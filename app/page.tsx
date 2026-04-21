@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Logo } from '@/components/Logo';
 import { Github, Download, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
 import * as motion from 'motion/react-client';
 
@@ -94,9 +95,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="flex items-center gap-3"
         >
-          <div className="w-8 h-8 rounded-full bg-stone-800 flex items-center justify-center">
-            <div className="w-4 h-4 border-2 border-white rounded-sm rotate-45"></div>
-          </div>
+          <Logo className="w-8 h-8 rounded-lg" />
           <span className="text-xl font-medium tracking-tight">sona</span>
         </motion.div>
         <motion.div 
