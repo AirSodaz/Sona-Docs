@@ -5,6 +5,7 @@ import * as motion from 'motion/react-client';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DownloadButton } from '@/components/download-button';
+import { TranscriptDemo } from '@/components/transcript-demo';
 import type { HomePageContent } from '@/lib/homepage-content';
 
 export function HomePage({ content }: { content: HomePageContent }) {
@@ -55,7 +56,7 @@ export function HomePage({ content }: { content: HomePageContent }) {
         </motion.div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-6 md:px-16 w-full mt-10">
+      <main className="flex-1 flex flex-col items-center px-6 md:px-16 w-full mt-10 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -101,8 +102,17 @@ export function HomePage({ content }: { content: HomePageContent }) {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-          className="grid sm:grid-cols-2 gap-12 mt-8 text-left w-full max-w-4xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+          className="w-full mt-2"
+        >
+          <TranscriptDemo demo={content.demo} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.35, ease: 'easeOut' }}
+          className="grid sm:grid-cols-2 gap-12 mt-20 text-left w-full max-w-4xl mx-auto"
         >
           <FeatureCard
             icon={<Shield size={20} className="text-stone-600 dark:text-stone-400" />}
