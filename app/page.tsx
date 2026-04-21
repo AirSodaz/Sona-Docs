@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { DownloadButton } from '@/components/download-button';
 import { Github, Download, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
 import * as motion from 'motion/react-client';
 
@@ -147,16 +148,7 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <Link href="https://github.com/AirSodaz/sona/releases" target="_blank">
-              <motion.button 
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-8 py-3 bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 rounded-full text-sm font-medium hover:bg-stone-700 dark:hover:bg-white transition-colors shadow-lg shadow-stone-200 dark:shadow-none flex items-center gap-2"
-              >
-                {loc.hero.btnDownload}
-                <Download size={16} />
-              </motion.button>
-            </Link>
+            <DownloadButton text={loc.hero.btnDownload} />
             <Link href="https://github.com/AirSodaz/sona#readme" target="_blank">
               <motion.button 
                 whileHover={{ scale: 1.02 }}

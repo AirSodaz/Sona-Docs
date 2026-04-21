@@ -1,0 +1,62 @@
+"use client"
+
+import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Download } from 'lucide-react'
+import * as motion from 'motion/react-client'
+
+interface ReleaseInfo {
+  version: string
+  size: string
+  url: string
+}
+
+export function DownloadButton({ text }: { text: string }) {
+  const [release, setRelease] = useState<ReleaseInfo | null>(null)
+
+  useEffect(() => {
+    fetch('/api/github-release')
+      .then((res) => {
+        if (!res.ok) return null;
+        return res.json()
+      })
+      .then((data) => {
+        if (data && data.version) {
+          setRelease({
+            version: data.version,
+            size: data.size,
+            url: data.url,
+          })
+        }
+      })
+      .catch(() => {
+        // Silently ignore network errors to prevent console spam
+      })
+  }, [])
+
+  return (
+    <div className="flex flex-col items-center justify-center relative">
+      <Link href={release?.url || "https://github.com/AirSodaz/sona/releases"} target="_blank">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="px-8 py-3 bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-900 rounded-full text-sm font-medium hover:bg-stone-700 dark:hover:bg-white transition-colors shadow-lg shadow-stone-200 dark:shadow-none flex items-center gap-2"
+        >
+          {text}
+          <Download size={16} />
+        </motion.button>
+      </Link>
+      <div className="h-6 mt-2 absolute -bottom-8 flex items-center justify-center w-full">
+        {release ? (
+          <motion.span
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-[11px] text-stone-400 dark:text-stone-500 font-mono tracking-wider"
+          >
+            {release.version} {release.size ? `· ~${release.size}` : ''}
+          </motion.span>
+        ) : null}
+      </div>
+    </div>
+  )
+}
