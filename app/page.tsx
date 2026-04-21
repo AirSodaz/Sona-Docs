@@ -94,10 +94,10 @@ export default function Home() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex items-center gap-3"
+          className="flex items-center"
         >
           <Logo className="w-8 h-8 rounded-lg" />
-          <span className="text-xl font-medium tracking-tight">sona</span>
+          <span className="text-[1.7rem] font-serif italic tracking-tighter mt-0.5 text-[#5c4d43] dark:text-[#E0E0E0] -ml-1" style={{fontFamily: 'Georgia, serif'}}>ona</span>
         </motion.div>
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
