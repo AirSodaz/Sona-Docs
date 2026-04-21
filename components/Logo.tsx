@@ -11,10 +11,10 @@ export function Logo({ className }: LogoProps) {
       viewBox="0 0 512 512" 
       className={className}
     >
-      {/* Terracotta & Cream background */}
-      <rect width="512" height="512" rx="112" fill="#f9f5f0" />
+      {/* Background */}
+      <rect width="512" height="512" rx="112" className="fill-[#f9f5f0] dark:fill-[#1A1A1A] transition-colors" />
       
-      <g transform="translate(256, 256)" stroke="#5c4d43" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" fill="none">
+      <g transform="translate(256, 256)" className="stroke-[#5c4d43] dark:stroke-[#E0E0E0] transition-colors" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" fill="none">
         {/* Abstract "S" formed by an audio wave. 
              Starting from top right, curving down left (top half of S), 
              curving down right (middle wave), curving down left (bottom half of S).
