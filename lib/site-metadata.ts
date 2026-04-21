@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { homePageContent, type HomeLocale } from '@/lib/homepage-content';
-
-const FALLBACK_SITE_URL = 'http://localhost:3000';
+import { getSiteUrl } from '@/lib/site-url';
 
 const localePaths: Record<HomeLocale, string> = {
   en: '/',
@@ -13,26 +12,12 @@ const openGraphLocales: Record<HomeLocale, string> = {
   'zh-CN': 'zh_CN',
 };
 
-function getMetadataBase() {
-  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-
-  if (!configuredUrl) {
-    return new URL(FALLBACK_SITE_URL);
-  }
-
-  try {
-    return new URL(configuredUrl);
-  } catch {
-    return new URL(FALLBACK_SITE_URL);
-  }
-}
-
 export function createHomePageMetadata(locale: HomeLocale): Metadata {
   const content = homePageContent[locale];
   const currentPath = localePaths[locale];
 
   return {
-    metadataBase: getMetadataBase(),
+    metadataBase: getSiteUrl(),
     title: content.metadata.title,
     description: content.metadata.description,
     icons: {

@@ -1,5 +1,36 @@
 import { NextResponse } from 'next/server';
 
+const GITHUB_RELEASE_URL =
+  'https://api.github.com/repos/AirSodaz/sona/releases/latest';
+const SUCCESS_CACHE_SECONDS = 60 * 60;
+const FAILURE_CACHE_SECONDS = 60 * 5;
+const STALE_WHILE_REVALIDATE_SECONDS = 60 * 60 * 24;
+const REQUEST_TIMEOUT_MS = 8000;
+
+interface GitHubReleaseAsset {
+  name: string;
+  size: number;
+  browser_download_url: string;
+}
+
+interface GitHubRelease {
+  tag_name?: string;
+  html_url?: string;
+  assets?: GitHubReleaseAsset[];
+}
+
+function buildCacheControl(maxAge: number) {
+  return `public, max-age=0, s-maxage=${maxAge}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_SECONDS}`;
+}
+
+function jsonResponse(body: null | { version: string; url: string; assets: { name: string; size: number; url: string }[] }, cacheSeconds: number) {
+  return NextResponse.json(body, {
+    headers: {
+      'Cache-Control': buildCacheControl(cacheSeconds),
+    },
+  });
+}
+
 export async function GET() {
   try {
     const headers: Record<string, string> = {
@@ -11,36 +42,39 @@ export async function GET() {
       headers['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
 
-    // Fetch the latest release from GitHub, cache for 1 hour
-    const response = await fetch('https://api.github.com/repos/AirSodaz/sona/releases/latest', {
+    const response = await fetch(GITHUB_RELEASE_URL, {
       headers,
-      next: { revalidate: 3600 },
+      next: { revalidate: SUCCESS_CACHE_SECONDS },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
 
     if (!response.ok) {
-      // Return 404/403 gracefully as empty release info
-      return NextResponse.json(null);
+      return jsonResponse(null, FAILURE_CACHE_SECONDS);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as GitHubRelease;
 
-    if (!data || !data.tag_name) {
-      return NextResponse.json(null);
+    if (!data.tag_name || !data.html_url) {
+      return jsonResponse(null, FAILURE_CACHE_SECONDS);
     }
 
-    const assets = data.assets?.map((a: any) => ({
-      name: a.name,
-      size: a.size,
-      url: a.browser_download_url,
-    })) || [];
+    const assets =
+      data.assets?.map((asset) => ({
+        name: asset.name,
+        size: asset.size,
+        url: asset.browser_download_url,
+      })) ?? [];
 
-    return NextResponse.json({
-      version: data.tag_name,
-      url: data.html_url,
-      assets,
-    });
+    return jsonResponse(
+      {
+        version: data.tag_name,
+        url: data.html_url,
+        assets,
+      },
+      SUCCESS_CACHE_SECONDS,
+    );
   } catch (error) {
     console.error('Error fetching GitHub release:', error);
-    return NextResponse.json(null);
+    return jsonResponse(null, FAILURE_CACHE_SECONDS);
   }
 }
