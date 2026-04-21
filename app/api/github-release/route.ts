@@ -28,20 +28,16 @@ export async function GET() {
       return NextResponse.json(null);
     }
 
-    let maxAssetSize = 0;
-    if (data.assets && data.assets.length > 0) {
-      maxAssetSize = Math.max(...data.assets.map((a: any) => a.size || 0));
-    }
-
-    let sizeStr = '';
-    if (maxAssetSize > 0) {
-      sizeStr = (maxAssetSize / (1024 * 1024)).toFixed(1) + ' MB';
-    }
+    const assets = data.assets?.map((a: any) => ({
+      name: a.name,
+      size: a.size,
+      url: a.browser_download_url,
+    })) || [];
 
     return NextResponse.json({
       version: data.tag_name,
-      size: sizeStr,
       url: data.html_url,
+      assets,
     });
   } catch (error) {
     console.error('Error fetching GitHub release:', error);
