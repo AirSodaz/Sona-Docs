@@ -16,32 +16,88 @@ interface ReleaseInfo {
   size: string
   url: string
   os: string
+  arch: string
 }
 
-function detectOS() {
-  if (typeof window === 'undefined') return 'unknown'
+function detectPlatform(): { os: string; arch: string } {
+  if (typeof window === 'undefined') return { os: 'unknown', arch: 'unknown' }
+  
   const ua = window.navigator.userAgent.toLowerCase()
-  if (ua.includes('win')) return 'windows'
-  if (ua.includes('mac')) return 'macos'
-  if (ua.includes('linux')) return 'linux'
-  return 'unknown'
+  let os = 'unknown'
+  let arch = 'x64' // Default to x64 for most desktop environments
+
+  // Detect OS
+  if (ua.includes('win')) os = 'windows'
+  else if (ua.includes('mac')) os = 'macos'
+  else if (ua.includes('linux')) os = 'linux'
+
+  // Detect Architecture
+  // Check userAgentData if available (modern Chromium browsers)
+  const nav = window.navigator as any
+  if (nav.userAgentData?.getHighEntropyValues) {
+    // We can't await this synchronously here, but we check what we can from userAgent string as fallback
+  }
+
+  // Fallback Architecture detection via UA and Platform
+  const platform = (nav.platform || '').toLowerCase()
+  if (
+    ua.includes('aarch64') || 
+    ua.includes('arm') || 
+    platform.includes('arm') || 
+    platform.includes('aarch64') ||
+    platform.includes('mac') // Modern Macs (M1+) are often Apple Silicon, but UA reports Intel. We default to x64 unless we know better, but for Apple, universal binaries or offering Apple Silicon is common. We'll rely on the specific asset mapping below to provide a safe fallback if we guess wrong.
+  ) {
+    arch = 'arm64'
+  }
+  
+  // Specific fix for macOS: If it's a Mac, and the platform says 'macintel', it MIGHT be Rosetta 2.
+  // Real detection requires async getHighEntropyValues, so for synchronous detection, we rely on the user to pick if the default is wrong, but we'll try to guess based on the presence of 'arm' anywhere or default to x64.
+  if (os === 'macos' && !platform.includes('arm') && ua.includes('intel mac os x')) {
+     // A lot of Apple Silicon Macs still report Intel Mac OS X.
+     // We will default to x64, but the ideal is a universal binary or letting the user choose from a dropdown later.
+     arch = 'x64' 
+  }
+
+  return { os, arch }
 }
 
-function findBestAsset(assets: Asset[], os: string): Asset | null {
+function findBestAsset(assets: Asset[], platform: { os: string; arch: string }): Asset | null {
   if (!assets || assets.length === 0) return null;
   
   let candidates: Asset[] = [];
+  const { os, arch } = platform;
   
   if (os === 'windows') {
-    candidates = assets.filter(a => a.name.toLowerCase().endsWith('.exe') || a.name.toLowerCase().endsWith('.msi'));
+    if (arch === 'arm64') {
+      candidates = assets.filter(a => a.name.toLowerCase().includes('arm64') && (a.name.toLowerCase().endsWith('.exe') || a.name.toLowerCase().endsWith('.msi')));
+    }
+    // Fallback or explicit x64
+    if (candidates.length === 0) {
+      candidates = assets.filter(a => a.name.toLowerCase().includes('x64') && (a.name.toLowerCase().endsWith('.exe') || a.name.toLowerCase().endsWith('.msi')));
+    }
+    // If still none, just grab any exe
+    if (candidates.length === 0) {
+      candidates = assets.filter(a => a.name.toLowerCase().endsWith('.exe') || a.name.toLowerCase().endsWith('.msi'));
+    }
   } else if (os === 'macos') {
-    candidates = assets.filter(a => a.name.toLowerCase().endsWith('.dmg') || a.name.toLowerCase().endsWith('.pkg') || a.name.toLowerCase().endsWith('.app.tar.gz'));
+    if (arch === 'arm64') {
+      candidates = assets.filter(a => a.name.toLowerCase().includes('aarch64') && (a.name.toLowerCase().endsWith('.dmg') || a.name.toLowerCase().endsWith('.app.tar.gz')));
+    }
+    if (candidates.length === 0) {
+      candidates = assets.filter(a => (a.name.toLowerCase().includes('x64') || a.name.toLowerCase().includes('x86_64')) && (a.name.toLowerCase().endsWith('.dmg') || a.name.toLowerCase().endsWith('.app.tar.gz')));
+    }
+    if (candidates.length === 0) {
+      candidates = assets.filter(a => a.name.toLowerCase().endsWith('.dmg') || a.name.toLowerCase().endsWith('.app.tar.gz'));
+    }
   } else if (os === 'linux') {
-    candidates = assets.filter(a => a.name.toLowerCase().endsWith('.appimage') || a.name.toLowerCase().endsWith('.deb') || a.name.toLowerCase().endsWith('.rpm'));
+    candidates = assets.filter(a => a.name.toLowerCase().includes('amd64') && (a.name.toLowerCase().endsWith('.appimage') || a.name.toLowerCase().endsWith('.deb') || a.name.toLowerCase().endsWith('.rpm')));
+    if (candidates.length === 0) {
+       candidates = assets.filter(a => a.name.toLowerCase().endsWith('.appimage') || a.name.toLowerCase().endsWith('.deb') || a.name.toLowerCase().endsWith('.rpm'));
+    }
   }
   
   if (candidates.length > 0) {
-    // Return largest candidate (usually the main installer)
+    // Return largest candidate (usually the main installer, not a signature file)
     return candidates.reduce((prev, current) => (prev.size > current.size) ? prev : current);
   }
   
@@ -59,8 +115,8 @@ export function DownloadButton({ text }: { text: string }) {
       })
       .then((data) => {
         if (data && data.version) {
-          const os = detectOS()
-          const bestAsset = findBestAsset(data.assets, os)
+          const platform = detectPlatform()
+          const bestAsset = findBestAsset(data.assets, platform)
           
           let downloadUrl = data.url
           let sizeStr = ''
@@ -74,7 +130,8 @@ export function DownloadButton({ text }: { text: string }) {
             version: data.version,
             size: sizeStr,
             url: downloadUrl,
-            os,
+            os: platform.os,
+            arch: platform.arch,
           })
         }
       })
@@ -84,9 +141,13 @@ export function DownloadButton({ text }: { text: string }) {
   }, [])
 
   let btnText = text;
-  if (release?.os === 'windows') btnText = `${text} (Windows)`;
-  else if (release?.os === 'macos') btnText = `${text} (macOS)`;
-  else if (release?.os === 'linux') btnText = `${text} (Linux)`;
+  if (release?.os === 'windows') {
+    btnText = release.arch === 'arm64' ? `${text} (Windows ARM)` : `${text} (Windows)`;
+  } else if (release?.os === 'macos') {
+    btnText = release.arch === 'arm64' ? `${text} (macOS Apple Silicon)` : `${text} (macOS Intel)`;
+  } else if (release?.os === 'linux') {
+    btnText = `${text} (Linux)`;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center relative">
