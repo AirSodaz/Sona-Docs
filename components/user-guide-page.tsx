@@ -9,8 +9,11 @@ import {
   Globe,
   Home,
 } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import type { Components } from 'react-markdown';
+import ReactMarkdown, {
+  defaultUrlTransform,
+  type Components,
+  type UrlTransform,
+} from 'react-markdown';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
@@ -24,6 +27,7 @@ import {
   getUserGuideMarkdown,
   getUserGuideNavigation,
   getUserGuideOverviewCards,
+  getUserGuidePageIdFromHrefToken,
   getUserGuidePageFromSlug,
   getUserGuideUiCopy,
   resolveUserGuideHref,
@@ -31,6 +35,14 @@ import {
   type UserGuideNavItem,
 } from '@/lib/user-guide-content';
 import type { HomeLocale } from '@/lib/homepage-content';
+
+const preserveUserGuideInternalLinks: UrlTransform = (url) => {
+  if (getUserGuidePageIdFromHrefToken(url)) {
+    return url;
+  }
+
+  return defaultUrlTransform(url);
+};
 
 function createMarkdownComponents(locale: HomeLocale): Components {
   return {
@@ -453,7 +465,10 @@ export async function UserGuidePage({
             ) : null}
 
             <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium">
-              <ReactMarkdown components={markdownComponents}>
+              <ReactMarkdown
+                components={markdownComponents}
+                urlTransform={preserveUserGuideInternalLinks}
+              >
                 {markdown}
               </ReactMarkdown>
             </AnimatedItem>

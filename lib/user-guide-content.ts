@@ -708,6 +708,34 @@ const legacyRelativeLinkOverrides: Record<string, string> = {
   '../README.zh-CN.md': 'readme',
 };
 
+function normalizeUserGuideHrefToken(href: string) {
+  const normalizedHref = href.replace(/^\.\//, '');
+
+  return (
+    legacyRelativeLinkOverrides[href] ??
+    legacyRelativeLinkOverrides[normalizedHref] ??
+    normalizedHref
+  );
+}
+
+export function getUserGuidePageIdFromHrefToken(
+  href: string | undefined,
+): UserGuidePageId | null {
+  if (!href) {
+    return null;
+  }
+
+  const token = normalizeUserGuideHrefToken(href);
+
+  if (!token.startsWith('guide:')) {
+    return null;
+  }
+
+  const pageId = token.replace('guide:', '');
+
+  return isUserGuidePageId(pageId) ? pageId : null;
+}
+
 export function resolveUserGuideHref(
   locale: HomeLocale,
   href: string | undefined,
@@ -730,17 +758,14 @@ export function resolveUserGuideHref(
   }
 
   const normalizedHref = href.replace(/^\.\//, '');
-  const token = legacyRelativeLinkOverrides[href] ?? legacyRelativeLinkOverrides[normalizedHref] ?? normalizedHref;
+  const token = normalizeUserGuideHrefToken(href);
+  const pageId = getUserGuidePageIdFromHrefToken(href);
 
-  if (token.startsWith('guide:')) {
-    const pageId = token.replace('guide:', '') as UserGuidePageId;
-
-    if (pageId in userGuidePageDefinitionById) {
-      return {
-        href: buildUserGuidePath(locale, pageId),
-        external: false,
-      };
-    }
+  if (pageId) {
+    return {
+      href: buildUserGuidePath(locale, pageId),
+      external: false,
+    };
   }
 
   if (token === 'cli') {
