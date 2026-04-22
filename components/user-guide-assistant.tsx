@@ -1,25 +1,23 @@
 'use client';
 
-import { startTransition, useState } from 'react';
-import { MessageSquare, Send, Sparkles } from 'lucide-react';
+import { startTransition, useEffect, useRef, useState } from 'react';
+import { ChevronDown, ChevronUp, Send, Sparkles } from 'lucide-react';
 
 const MAX_QUESTION_LENGTH = 1200;
 
 type AssistantCopy = {
-  eyebrow: string;
   title: string;
-  description: string;
-  currentPageLabel: string;
+  summary: string;
+  expandLabel: string;
+  collapseLabel: string;
   examplesLabel: string;
   examples: string[];
   inputPlaceholder: string;
   submitLabel: string;
   submittingLabel: string;
-  emptyState: string;
   youLabel: string;
   assistantLabel: string;
-  disabledTitle: string;
-  disabledBody: string;
+  disabledInline: string;
   genericError: string;
   networkError: string;
   upstreamError: string;
@@ -82,6 +80,31 @@ function createMessage(role: Message['role'], content: string): Message {
   };
 }
 
+function resizeTextarea(element: HTMLTextAreaElement | null) {
+  if (!element) {
+    return;
+  }
+
+  element.style.height = '0px';
+
+  const styles = window.getComputedStyle(element);
+  const lineHeight = Number.parseFloat(styles.lineHeight) || 28;
+  const paddingTop = Number.parseFloat(styles.paddingTop) || 0;
+  const paddingBottom = Number.parseFloat(styles.paddingBottom) || 0;
+  const borderTop = Number.parseFloat(styles.borderTopWidth) || 0;
+  const borderBottom = Number.parseFloat(styles.borderBottomWidth) || 0;
+  const maxHeight =
+    lineHeight * 3 +
+    paddingTop +
+    paddingBottom +
+    borderTop +
+    borderBottom;
+  const nextHeight = Math.min(element.scrollHeight, maxHeight);
+
+  element.style.height = `${nextHeight}px`;
+  element.style.overflowY = element.scrollHeight > maxHeight ? 'auto' : 'hidden';
+}
+
 function MessageBubble({
   content,
   isPending = false,
@@ -97,9 +120,9 @@ function MessageBubble({
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className="max-w-[88%]">
+      <div className="max-w-[90%]">
         <p
-          className={`text-[11px] font-semibold uppercase tracking-[0.2em] ${
+          className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${
             isUser
               ? 'text-right text-stone-400 dark:text-stone-500'
               : 'text-left text-stone-500 dark:text-stone-400'
@@ -108,10 +131,10 @@ function MessageBubble({
           {label}
         </p>
         <div
-          className={`mt-2 rounded-[22px] px-4 py-3 text-[0.95rem] leading-7 whitespace-pre-wrap sm:px-5 sm:py-4 ${
+          className={`mt-2 rounded-[18px] px-4 py-3 text-[0.95rem] leading-7 whitespace-pre-wrap ${
             isUser
               ? 'bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900'
-              : 'border border-stone-200/80 bg-white/80 text-stone-700 dark:border-stone-800/80 dark:bg-stone-900/80 dark:text-stone-200'
+              : 'border border-stone-200/80 bg-white/85 text-stone-700 dark:border-stone-800/80 dark:bg-stone-900/80 dark:text-stone-200'
           } ${isPending ? 'animate-pulse' : ''}`}
         >
           {content}
@@ -126,20 +149,32 @@ export function UserGuideAssistant({
   enabled,
   locale,
   pageId,
-  pageTitle,
 }: {
   copy: AssistantCopy;
   enabled: boolean;
   locale: 'en' | 'zh-CN';
   pageId: string;
-  pageTitle: string;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [question, setQuestion] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const [serviceAvailable, setServiceAvailable] = useState(enabled);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const hasConversation = messages.length > 0 || pendingQuestion !== null;
+  const panelId = `user-guide-assistant-${pageId}`;
+
+  useEffect(() => {
+    resizeTextarea(textareaRef.current);
+  }, [question, isExpanded, serviceAvailable]);
+
+  useEffect(() => {
+    if (isExpanded && serviceAvailable) {
+      textareaRef.current?.focus();
+    }
+  }, [isExpanded, serviceAvailable]);
 
   async function submitQuestion(nextQuestion: string) {
     if (!serviceAvailable || isSubmitting) {
@@ -181,6 +216,9 @@ export function UserGuideAssistant({
 
       if (!response.ok && payload?.code === 'disabled') {
         setServiceAvailable(false);
+        setIsExpanded(false);
+        setQuestion('');
+        setError(null);
         return;
       }
 
@@ -195,11 +233,13 @@ export function UserGuideAssistant({
         return;
       }
 
+      const answer = payload.answer;
+
       startTransition(() => {
         setMessages((currentMessages) => [
           ...currentMessages,
           createMessage('user', trimmedQuestion),
-          createMessage('assistant', payload.answer!),
+          createMessage('assistant', answer),
         ]);
         setQuestion('');
       });
@@ -213,68 +253,126 @@ export function UserGuideAssistant({
   }
 
   return (
-    <section className="mb-14 overflow-hidden rounded-[28px] border border-stone-200/70 bg-white/65 shadow-[0_28px_100px_-68px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/70 dark:bg-stone-900/45 dark:shadow-[0_28px_100px_-68px_rgba(0,0,0,0.72)]">
-      <div className="border-b border-stone-200/70 px-5 py-6 dark:border-stone-800/70 sm:px-7 sm:py-7">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-3xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-              {copy.eyebrow}
-            </p>
-            <h2
-              className="mt-4 text-[2rem] leading-tight text-stone-800 dark:text-stone-100 sm:text-[2.35rem]"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
-              {copy.title}
-            </h2>
-            <p className="mt-4 text-[1rem] font-light leading-[1.8] text-stone-500 dark:text-stone-400 sm:text-lg">
-              {copy.description}
-            </p>
+    <section className="mb-10 overflow-hidden rounded-[22px] border border-stone-200/70 bg-white/60 shadow-[0_18px_60px_-48px_rgba(87,83,78,0.45)] backdrop-blur-md dark:border-stone-800/70 dark:bg-stone-900/35 dark:shadow-[0_18px_60px_-48px_rgba(0,0,0,0.65)]">
+      <div className="flex flex-col gap-3 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-stone-200/70 bg-stone-50/90 text-stone-500 dark:border-stone-800/70 dark:bg-stone-950/70 dark:text-stone-400">
+            <Sparkles size={15} />
           </div>
 
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-stone-200/80 bg-stone-50/80 px-4 py-2 text-sm text-stone-600 dark:border-stone-800/80 dark:bg-stone-950/60 dark:text-stone-300">
-            <Sparkles size={15} className="text-stone-400 dark:text-stone-500" />
-            <span>
-              {copy.currentPageLabel}: {pageTitle}
-            </span>
+          <div className="min-w-0">
+            <p className="text-[0.96rem] font-medium text-stone-800 dark:text-stone-100">
+              {copy.title}
+            </p>
+            <p
+              className={`mt-0.5 text-sm leading-6 ${
+                serviceAvailable
+                  ? 'text-stone-500 dark:text-stone-400'
+                  : 'text-amber-700 dark:text-amber-300'
+              }`}
+            >
+              {serviceAvailable ? copy.summary : copy.disabledInline}
+            </p>
           </div>
         </div>
 
         {serviceAvailable ? (
-          <div className="mt-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-              {copy.examplesLabel}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {copy.examples.map((example) => (
-                <button
-                  key={example}
-                  type="button"
-                  onClick={() => {
-                    setQuestion(example);
-                    void submitQuestion(example);
-                  }}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-stone-200/80 bg-white/80 px-4 py-2 text-sm text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-stone-800/80 dark:bg-stone-950/55 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-stone-100 dark:focus-visible:ring-stone-500/60 dark:focus-visible:ring-offset-stone-900"
-                >
-                  <MessageSquare size={14} />
-                  {example}
-                </button>
-              ))}
-            </div>
-          </div>
+          <button
+            type="button"
+            aria-controls={panelId}
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? copy.collapseLabel : copy.expandLabel}
+            onClick={() => {
+              setIsExpanded((current) => !current);
+            }}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-stone-200/80 bg-white/85 text-stone-700 transition-colors hover:border-stone-300 hover:text-stone-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F5F2] dark:border-stone-800/80 dark:bg-stone-950/60 dark:text-stone-200 dark:hover:border-stone-700 dark:hover:text-white dark:focus-visible:ring-stone-500/60 dark:focus-visible:ring-offset-[#121212]"
+          >
+            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
         ) : null}
       </div>
 
-      <div className="px-5 py-5 sm:px-7 sm:py-6">
-        {serviceAvailable ? (
-          <>
-            <div className="rounded-[24px] border border-stone-200/80 bg-stone-50/70 p-4 dark:border-stone-800/80 dark:bg-[#171717] sm:p-5">
-              <div className="space-y-4">
-                {messages.length === 0 && !pendingQuestion ? (
-                  <div className="rounded-[22px] border border-dashed border-stone-200/80 bg-white/70 px-4 py-6 text-[0.95rem] leading-7 text-stone-500 dark:border-stone-800/80 dark:bg-stone-950/45 dark:text-stone-400">
-                    {copy.emptyState}
-                  </div>
-                ) : null}
+      {serviceAvailable && isExpanded ? (
+        <div
+          id={panelId}
+          className="border-t border-stone-200/70 px-4 py-4 dark:border-stone-800/70 sm:px-5 sm:py-5"
+        >
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void submitQuestion(question);
+            }}
+          >
+            <div className="overflow-hidden rounded-[18px] border border-stone-200/80 bg-stone-50/70 transition-colors focus-within:border-stone-400 dark:border-stone-800/80 dark:bg-[#171717] dark:focus-within:border-stone-600">
+              <textarea
+                ref={textareaRef}
+                value={question}
+                onChange={(event) => {
+                  setQuestion(event.target.value);
+                  if (error) {
+                    setError(null);
+                  }
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    void submitQuestion(question);
+                  }
+                }}
+                disabled={isSubmitting}
+                rows={1}
+                maxLength={MAX_QUESTION_LENGTH}
+                placeholder={copy.inputPlaceholder}
+                className="block min-h-[56px] w-full resize-none border-0 bg-transparent px-4 py-4 text-[0.96rem] leading-7 text-stone-700 outline-none placeholder:text-stone-400 disabled:cursor-not-allowed disabled:opacity-70 dark:text-stone-100 dark:placeholder:text-stone-500"
+              />
+            </div>
 
+            <div className="mt-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+                {copy.examplesLabel}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
+                {copy.examples.map((example) => (
+                  <button
+                    key={example}
+                    type="button"
+                    onClick={() => {
+                      setQuestion(example);
+                      void submitQuestion(example);
+                    }}
+                    className="text-left text-sm text-stone-500 underline decoration-stone-300/70 underline-offset-4 transition-colors hover:text-stone-800 hover:decoration-stone-500 focus:outline-none focus-visible:text-stone-900 dark:text-stone-400 dark:decoration-stone-700 dark:hover:text-stone-100 dark:hover:decoration-stone-500 dark:focus-visible:text-white"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p
+                aria-live="polite"
+                className={`text-sm ${
+                  error
+                    ? 'text-rose-600 dark:text-rose-400'
+                    : 'text-stone-500 dark:text-stone-400'
+                }`}
+              >
+                {error ?? `${question.trim().length}/${MAX_QUESTION_LENGTH}`}
+              </p>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-stone-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F5F2] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-200 dark:text-stone-900 dark:hover:bg-stone-300 dark:focus-visible:ring-stone-500/60 dark:focus-visible:ring-offset-[#121212]"
+              >
+                <Send size={14} />
+                {isSubmitting ? copy.submittingLabel : copy.submitLabel}
+              </button>
+            </div>
+          </form>
+
+          {hasConversation ? (
+            <div className="mt-4 border-t border-stone-200/70 pt-4 dark:border-stone-800/70">
+              <div className="max-h-[26rem] space-y-4 overflow-y-auto pr-1">
                 {messages.map((message) => (
                   <MessageBubble
                     key={message.id}
@@ -305,59 +403,9 @@ export function UserGuideAssistant({
                 ) : null}
               </div>
             </div>
-
-            <form
-              className="mt-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void submitQuestion(question);
-              }}
-            >
-              <textarea
-                value={question}
-                onChange={(event) => {
-                  setQuestion(event.target.value);
-                  if (error) {
-                    setError(null);
-                  }
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    void submitQuestion(question);
-                  }
-                }}
-                disabled={isSubmitting}
-                rows={4}
-                maxLength={MAX_QUESTION_LENGTH}
-                placeholder={copy.inputPlaceholder}
-                className="w-full rounded-[24px] border border-stone-200/80 bg-white/80 px-4 py-4 text-[0.96rem] leading-7 text-stone-700 outline-none transition-colors placeholder:text-stone-400 focus:border-stone-400 dark:border-stone-800/80 dark:bg-stone-900/70 dark:text-stone-100 dark:placeholder:text-stone-500 dark:focus:border-stone-600"
-              />
-
-              <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className={`text-sm ${error ? 'text-rose-600 dark:text-rose-400' : 'text-stone-500 dark:text-stone-400'}`}>
-                  {error ?? `${question.trim().length}/${MAX_QUESTION_LENGTH}`}
-                </p>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-stone-800 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-stone-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-60 dark:bg-stone-200 dark:text-stone-900 dark:hover:bg-stone-300 dark:focus-visible:ring-stone-500/60 dark:focus-visible:ring-offset-stone-900"
-                >
-                  <Send size={15} />
-                  {isSubmitting ? copy.submittingLabel : copy.submitLabel}
-                </button>
-              </div>
-            </form>
-          </>
-        ) : (
-          <div className="rounded-[24px] border border-dashed border-amber-300/80 bg-amber-50/70 px-5 py-5 text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
-            <p className="text-lg font-medium">{copy.disabledTitle}</p>
-            <p className="mt-2 text-[0.96rem] leading-7 text-amber-800/80 dark:text-amber-100/80">
-              {copy.disabledBody}
-            </p>
-          </div>
-        )}
-      </div>
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 }

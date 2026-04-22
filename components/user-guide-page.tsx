@@ -363,7 +363,6 @@ export async function UserGuidePage({
                 enabled={aiEnabled}
                 locale={locale}
                 pageId={page.id}
-                pageTitle={page.navLabel}
               />
             </AnimatedItem>
 
