@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Children, isValidElement, type ReactNode } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
@@ -16,6 +16,7 @@ import ReactMarkdown, {
 } from 'react-markdown';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
@@ -44,7 +45,26 @@ const preserveUserGuideInternalLinks: UrlTransform = (url) => {
   return defaultUrlTransform(url);
 };
 
-function createMarkdownComponents(locale: HomeLocale): Components {
+function extractTextContent(children: ReactNode): string {
+  return Children.toArray(children)
+    .map((child) => {
+      if (typeof child === 'string' || typeof child === 'number') {
+        return String(child);
+      }
+
+      if (isValidElement<{ children?: ReactNode }>(child)) {
+        return extractTextContent(child.props.children);
+      }
+
+      return '';
+    })
+    .join('');
+}
+
+function createMarkdownComponents(
+  locale: HomeLocale,
+  ui: ReturnType<typeof getUserGuideUiCopy>,
+): Components {
   return {
     h1: ({ children }) => (
       <h1
@@ -112,8 +132,21 @@ function createMarkdownComponents(locale: HomeLocale): Components {
         </Link>
       );
     },
-    code: ({ children }) => (
-      <code className="rounded-md bg-stone-100 px-1.5 py-0.5 text-[0.95em] font-mono text-stone-800 dark:bg-stone-800 dark:text-stone-200">
+    pre: ({ children }) => (
+      <UserGuideCodeBlock
+        code={extractTextContent(children).replace(/\n$/, '')}
+        copyLabel={ui.codeBlock.copyLabel}
+        copiedLabel={ui.codeBlock.copiedLabel}
+      />
+    ),
+    code: ({ children, className }) => (
+      <code
+        className={
+          className
+            ? className
+            : 'rounded-md border border-stone-200/80 bg-stone-100/90 px-1.5 py-0.5 font-mono text-[0.92em] font-medium text-stone-800 transition-colors dark:border-stone-700/80 dark:bg-stone-900/80 dark:text-stone-100'
+        }
+      >
         {children}
       </code>
     ),
@@ -282,7 +315,7 @@ export async function UserGuidePage({
   const navigation = getUserGuideNavigation(locale, page.id);
   const overviewCards = getUserGuideOverviewCards(locale);
   const markdown = await getUserGuideMarkdown(locale, page.id);
-  const markdownComponents = createMarkdownComponents(locale);
+  const markdownComponents = createMarkdownComponents(locale, ui);
   const assistantCopy = getUserGuideAssistantCopy(locale, page.navLabel);
   const aiEnabled = isUserGuideAiEnabled();
   const turnstileSiteKey = getUserGuideTurnstileSiteKey();
@@ -464,7 +497,7 @@ export async function UserGuidePage({
               </AnimatedItem>
             ) : null}
 
-            <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium">
+            <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:text-inherit prose-pre:shadow-none">
               <ReactMarkdown
                 components={markdownComponents}
                 urlTransform={preserveUserGuideInternalLinks}

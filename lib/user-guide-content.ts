@@ -61,6 +61,10 @@ interface UserGuideUiCopy {
     browseTitle: string;
     browseDescription: string;
   };
+  codeBlock: {
+    copyLabel: string;
+    copiedLabel: string;
+  };
 }
 
 export interface UserGuideNavItem {
@@ -163,6 +167,10 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseDescription:
         'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, export, extended capabilities, CLI reference, and troubleshooting.',
     },
+    codeBlock: {
+      copyLabel: 'Copy code',
+      copiedLabel: 'Copied',
+    },
   },
   'zh-CN': {
     guideLabel: '用户指南',
@@ -188,6 +196,10 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseTitle: '整套指南按照 Sona 的真实使用流程组织。',
       browseDescription:
         '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 导出 -> 扩展能力 -> CLI 参考 -> 排障”的顺序继续。',
+    },
+    codeBlock: {
+      copyLabel: '复制代码',
+      copiedLabel: '已复制',
     },
   },
 };
