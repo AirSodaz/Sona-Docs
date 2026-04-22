@@ -4,17 +4,20 @@ import { Github, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DownloadButton } from '@/components/download-button';
+import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
 import type { HomePageContent } from '@/lib/homepage-content';
 
 export function HomePage({ content }: { content: HomePageContent }) {
+  const demoPreviewId = 'homepage-demo-preview';
+
   return (
     <div className="relative overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
       <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[500px] sm:w-[500px] sm:blur-[100px]"></div>
       <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[600px] sm:w-[600px] sm:blur-[120px]"></div>
 
-      <section className="relative flex min-h-screen flex-col">
+      <section className="relative flex min-h-[100svh] flex-col">
         <header className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
           <div className="flex items-center">
             <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
@@ -48,14 +51,14 @@ export function HomePage({ content }: { content: HomePageContent }) {
         </header>
 
         <div className="flex flex-1 items-center">
-          <div className="mx-auto flex w-full max-w-[1400px] px-4 pb-10 pt-1 sm:px-6 sm:pb-12 sm:pt-4 md:px-16 md:pb-16">
+          <div className="mx-auto flex w-full max-w-[1400px] px-4 pb-22 pt-0 sm:px-6 sm:pb-24 sm:pt-3 md:px-16 md:pb-28 md:pt-4">
             <div className="mx-auto flex max-w-3xl flex-col items-center justify-center text-center">
               <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs sm:tracking-[0.28em]">
                 {content.hero.badge}
               </p>
 
               <h1
-                className="mb-4 text-[clamp(2.7rem,12vw,4.5rem)] leading-[0.94] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] sm:mb-5 sm:text-6xl md:text-7xl"
+                className="mb-3 text-[clamp(2.7rem,12vw,4.5rem)] leading-[0.94] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] sm:mb-4 sm:text-6xl md:text-7xl"
                 style={{ fontFamily: 'Georgia, serif' }}
               >
                 {content.hero.title1} <br />
@@ -64,7 +67,7 @@ export function HomePage({ content }: { content: HomePageContent }) {
                 </span>
               </h1>
 
-              <p className="mx-auto mb-7 max-w-2xl text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:mb-9 sm:text-lg sm:leading-[1.8]">
+              <p className="mx-auto mb-6 max-w-2xl text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:mb-8 sm:text-lg sm:leading-[1.8]">
                 {content.hero.desc}
               </p>
 
@@ -77,13 +80,40 @@ export function HomePage({ content }: { content: HomePageContent }) {
                   {content.hero.btnDocs}
                 </Link>
               </div>
+
+              <div className="mt-8 w-full max-w-3xl border-t border-stone-200/80 pt-5 text-left transition-colors duration-300 dark:border-stone-800/80 sm:mt-9 sm:pt-6">
+                <p className="text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-[11px]">
+                  {content.hero.workflowLabel}
+                </p>
+
+                <ol className="mt-4 grid grid-cols-2 gap-x-5 gap-y-4 sm:mt-5 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-0">
+                  {content.hero.workflowSteps.map((step, index) => (
+                    <li
+                      key={step}
+                      className="flex min-w-0 items-center gap-3 sm:flex-none"
+                    >
+                      <span className="font-mono text-[10px] tracking-[0.24em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-[11px]">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-sm leading-6 text-stone-600 transition-colors duration-300 dark:text-stone-300 sm:text-[0.95rem]">
+                        {step}
+                      </span>
+                      {index < content.hero.workflowSteps.length - 1 ? (
+                        <span className="hidden h-px w-8 bg-stone-200 transition-colors duration-300 dark:bg-stone-700 sm:block md:w-10" />
+                      ) : null}
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
           </div>
         </div>
+
+        <ScrollHint label={content.hero.scrollHint} targetId={demoPreviewId} />
       </section>
 
       <main className="w-full px-4 pb-10 pt-6 sm:px-6 sm:pb-12 sm:pt-10 md:px-16 md:pt-12">
-        <div className="w-full">
+        <div id={demoPreviewId} className="w-full scroll-mt-6 sm:scroll-mt-8">
           <TranscriptDemo demo={content.demo} />
         </div>
 

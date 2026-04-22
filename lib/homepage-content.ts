@@ -78,6 +78,9 @@ export interface HomePageContent {
     title1: string;
     title2: string;
     desc: string;
+    workflowLabel: string;
+    workflowSteps: string[];
+    scrollHint: string;
     btnDownload: string;
     btnDocs: string;
     docsHref: string;
@@ -109,7 +112,15 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       badge: 'Fast, accurate, private.',
       title1: 'Transcription tools',
       title2: 'for the quiet spaces.',
-      desc: 'Sona is an offline transcript editor built with Tauri and Sherpa-onnx. It brings powerful speech-to-text directly to your local machine. No cloud, no subscriptions, just your words.',
+      desc: 'Sona keeps speech-to-text on your own machine, then lets you review timestamps, clean up wording, translate, and export without leaving the same editor.',
+      workflowLabel: 'Workflow',
+      workflowSteps: [
+        'Record or Import',
+        'Review Timestamps',
+        'Polish or Translate',
+        'Export',
+      ],
+      scrollHint: 'Scroll for the editor preview',
       btnDownload: 'Download Latest Release',
       btnDocs: 'Read User Guide',
       docsHref: '/user-guide',
@@ -173,8 +184,8 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     },
     demo: {
       eyebrow: 'From recording to a usable draft',
-      title: 'Preview the workflow after the mic goes quiet.',
-      desc: 'This faux editor keeps the timestamped transcript in view, then lets you switch to AI polish or translation with a single tap.',
+      title: 'See where a finished recording lands.',
+      desc: 'This faux editor shows how the raw transcript, polish pass, and translation stay tied to the same timestamped source.',
       appLabel: 'Sona Demo Editor',
       fileName: 'Product-sync-interview.sona',
       status: 'Recording finished',
@@ -287,7 +298,10 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       badge: '快速 · 准确 · 隐私',
       title1: '静谧空间的',
       title2: '转写工具。',
-      desc: 'Sona 是一款基于 Tauri 和 Sherpa-onnx 构建的离线富文本转录编辑器。让强大的语音识别能力回归本地机器。没有云端，没有订阅，只有你的文字。',
+      desc: 'Sona 把语音转文字留在本地机器上完成，再把时间戳整理、润色、翻译和导出接回同一块编辑界面里。',
+      workflowLabel: '工作流',
+      workflowSteps: ['实时录音/批量导入', '整理时间戳', '润色/翻译', '导出'],
+      scrollHint: '向下查看编辑界面',
       btnDownload: '下载最新版本',
       btnDocs: '阅读用户指南',
       docsHref: '/zh/user-guide',
@@ -351,8 +365,8 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     },
     demo: {
       eyebrow: '录音结束后的整理界面',
-      title: '看一眼转录落地后的完整演示。',
-      desc: '这个轻量伪编辑器展示录音结束后的处理方式：时间戳原文始终保留，润色与翻译只需一次点击。',
+      title: '看一眼录音落地后的编辑界面。',
+      desc: '下面这个轻量伪编辑器展示转录原文、润色和翻译如何围绕同一份时间戳内容展开。',
       appLabel: 'Sona 演示编辑器',
       fileName: '产品同步访谈.sona',
       status: '录音已完成',
