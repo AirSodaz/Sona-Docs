@@ -277,13 +277,15 @@ export async function UserGuidePage({
             href={page.homeHref}
             className="group flex items-center transition-colors focus:outline-none"
           >
-            <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8 transition-transform group-hover:scale-105" />
-            <span
-              className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white sm:text-[1.7rem]"
-              style={{ fontFamily: 'Georgia, serif' }}
-            >
-              ona
-            </span>
+            <div className="flex items-center transition-transform duration-300 group-hover:scale-105 origin-left will-change-transform">
+              <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
+              <span
+                className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
+                style={{ fontFamily: 'Georgia, serif' }}
+              >
+                ona
+              </span>
+            </div>
           </Link>
 
           <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
