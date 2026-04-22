@@ -112,6 +112,9 @@ interface UserGuideAssistantCopy {
   disabledTitle: string;
   disabledBody: string;
   genericError: string;
+  networkError: string;
+  upstreamError: string;
+  emptyResponseError: string;
   unavailableError: string;
   emptyQuestionError: string;
   tooLongError: string;
@@ -554,6 +557,12 @@ export function getUserGuideAssistantCopy(
         'This guide can show the AI Q&A card, but the server does not currently have Gemini configured.',
       genericError:
         'The guide assistant could not answer right now. Please try again in a moment.',
+      networkError:
+        'The server could not reach Gemini right now. Please check the server network or proxy and try again.',
+      upstreamError:
+        'Gemini returned an upstream error for this question. Please try again in a moment.',
+      emptyResponseError:
+        'Gemini replied without usable answer text. Please try asking again.',
       unavailableError:
         'AI questions are not available on this deployment right now.',
       emptyQuestionError: 'Enter a question before sending it.',
@@ -585,6 +594,12 @@ export function getUserGuideAssistantCopy(
     disabledBody:
       '页面已经预留了问答入口，但服务器端目前还没有配置 Gemini。',
     genericError: '指南助手暂时无法回答，请稍后再试。',
+    networkError:
+      '服务器当前无法连到 Gemini。请检查服务端网络或代理后再试。',
+    upstreamError:
+      'Gemini 这次返回了上游错误，请稍后重试。',
+    emptyResponseError:
+      'Gemini 这次没有返回可用答案文本，可以再问一次。',
     unavailableError: '当前部署暂时不可用 AI 问答。',
     emptyQuestionError: '请先输入问题再发送。',
     tooLongError: '问题请控制在 1200 个字符以内。',

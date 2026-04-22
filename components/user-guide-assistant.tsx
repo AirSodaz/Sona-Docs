@@ -21,16 +21,58 @@ type AssistantCopy = {
   disabledTitle: string;
   disabledBody: string;
   genericError: string;
+  networkError: string;
+  upstreamError: string;
+  emptyResponseError: string;
   unavailableError: string;
   emptyQuestionError: string;
   tooLongError: string;
 };
+
+type ApiErrorCode =
+  | 'disabled'
+  | 'empty_response'
+  | 'invalid_request'
+  | 'network_unreachable'
+  | 'upstream_error';
 
 type Message = {
   id: string;
   role: 'assistant' | 'user';
   content: string;
 };
+
+function getApiErrorMessage({
+  code,
+  copy,
+  fallback,
+}: {
+  code?: ApiErrorCode;
+  copy: AssistantCopy;
+  fallback?: string;
+}) {
+  if (code === 'network_unreachable') {
+    return copy.networkError;
+  }
+
+  if (code === 'upstream_error') {
+    return copy.upstreamError;
+  }
+
+  if (code === 'empty_response') {
+    return copy.emptyResponseError;
+  }
+
+  if (code === 'disabled') {
+    return copy.unavailableError;
+  }
+
+  if (code === 'invalid_request' && fallback) {
+    return fallback;
+  }
+
+  return fallback || copy.genericError;
+}
 
 function createMessage(role: Message['role'], content: string): Message {
   return {
@@ -134,20 +176,21 @@ export function UserGuideAssistant({
         method: 'POST',
       });
       const payload = (await response.json().catch(() => null)) as
-        | { answer?: string; error?: string }
+        | { answer?: string; code?: ApiErrorCode; error?: string }
         | null;
 
-      if (response.status === 503) {
+      if (!response.ok && payload?.code === 'disabled') {
         setServiceAvailable(false);
-        setError(copy.unavailableError);
         return;
       }
 
       if (!response.ok || !payload || typeof payload.answer !== 'string') {
         setError(
-          response.status === 400 && payload?.error
-            ? payload.error
-            : copy.genericError,
+          getApiErrorMessage({
+            code: payload?.code,
+            copy,
+            fallback: payload?.error,
+          }),
         );
         return;
       }
