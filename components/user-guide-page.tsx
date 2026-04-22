@@ -12,6 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
   getUserGuideMarkdown,
   getUserGuideNavigation,
@@ -28,50 +29,50 @@ function createMarkdownComponents(locale: HomeLocale): Components {
   return {
     h1: ({ children }) => (
       <h1
-        className="text-[2.3rem] leading-[0.98] text-stone-900 dark:text-stone-100 sm:text-[3rem]"
-        style={{ fontFamily: 'var(--font-serif)' }}
+        className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
+        style={{ fontFamily: 'Georgia, serif' }}
       >
         {children}
       </h1>
     ),
     h2: ({ children }) => (
       <h2
-        className="mt-12 scroll-mt-24 border-t border-stone-200 pt-8 text-[1.7rem] leading-tight text-stone-900 dark:border-stone-800 dark:text-stone-100 sm:text-[2rem]"
-        style={{ fontFamily: 'var(--font-serif)' }}
+        className="mt-16 scroll-mt-24 border-t border-stone-200/50 pt-10 text-[1.8rem] leading-tight font-serif italic text-[#2D2D2D] dark:border-stone-800/50 dark:text-[#E0E0E0] sm:text-[2.2rem]"
+        style={{ fontFamily: 'Georgia, serif' }}
       >
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mt-8 text-lg font-semibold tracking-[0.02em] text-stone-900 dark:text-stone-100 sm:text-xl">
+      <h3 className="mt-12 text-xl font-medium tracking-tight text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-2xl">
         {children}
       </h3>
     ),
     p: ({ children }) => (
-      <p className="text-base leading-8 text-stone-600 dark:text-stone-300 sm:text-[1.02rem]">
+      <p className="mt-6 text-[1rem] font-light leading-[1.8] text-stone-600 dark:text-stone-300 sm:text-lg">
         {children}
       </p>
     ),
     ul: ({ children }) => (
-      <ul className="space-y-3 pl-6 text-base leading-8 text-stone-600 marker:text-stone-400 dark:text-stone-300 dark:marker:text-stone-500 sm:text-[1.02rem]">
+      <ul className="mt-6 space-y-3 pl-6 text-[1rem] font-light leading-[1.8] text-stone-600 marker:text-stone-400 dark:text-stone-300 dark:marker:text-stone-500 sm:text-lg">
         {children}
       </ul>
     ),
     ol: ({ children }) => (
-      <ol className="space-y-3 pl-6 text-base leading-8 text-stone-600 marker:font-medium marker:text-stone-500 dark:text-stone-300 dark:marker:text-stone-400 sm:text-[1.02rem]">
+      <ol className="mt-6 space-y-3 pl-6 text-[1rem] font-light leading-[1.8] text-stone-600 marker:font-medium marker:text-stone-500 dark:text-stone-300 dark:marker:text-stone-400 sm:text-lg">
         {children}
       </ol>
     ),
     li: ({ children }) => <li className="pl-1">{children}</li>,
     blockquote: ({ children }) => (
-      <blockquote className="rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-stone-700 dark:border-stone-800 dark:bg-stone-900/60 dark:text-stone-200">
+      <blockquote className="mt-8 rounded-2xl border-l-4 border-stone-300 bg-stone-100/50 px-6 py-5 text-stone-700 dark:border-stone-600 dark:bg-stone-800/30 dark:text-stone-200">
         {children}
       </blockquote>
     ),
     a: ({ href, children }) => {
       const resolved = resolveUserGuideHref(locale, href);
       const className =
-        'font-medium text-stone-900 underline decoration-stone-300 decoration-2 underline-offset-4 transition-colors hover:text-stone-600 hover:decoration-stone-500 dark:text-stone-100 dark:decoration-stone-600 dark:hover:text-stone-300';
+        'font-medium text-[#2D2D2D] underline decoration-stone-300 decoration-2 underline-offset-4 transition-colors hover:text-stone-600 hover:decoration-stone-500 dark:text-[#E0E0E0] dark:decoration-stone-600 dark:hover:text-stone-300';
 
       if (resolved.external) {
         return (
@@ -93,7 +94,7 @@ function createMarkdownComponents(locale: HomeLocale): Components {
       );
     },
     code: ({ children }) => (
-      <code className="rounded-md bg-stone-100 px-1.5 py-0.5 text-[0.95em] text-stone-800 dark:bg-stone-800 dark:text-stone-100">
+      <code className="rounded-md bg-stone-100 px-1.5 py-0.5 text-[0.95em] font-mono text-stone-800 dark:bg-stone-800 dark:text-stone-200">
         {children}
       </code>
     ),
@@ -110,7 +111,7 @@ function HeaderLink({
   external?: boolean;
 }) {
   const className =
-    'inline-flex min-h-11 items-center justify-center rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50 dark:border-stone-700 dark:text-stone-200 dark:hover:border-stone-600 dark:hover:bg-stone-900';
+    'inline-flex items-center justify-center transition-colors hover:text-stone-800 dark:hover:text-stone-200';
 
   if (external) {
     return (
@@ -140,38 +141,29 @@ function SidebarNavigation({
   title: string;
 }) {
   return (
-    <aside className="hidden lg:block">
-      <div className="sticky top-8 rounded-[28px] border border-stone-200/80 bg-white/88 p-5 shadow-[0_24px_90px_-56px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/88">
+    <aside className="hidden lg:block w-[280px] shrink-0">
+      <div className="sticky top-12 flex flex-col gap-8 pr-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
           {title}
         </p>
-        <div className="mt-5 space-y-6">
+        <div className="space-y-8">
           {groups.map((group) => (
             <div key={group.id}>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-400/80 dark:text-stone-500/80">
                 {group.label}
               </p>
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 {group.items.map((item) => (
                   <Link
                     key={item.id}
                     href={item.path}
-                    className={`block rounded-2xl px-3 py-3 transition-colors ${
+                    className={`group block rounded-xl px-3 py-2 transition-all ${
                       item.active
-                        ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
-                        : 'text-stone-700 hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-900'
+                        ? 'bg-stone-200/50 text-[#2D2D2D] dark:bg-stone-800/50 dark:text-[#E0E0E0]'
+                        : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-900/50 dark:hover:text-stone-200'
                     }`}
                   >
-                    <p className="text-sm font-medium">{item.title}</p>
-                    <p
-                      className={`mt-1 text-xs leading-5 ${
-                        item.active
-                          ? 'text-stone-200 dark:text-stone-700'
-                          : 'text-stone-500 dark:text-stone-400'
-                      }`}
-                    >
-                      {item.description}
-                    </p>
+                    <p className={`text-sm ${item.active ? 'font-medium' : 'font-normal'}`}>{item.title}</p>
                   </Link>
                 ))}
               </div>
@@ -193,19 +185,19 @@ function MobileNavigation({
   const items = groups.flatMap((group) => group.items);
 
   return (
-    <section className="rounded-[24px] border border-stone-200/80 bg-white/88 p-4 shadow-[0_24px_90px_-56px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/88 lg:hidden">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+    <section className="mb-8 lg:hidden">
+      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
         {label}
       </p>
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 scrollbar-hide">
         {items.map((item) => (
           <Link
             key={item.id}
             href={item.path}
-            className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-2 text-sm transition-colors ${
               item.active
-                ? 'border-stone-900 bg-stone-900 text-white dark:border-stone-100 dark:bg-stone-100 dark:text-stone-900'
-                : 'border-stone-300 text-stone-700 hover:bg-stone-50 dark:border-stone-700 dark:text-stone-200 dark:hover:bg-stone-900'
+                ? 'bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900 font-medium'
+                : 'bg-white/50 text-stone-600 ring-1 ring-stone-200 hover:bg-stone-50 dark:bg-stone-900/30 dark:text-stone-300 dark:ring-stone-800 dark:hover:bg-stone-800/50'
             }`}
           >
             {item.title}
@@ -227,27 +219,27 @@ function PaginationCard({
 }) {
   const icon =
     direction === 'previous' ? (
-      <ArrowLeft size={16} />
+      <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
     ) : (
-      <ArrowRight size={16} />
+      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
     );
 
   return (
     <Link
       href={item.path}
-      className="flex h-full min-h-[148px] flex-col justify-between rounded-[24px] border border-stone-200/80 bg-white/88 p-5 shadow-[0_24px_90px_-56px_rgba(87,83,78,0.55)] transition-colors hover:border-stone-300 hover:bg-white dark:border-stone-800/80 dark:bg-[#171717]/88 dark:hover:border-stone-700 dark:hover:bg-[#1a1a1a]"
+      className={`group flex h-full min-h-[120px] flex-col justify-between rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:bg-stone-900/30 dark:ring-stone-800/50 dark:hover:bg-stone-900 ${
+        direction === 'next' ? 'items-end text-right' : 'items-start text-left'
+      }`}
     >
-      <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-        {direction === 'previous' && icon}
+      <span className={`inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-stone-400 transition-colors group-hover:text-stone-600 dark:text-stone-500 dark:group-hover:text-stone-300 ${
+        direction === 'next' ? 'flex-row-reverse' : 'flex-row'
+      }`}>
+        {icon}
         {label}
-        {direction === 'next' && icon}
       </span>
       <div className="mt-4">
-        <p className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+        <p className="text-lg font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
           {item.title}
-        </p>
-        <p className="mt-2 text-sm leading-6 text-stone-500 dark:text-stone-400">
-          {item.description}
         </p>
       </div>
     </Link>
@@ -274,160 +266,158 @@ export async function UserGuidePage({
   const markdownComponents = createMarkdownComponents(locale);
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 py-6 sm:px-6 sm:py-8 md:px-16">
-      <div className="absolute right-0 top-0 h-[300px] w-[300px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200/70 blur-[90px] dark:bg-stone-800/40 sm:h-[480px] sm:w-[480px] sm:blur-[110px]" />
-      <div className="absolute bottom-0 left-0 h-[340px] w-[340px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200/70 blur-[100px] dark:bg-stone-800/30 sm:h-[560px] sm:w-[560px] sm:blur-[120px]" />
+    <main className="relative min-h-[100svh] overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0] px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
+      <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[500px] sm:w-[500px] sm:blur-[100px]" />
+      <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-6 sm:gap-8">
-        <header className="flex flex-col gap-5 rounded-[28px] border border-stone-200/80 bg-white/78 px-5 py-5 shadow-[0_32px_110px_-58px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/78 sm:px-7 sm:py-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0">
-              <Link
-                href={page.homeHref}
-                className="inline-flex items-center gap-3 text-stone-900 transition-colors hover:text-stone-600 dark:text-stone-100 dark:hover:text-stone-300"
-              >
-                <Logo className="h-10 w-10 rounded-xl" />
-                <div>
-                  <p
-                    className="text-[1.8rem] italic leading-none"
-                    style={{ fontFamily: 'var(--font-serif)' }}
-                  >
-                    Sona
-                  </p>
-                  <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-                    {page.guideLabel}
-                  </p>
-                </div>
-              </Link>
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-12 sm:gap-16">
+        <header className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <Link
+            href={page.homeHref}
+            className="group inline-flex items-center gap-3 transition-colors focus:outline-none"
+          >
+            <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8 transition-transform group-hover:scale-105" />
+            <div>
+              <div className="flex items-center">
+                <span
+                  className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white sm:text-[1.7rem]"
+                  style={{ fontFamily: 'Georgia, serif' }}
+                >
+                  ona
+                </span>
+              </div>
             </div>
+          </Link>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <ThemeToggle />
-              <HeaderLink href={page.homeHref}>
-                <span className="inline-flex items-center gap-2">
-                  <Home size={16} />
-                  {page.homeLabel}
-                </span>
-              </HeaderLink>
-              <HeaderLink href={page.alternatePath}>
-                {page.alternateLanguageLabel}
-              </HeaderLink>
-              <HeaderLink href={page.sourceHref} external>
-                <span className="inline-flex items-center gap-2">
-                  <Github size={16} />
-                  {page.sourceLabel}
-                </span>
-              </HeaderLink>
-            </div>
+          <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
+            <ThemeToggle />
+            <HeaderLink href={page.homeHref}>
+              <span className="inline-flex items-center gap-1.5">
+                <Home size={16} />
+                <span className="hidden sm:inline">{page.homeLabel}</span>
+              </span>
+            </HeaderLink>
+            <HeaderLink href={page.alternatePath}>
+              {page.alternateLanguageLabel}
+            </HeaderLink>
+            <HeaderLink href={page.sourceHref} external>
+              <span className="inline-flex items-center gap-1.5">
+                <Github size={16} />
+                <span className="hidden sm:inline">{page.sourceLabel}</span>
+              </span>
+            </HeaderLink>
           </div>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-16 pb-20">
           <SidebarNavigation groups={navigation} title={page.sidebarTitle} />
 
-          <div className="min-w-0 space-y-6">
+          <AnimatedContainer className="flex-1 min-w-0 max-w-4xl">
             <MobileNavigation groups={navigation} label={page.mobileNavLabel} />
 
-            <section className="rounded-[28px] border border-stone-200/80 bg-white/88 px-5 py-6 shadow-[0_32px_110px_-58px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/86 sm:px-8 sm:py-8">
-              <nav className="flex flex-wrap items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
+            <AnimatedItem>
+              <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
                 <Link href={page.homeHref} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
                   Sona
                 </Link>
-                <ChevronRight size={14} />
+                <ChevronRight size={14} className="opacity-50" />
                 <Link href={page.locale === 'en' ? '/user-guide' : '/zh/user-guide'} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
                   {page.guideLabel}
                 </Link>
                 {page.id !== 'overview' ? (
                   <>
-                    <ChevronRight size={14} />
-                    <span>{page.navLabel}</span>
+                    <ChevronRight size={14} className="opacity-50" />
+                    <span className="text-stone-800 dark:text-stone-200">{page.navLabel}</span>
                   </>
                 ) : null}
               </nav>
 
-              <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-                {page.groupLabel}
-              </p>
-              <h1
-                className="mt-3 text-[2.5rem] leading-[0.96] text-stone-900 dark:text-stone-100 sm:text-[3.3rem]"
-                style={{ fontFamily: 'var(--font-serif)' }}
-              >
-                {page.title}
-              </h1>
-              <p className="mt-4 max-w-3xl text-base leading-8 text-stone-600 dark:text-stone-300 sm:text-lg">
-                {page.description}
-              </p>
-            </section>
+              <div className="mb-12 border-b border-stone-200/50 pb-8 dark:border-stone-800/50">
+                <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+                  {page.groupLabel}
+                </p>
+                <h1
+                  className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
+                  style={{ fontFamily: 'Georgia, serif' }}
+                >
+                  {page.title}
+                </h1>
+                <p className="mt-6 text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
+                  {page.description}
+                </p>
+              </div>
+            </AnimatedItem>
 
             {page.id === 'overview' ? (
-              <>
-                <section className="rounded-[28px] border border-stone-200/80 bg-white/88 px-5 py-6 shadow-[0_32px_110px_-58px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/86 sm:px-8 sm:py-8">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+              <AnimatedItem className="mb-16 space-y-16">
+                <section>
+                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
                     {ui.overview.cardsEyebrow}
                   </p>
                   <h2
-                    className="mt-3 text-[1.9rem] leading-tight text-stone-900 dark:text-stone-100 sm:text-[2.2rem]"
-                    style={{ fontFamily: 'var(--font-serif)' }}
+                    className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
+                    style={{ fontFamily: 'Georgia, serif' }}
                   >
                     {ui.overview.cardsTitle}
                   </h2>
-                  <p className="mt-3 max-w-3xl text-base leading-8 text-stone-600 dark:text-stone-300">
+                  <p className="mb-8 text-[1rem] font-light leading-[1.75] text-stone-500 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
                     {ui.overview.cardsDescription}
                   </p>
 
-                  <div className="mt-6 grid gap-4 md:grid-cols-3">
+                  <div className="grid gap-4 md:grid-cols-3">
                     {overviewCards.map((item) => (
                       <Link
                         key={item.id}
                         href={item.path}
-                        className="rounded-[24px] border border-stone-200 bg-stone-50 p-5 transition-colors hover:border-stone-300 hover:bg-white dark:border-stone-800 dark:bg-stone-900/60 dark:hover:border-stone-700 dark:hover:bg-stone-900"
+                        className="group flex flex-col rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:bg-stone-900/30 dark:ring-stone-800/50 dark:hover:bg-stone-900"
                       >
-                        <p className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+                        <p className="text-lg font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
                           {item.title}
                         </p>
-                        <p className="mt-2 text-sm leading-6 text-stone-500 dark:text-stone-400">
+                        <p className="mt-2 text-sm font-light leading-[1.6] text-stone-500 dark:text-stone-400">
                           {item.description}
                         </p>
+                        <div className="mt-4 flex items-center gap-1 text-sm font-medium text-stone-400 transition-colors group-hover:text-stone-800 dark:text-stone-500 dark:group-hover:text-stone-200">
+                          <span>Read more</span>
+                          <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                        </div>
                       </Link>
                     ))}
                   </div>
                 </section>
 
-                <section className="rounded-[28px] border border-stone-200/80 bg-white/88 px-5 py-6 shadow-[0_32px_110px_-58px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/86 sm:px-8 sm:py-8">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+                <section>
+                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
                     {ui.overview.browseEyebrow}
                   </p>
                   <h2
-                    className="mt-3 text-[1.9rem] leading-tight text-stone-900 dark:text-stone-100 sm:text-[2.2rem]"
-                    style={{ fontFamily: 'var(--font-serif)' }}
+                    className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
+                    style={{ fontFamily: 'Georgia, serif' }}
                   >
                     {ui.overview.browseTitle}
                   </h2>
-                  <p className="mt-3 max-w-3xl text-base leading-8 text-stone-600 dark:text-stone-300">
+                  <p className="mb-8 text-[1rem] font-light leading-[1.75] text-stone-500 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
                     {ui.overview.browseDescription}
                   </p>
 
-                  <div className="mt-6 grid gap-4 xl:grid-cols-3">
+                  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                     {navigation.map((group) => (
                       <div
                         key={group.id}
-                        className="rounded-[24px] border border-stone-200 bg-stone-50 p-5 dark:border-stone-800 dark:bg-stone-900/60"
+                        className="flex flex-col gap-4 rounded-2xl bg-white/30 p-6 ring-1 ring-stone-200/40 dark:bg-stone-900/20 dark:ring-stone-800/40"
                       >
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
                           {group.label}
                         </p>
-                        <div className="mt-4 space-y-3">
+                        <div className="flex flex-col gap-2">
                           {group.items.map((item) => (
                             <Link
                               key={item.id}
                               href={item.path}
-                              className="block rounded-2xl px-3 py-3 transition-colors hover:bg-white dark:hover:bg-stone-950"
+                              className="group block rounded-xl px-3 py-2.5 transition-colors hover:bg-white dark:hover:bg-stone-900/80"
                             >
-                              <p className="text-sm font-medium text-stone-900 dark:text-stone-100">
+                              <p className="text-sm font-medium text-[#2D2D2D] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white">
                                 {item.title}
-                              </p>
-                              <p className="mt-1 text-sm leading-6 text-stone-500 dark:text-stone-400">
-                                {item.description}
                               </p>
                             </Link>
                           ))}
@@ -436,19 +426,17 @@ export async function UserGuidePage({
                     ))}
                   </div>
                 </section>
-              </>
+              </AnimatedItem>
             ) : null}
 
-            <section className="rounded-[28px] border border-stone-200/80 bg-white/88 px-5 py-6 shadow-[0_32px_110px_-58px_rgba(87,83,78,0.55)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-[#171717]/86 sm:px-8 sm:py-8">
-              <article className="space-y-6">
-                <ReactMarkdown components={markdownComponents}>
-                  {markdown}
-                </ReactMarkdown>
-              </article>
-            </section>
+            <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium">
+              <ReactMarkdown components={markdownComponents}>
+                {markdown}
+              </ReactMarkdown>
+            </AnimatedItem>
 
             {page.previousPage || page.nextPage ? (
-              <section className="grid gap-4 md:grid-cols-2">
+              <AnimatedItem as="section" className="mt-16 grid gap-4 border-t border-stone-200/50 pt-8 dark:border-stone-800/50 md:grid-cols-2">
                 {page.previousPage ? (
                   <PaginationCard
                     item={page.previousPage}
@@ -465,9 +453,9 @@ export async function UserGuidePage({
                     direction="next"
                   />
                 ) : null}
-              </section>
+              </AnimatedItem>
             ) : null}
-          </div>
+          </AnimatedContainer>
         </div>
       </div>
     </main>
