@@ -7,6 +7,10 @@ import {
   getUserGuideMarkdown,
   type UserGuidePageId,
 } from '@/lib/user-guide-content';
+import {
+  getUserGuideTurnstileSiteKey,
+  isUserGuideAbuseProtectionConfigured,
+} from '@/lib/user-guide-abuse';
 
 export const DEFAULT_USER_GUIDE_CHAT_MODEL = 'gemini-2.5-flash';
 
@@ -83,12 +87,16 @@ export const getUserGuideAiContext = cache(
 );
 
 export function isUserGuideAiEnabled() {
-  return Boolean(process.env.GEMINI_API_KEY?.trim());
+  return Boolean(
+    process.env.GEMINI_API_KEY?.trim() && isUserGuideAbuseProtectionConfigured(),
+  );
 }
 
 export function getUserGuideChatModel() {
   return process.env.GEMINI_GUIDE_MODEL?.trim() || DEFAULT_USER_GUIDE_CHAT_MODEL;
 }
+
+export { getUserGuideTurnstileSiteKey };
 
 export function buildUserGuideSystemInstruction({
   context,

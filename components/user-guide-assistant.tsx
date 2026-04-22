@@ -1,9 +1,11 @@
 'use client';
 
 import { startTransition, useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronUp, Send, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Send, ShieldCheck, Sparkles } from 'lucide-react';
+import { TurnstileWidget } from '@/components/turnstile-widget';
 
 const MAX_QUESTION_LENGTH = 1200;
+const USER_GUIDE_TURNSTILE_ACTION = 'user_guide_chat';
 
 type AssistantCopy = {
   title: string;
@@ -24,14 +26,24 @@ type AssistantCopy = {
   emptyResponseError: string;
   unavailableError: string;
   emptyQuestionError: string;
+  forbiddenOriginError: string;
+  challengeError: string;
+  challengeExpiredError: string;
+  challengePrompt: string;
+  challengeVerifyingLabel: string;
+  challengeLoadingError: string;
+  throttledError: string;
   tooLongError: string;
 };
 
 type ApiErrorCode =
+  | 'challenge_required'
   | 'disabled'
   | 'empty_response'
+  | 'forbidden_origin'
   | 'invalid_request'
   | 'network_unreachable'
+  | 'throttled'
   | 'upstream_error';
 
 type Message = {
@@ -39,6 +51,20 @@ type Message = {
   role: 'assistant' | 'user';
   content: string;
 };
+
+type ChallengeState =
+  | {
+      error: null | string;
+      nonce: number;
+      pendingQuestion: null;
+      status: 'idle';
+    }
+  | {
+      error: null | string;
+      nonce: number;
+      pendingQuestion: string;
+      status: 'required' | 'verifying';
+    };
 
 function getApiErrorMessage({
   code,
@@ -63,6 +89,18 @@ function getApiErrorMessage({
 
   if (code === 'disabled') {
     return copy.unavailableError;
+  }
+
+  if (code === 'challenge_required') {
+    return fallback || copy.challengeError;
+  }
+
+  if (code === 'throttled') {
+    return fallback || copy.throttledError;
+  }
+
+  if (code === 'forbidden_origin') {
+    return fallback || copy.forbiddenOriginError;
   }
 
   if (code === 'invalid_request' && fallback) {
@@ -144,16 +182,27 @@ function MessageBubble({
   );
 }
 
+function createIdleChallengeState(nonce = 0): ChallengeState {
+  return {
+    error: null,
+    nonce,
+    pendingQuestion: null,
+    status: 'idle',
+  };
+}
+
 export function UserGuideAssistant({
   copy,
   enabled,
   locale,
   pageId,
+  turnstileSiteKey,
 }: {
   copy: AssistantCopy;
   enabled: boolean;
   locale: 'en' | 'zh-CN';
   pageId: string;
+  turnstileSiteKey: null | string;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [question, setQuestion] = useState('');
@@ -162,9 +211,16 @@ export function UserGuideAssistant({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const [serviceAvailable, setServiceAvailable] = useState(enabled);
+  const [challenge, setChallenge] = useState<ChallengeState>(() =>
+    createIdleChallengeState(),
+  );
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const hasConversation = messages.length > 0 || pendingQuestion !== null;
   const panelId = `user-guide-assistant-${pageId}`;
+  const showChallenge =
+    serviceAvailable &&
+    challenge.status !== 'idle' &&
+    Boolean(turnstileSiteKey);
 
   useEffect(() => {
     resizeTextarea(textareaRef.current);
@@ -176,7 +232,12 @@ export function UserGuideAssistant({
     }
   }, [isExpanded, serviceAvailable]);
 
-  async function submitQuestion(nextQuestion: string) {
+  async function submitQuestion(
+    nextQuestion: string,
+    options?: {
+      turnstileToken?: string;
+    },
+  ) {
     if (!serviceAvailable || isSubmitting) {
       return;
     }
@@ -193,6 +254,15 @@ export function UserGuideAssistant({
       return;
     }
 
+    if (options?.turnstileToken) {
+      setChallenge((current) => ({
+        error: null,
+        nonce: current.nonce,
+        pendingQuestion: trimmedQuestion,
+        status: 'verifying',
+      }));
+    }
+
     setError(null);
     setIsSubmitting(true);
     setPendingQuestion(trimmedQuestion);
@@ -204,6 +274,7 @@ export function UserGuideAssistant({
           locale,
           pageId,
           question: trimmedQuestion,
+          turnstileToken: options?.turnstileToken,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -219,10 +290,32 @@ export function UserGuideAssistant({
         setIsExpanded(false);
         setQuestion('');
         setError(null);
+        setChallenge((current) => createIdleChallengeState(current.nonce));
+        return;
+      }
+
+      if (!response.ok && payload?.code === 'challenge_required') {
+        if (!turnstileSiteKey) {
+          setError(copy.challengeLoadingError);
+          setChallenge((current) => createIdleChallengeState(current.nonce + 1));
+          return;
+        }
+
+        setChallenge((current) => ({
+          error: getApiErrorMessage({
+            code: payload.code,
+            copy,
+            fallback: payload.error,
+          }),
+          nonce: current.nonce + 1,
+          pendingQuestion: trimmedQuestion,
+          status: 'required',
+        }));
         return;
       }
 
       if (!response.ok || !payload || typeof payload.answer !== 'string') {
+        setChallenge((current) => createIdleChallengeState(current.nonce + 1));
         setError(
           getApiErrorMessage({
             code: payload?.code,
@@ -242,9 +335,11 @@ export function UserGuideAssistant({
           createMessage('assistant', answer),
         ]);
         setQuestion('');
+        setChallenge((current) => createIdleChallengeState(current.nonce));
       });
     } catch (requestError) {
       console.error('Failed to ask guide assistant:', requestError);
+      setChallenge((current) => createIdleChallengeState(current.nonce + 1));
       setError(copy.genericError);
     } finally {
       setIsSubmitting(false);
@@ -312,6 +407,11 @@ export function UserGuideAssistant({
                   if (error) {
                     setError(null);
                   }
+                  if (challenge.status !== 'idle') {
+                    setChallenge((current) =>
+                      createIdleChallengeState(current.nonce + 1),
+                    );
+                  }
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' && !event.shiftKey) {
@@ -347,6 +447,65 @@ export function UserGuideAssistant({
                 ))}
               </div>
             </div>
+
+            {showChallenge ? (
+              <div className="mt-3 rounded-[18px] border border-amber-300/80 bg-amber-50/80 px-4 py-4 text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-50">
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber-300/80 bg-white/70 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-200">
+                    <ShieldCheck size={15} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium">{copy.challengePrompt}</p>
+                    {challenge.error ? (
+                      <p className="mt-1 text-sm text-amber-800 dark:text-amber-100/85">
+                        {challenge.error}
+                      </p>
+                    ) : null}
+                    {turnstileSiteKey ? (
+                      <div className="mt-3">
+                        <TurnstileWidget
+                          key={challenge.nonce}
+                          action={USER_GUIDE_TURNSTILE_ACTION}
+                          onError={() => {
+                            setChallenge((current) => ({
+                              error: copy.challengeLoadingError,
+                              nonce: current.nonce,
+                              pendingQuestion:
+                                current.status === 'idle'
+                                  ? question.trim()
+                                  : current.pendingQuestion,
+                              status: 'required',
+                            }));
+                          }}
+                          onExpire={() => {
+                            setChallenge((current) => ({
+                              error: copy.challengeExpiredError,
+                              nonce: current.nonce + 1,
+                              pendingQuestion:
+                                current.status === 'idle'
+                                  ? question.trim()
+                                  : current.pendingQuestion,
+                              status: 'required',
+                            }));
+                          }}
+                          onToken={(token) => {
+                            void submitQuestion(challenge.pendingQuestion, {
+                              turnstileToken: token,
+                            });
+                          }}
+                          siteKey={turnstileSiteKey}
+                        />
+                      </div>
+                    ) : null}
+                    {challenge.status === 'verifying' ? (
+                      <p className="mt-2 text-sm text-amber-800 dark:text-amber-100/85">
+                        {copy.challengeVerifyingLabel}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            ) : null}
 
             <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p

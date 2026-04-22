@@ -45,6 +45,26 @@ function jsonResponse(body: null | ReleaseResponseBody, cacheSeconds: number) {
   });
 }
 
+function logGitHubReleaseEvent({
+  code,
+  error,
+  host,
+  status,
+}: {
+  code: 'invalid_payload' | 'upstream_error' | 'upstream_status';
+  error?: string;
+  host: null | string;
+  status: number;
+}) {
+  console.warn('GitHub release route event:', {
+    code,
+    error,
+    host,
+    path: '/api/github-release',
+    status,
+  });
+}
+
 async function fetchGitHubRelease(headers: Record<string, string>) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -289,7 +309,9 @@ function buildStructuredDownloads(downloads: StructuredDownload[]) {
   return { downloads: grouped, recommended };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const requestHost = request.headers.get('host');
+
   try {
     const headers: Record<string, string> = {
       Accept: 'application/vnd.github.v3+json',
@@ -303,12 +325,24 @@ export async function GET() {
     const response = await fetchGitHubRelease(headers);
 
     if (!response.ok) {
+      logGitHubReleaseEvent({
+        code: 'upstream_status',
+        error: `GitHub returned ${response.status}.`,
+        host: requestHost,
+        status: response.status,
+      });
       return jsonResponse(null, FAILURE_CACHE_SECONDS);
     }
 
     const data = (await response.json()) as GitHubRelease;
 
     if (!data.tag_name || !data.html_url) {
+      logGitHubReleaseEvent({
+        code: 'invalid_payload',
+        error: 'Missing tag_name or html_url in GitHub release payload.',
+        host: requestHost,
+        status: 502,
+      });
       return jsonResponse(null, FAILURE_CACHE_SECONDS);
     }
 
@@ -331,7 +365,12 @@ export async function GET() {
       SUCCESS_CACHE_SECONDS,
     );
   } catch (error) {
-    console.error('Error fetching GitHub release:', error);
+    logGitHubReleaseEvent({
+      code: 'upstream_error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      host: requestHost,
+      status: 502,
+    });
     return jsonResponse(null, FAILURE_CACHE_SECONDS);
   }
 }

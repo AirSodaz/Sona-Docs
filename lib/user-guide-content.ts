@@ -16,10 +16,13 @@ const USER_GUIDE_PAGE_ORDER = [
   'edit-and-playback',
   'ai-polish-and-translate',
   'export-history-and-settings',
+  'ai-summary',
+  'live-caption-and-voice-typing',
+  'vocabulary-and-advanced-settings',
   'faq',
 ] as const;
 
-type UserGuideNavGroupId = 'start' | 'workflow' | 'reference';
+type UserGuideNavGroupId = 'start' | 'workflow' | 'extended' | 'reference';
 
 export type UserGuidePageId = (typeof USER_GUIDE_PAGE_ORDER)[number];
 
@@ -115,6 +118,13 @@ interface UserGuideAssistantCopy {
   emptyResponseError: string;
   unavailableError: string;
   emptyQuestionError: string;
+  forbiddenOriginError: string;
+  challengeError: string;
+  challengeExpiredError: string;
+  challengePrompt: string;
+  challengeVerifyingLabel: string;
+  challengeLoadingError: string;
+  throttledError: string;
   tooLongError: string;
 }
 
@@ -136,6 +146,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
     groupLabels: {
       start: 'Start Here',
       workflow: 'Core Workflows',
+      extended: 'Extended Capabilities',
       reference: 'Reference & Help',
     },
     overview: {
@@ -146,7 +157,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: 'Everything Inside',
       browseTitle: 'The full docs set, organized by the actual Sona workflow.',
       browseDescription:
-        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, export, and troubleshooting.',
+        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, export, extended capabilities, and troubleshooting.',
     },
   },
   'zh-CN': {
@@ -161,6 +172,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
     groupLabels: {
       start: '开始使用',
       workflow: '核心流程',
+      extended: '扩展能力',
       reference: '参考与帮助',
     },
     overview: {
@@ -171,7 +183,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: '完整内容',
       browseTitle: '整套指南按照 Sona 的真实使用流程组织。',
       browseDescription:
-        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 导出与排障”的顺序继续。',
+        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 导出 -> 扩展能力 -> 排障”的顺序继续。',
     },
   },
 };
@@ -186,14 +198,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Sona User Guide',
         navLabel: 'Overview',
         description:
-          'A product-shaped entry point to the Sona docs, with the shortest paths for setup, live capture, file import, editing, AI polish, export, and help.',
+          'A product-shaped entry point to the Sona docs, with the shortest paths for setup, live capture, file import, editing, optional AI steps, export, extended capabilities, and help.',
         contentFile: 'en/overview.md',
       },
       'zh-CN': {
         title: 'Sona 用户指南',
         navLabel: '总览',
         description:
-          '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、导出与排障。',
+          '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、导出、扩展能力与排障。',
         contentFile: 'zh-CN/overview.md',
       },
     },
@@ -321,6 +333,69 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '完成导出、重新打开历史条目，并快速理解哪些设置项最值得优先了解。',
         contentFile: 'zh-CN/export-history-and-settings.md',
+      },
+    },
+  },
+  {
+    id: 'ai-summary',
+    slug: ['ai-summary'],
+    group: 'extended',
+    localizations: {
+      en: {
+        title: 'AI Summary',
+        navLabel: 'AI Summary',
+        description:
+          'Assign a Summary Model, generate template-based summaries from existing transcripts, and understand what stays read-only, outdated, and separate from export.',
+        contentFile: 'en/ai-summary.md',
+      },
+      'zh-CN': {
+        title: 'AI 摘要',
+        navLabel: 'AI 摘要',
+        description:
+          '绑定摘要模型，用已有转录生成模板化摘要，并理解摘要为什么保持只读、何时会过期、以及为什么它不会进入导出文件。',
+        contentFile: 'zh-CN/ai-summary.md',
+      },
+    },
+  },
+  {
+    id: 'live-caption-and-voice-typing',
+    slug: ['live-caption-and-voice-typing'],
+    group: 'extended',
+    localizations: {
+      en: {
+        title: 'Live Caption and Voice Typing',
+        navLabel: 'Live Caption & Voice Typing',
+        description:
+          'Understand where Live Caption starts, which settings shape the floating window, and how Voice Typing uses the same offline live transcription stack in other apps.',
+        contentFile: 'en/live-caption-and-voice-typing.md',
+      },
+      'zh-CN': {
+        title: '实时字幕与语音输入法',
+        navLabel: '实时字幕与语音输入法',
+        description:
+          '理解实时字幕的入口在哪里、字幕浮窗设置负责什么，以及语音输入法如何复用同一套离线实时转录能力进入其他应用。',
+        contentFile: 'zh-CN/live-caption-and-voice-typing.md',
+      },
+    },
+  },
+  {
+    id: 'vocabulary-and-advanced-settings',
+    slug: ['vocabulary-and-advanced-settings'],
+    group: 'extended',
+    localizations: {
+      en: {
+        title: 'Vocabulary and Advanced Settings',
+        navLabel: 'Vocabulary & Advanced',
+        description:
+          'Use hotwords, text replacement, and polish advanced settings when you need finer control, without turning the guide into a full settings manual.',
+        contentFile: 'en/vocabulary-and-advanced-settings.md',
+      },
+      'zh-CN': {
+        title: '词汇与高级设置',
+        navLabel: '词汇与高级设置',
+        description:
+          '在需要更细调校时使用热词、文本替换和润色高级设置，而不是把整份指南扩写成完整设置手册。',
+        contentFile: 'zh-CN/vocabulary-and-advanced-settings.md',
       },
     },
   },
@@ -548,7 +623,7 @@ export function getUserGuideAssistantCopy(
       youLabel: 'You',
       assistantLabel: 'Guide AI',
       disabledInline:
-        'This deployment has not enabled Gemini-backed guide Q&A.',
+        'This deployment has not enabled protected guide Q&A.',
       genericError:
         'The guide assistant could not answer right now. Please try again in a moment.',
       networkError:
@@ -560,6 +635,19 @@ export function getUserGuideAssistantCopy(
       unavailableError:
         'AI questions are not available on this deployment right now.',
       emptyQuestionError: 'Enter a question before sending it.',
+      forbiddenOriginError:
+        'This host is not allowed to use the protected guide assistant.',
+      challengeError:
+        'Please complete the verification challenge to continue asking questions.',
+      challengeExpiredError:
+        'Verification expired. Please complete the challenge again.',
+      challengePrompt:
+        'Complete the verification challenge to continue using guide Q&A.',
+      challengeVerifyingLabel: 'Verifying...',
+      challengeLoadingError:
+        'The verification widget could not load. Please refresh and try again.',
+      throttledError:
+        'Too many verification failures. Please wait and try again later.',
       tooLongError: 'Keep the question under 1200 characters.',
     };
   }
@@ -581,7 +669,7 @@ export function getUserGuideAssistantCopy(
     submittingLabel: '正在思考...',
     youLabel: '你',
     assistantLabel: '指南 AI',
-    disabledInline: '当前部署尚未启用 Gemini 文档问答。',
+    disabledInline: '当前部署尚未启用受保护的文档问答。',
     genericError: '指南助手暂时无法回答，请稍后再试。',
     networkError:
       '服务器当前无法连到 Gemini。请检查服务端网络或代理后再试。',
@@ -591,6 +679,13 @@ export function getUserGuideAssistantCopy(
       'Gemini 这次没有返回可用答案文本，可以再问一次。',
     unavailableError: '当前部署暂时不可用 AI 问答。',
     emptyQuestionError: '请先输入问题再发送。',
+    forbiddenOriginError: '当前域名不允许使用受保护的指南问答。',
+    challengeError: '请先完成验证挑战，再继续提问。',
+    challengeExpiredError: '验证已过期，请重新完成一次挑战。',
+    challengePrompt: '继续使用指南问答前，请先完成下面的验证。',
+    challengeVerifyingLabel: '正在验证...',
+    challengeLoadingError: '验证组件加载失败，请刷新后重试。',
+    throttledError: '验证失败次数过多，请稍后再试。',
     tooLongError: '问题请控制在 1200 个字符以内。',
   };
 }

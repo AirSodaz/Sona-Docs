@@ -15,7 +15,10 @@ import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
-import { isUserGuideAiEnabled } from '@/lib/user-guide-ai';
+import {
+  getUserGuideTurnstileSiteKey,
+  isUserGuideAiEnabled,
+} from '@/lib/user-guide-ai';
 import {
   getUserGuideAssistantCopy,
   getUserGuideMarkdown,
@@ -270,6 +273,7 @@ export async function UserGuidePage({
   const markdownComponents = createMarkdownComponents(locale);
   const assistantCopy = getUserGuideAssistantCopy(locale, page.navLabel);
   const aiEnabled = isUserGuideAiEnabled();
+  const turnstileSiteKey = getUserGuideTurnstileSiteKey();
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0] px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
@@ -363,6 +367,7 @@ export async function UserGuidePage({
                 enabled={aiEnabled}
                 locale={locale}
                 pageId={page.id}
+                turnstileSiteKey={turnstileSiteKey}
               />
             </AnimatedItem>
 

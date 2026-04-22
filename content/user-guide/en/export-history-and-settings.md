@@ -1,4 +1,4 @@
-This page covers the final stage of the workflow: exporting finished transcripts, reopening earlier work, and knowing which settings areas matter most in everyday use.
+This page covers the final stage of the workflow: exporting finished transcripts, reopening earlier work, and quickly locating the settings areas that matter most.
 
 ## Export a finished transcript
 
@@ -28,24 +28,21 @@ This page covers the final stage of the workflow: exporting finished transcripts
 
 - `Settings > General`: theme, app language, font, tray behavior, update checks
 - `Settings > Input Device`: microphone selection, system audio selection, microphone boost, mute during recording
-- `Settings > Subtitle Settings`: live caption startup, click-through lock, always-on-top, font size, width, color, background transparency
+- `Settings > Subtitle Settings`: floating caption behavior; if you mainly came for `Live Caption` or `Voice Typing`, continue to [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - `Settings > Model Hub`: `Live Record Model`, `Batch Import Model`, and downloadable recognition, punctuation, and VAD models
 - `Settings > Local Setup`: `Transcription Settings`, `ITN`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, and `Restore Default Settings`
-- `Settings > Vocabulary`: `Text Replacement` rule sets and `Hotwords` rule sets
-- `Settings > LLM Service`: feature model bindings and provider credentials
-- `Settings > Shortcuts`: live recording shortcuts plus `Voice Typing`
+- `Settings > Vocabulary`: `Text Replacement` and `Hotwords`; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
+- `Settings > LLM Service`: feature model bindings and provider credentials; use [AI Polish and Translate](guide:ai-polish-and-translate) for polish/translation and [AI Summary](guide:ai-summary) for summaries
+- `Settings > Shortcuts`: live recording shortcuts plus `Voice Typing`; the mode choice is explained in [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - `Settings > About`: source code, logs, and update-related actions
 
-## `Voice Typing`
+## If you mainly came for an extension capability
 
-- `Voice Typing` is useful when you want to dictate directly into chat apps, documents, forms, or other applications.
-- Open `Settings > Shortcuts`, turn on `Voice Typing`, choose a global shortcut, and pick either `Push to Talk (Hold)` or `Toggle (Press once)`.
-- `Push to Talk (Hold)` works better for short bursts. `Toggle (Press once)` works better for longer dictation sessions.
-- `Voice Typing` depends on the same offline live transcription setup, so you also need a working `Live Record Model`.
-- If it still does not work after setup, go straight to [FAQ and Troubleshooting](guide:faq).
+- Need a read-only recap: [AI Summary](guide:ai-summary)
+- Need floating captions or dictation in another app: [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
+- Need `Hotwords`, `Text Replacement`, `Auto-Polish`, or custom context tuning: [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 
 ## Useful notes
 
-- In `Settings > Vocabulary`, `Hotwords` are entered one per line. Weighted entries such as `Term :2.0` are supported, and hotwords are currently most relevant for Transducer and Qwen3 ASR models.
-- In `Settings > Vocabulary`, `Text Replacement` can fix repeated terminology or spelling after transcription.
+- This page is intentionally not a full settings manual. It is here to point you at the right next page.
 - If you are troubleshooting rather than exporting, go straight to [FAQ and Troubleshooting](guide:faq).

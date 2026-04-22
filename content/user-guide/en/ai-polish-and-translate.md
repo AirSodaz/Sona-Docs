@@ -1,4 +1,4 @@
-Sona's polish and translation features are optional. Local transcription works without them, but the AI steps need a configured provider in `Settings > LLM Service`.
+Sona's polish and translation features are optional. Local transcription works without them, but the AI steps need a configured provider in `Settings > LLM Service`. This page stays focused on `LLM Polish` and `Translate`; if you mainly want a read-only recap, jump straight to [AI Summary](guide:ai-summary).
 
 ## Best for
 
@@ -24,7 +24,7 @@ Sona's polish and translation features are optional. Local transcription works w
 1. Make sure `Polish Model` is assigned in `Settings > LLM Service`.
 2. In the app, open the `LLM Polish` action.
 3. Choose what you need: `LLM Polish`, `Re-transcribe`, `Undo`, `Redo`, or `Advanced Settings`.
-4. Open `Advanced Settings` if you want to manage `Auto-Polish`, `Auto-Polish Frequency`, `Keywords`, `Scenario Presets`, or `Custom Context`.
+4. Open `Advanced Settings` if you want to manage `Auto-Polish`, `Auto-Polish Frequency`, `Keywords`, `Scenario Presets`, or `Custom Context`. The fuller tuning view is collected in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
 
 ## Run translation when you need bilingual output
 
@@ -45,4 +45,6 @@ Sona's polish and translation features are optional. Local transcription works w
 - Translation can use dedicated translation providers such as `Google Translate (Free)` or `Google Translate (API)`, but polish needs an LLM-capable provider and model.
 - Translation target languages currently include `Chinese (Simplified)`, `English`, `Japanese`, `Korean`, `French`, `German`, and `Spanish`.
 - `Re-transcribe` is only available when the current transcript came from a saved history item.
+- If what you need next is a read-only recap instead of rewritten transcript text, continue to [AI Summary](guide:ai-summary).
+- If you are really here for `Auto-Polish`, keywords, or custom context, continue to [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
 - Once the text looks right, move to [Export, History, and Settings](guide:export-history-and-settings).

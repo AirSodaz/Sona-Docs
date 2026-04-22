@@ -1,6 +1,21 @@
 import type { GenerateContentResponse } from '@google/genai';
+import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import type { HomeLocale } from '@/lib/homepage-content';
+import {
+  applyUserGuideSessionCookies,
+  clearUserGuideChallengeFailures,
+  getUserGuideRemoteIp,
+  getUserGuideRequestGuard,
+  getUserGuideSessionFingerprint,
+  isUserGuideThrottled,
+  promoteUserGuideSessionVerification,
+  readUserGuideSession,
+  registerUserGuideAttempt,
+  registerUserGuideChallengeFailure,
+  shouldUserGuideChallenge,
+  verifyUserGuideTurnstileToken,
+} from '@/lib/user-guide-abuse';
 import {
   buildUserGuideSystemInstruction,
   buildUserGuideUserPrompt,
@@ -23,13 +38,19 @@ const MAX_QUESTION_LENGTH = 1200;
 const MAX_HISTORY_MESSAGES = 6;
 const MAX_HISTORY_MESSAGE_LENGTH = 1200;
 const MAX_HISTORY_TOTAL_LENGTH = 4000;
+const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
+const GEMINI_TIMEOUT_MS = 12000;
+const VERIFIED_WINDOW_MS = 30 * 60 * 1000;
 
 type ChatRole = 'assistant' | 'user';
 type RouteErrorCode =
+  | 'challenge_required'
   | 'disabled'
   | 'empty_response'
+  | 'forbidden_origin'
   | 'invalid_request'
   | 'network_unreachable'
+  | 'throttled'
   | 'upstream_error';
 
 type ChatHistoryItem = {
@@ -48,11 +69,38 @@ function isHomeLocale(value: unknown): value is HomeLocale {
   return value === 'en' || value === 'zh-CN';
 }
 
+function withGeminiTimeout<T>(promise: Promise<T>) {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(`Gemini request timed out after ${GEMINI_TIMEOUT_MS}ms.`));
+    }, GEMINI_TIMEOUT_MS);
+
+    promise
+      .then((value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      });
+  });
+}
+
+function jsonResponse(
+  body: Record<string, unknown>,
+  status = 200,
+) {
+  return NextResponse.json(body, {
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+    status,
+  });
+}
+
 function jsonError(status: number, code: RouteErrorCode, error: string) {
-  return NextResponse.json(
-    { code, error },
-    { status },
-  );
+  return jsonResponse({ code, error }, status);
 }
 
 function sanitizeText(value: unknown, maxLength: number) {
@@ -117,6 +165,10 @@ function sanitizeHistory(value: unknown): ChatHistoryItem[] {
   }
 
   return limited;
+}
+
+function sanitizeTurnstileToken(value: unknown) {
+  return sanitizeText(value, MAX_TURNSTILE_TOKEN_LENGTH);
 }
 
 function buildHistoryContents(history: ChatHistoryItem[]) {
@@ -227,11 +279,7 @@ function isNetworkError(error: unknown) {
   ]);
 
   return diagnostics.some((detail) => {
-    const diagnosticText = [
-      detail.code,
-      detail.message,
-      detail.name,
-    ]
+    const diagnosticText = [detail.code, detail.message, detail.name]
       .filter(Boolean)
       .join(' ')
       .toLowerCase();
@@ -271,16 +319,101 @@ function getErrorResponse(error: unknown) {
   };
 }
 
+function isJsonContentType(value: null | string) {
+  return Boolean(value && value.toLowerCase().startsWith('application/json'));
+}
+
+function getForbiddenOriginMessage(
+  reason:
+    | 'cross_site'
+    | 'host_not_allowed'
+    | 'invalid_host'
+    | 'missing_origin'
+    | 'origin_mismatch',
+) {
+  if (reason === 'host_not_allowed') {
+    return 'This host is not allowed to use the protected AI route.';
+  }
+
+  if (reason === 'cross_site') {
+    return 'Cross-site requests are not allowed for this route.';
+  }
+
+  if (reason === 'origin_mismatch') {
+    return 'The request origin does not match the allowed public host.';
+  }
+
+  if (reason === 'invalid_host') {
+    return 'The request host could not be validated.';
+  }
+
+  return 'The request is missing an allowed same-site origin signal.';
+}
+
+function logGuideChatSecurityEvent({
+  code,
+  challenged = false,
+  error,
+  host,
+  originHost,
+  path,
+  reason,
+  referrerHost,
+  secFetchSite,
+  sessionFingerprint,
+  status,
+  turnstileValidated = false,
+  verifiedSession = false,
+}: {
+  challenged?: boolean;
+  code: RouteErrorCode;
+  error?: string;
+  host: null | string;
+  originHost: null | string;
+  path: string;
+  reason?: null | string;
+  referrerHost: null | string;
+  secFetchSite: null | string;
+  sessionFingerprint?: null | string;
+  status: number;
+  turnstileValidated?: boolean;
+  verifiedSession?: boolean;
+}) {
+  console.warn('Guide chat security event:', {
+    challenged,
+    code,
+    error,
+    host,
+    originHost,
+    path,
+    reason,
+    referrerHost,
+    secFetchSite,
+    session: sessionFingerprint,
+    status,
+    turnstileValidated,
+    verifiedSession,
+  });
+}
+
 function logGuideChatError({
   code,
   error,
+  host,
   model,
+  sessionFingerprint,
   status,
+  turnstileValidated,
+  verifiedSession,
 }: {
   code: RouteErrorCode;
   error: unknown;
+  host: string;
   model: string;
+  sessionFingerprint: string;
   status: number;
+  turnstileValidated: boolean;
+  verifiedSession: boolean;
 }) {
   const diagnostics = collectErrorDiagnostics(error);
   const primary = diagnostics[0];
@@ -295,12 +428,51 @@ function logGuideChatError({
     errorMessage: primary?.message,
     errorName: primary?.name,
     hasProxy: transport.hasProxy,
+    host,
     model,
+    session: sessionFingerprint,
     status,
+    turnstileValidated,
+    verifiedSession,
   });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const requestPath = request.nextUrl.pathname;
+  const contentType = request.headers.get('content-type');
+
+  if (!isJsonContentType(contentType)) {
+    return jsonError(
+      400,
+      'invalid_request',
+      'Request body must use application/json.',
+    );
+  }
+
+  const requestGuard = getUserGuideRequestGuard(request);
+
+  if (!requestGuard.ok) {
+    const response = jsonError(
+      403,
+      'forbidden_origin',
+      getForbiddenOriginMessage(requestGuard.reason),
+    );
+
+    logGuideChatSecurityEvent({
+      code: 'forbidden_origin',
+      error: getForbiddenOriginMessage(requestGuard.reason),
+      host: requestGuard.host,
+      originHost: requestGuard.originHost,
+      path: requestPath,
+      reason: requestGuard.reason,
+      referrerHost: requestGuard.referrerHost,
+      secFetchSite: requestGuard.secFetchSite,
+      status: 403,
+    });
+
+    return response;
+  }
+
   let body: Record<string, unknown>;
 
   try {
@@ -312,6 +484,7 @@ export async function POST(request: Request) {
   const locale = body.locale;
   const pageId = body.pageId;
   const question = sanitizeText(body.question, MAX_QUESTION_LENGTH + 1);
+  const turnstileToken = sanitizeTurnstileToken(body.turnstileToken);
 
   if (
     !isHomeLocale(locale) ||
@@ -333,65 +506,193 @@ export async function POST(request: Request) {
     return jsonError(503, 'disabled', 'AI questions are not enabled.');
   }
 
+  const abuseState = readUserGuideSession(request);
+
+  if (!abuseState) {
+    return jsonError(503, 'disabled', 'AI questions are not enabled.');
+  }
+
+  const sessionFingerprint = getUserGuideSessionFingerprint(abuseState.session.id);
   const history = sanitizeHistory(body.history);
   const page = getUserGuidePageById(locale, pageId);
   const model = getUserGuideChatModel();
   const ai = getGeminiClient();
+  const hadExpiredVerifiedCookie =
+    Boolean(abuseState.verifiedRecord) && !abuseState.verified;
 
   if (!ai) {
-    return jsonError(503, 'disabled', 'AI questions are not enabled.');
+    const response = jsonError(503, 'disabled', 'AI questions are not enabled.');
+    return applyUserGuideSessionCookies({
+      clearVerifiedCookie: hadExpiredVerifiedCookie,
+      response,
+      session: abuseState.session,
+    });
   }
+
+  let verifiedSession = abuseState.verified;
+  let turnstileValidated = false;
+  let verifiedUntil: number | undefined;
+
+  if (
+    shouldUserGuideChallenge({
+      session: abuseState.session,
+      verified: verifiedSession,
+    })
+  ) {
+    if (!turnstileToken) {
+      const response = jsonError(
+        403,
+        'challenge_required',
+        'Please complete verification to keep asking guide questions.',
+      );
+
+      logGuideChatSecurityEvent({
+        challenged: true,
+        code: 'challenge_required',
+        error: 'Missing Turnstile token after challenge threshold.',
+        host: requestGuard.host,
+        originHost: requestGuard.originHost,
+        path: requestPath,
+        referrerHost: requestGuard.referrerHost,
+        secFetchSite: requestGuard.secFetchSite,
+        sessionFingerprint,
+        status: 403,
+        verifiedSession,
+      });
+
+      return applyUserGuideSessionCookies({
+        clearVerifiedCookie: hadExpiredVerifiedCookie,
+        response,
+        session: abuseState.session,
+      });
+    }
+
+    const turnstileResult = await verifyUserGuideTurnstileToken({
+      remoteIp: getUserGuideRemoteIp(request),
+      requestHost: requestGuard.host,
+      token: turnstileToken,
+    });
+
+    if (!turnstileResult.ok) {
+      registerUserGuideChallengeFailure(abuseState.session, abuseState.now);
+      const code = isUserGuideThrottled(abuseState.session)
+        ? 'throttled'
+        : 'challenge_required';
+      const status = code === 'throttled' ? 429 : 403;
+      const message =
+        code === 'throttled'
+          ? 'Too many failed verification attempts. Please wait and try again later.'
+          : 'Verification did not complete. Please try the challenge again.';
+      const response = jsonError(status, code, message);
+
+      logGuideChatSecurityEvent({
+        challenged: true,
+        code,
+        error: turnstileResult.reason,
+        host: requestGuard.host,
+        originHost: requestGuard.originHost,
+        path: requestPath,
+        reason: turnstileResult.errorCodes.join(',') || turnstileResult.reason,
+        referrerHost: requestGuard.referrerHost,
+        secFetchSite: requestGuard.secFetchSite,
+        sessionFingerprint,
+        status,
+        turnstileValidated: false,
+        verifiedSession,
+      });
+
+      return applyUserGuideSessionCookies({
+        clearVerifiedCookie: hadExpiredVerifiedCookie,
+        response,
+        session: abuseState.session,
+      });
+    }
+
+    turnstileValidated = true;
+    verifiedSession = true;
+    verifiedUntil = abuseState.now + VERIFIED_WINDOW_MS;
+    promoteUserGuideSessionVerification(abuseState.session, abuseState.now);
+  } else {
+    clearUserGuideChallengeFailures(abuseState.session, abuseState.now);
+  }
+
+  registerUserGuideAttempt({
+    session: abuseState.session,
+    verified: verifiedSession,
+  });
 
   try {
     const context = await getUserGuideAiContext(locale, pageId);
-    const response = await ai.models.generateContent({
-      config: {
-        maxOutputTokens: 700,
-        responseMimeType: 'text/plain',
-        systemInstruction: buildUserGuideSystemInstruction({
-          context,
-          currentPageTitle: page.title,
-          locale,
-        }),
-        temperature: 0.2,
-        thinkingConfig: {
-          thinkingBudget: 0,
+    const response = await withGeminiTimeout(
+      ai.models.generateContent({
+        config: {
+          maxOutputTokens: 700,
+          responseMimeType: 'text/plain',
+          systemInstruction: buildUserGuideSystemInstruction({
+            context,
+            currentPageTitle: page.title,
+            locale,
+          }),
+          temperature: 0.2,
+          thinkingConfig: {
+            thinkingBudget: 0,
+          },
+          topP: 0.8,
         },
-        topP: 0.8,
-      },
-      contents: [
-        ...buildHistoryContents(history),
-        {
-          parts: [
-            {
-              text: buildUserGuideUserPrompt({
-                pageDescription: page.description,
-                pageTitle: page.title,
-                question,
-              }),
-            },
-          ],
-          role: 'user',
-        },
-      ],
-      model,
+        contents: [
+          ...buildHistoryContents(history),
+          {
+            parts: [
+              {
+                text: buildUserGuideUserPrompt({
+                  pageDescription: page.description,
+                  pageTitle: page.title,
+                  question,
+                }),
+              },
+            ],
+            role: 'user',
+          },
+        ],
+        model,
+      }),
+    );
+
+    const successResponse = jsonResponse({
+      answer: extractAnswer(response),
     });
 
-    return NextResponse.json({ answer: extractAnswer(response) });
+    return applyUserGuideSessionCookies({
+      clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+      response: successResponse,
+      session: abuseState.session,
+      verifiedUntil,
+    });
   } catch (error) {
     const errorResponse = getErrorResponse(error);
 
     logGuideChatError({
       code: errorResponse.code,
       error,
+      host: requestGuard.host,
       model,
+      sessionFingerprint,
       status: errorResponse.status,
+      turnstileValidated,
+      verifiedSession,
     });
 
-    return jsonError(
+    const response = jsonError(
       errorResponse.status,
       errorResponse.code,
       errorResponse.message,
     );
+
+    return applyUserGuideSessionCookies({
+      clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+      response,
+      session: abuseState.session,
+      verifiedUntil,
+    });
   }
 }
