@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Github } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, Globe } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -87,19 +87,15 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
         <header className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href={content.page.homeHref}
-            className="group inline-flex items-center gap-3 transition-colors focus:outline-none"
+            className="group flex items-center transition-colors focus:outline-none"
           >
             <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8 transition-transform group-hover:scale-105" />
-            <div>
-              <div className="flex items-center">
-                <span
-                  className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white sm:text-[1.7rem]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  ona
-                </span>
-              </div>
-            </div>
+            <span
+              className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white sm:text-[1.7rem]"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              ona
+            </span>
           </Link>
 
           <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
@@ -110,9 +106,14 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
                 <span className="hidden sm:inline">{content.page.homeLabel}</span>
               </span>
             </HeaderLink>
-            <HeaderLink href={content.page.alternateHref}>
-              {content.page.alternateLanguageLabel}
-            </HeaderLink>
+            <Link
+              href={content.page.alternateHref}
+              className="flex items-center gap-1.5 cursor-pointer transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
+            >
+              <Globe size={16} />
+              <span className="hidden sm:inline">{content.page.alternateLanguageLabel}</span>
+              <span className="sm:hidden">{content.page.alternateLanguageLabel === '中文' ? '中' : 'En'}</span>
+            </Link>
             <HeaderLink href={githubHref} external>
               <span className="inline-flex items-center gap-1.5">
                 <Github size={16} />

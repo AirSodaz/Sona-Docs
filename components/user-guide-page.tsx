@@ -6,6 +6,7 @@ import {
   ArrowRight,
   ChevronRight,
   Github,
+  Globe,
   Home,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -274,19 +275,15 @@ export async function UserGuidePage({
         <header className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <Link
             href={page.homeHref}
-            className="group inline-flex items-center gap-3 transition-colors focus:outline-none"
+            className="group flex items-center transition-colors focus:outline-none"
           >
             <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8 transition-transform group-hover:scale-105" />
-            <div>
-              <div className="flex items-center">
-                <span
-                  className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white sm:text-[1.7rem]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  ona
-                </span>
-              </div>
-            </div>
+            <span
+              className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white sm:text-[1.7rem]"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              ona
+            </span>
           </Link>
 
           <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
@@ -297,9 +294,14 @@ export async function UserGuidePage({
                 <span className="hidden sm:inline">{page.homeLabel}</span>
               </span>
             </HeaderLink>
-            <HeaderLink href={page.alternatePath}>
-              {page.alternateLanguageLabel}
-            </HeaderLink>
+            <Link
+              href={page.alternatePath}
+              className="flex items-center gap-1.5 cursor-pointer transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
+            >
+              <Globe size={16} />
+              <span className="hidden sm:inline">{page.alternateLanguageLabel}</span>
+              <span className="sm:hidden">{page.alternateLanguageLabel === '中文' ? '中' : 'En'}</span>
+            </Link>
             <HeaderLink href={page.sourceHref} external>
               <span className="inline-flex items-center gap-1.5">
                 <Github size={16} />
