@@ -1,0 +1,41 @@
+Use `Live Record` when you want transcript segments to appear while you are still capturing audio.
+
+## Best for
+
+- Meetings, interviews, lectures, or voice notes
+- Workflows where timestamps need to stay attached during capture
+- Users who want to keep everything in the main Sona workspace after recording stops
+
+## Before you start
+
+- Finish [Getting Started](guide:getting-started), or manually configure a `Live Record Model` in `Settings > Model Hub`.
+- Make sure your operating system has granted microphone permission if you want to record from a microphone.
+
+## Record a live session
+
+1. Open the `Live Record` tab.
+2. Before recording starts, choose the input source from the dropdown: `Microphone` or `Desktop Audio`.
+3. Click `Start Recording`.
+4. Watch the waveform and timer while Sona captures audio.
+5. Use `Pause` if you want to temporarily stop without ending the session.
+6. Use `Stop` when you want to finalize the recording.
+
+## Adjust what happens during recording
+
+1. Click `Parameter Settings` if you want to change `Subtitle Mode` or `Language`.
+2. Turn on `Live Caption` if you want the floating caption window during live use.
+3. Open `Settings > Subtitle Settings` if you want to change caption behavior such as always-on-top, click-through, size, width, color, or startup behavior.
+
+## What you get after stopping
+
+- Transcript segments appear in the editor on the right.
+- The active segment follows the live recording state while capture is running.
+- Once recording stops, the transcript remains available for editing, polishing, translation, export, and history saving.
+
+## Useful tips
+
+- `Ctrl + Space` starts or stops live recording by default.
+- `Space` pauses or resumes while recording is active.
+- `Parameter Settings` only covers transcription behavior like `Subtitle Mode` and `Language`; it is not the full LLM polish workflow.
+- If Sona says a model is missing, reopen onboarding or configure the model in `Settings > Model Hub`.
+- After capture, the next practical page is usually [Edit and Playback](guide:edit-and-playback).

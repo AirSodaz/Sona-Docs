@@ -1,16 +1,11 @@
 import type { Metadata } from 'next';
 import { homePageContent, type HomeLocale } from '@/lib/homepage-content';
 import { getSiteUrl } from '@/lib/site-url';
-import { userGuidePageContent } from '@/lib/user-guide-content';
+import { getUserGuidePageFromSlug } from '@/lib/user-guide-content';
 
 const localePaths: Record<HomeLocale, string> = {
   en: '/',
   'zh-CN': '/zh',
-};
-
-const guideLocalePaths: Record<HomeLocale, string> = {
-  en: '/user-guide',
-  'zh-CN': '/zh/user-guide',
 };
 
 const openGraphLocales: Record<HomeLocale, string> = {
@@ -56,29 +51,46 @@ export function createHomePageMetadata(locale: HomeLocale): Metadata {
   };
 }
 
-export function createGuidePageMetadata(locale: HomeLocale): Metadata {
-  const content = userGuidePageContent[locale];
-  const currentPath = guideLocalePaths[locale];
+export function createGuidePageMetadata(
+  locale: HomeLocale,
+  slug?: string[],
+): Metadata {
+  const page = getUserGuidePageFromSlug(locale, slug) ?? getUserGuidePageFromSlug(locale, undefined);
+
+  if (!page) {
+    return {
+      metadataBase: getSiteUrl(),
+    };
+  }
 
   return {
     metadataBase: getSiteUrl(),
-    title: content.metadata.title,
-    description: content.metadata.description,
+    title: page.title,
+    description: page.description,
     icons: {
       icon: '/icon.svg',
     },
     alternates: {
-      canonical: currentPath,
+      canonical: page.path,
       languages: {
-        en: guideLocalePaths.en,
-        'zh-CN': guideLocalePaths['zh-CN'],
-        'x-default': guideLocalePaths.en,
+        en:
+          page.locale === 'en'
+            ? page.path
+            : page.alternatePath,
+        'zh-CN':
+          page.locale === 'zh-CN'
+            ? page.path
+            : page.alternatePath,
+        'x-default':
+          page.locale === 'en'
+            ? page.path
+            : page.alternatePath,
       },
     },
     openGraph: {
-      title: content.metadata.title,
-      description: content.metadata.description,
-      url: currentPath,
+      title: page.title,
+      description: page.description,
+      url: page.path,
       locale: openGraphLocales[locale],
       alternateLocale: Object.values(openGraphLocales).filter(
         (value) => value !== openGraphLocales[locale],
@@ -88,8 +100,8 @@ export function createGuidePageMetadata(locale: HomeLocale): Metadata {
     },
     twitter: {
       card: 'summary_large_image',
-      title: content.metadata.title,
-      description: content.metadata.description,
+      title: page.title,
+      description: page.description,
     },
   };
 }
