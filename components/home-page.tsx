@@ -198,9 +198,14 @@ export function HomePage({
             description={content.features[3].desc}
           />
         </div>
+
+        <ClosingCtaSection
+          content={content.finalCta}
+          primaryHref={downloads.button.allBuildsHref}
+        />
       </main>
 
-      <footer className="mt-20 w-full border-t border-stone-200 bg-white transition-colors duration-300 dark:border-stone-800 dark:bg-[#121212] sm:mt-24">
+      <footer className="w-full border-t border-stone-200 bg-white transition-colors duration-300 dark:border-stone-800 dark:bg-[#121212]">
         <div className="container mx-auto flex max-w-[1400px] flex-col items-center gap-5 px-4 py-10 text-center text-sm font-light text-stone-500 dark:text-stone-400 sm:gap-6 sm:px-6 sm:py-12 md:flex-row md:justify-between md:px-16 md:text-left">
           <p className="max-w-[20rem] md:max-w-none">
             © {new Date().getFullYear()} Sona. {content.footer.license}
@@ -226,6 +231,63 @@ export function HomePage({
         </div>
       </footer>
     </div>
+  );
+}
+
+function ClosingCtaSection({
+  content,
+  primaryHref,
+}: {
+  content: HomePageContent['finalCta'];
+  primaryHref: string;
+}) {
+  return (
+    <motion.section
+      className="mx-auto mt-20 w-full max-w-5xl sm:mt-24"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ duration: 0.55, ease: 'easeOut' }}
+    >
+      <div className="relative overflow-hidden rounded-[32px] border border-stone-200/80 bg-white/72 px-6 py-8 text-center shadow-[0_30px_90px_-60px_rgba(87,83,78,0.58)] backdrop-blur-xl transition-colors duration-300 dark:border-stone-800/80 dark:bg-stone-900/72 dark:shadow-[0_28px_90px_-62px_rgba(0,0,0,0.76)] sm:px-10 sm:py-10 lg:px-14 lg:py-12">
+        <div className="pointer-events-none absolute inset-x-12 top-0 h-24 bg-gradient-to-r from-transparent via-stone-200/70 to-transparent blur-3xl dark:via-stone-700/35" />
+        <div className="pointer-events-none absolute left-1/2 top-full h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-stone-200/60 blur-3xl dark:bg-stone-700/25" />
+
+        <div className="relative mx-auto max-w-3xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-xs">
+            {content.eyebrow}
+          </p>
+          <h2
+            className="mt-4 text-[2rem] leading-tight text-stone-800 transition-colors duration-300 dark:text-stone-100 sm:text-[2.35rem] md:text-[2.65rem]"
+            style={{ fontFamily: 'var(--font-serif)' }}
+          >
+            {content.title}
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 font-light text-stone-600 transition-colors duration-300 dark:text-stone-300 sm:text-lg">
+            {content.desc}
+          </p>
+
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
+            <Link
+              href={primaryHref}
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-stone-800 px-6 py-3 text-center text-sm font-medium leading-tight text-white shadow-lg shadow-stone-200 transition-colors hover:bg-stone-700 dark:bg-stone-200 dark:text-stone-900 dark:shadow-none dark:hover:bg-white sm:min-w-[18rem] sm:w-auto sm:px-8"
+            >
+              {content.primaryLabel}
+            </Link>
+            <Link
+              href={content.secondaryHref}
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-6 py-3 text-center text-sm font-medium text-[#2D2D2D] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:shadow-white/5 sm:w-auto sm:px-8"
+            >
+              {content.secondaryLabel}
+            </Link>
+          </div>
+
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-stone-500 transition-colors duration-300 dark:text-stone-400">
+            {content.note}
+          </p>
+        </div>
+      </div>
+    </motion.section>
   );
 }
 
