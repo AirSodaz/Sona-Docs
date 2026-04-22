@@ -11,6 +11,7 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 - Need a read-only recap instead of rewriting the transcript: [AI Summary](guide:ai-summary)
 - Mainly want floating captions or dictation in another app: [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - Mainly want hotwords, text replacement, or `Auto-Polish` tuning: [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
+- Mainly want offline batch transcription from the terminal: [CLI Guide](guide:cli-guide)
 - Solving a blocker: [FAQ and Troubleshooting](guide:faq)
 
 ## The Sona workflow in one line
@@ -30,9 +31,9 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 - How the editor, playback, translation, and export steps fit together
 - Which settings and extension entry points matter most without turning the docs into a full settings reference
 
-## What lives outside this guide
+## Other docs you might need
 
-- Command-line batch transcription: [CLI guide](cli)
+- Command-line batch transcription: [CLI Guide](guide:cli-guide)
 - Source builds and development commands: [project README](readme)
 
 > The normal Sona path is simple: set up local transcription, create a transcript, review it in the editor, and only then add polish, translation, or export when needed.

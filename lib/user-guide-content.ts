@@ -19,10 +19,12 @@ const USER_GUIDE_PAGE_ORDER = [
   'ai-summary',
   'live-caption-and-voice-typing',
   'vocabulary-and-advanced-settings',
+  'cli-guide',
   'faq',
 ] as const;
 
 type UserGuideNavGroupId = 'start' | 'workflow' | 'extended' | 'reference';
+type UserGuideSourceDocId = 'user-guide' | 'cli';
 
 export type UserGuidePageId = (typeof USER_GUIDE_PAGE_ORDER)[number];
 
@@ -37,6 +39,7 @@ interface UserGuidePageDefinition {
   id: UserGuidePageId;
   slug: string[];
   group: UserGuideNavGroupId;
+  sourceDoc?: UserGuideSourceDocId;
   localizations: Record<HomeLocale, UserGuideLocalizedPageCopy>;
 }
 
@@ -86,6 +89,7 @@ export interface UserGuidePageModel {
   homeHref: string;
   homeLabel: string;
   alternateLanguageLabel: string;
+  sourceDocId: UserGuideSourceDocId;
   sourceHref: string;
   sourceLabel: string;
   guideLabel: string;
@@ -138,7 +142,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
     guideLabel: 'User Guide',
     homeLabel: 'Back Home',
     alternateLanguageLabel: '简体中文',
-    sourceLabel: 'Source Guide',
+    sourceLabel: 'Source Doc',
     mobileNavLabel: 'Guide pages',
     sidebarTitle: 'Browse the guide',
     previousLabel: 'Previous',
@@ -157,7 +161,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: 'Everything Inside',
       browseTitle: 'The full docs set, organized by the actual Sona workflow.',
       browseDescription:
-        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, export, extended capabilities, and troubleshooting.',
+        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, export, extended capabilities, CLI reference, and troubleshooting.',
     },
   },
   'zh-CN': {
@@ -183,7 +187,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: '完整内容',
       browseTitle: '整套指南按照 Sona 的真实使用流程组织。',
       browseDescription:
-        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 导出 -> 扩展能力 -> 排障”的顺序继续。',
+        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 导出 -> 扩展能力 -> CLI 参考 -> 排障”的顺序继续。',
     },
   },
 };
@@ -400,6 +404,28 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
     },
   },
   {
+    id: 'cli-guide',
+    slug: ['cli'],
+    group: 'reference',
+    sourceDoc: 'cli',
+    localizations: {
+      en: {
+        title: 'CLI Guide',
+        navLabel: 'CLI Guide',
+        description:
+          "Run Sona's offline batch transcription from the terminal, understand packaged versus source-build entry points, and verify the current command surface.",
+        contentFile: 'en/cli-guide.md',
+      },
+      'zh-CN': {
+        title: 'CLI 指南',
+        navLabel: 'CLI 指南',
+        description:
+          '从终端运行 Sona 的离线批量转录，理解安装包与源码构建两种入口，并确认当前命令行能力边界。',
+        contentFile: 'zh-CN/cli-guide.md',
+      },
+    },
+  },
+  {
     id: 'faq',
     slug: ['faq'],
     group: 'reference',
@@ -453,10 +479,16 @@ function getGuideSourceHref(locale: HomeLocale) {
     : `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`;
 }
 
-function getCliGuideHref(locale: HomeLocale) {
+function getCliSourceHref(locale: HomeLocale) {
   return locale === 'en'
     ? `${GITHUB_BLOB_ROOT}/docs/cli.md`
     : `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
+}
+
+function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale) {
+  return sourceDocId === 'cli'
+    ? getCliSourceHref(locale)
+    : getGuideSourceHref(locale);
 }
 
 function getReadmeHref(locale: HomeLocale) {
@@ -499,6 +531,7 @@ export function getUserGuidePageById(
   const definition = userGuidePageDefinitionById[pageId];
   const localized = definition.localizations[locale];
   const ui = userGuideUiContent[locale];
+  const sourceDocId = definition.sourceDoc ?? 'user-guide';
   const currentIndex = USER_GUIDE_PAGE_ORDER.indexOf(pageId);
   const previousId =
     currentIndex > 0 ? USER_GUIDE_PAGE_ORDER[currentIndex - 1] : null;
@@ -519,7 +552,8 @@ export function getUserGuidePageById(
     homeHref: getLocaleHomeHref(locale),
     homeLabel: ui.homeLabel,
     alternateLanguageLabel: ui.alternateLanguageLabel,
-    sourceHref: getGuideSourceHref(locale),
+    sourceDocId,
+    sourceHref: getSourceDocHref(sourceDocId, locale),
     sourceLabel: ui.sourceLabel,
     guideLabel: ui.guideLabel,
     sidebarTitle: ui.sidebarTitle,
@@ -702,8 +736,9 @@ export const getUserGuideMarkdown = cache(
 const legacyRelativeLinkOverrides: Record<string, string> = {
   'user-guide.md': 'guide:overview',
   'user-guide.zh-CN.md': 'guide:overview',
-  'cli.md': 'cli',
-  'cli.zh-CN.md': 'cli',
+  cli: 'guide:cli-guide',
+  'cli.md': 'guide:cli-guide',
+  'cli.zh-CN.md': 'guide:cli-guide',
   '../README.md': 'readme',
   '../README.zh-CN.md': 'readme',
 };
@@ -765,13 +800,6 @@ export function resolveUserGuideHref(
     return {
       href: buildUserGuidePath(locale, pageId),
       external: false,
-    };
-  }
-
-  if (token === 'cli') {
-    return {
-      href: getCliGuideHref(locale),
-      external: true,
     };
   }
 
