@@ -7,10 +7,18 @@ import { DownloadButton } from '@/components/download-button';
 import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
-import type { HomePageContent } from '@/lib/homepage-content';
+import { downloadContent } from '@/lib/download-content';
+import type { HomeLocale, HomePageContent } from '@/lib/homepage-content';
 
-export function HomePage({ content }: { content: HomePageContent }) {
+export function HomePage({
+  content,
+  locale,
+}: {
+  content: HomePageContent;
+  locale: HomeLocale;
+}) {
   const demoPreviewId = 'homepage-demo-preview';
+  const downloads = downloadContent[locale];
 
   return (
     <div className="relative overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
@@ -72,7 +80,10 @@ export function HomePage({ content }: { content: HomePageContent }) {
               </p>
 
               <div className="flex w-full max-w-sm flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
-                <DownloadButton text={content.hero.btnDownload} />
+                <DownloadButton
+                  content={downloads}
+                  text={content.hero.btnDownload}
+                />
                 <Link
                   href={content.hero.docsHref}
                   className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-6 py-3 text-center text-sm font-medium text-[#2D2D2D] transition-colors hover:bg-white dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800 sm:w-auto sm:px-8"

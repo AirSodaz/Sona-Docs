@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { downloadContent } from '@/lib/download-content';
 import { homePageContent, type HomeLocale } from '@/lib/homepage-content';
 import { getSiteUrl } from '@/lib/site-url';
 import { getUserGuidePageFromSlug } from '@/lib/user-guide-content';
@@ -102,6 +103,44 @@ export function createGuidePageMetadata(
       card: 'summary_large_image',
       title: page.title,
       description: page.description,
+    },
+  };
+}
+
+export function createDownloadsPageMetadata(locale: HomeLocale): Metadata {
+  const content = downloadContent[locale];
+  const currentPath = locale === 'en' ? '/downloads' : '/zh/downloads';
+
+  return {
+    metadataBase: getSiteUrl(),
+    title: content.metadata.title,
+    description: content.metadata.description,
+    icons: {
+      icon: '/icon.svg',
+    },
+    alternates: {
+      canonical: currentPath,
+      languages: {
+        en: '/downloads',
+        'zh-CN': '/zh/downloads',
+        'x-default': '/downloads',
+      },
+    },
+    openGraph: {
+      title: content.metadata.title,
+      description: content.metadata.description,
+      url: currentPath,
+      locale: openGraphLocales[locale],
+      alternateLocale: Object.values(openGraphLocales).filter(
+        (value) => value !== openGraphLocales[locale],
+      ),
+      siteName: 'Sona',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: content.metadata.title,
+      description: content.metadata.description,
     },
   };
 }

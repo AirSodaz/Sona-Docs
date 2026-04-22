@@ -5,5 +5,5 @@ import { createHomePageMetadata } from '@/lib/site-metadata';
 export const metadata = createHomePageMetadata('en');
 
 export default function EnglishHomePage() {
-  return <HomePage content={homePageContent.en} />;
+  return <HomePage content={homePageContent.en} locale="en" />;
 }
