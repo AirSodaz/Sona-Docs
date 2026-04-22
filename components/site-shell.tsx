@@ -1,17 +1,6 @@
 import type { ReactNode } from 'react';
-import { Inter, Cormorant_Garamond } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
-
-const cormorantGaramond = Cormorant_Garamond({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-serif',
-});
+import { cormorantGaramond, inter } from '@/lib/fonts';
 
 export function SiteShell({
   children,

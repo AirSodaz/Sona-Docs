@@ -31,6 +31,21 @@ function jsonResponse(body: null | { version: string; url: string; assets: { nam
   });
 }
 
+async function fetchGitHubRelease(headers: Record<string, string>) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    return await fetch(GITHUB_RELEASE_URL, {
+      headers,
+      next: { revalidate: SUCCESS_CACHE_SECONDS },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 export async function GET() {
   try {
     const headers: Record<string, string> = {
@@ -42,11 +57,7 @@ export async function GET() {
       headers['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
 
-    const response = await fetch(GITHUB_RELEASE_URL, {
-      headers,
-      next: { revalidate: SUCCESS_CACHE_SECONDS },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    });
+    const response = await fetchGitHubRelease(headers);
 
     if (!response.ok) {
       return jsonResponse(null, FAILURE_CACHE_SECONDS);

@@ -1,4 +1,9 @@
 const FALLBACK_SITE_URL = 'http://localhost:3000';
+const DEPLOYMENT_ENVIRONMENT_VARIABLES = [
+  'SITE_URL',
+  'NEXT_PUBLIC_SITE_URL',
+  'VERCEL_PROJECT_PRODUCTION_URL',
+] as const;
 
 function normalizeSiteUrl(value?: string | null) {
   if (!value) {
@@ -22,17 +27,64 @@ function normalizeSiteUrl(value?: string | null) {
   }
 }
 
-export function getSiteUrl() {
-  const explicitUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
-  if (explicitUrl) {
-    return explicitUrl;
+function getConfiguredSiteUrl() {
+  for (const envVar of DEPLOYMENT_ENVIRONMENT_VARIABLES) {
+    const candidate = normalizeSiteUrl(process.env[envVar]);
+    if (candidate) {
+      return candidate;
+    }
   }
 
-  const vercelUrl = normalizeSiteUrl(
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL,
+  return null;
+}
+
+function isLocalHostname(hostname: string) {
+  return (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '0.0.0.0' ||
+    hostname === '::1'
   );
-  if (vercelUrl) {
-    return vercelUrl;
+}
+
+function shouldRequirePublicSiteUrl() {
+  return (
+    process.env.NODE_ENV === 'production' &&
+    (process.env.CI === 'true' ||
+      process.env.VERCEL === '1' ||
+      process.env.CF_PAGES === '1')
+  );
+}
+
+export function getPublicSiteUrl() {
+  const configuredUrl = getConfiguredSiteUrl();
+
+  if (!configuredUrl || isLocalHostname(configuredUrl.hostname)) {
+    return null;
+  }
+
+  return configuredUrl;
+}
+
+export function getSiteUrl() {
+  const configuredUrl = getConfiguredSiteUrl();
+  if (configuredUrl) {
+    if (
+      shouldRequirePublicSiteUrl() &&
+      isLocalHostname(configuredUrl.hostname)
+    ) {
+      throw new Error(
+        'SITE_URL must point to a public production domain during deployed builds.',
+      );
+    }
+
+    return configuredUrl;
+  }
+
+  if (shouldRequirePublicSiteUrl()) {
+    throw new Error(
+      'Missing SITE_URL. Set SITE_URL or NEXT_PUBLIC_SITE_URL for deployed builds.',
+    );
   }
 
   return new URL(FALLBACK_SITE_URL);

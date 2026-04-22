@@ -1,10 +1,10 @@
 # Sona | Offline Transcript Editor Landing Page
 
-A lightweight landing page for **Sona**, the offline transcript editor built with Tauri and Sherpa-onnx. The site is built with Next.js App Router and is ready to deploy on Vercel.
+A lightweight landing page for **Sona**, the offline transcript editor built with Tauri and Sherpa-onnx. The site is built with Next.js App Router, tuned for Vercel-first deployment, and keeps its metadata setup portable enough for Cloudflare-style hosting.
 
 ## Overview
 
-Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact bilingual landing page, a release-aware download button, and metadata tuned for production deployment.
+Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact bilingual landing page, a release-aware download button, a branded global 404 page, and metadata tuned for production deployment.
 
 ### Highlighted Product Capabilities
 - **Local processing:** Speech recognition runs on-device with Sherpa-onnx.
@@ -38,7 +38,7 @@ npm install
 Copy `.env.example` to `.env.local` for local development:
 
 ```env
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+SITE_URL=http://localhost:3000
 GITHUB_TOKEN=your_github_token_here
 ```
 
@@ -60,13 +60,16 @@ npm run build
 npm run start
 ```
 
-## Vercel Deployment
+## Deployment
 
 ### Required Environment Variables
 
+- `SITE_URL`
+  - Set this to your public production domain, such as `https://sona.yourdomain.com`.
+  - This value is used for canonical URLs, `robots.txt`, `sitemap.xml`, and social metadata.
+  - In Vercel preview/production, the app also supports `VERCEL_PROJECT_PRODUCTION_URL` as a fallback.
 - `NEXT_PUBLIC_SITE_URL`
-  - Set this to your production domain, such as `https://sona.yourdomain.com`.
-  - If you do not have a custom domain yet, use your production Vercel domain.
+  - Optional legacy fallback if you already expose the site origin to the client.
 - `GITHUB_TOKEN`
   - Recommended for `/api/github-release`.
   - Use a read-only token for public repository access.
@@ -75,7 +78,8 @@ npm run start
 
 - `/` and `/zh` are statically generated.
 - `/api/github-release` stays dynamic, but its upstream GitHub response is cached and protected with a timeout.
-- `robots.txt`, `sitemap.xml`, and a stable Open Graph image are generated from the app itself.
+- `robots.txt`, `sitemap.xml`, a stable Open Graph image, and a branded global 404 page are generated from the app itself.
+- Deployed builds should provide a public `SITE_URL`; otherwise metadata generation will fail in CI/Vercel/Pages environments instead of silently emitting `localhost` URLs.
 
 ## License
 

@@ -28,6 +28,7 @@ export function createHomePageMetadata(locale: HomeLocale): Metadata {
       languages: {
         en: localePaths.en,
         'zh-CN': localePaths['zh-CN'],
+        'x-default': localePaths.en,
       },
     },
     openGraph: {
@@ -35,11 +36,14 @@ export function createHomePageMetadata(locale: HomeLocale): Metadata {
       description: content.metadata.description,
       url: currentPath,
       locale: openGraphLocales[locale],
+      alternateLocale: Object.values(openGraphLocales).filter(
+        (value) => value !== openGraphLocales[locale],
+      ),
       siteName: 'Sona',
       type: 'website',
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: content.metadata.title,
       description: content.metadata.description,
     },
