@@ -1,9 +1,36 @@
 export type HomeLocale = 'en' | 'zh-CN';
 export type DemoAction = 'recorded' | 'polished' | 'translated';
+export type UseCaseId =
+  | 'meetings'
+  | 'lectures'
+  | 'subtitle-export'
+  | 'subtitle-translation';
 
 interface FeatureContent {
   title: string;
   desc: string;
+}
+
+export interface UseCaseItem {
+  id: UseCaseId;
+  title: string;
+  context: string;
+  workflow: string;
+  result: string;
+  tags: string[];
+}
+
+export interface UseCasesContent {
+  eyebrow: string;
+  title: string;
+  desc: string;
+  labels: {
+    context: string;
+    workflow: string;
+    result: string;
+  };
+  note: string;
+  items: UseCaseItem[];
 }
 
 export interface DemoSegment {
@@ -55,6 +82,7 @@ export interface HomePageContent {
     btnDocs: string;
     docsHref: string;
   };
+  useCases: UseCasesContent;
   demo: DemoContent;
   features: FeatureContent[];
   footer: {
@@ -84,7 +112,64 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       desc: 'Sona is an offline transcript editor built with Tauri and Sherpa-onnx. It brings powerful speech-to-text directly to your local machine. No cloud, no subscriptions, just your words.',
       btnDownload: 'Download Latest Release',
       btnDocs: 'Read User Guide',
-      docsHref: 'https://github.com/AirSodaz/sona/blob/master/docs/user-guide.md',
+      docsHref: '/user-guide',
+    },
+    useCases: {
+      eyebrow: 'Use Cases',
+      title: 'Made for the moments when audio needs to become usable text',
+      desc: 'Sona handles local transcription first, then keeps polish, translation, and export in the same working thread instead of sending you across separate tools.',
+      labels: {
+        context: 'Context',
+        workflow: 'Workflow',
+        result: 'Result',
+      },
+      note: 'Local transcription works on-device; polish and translation require a configured LLM provider.',
+      items: [
+        {
+          id: 'meetings',
+          title: 'Meeting Notes',
+          context:
+            'Capture project syncs, interviews, or standups while the room is still talking.',
+          workflow:
+            'Use Live Record to keep timestamps attached, then run polish for a cleaner internal recap.',
+          result:
+            'You leave with a shareable draft that still points back to the original audio moments.',
+          tags: ['Live Record', 'Timestamps', 'Polish'],
+        },
+        {
+          id: 'lectures',
+          title: 'Lecture Capture',
+          context:
+            'Record lectures, seminars, or office-hour explanations without losing the structure of the talk.',
+          workflow:
+            'Transcribe locally, jump back through timestamps, and edit key segments into study-ready notes.',
+          result:
+            'The transcript stays tied to playback, so review and revision happen in one place.',
+          tags: ['Lecture capture', 'Playback sync', 'Study notes'],
+        },
+        {
+          id: 'subtitle-export',
+          title: 'Video Subtitle Export',
+          context:
+            'Bring in local video or film files when you need subtitles instead of a blank timeline.',
+          workflow:
+            'Queue them through Batch Import, review the text, then export SRT or VTT once the segments look right.',
+          result:
+            'You get subtitle files that are ready for handoff, iteration, or platform upload.',
+          tags: ['Batch Import', 'SRT / VTT', 'Export'],
+        },
+        {
+          id: 'subtitle-translation',
+          title: 'Subtitle Translation',
+          context:
+            'Prepare subtitles for bilingual review or international delivery without separating the source text.',
+          workflow:
+            'Keep the original transcript visible, run Translate, and export translation-only or bilingual output when needed.',
+          result:
+            'The translated version stays aligned with the source so subtitle comparison is quick and readable.',
+          tags: ['Translate', 'Bilingual', 'Side-by-side'],
+        },
+      ],
     },
     demo: {
       eyebrow: 'From recording to a usable draft',
@@ -205,7 +290,64 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       desc: 'Sona 是一款基于 Tauri 和 Sherpa-onnx 构建的离线富文本转录编辑器。让强大的语音识别能力回归本地机器。没有云端，没有订阅，只有你的文字。',
       btnDownload: '下载最新版本',
       btnDocs: '阅读用户指南',
-      docsHref: 'https://github.com/AirSodaz/sona/blob/master/docs/user-guide.zh-CN.md',
+      docsHref: '/zh/user-guide',
+    },
+    useCases: {
+      eyebrow: '适合这些场景',
+      title: '适合这些需要把声音整理成成稿的时刻',
+      desc: 'Sona 先把本地转录和整理做好，再把润色、翻译、导出接到同一条工作流里，不用在几套工具之间来回切换。',
+      labels: {
+        context: '场景',
+        workflow: '流程',
+        result: '结果',
+      },
+      note: '离线转录本身不依赖云服务；润色与翻译需要先配置 LLM provider。',
+      items: [
+        {
+          id: 'meetings',
+          title: '会议记录',
+          context:
+            '记录项目例会、访谈或同步会时，希望边说边留下一份可回看的文本。',
+          workflow:
+            '用 Live Record 实时转录，保留时间戳，再在结束后继续润色成更适合流转的纪要。',
+          result:
+            '最后得到一份可分享的会议稿，同时还能回到原始音频对应位置继续核对。',
+          tags: ['实时录音', '时间戳', '会议纪要'],
+        },
+        {
+          id: 'lectures',
+          title: '课堂记录',
+          context:
+            '上课、讲座或讨论课内容较长，需要先完整记下，再回看重点段落。',
+          workflow:
+            '先做本地转录，再根据时间戳回看关键位置，把内容整理成复习笔记。',
+          result:
+            '转录、播放和编辑保持在同一个界面里，后续复盘不会被拆散。',
+          tags: ['课堂录制', '回看定位', '复习笔记'],
+        },
+        {
+          id: 'subtitle-export',
+          title: '视频/影片字幕导出',
+          context:
+            '手头已经有本地视频或影片素材，需要尽快整理出可交付的字幕文件。',
+          workflow:
+            '通过 Batch Import 批量导入并转录，检查文本后直接导出 SRT 或 VTT。',
+          result:
+            '拿到可继续校对、上传或交付的字幕文件，而不是停在一份原始文本上。',
+          tags: ['批量导入', 'SRT / VTT', '字幕导出'],
+        },
+        {
+          id: 'subtitle-translation',
+          title: '字幕翻译',
+          context:
+            '需要在保留原文的前提下生成译文，方便双语审阅或海外发布。',
+          workflow:
+            '在同一份转录上运行 Translate，让译文跟随原文分段显示，并按需导出翻译或双语版本。',
+          result:
+            '译文与源文本保持对照关系，做术语校对或版本确认会更快。',
+          tags: ['字幕翻译', '双语对照', '导出'],
+        },
+      ],
     },
     demo: {
       eyebrow: '录音结束后的整理界面',

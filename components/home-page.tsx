@@ -4,6 +4,7 @@ import { Github, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DownloadButton } from '@/components/download-button';
+import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
 import type { HomePageContent } from '@/lib/homepage-content';
 
@@ -73,8 +74,6 @@ export function HomePage({ content }: { content: HomePageContent }) {
             <DownloadButton text={content.hero.btnDownload} />
             <Link
               href={content.hero.docsHref}
-              target="_blank"
-              rel="noreferrer"
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-6 py-3 text-center text-sm font-medium text-[#2D2D2D] transition-colors hover:bg-white dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800 sm:w-auto sm:px-8"
             >
               {content.hero.btnDocs}
@@ -82,7 +81,11 @@ export function HomePage({ content }: { content: HomePageContent }) {
           </div>
         </div>
 
-        <div className="mt-2 w-full">
+        <div className="w-full">
+          <UseCasesSection content={content.useCases} />
+        </div>
+
+        <div className="mt-20 w-full sm:mt-24">
           <TranscriptDemo demo={content.demo} />
         </div>
 
