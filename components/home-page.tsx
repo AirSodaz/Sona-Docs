@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Github, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
@@ -9,6 +11,7 @@ import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
 import { downloadContent } from '@/lib/download-content';
 import type { HomeLocale, HomePageContent } from '@/lib/homepage-content';
+import { motion } from 'motion/react';
 
 export function HomePage({
   content,
@@ -60,12 +63,35 @@ export function HomePage({
 
         <div className="flex flex-1 items-center">
           <div className="mx-auto flex w-full max-w-[1400px] px-4 pb-22 pt-0 sm:px-6 sm:pb-24 sm:pt-3 md:px-16 md:pb-28 md:pt-4">
-            <div className="mx-auto flex max-w-3xl flex-col items-center justify-center text-center">
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs sm:tracking-[0.28em]">
+            <motion.div
+              className="mx-auto flex max-w-3xl flex-col items-center justify-center text-center"
+              initial="hidden"
+              animate="show"
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.15,
+                  },
+                },
+              }}
+            >
+              <motion.p
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+                }}
+                className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs sm:tracking-[0.28em]"
+              >
                 {content.hero.badge}
-              </p>
+              </motion.p>
 
-              <h1
+              <motion.h1
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+                }}
                 className="mb-3 text-[clamp(2.7rem,12vw,4.5rem)] leading-[0.94] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] sm:mb-4 sm:text-6xl md:text-7xl"
                 style={{ fontFamily: 'Georgia, serif' }}
               >
@@ -73,26 +99,44 @@ export function HomePage({
                 <span className="font-light text-stone-500 transition-colors duration-300 dark:text-stone-400">
                   {content.hero.title2}
                 </span>
-              </h1>
+              </motion.h1>
 
-              <p className="mx-auto mb-6 max-w-2xl text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:mb-8 sm:text-lg sm:leading-[1.8]">
+              <motion.p
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+                }}
+                className="mx-auto mb-6 max-w-2xl text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:mb-8 sm:text-lg sm:leading-[1.8]"
+              >
                 {content.hero.desc}
-              </p>
+              </motion.p>
 
-              <div className="flex w-full max-w-sm flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+                }}
+                className="flex w-full max-w-sm flex-col items-stretch justify-center gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-start sm:gap-4"
+              >
                 <DownloadButton
                   content={downloads}
                   text={content.hero.btnDownload}
                 />
                 <Link
                   href={content.hero.docsHref}
-                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-6 py-3 text-center text-sm font-medium text-[#2D2D2D] transition-colors hover:bg-white dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800 sm:w-auto sm:px-8"
+                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-6 py-3 text-center text-sm font-medium text-[#2D2D2D] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:bg-white dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:shadow-white/5 sm:w-auto sm:px-8"
                 >
                   {content.hero.btnDocs}
                 </Link>
-              </div>
+              </motion.div>
 
-              <div className="mt-8 w-full max-w-3xl border-t border-stone-200/80 pt-5 text-left transition-colors duration-300 dark:border-stone-800/80 sm:mt-9 sm:pt-6">
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+                }}
+                className="mt-8 w-full max-w-3xl border-t border-stone-200/80 pt-5 text-left transition-colors duration-300 dark:border-stone-800/80 sm:mt-9 sm:pt-6"
+              >
                 <p className="text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-[11px]">
                   {content.hero.workflowLabel}
                 </p>
@@ -115,8 +159,8 @@ export function HomePage({
                     </li>
                   ))}
                 </ol>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
 
@@ -195,7 +239,13 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="flex flex-col">
+    <motion.div
+      className="flex flex-col"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-stone-100 transition-colors duration-300 dark:bg-stone-800/50">
         {icon}
       </div>
@@ -205,6 +255,6 @@ function FeatureCard({
       <p className="text-sm font-light leading-7 text-stone-600 transition-colors duration-300 dark:text-stone-400">
         {description}
       </p>
-    </div>
+    </motion.div>
   );
 }

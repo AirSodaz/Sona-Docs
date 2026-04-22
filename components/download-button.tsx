@@ -111,7 +111,7 @@ export function DownloadButton({
     <div className="flex w-full max-w-sm flex-col items-center gap-2 sm:w-auto sm:max-w-none sm:items-start">
       <div ref={menuRef} className="relative w-full sm:w-auto">
         {canShowMenu ? (
-          <div className="inline-flex w-full items-stretch rounded-full shadow-lg shadow-stone-200 dark:shadow-none sm:w-auto">
+          <div className="group inline-flex w-full items-stretch rounded-full shadow-lg shadow-stone-200 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl dark:shadow-none dark:hover:shadow-white/5 sm:w-auto">
             <Link
               href={primaryUrl}
               target="_blank"
