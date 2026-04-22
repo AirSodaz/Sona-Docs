@@ -8,6 +8,8 @@ Sona 是一款以隐私优先为目标的转录编辑器，适合希望默认在
 - 主要在整理措辞、时间戳和回放： [编辑与播放](guide:edit-and-playback)
 - 需要可选的 AI 润色或双语输出： [AI 润色与翻译](guide:ai-polish-and-translate)
 - 要导出成品、回看旧记录或理解关键设置： [导出、历史记录与设置](guide:export-history-and-settings)
+- 主要想看悬浮字幕：从 [实时录音](guide:live-record) 里的 `实时字幕` 开始
+- 主要想在其他应用里直接听写文字：查看 [导出、历史记录与设置](guide:export-history-and-settings) 里的 `语音输入法`
 - 遇到具体阻塞： [常见问题与排障](guide:faq)
 
 ## 一句话看懂 Sona 的完整流程
@@ -17,6 +19,8 @@ Sona 是一款以隐私优先为目标的转录编辑器，适合希望默认在
 3. 在 [编辑与播放](guide:edit-and-playback) 中整理文本和时间戳。
 4. 只有在需要时，再进入 [AI 润色与翻译](guide:ai-polish-and-translate)。
 5. 最后在 [导出、历史记录与设置](guide:export-history-and-settings) 完成导出或回看。
+
+`实时字幕` 是 `实时录音` 里的侧向能力，`语音输入法` 则位于 `设置 > 快捷键`，这两个能力都建立在同一套离线实时转录基础之上。
 
 ## 这份指南重点覆盖什么
 

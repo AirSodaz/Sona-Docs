@@ -26,6 +26,13 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 2. Turn on `Live Caption` if you want the floating caption window during live use.
 3. Open `Settings > Subtitle Settings` if you want to change caption behavior such as always-on-top, click-through, size, width, color, or startup behavior.
 
+## What `Live Caption` is for
+
+- `Live Caption` is the `System Audio Captions` toggle on the `Live Record` page, and it is useful when you mainly want a floating subtitle window for system audio.
+- You can turn it on without starting a recording first. If you later start `Live Record`, both can run in parallel.
+- `Settings > Subtitle Settings` controls startup behavior, always-on-top, click-through, font size, width, color, and background transparency.
+- If `Live Caption` is turned on but the window still does not appear, check [FAQ and Troubleshooting](guide:faq).
+
 ## What you get after stopping
 
 - Transcript segments appear in the editor on the right.

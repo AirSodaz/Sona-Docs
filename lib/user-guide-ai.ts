@@ -1,0 +1,132 @@
+import 'server-only';
+
+import { cache } from 'react';
+import type { HomeLocale } from '@/lib/homepage-content';
+import {
+  getAllUserGuidePages,
+  getUserGuideMarkdown,
+  type UserGuidePageId,
+} from '@/lib/user-guide-content';
+
+export const DEFAULT_USER_GUIDE_CHAT_MODEL = 'gemini-2.5-flash';
+
+function getAnswerLanguage(locale: HomeLocale) {
+  return locale === 'en' ? 'English' : 'Simplified Chinese';
+}
+
+function formatGuideSection({
+  heading,
+  path,
+  description,
+  markdown,
+}: {
+  heading: string;
+  path: string;
+  description: string;
+  markdown: string;
+}) {
+  return [
+    `## ${heading}`,
+    `Path: ${path}`,
+    `Description: ${description}`,
+    'Content:',
+    markdown.trim(),
+  ].join('\n');
+}
+
+const getLocaleGuideDocuments = cache(async (locale: HomeLocale) => {
+  const pages = getAllUserGuidePages(locale);
+
+  return Promise.all(
+    pages.map(async (page) => ({
+      description: page.description,
+      id: page.id,
+      markdown: await getUserGuideMarkdown(locale, page.id),
+      path: page.path,
+      title: page.title,
+    })),
+  );
+});
+
+export const getUserGuideAiContext = cache(
+  async (locale: HomeLocale, currentPageId: UserGuidePageId) => {
+    const documents = await getLocaleGuideDocuments(locale);
+    const currentPage = documents.find((page) => page.id === currentPageId);
+
+    if (!currentPage) {
+      throw new Error(`Unknown user guide page id: ${currentPageId}`);
+    }
+
+    const referencePages = documents.filter((page) => page.id !== currentPageId);
+
+    return [
+      `Guide locale: ${locale}`,
+      '',
+      formatGuideSection({
+        heading: `Current page - ${currentPage.title}`,
+        path: currentPage.path,
+        description: currentPage.description,
+        markdown: currentPage.markdown,
+      }),
+      '',
+      '## Reference pages',
+      ...referencePages.map((page) =>
+        formatGuideSection({
+          heading: page.title,
+          path: page.path,
+          description: page.description,
+          markdown: page.markdown,
+        }),
+      ),
+    ].join('\n\n');
+  },
+);
+
+export function isUserGuideAiEnabled() {
+  return Boolean(process.env.GEMINI_API_KEY?.trim());
+}
+
+export function getUserGuideChatModel() {
+  return process.env.GEMINI_GUIDE_MODEL?.trim() || DEFAULT_USER_GUIDE_CHAT_MODEL;
+}
+
+export function buildUserGuideSystemInstruction({
+  context,
+  currentPageTitle,
+  locale,
+}: {
+  context: string;
+  currentPageTitle: string;
+  locale: HomeLocale;
+}) {
+  return [
+    'You are the Sona user guide assistant.',
+    `Answer in ${getAnswerLanguage(locale)}.`,
+    `Prioritize the current page (${currentPageTitle}) before using the rest of the guide.`,
+    'Only answer with information that is directly stated in, or is a careful synthesis of, the provided user guide context.',
+    'Do not invent product behavior, setup steps, UI labels, pricing, release details, or troubleshooting advice that are not covered by the guide.',
+    'If the guide does not cover the answer, say that the current user guide does not cover it and suggest the closest guide page when possible.',
+    'Keep the answer practical and concise.',
+    '',
+    'User guide context starts below.',
+    context,
+  ].join('\n');
+}
+
+export function buildUserGuideUserPrompt({
+  pageDescription,
+  pageTitle,
+  question,
+}: {
+  pageDescription: string;
+  pageTitle: string;
+  question: string;
+}) {
+  return [
+    `Current page title: ${pageTitle}`,
+    `Current page description: ${pageDescription}`,
+    '',
+    'User question:',
+    question,
+  ].join('\n');
+}

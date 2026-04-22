@@ -33,6 +33,12 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 - `Translation` and `Bilingual` only appear when the transcript already contains translation text.
 
+## `Live Caption` does not appear
+
+- Go back to [Live Record](guide:live-record) and make sure `Live Caption` is turned on there. `Settings > Subtitle Settings` only controls the window behavior and appearance.
+- If you only want floating system-audio subtitles, you do not need to start recording first. Turning on `Live Caption` is enough.
+- `Live Caption` depends on the same offline live transcription setup, so make sure a `Live Record Model` is configured.
+
 ## Voice Typing does not work
 
 - Turn on `Voice Typing` in `Settings > Shortcuts`.

@@ -96,6 +96,27 @@ export interface UserGuidePageModel {
   nextPage: UserGuideNavItem | null;
 }
 
+interface UserGuideAssistantCopy {
+  eyebrow: string;
+  title: string;
+  description: string;
+  currentPageLabel: string;
+  examplesLabel: string;
+  examples: string[];
+  inputPlaceholder: string;
+  submitLabel: string;
+  submittingLabel: string;
+  emptyState: string;
+  youLabel: string;
+  assistantLabel: string;
+  disabledTitle: string;
+  disabledBody: string;
+  genericError: string;
+  unavailableError: string;
+  emptyQuestionError: string;
+  tooLongError: string;
+}
+
 const GUIDE_PREFIXES: Record<HomeLocale, string> = {
   en: '/user-guide',
   'zh-CN': '/zh/user-guide',
@@ -329,6 +350,8 @@ const userGuidePageDefinitionById = Object.fromEntries(
   userGuidePageDefinitions.map((definition) => [definition.id, definition]),
 ) as Record<UserGuidePageId, UserGuidePageDefinition>;
 
+const userGuidePageIdSet = new Set<string>(USER_GUIDE_PAGE_ORDER);
+
 function isExternalHref(href: string) {
   return href.startsWith('http://') || href.startsWith('https://');
 }
@@ -477,6 +500,14 @@ export function getUserGuideOverviewCards(locale: HomeLocale) {
   );
 }
 
+export function getAllUserGuidePages(locale: HomeLocale) {
+  return USER_GUIDE_PAGE_ORDER.map((pageId) => getUserGuidePageById(locale, pageId));
+}
+
+export function isUserGuidePageId(value: string): value is UserGuidePageId {
+  return userGuidePageIdSet.has(value);
+}
+
 export function getUserGuideStaticParams() {
   return USER_GUIDE_PAGE_ORDER.map((pageId) => ({
     slug: userGuidePageDefinitionById[pageId].slug,
@@ -491,6 +522,73 @@ export function getAllUserGuidePaths() {
 
 export function getUserGuideUiCopy(locale: HomeLocale) {
   return userGuideUiContent[locale];
+}
+
+export function getUserGuideAssistantCopy(
+  locale: HomeLocale,
+  pageTitle: string,
+): UserGuideAssistantCopy {
+  if (locale === 'en') {
+    return {
+      eyebrow: 'Ask AI',
+      title: 'Ask about this guide',
+      description:
+        'Ask about the current page, the next step, or where a setting lives. Answers stay inside this user guide and prioritize the page you are reading now.',
+      currentPageLabel: 'Current page',
+      examplesLabel: 'Try asking',
+      examples: [
+        `What is the main task on the ${pageTitle} page?`,
+        `What should I read after ${pageTitle}?`,
+        'Where do I set up AI polish or translation in Sona?',
+      ],
+      inputPlaceholder:
+        'Ask about this page, the next step, or where a feature lives in the guide...',
+      submitLabel: 'Ask AI',
+      submittingLabel: 'Thinking...',
+      emptyState:
+        'Ask a question to get a guide-only answer based on the current page and the rest of the docs.',
+      youLabel: 'You',
+      assistantLabel: 'Guide AI',
+      disabledTitle: 'AI questions are not enabled on this deployment',
+      disabledBody:
+        'This guide can show the AI Q&A card, but the server does not currently have Gemini configured.',
+      genericError:
+        'The guide assistant could not answer right now. Please try again in a moment.',
+      unavailableError:
+        'AI questions are not available on this deployment right now.',
+      emptyQuestionError: 'Enter a question before sending it.',
+      tooLongError: 'Keep the question under 1200 characters.',
+    };
+  }
+
+  return {
+    eyebrow: '向 AI 提问',
+    title: '直接问这份指南',
+    description:
+      '可以问当前页面在讲什么、下一步该看哪页，或者某项设置在哪里。回答只基于这套用户指南，并优先参考你正在浏览的这一页。',
+    currentPageLabel: '当前页面',
+    examplesLabel: '可以这样问',
+    examples: [
+      `“${pageTitle}”这一页主要是在解决什么问题？`,
+      `看完“${pageTitle}”后，下一步应该看哪一页？`,
+      'Sona 里的 AI 润色或翻译应该去哪里设置？',
+    ],
+    inputPlaceholder:
+      '可以问这页内容、下一步流程，或某项功能在指南里的位置……',
+    submitLabel: '发送问题',
+    submittingLabel: '正在思考...',
+    emptyState:
+      '输入一个问题，AI 会优先结合当前页面，再参考整套用户指南来回答。',
+    youLabel: '你',
+    assistantLabel: '指南 AI',
+    disabledTitle: '当前部署尚未启用 AI 问答',
+    disabledBody:
+      '页面已经预留了问答入口，但服务器端目前还没有配置 Gemini。',
+    genericError: '指南助手暂时无法回答，请稍后再试。',
+    unavailableError: '当前部署暂时不可用 AI 问答。',
+    emptyQuestionError: '请先输入问题再发送。',
+    tooLongError: '问题请控制在 1200 个字符以内。',
+  };
 }
 
 export const getUserGuideMarkdown = cache(

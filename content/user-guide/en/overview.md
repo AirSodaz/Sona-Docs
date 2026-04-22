@@ -8,6 +8,8 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 - Reviewing wording, timestamps, and playback: [Edit and Playback](guide:edit-and-playback)
 - Adding optional LLM-powered cleanup or bilingual output: [AI Polish and Translate](guide:ai-polish-and-translate)
 - Exporting finished work, reopening earlier sessions, or checking key settings: [Export, History, and Settings](guide:export-history-and-settings)
+- Mainly want a floating subtitle window: start with `Live Caption` in [Live Record](guide:live-record)
+- Mainly want to dictate into another app: check `Voice Typing` in [Export, History, and Settings](guide:export-history-and-settings)
 - Solving a blocker: [FAQ and Troubleshooting](guide:faq)
 
 ## The Sona workflow in one line
@@ -17,6 +19,8 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 3. Refine the transcript in [Edit and Playback](guide:edit-and-playback).
 4. Use [AI Polish and Translate](guide:ai-polish-and-translate) only if you want LLM-assisted cleanup or translation.
 5. Finish in [Export, History, and Settings](guide:export-history-and-settings).
+
+`Live Caption` is a side capability inside `Live Record`, while `Voice Typing` lives under `Settings > Shortcuts`. Both depend on the same offline live transcription setup.
 
 ## What this guide covers well
 

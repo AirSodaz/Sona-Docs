@@ -13,8 +13,11 @@ import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
+import { isUserGuideAiEnabled } from '@/lib/user-guide-ai';
 import {
+  getUserGuideAssistantCopy,
   getUserGuideMarkdown,
   getUserGuideNavigation,
   getUserGuideOverviewCards,
@@ -265,6 +268,8 @@ export async function UserGuidePage({
   const overviewCards = getUserGuideOverviewCards(locale);
   const markdown = await getUserGuideMarkdown(locale, page.id);
   const markdownComponents = createMarkdownComponents(locale);
+  const assistantCopy = getUserGuideAssistantCopy(locale, page.navLabel);
+  const aiEnabled = isUserGuideAiEnabled();
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0] px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
@@ -350,6 +355,16 @@ export async function UserGuidePage({
                   {page.description}
                 </p>
               </div>
+            </AnimatedItem>
+
+            <AnimatedItem>
+              <UserGuideAssistant
+                copy={assistantCopy}
+                enabled={aiEnabled}
+                locale={locale}
+                pageId={page.id}
+                pageTitle={page.navLabel}
+              />
             </AnimatedItem>
 
             {page.id === 'overview' ? (

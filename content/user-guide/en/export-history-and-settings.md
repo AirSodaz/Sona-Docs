@@ -36,9 +36,16 @@ This page covers the final stage of the workflow: exporting finished transcripts
 - `Settings > Shortcuts`: live recording shortcuts plus `Voice Typing`
 - `Settings > About`: source code, logs, and update-related actions
 
+## `Voice Typing`
+
+- `Voice Typing` is useful when you want to dictate directly into chat apps, documents, forms, or other applications.
+- Open `Settings > Shortcuts`, turn on `Voice Typing`, choose a global shortcut, and pick either `Push to Talk (Hold)` or `Toggle (Press once)`.
+- `Push to Talk (Hold)` works better for short bursts. `Toggle (Press once)` works better for longer dictation sessions.
+- `Voice Typing` depends on the same offline live transcription setup, so you also need a working `Live Record Model`.
+- If it still does not work after setup, go straight to [FAQ and Troubleshooting](guide:faq).
+
 ## Useful notes
 
-- In `Settings > Shortcuts`, `Voice Typing` can insert text into other applications. You can enable it, choose a shortcut, and pick `Push to Talk (Hold)` or `Toggle (Press once)`.
 - In `Settings > Vocabulary`, `Hotwords` are entered one per line. Weighted entries such as `Term :2.0` are supported, and hotwords are currently most relevant for Transducer and Qwen3 ASR models.
 - In `Settings > Vocabulary`, `Text Replacement` can fix repeated terminology or spelling after transcription.
 - If you are troubleshooting rather than exporting, go straight to [FAQ and Troubleshooting](guide:faq).
