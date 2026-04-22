@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { motion } from 'motion/react';
 import {
   Briefcase,
@@ -90,54 +91,60 @@ function UseCaseStory({
   const Icon = useCaseIcons[item.id];
 
   return (
-    <motion.article
-      initial={{ opacity: 1, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.38,
-        ease: 'easeOut',
-        delay: index * 0.06,
-      }}
-      viewport={{ once: true, amount: 0.3 }}
-      className="relative flex h-full min-w-[284px] max-w-[320px] shrink-0 snap-center flex-col overflow-hidden rounded-[28px] border border-stone-200/80 bg-white/75 p-5 shadow-[0_28px_70px_-52px_rgba(87,83,78,0.6)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-stone-900/70 dark:shadow-[0_24px_72px_-48px_rgba(0,0,0,0.72)] md:min-w-0 md:max-w-none md:p-6"
+    <Link
+      href={item.href}
+      aria-label={item.title}
+      className="group block h-full min-w-[284px] max-w-[320px] shrink-0 snap-center rounded-[28px] focus-visible:outline-none md:min-w-0 md:max-w-none"
     >
-      <div className="pointer-events-none absolute inset-x-8 top-0 h-20 bg-gradient-to-r from-transparent via-stone-200/70 to-transparent blur-3xl dark:via-stone-700/35" />
+      <motion.article
+        initial={{ opacity: 1, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.38,
+          ease: 'easeOut',
+          delay: index * 0.06,
+        }}
+        viewport={{ once: true, amount: 0.3 }}
+        className="relative flex h-full flex-col overflow-hidden rounded-[28px] border border-stone-200/80 bg-white/75 p-5 shadow-[0_28px_70px_-52px_rgba(87,83,78,0.6)] backdrop-blur-xl transition-all duration-300 group-hover:-translate-y-1 group-hover:border-stone-300/90 group-hover:shadow-[0_32px_90px_-58px_rgba(87,83,78,0.68)] group-focus-visible:-translate-y-1 group-focus-visible:border-stone-400/95 group-focus-visible:ring-2 group-focus-visible:ring-stone-400/70 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-[#F7F5F2] dark:border-stone-800/80 dark:bg-stone-900/70 dark:shadow-[0_24px_72px_-48px_rgba(0,0,0,0.72)] dark:group-hover:border-stone-700/90 dark:group-hover:shadow-[0_28px_86px_-50px_rgba(0,0,0,0.8)] dark:group-focus-visible:border-stone-600/95 dark:group-focus-visible:ring-stone-500/70 dark:group-focus-visible:ring-offset-[#121212] md:p-6"
+      >
+        <div className="pointer-events-none absolute inset-x-8 top-0 h-20 bg-gradient-to-r from-transparent via-stone-200/70 to-transparent blur-3xl dark:via-stone-700/35" />
 
-      <div className="relative flex items-start justify-between gap-4">
-        <div>
-          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-200/80 bg-stone-100/85 text-stone-600 dark:border-stone-700/80 dark:bg-stone-800/75 dark:text-stone-300">
-            <Icon size={18} />
+        <div className="relative flex items-start justify-between gap-4">
+          <div>
+            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-stone-200/80 bg-stone-100/85 text-stone-600 transition-colors duration-300 group-hover:border-stone-300/90 group-hover:bg-stone-50 group-focus-visible:border-stone-400/90 group-focus-visible:bg-stone-50 dark:border-stone-700/80 dark:bg-stone-800/75 dark:text-stone-300 dark:group-hover:border-stone-600/90 dark:group-hover:bg-stone-800 dark:group-focus-visible:border-stone-500/90 dark:group-focus-visible:bg-stone-800">
+              <Icon size={18} />
+            </div>
+            <h3
+              className="mt-5 text-[1.65rem] leading-tight text-stone-800 transition-colors duration-300 group-hover:text-stone-950 group-focus-visible:text-stone-950 dark:text-stone-100 dark:group-hover:text-white dark:group-focus-visible:text-white"
+              style={{ fontFamily: 'var(--font-serif)' }}
+            >
+              {item.title}
+            </h3>
           </div>
-          <h3
-            className="mt-5 text-[1.65rem] leading-tight text-stone-800 dark:text-stone-100"
-            style={{ fontFamily: 'var(--font-serif)' }}
-          >
-            {item.title}
-          </h3>
+
+          <span className="pt-1 font-mono text-[11px] tracking-[0.28em] text-stone-300 transition-colors duration-300 group-hover:text-stone-400 group-focus-visible:text-stone-500 dark:text-stone-600 dark:group-hover:text-stone-500 dark:group-focus-visible:text-stone-400">
+            0{index + 1}
+          </span>
         </div>
 
-        <span className="pt-1 font-mono text-[11px] tracking-[0.28em] text-stone-300 dark:text-stone-600">
-          0{index + 1}
-        </span>
-      </div>
+        <div className="relative mt-5 flex flex-wrap gap-2">
+          {item.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-stone-200/80 bg-stone-50/85 px-3 py-1 text-[11px] font-medium tracking-[0.08em] text-stone-500 transition-colors duration-300 group-hover:border-stone-300/90 group-hover:text-stone-700 group-focus-visible:border-stone-400/80 group-focus-visible:text-stone-700 dark:border-stone-800/80 dark:bg-stone-950/55 dark:text-stone-300 dark:group-hover:border-stone-700/85 dark:group-hover:text-stone-200 dark:group-focus-visible:border-stone-600/80 dark:group-focus-visible:text-stone-200"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
 
-      <div className="relative mt-5 flex flex-wrap gap-2">
-        {item.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full border border-stone-200/80 bg-stone-50/85 px-3 py-1 text-[11px] font-medium tracking-[0.08em] text-stone-500 dark:border-stone-800/80 dark:bg-stone-950/55 dark:text-stone-300"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="relative mt-6 flex flex-1 flex-col">
-        <StoryRow label={labels.context} value={item.context} />
-        <StoryRow label={labels.workflow} value={item.workflow} />
-        <StoryRow label={labels.result} value={item.result} />
-      </div>
-    </motion.article>
+        <div className="relative mt-6 flex flex-1 flex-col">
+          <StoryRow label={labels.context} value={item.context} />
+          <StoryRow label={labels.workflow} value={item.workflow} />
+          <StoryRow label={labels.result} value={item.result} />
+        </div>
+      </motion.article>
+    </Link>
   );
 }
 

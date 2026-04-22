@@ -13,6 +13,7 @@ interface FeatureContent {
 
 export interface UseCaseItem {
   id: UseCaseId;
+  href: string;
   title: string;
   context: string;
   workflow: string;
@@ -149,6 +150,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       items: [
         {
           id: 'meetings',
+          href: '/user-guide/live-record',
           title: 'Meeting Notes',
           context:
             'Capture project syncs, interviews, or standups while the room is still talking.',
@@ -160,6 +162,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'lectures',
+          href: '/user-guide/edit-and-playback',
           title: 'Lecture Capture',
           context:
             'Record lectures, seminars, or office-hour explanations without losing the structure of the talk.',
@@ -171,6 +174,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'subtitle-export',
+          href: '/user-guide/batch-import',
           title: 'Video Subtitle Export',
           context:
             'Bring in local video or film files when you need subtitles instead of a blank timeline.',
@@ -182,6 +186,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'subtitle-translation',
+          href: '/user-guide/ai-polish-and-translate',
           title: 'Subtitle Translation',
           context:
             'Prepare subtitles for bilingual review or international delivery without separating the source text.',
@@ -339,6 +344,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       items: [
         {
           id: 'meetings',
+          href: '/zh/user-guide/live-record',
           title: '会议记录',
           context:
             '记录项目例会、访谈或同步会时，希望边说边留下一份可回看的文本。',
@@ -350,6 +356,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'lectures',
+          href: '/zh/user-guide/edit-and-playback',
           title: '课堂记录',
           context:
             '上课、讲座或讨论课内容较长，需要先完整记下，再回看重点段落。',
@@ -361,6 +368,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'subtitle-export',
+          href: '/zh/user-guide/batch-import',
           title: '视频/影片字幕导出',
           context:
             '手头已经有本地视频或影片素材，需要尽快整理出可交付的字幕文件。',
@@ -372,6 +380,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'subtitle-translation',
+          href: '/zh/user-guide/ai-polish-and-translate',
           title: '字幕翻译',
           context:
             '需要在保留原文的前提下生成译文，方便双语审阅或海外发布。',
