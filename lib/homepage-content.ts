@@ -62,6 +62,16 @@ export interface DemoContent {
   segments: DemoSegment[];
 }
 
+export interface FinalCtaContent {
+  eyebrow: string;
+  title: string;
+  desc: string;
+  primaryLabel: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  note: string;
+}
+
 export interface HomePageContent {
   metadata: {
     title: string;
@@ -88,6 +98,7 @@ export interface HomePageContent {
   useCases: UseCasesContent;
   demo: DemoContent;
   features: FeatureContent[];
+  finalCta: FinalCtaContent;
   footer: {
     license: string;
     repo: string;
@@ -276,6 +287,15 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         desc: 'Rich, interactive editor built with React to easily tweak generated text, align timestamps, and refine your audio.',
       },
     ],
+    finalCta: {
+      eyebrow: 'Start Here',
+      title: 'Download Sona and keep the full transcript workflow in one editor.',
+      desc: 'Install the latest release, then record or import audio, review timestamps, polish, translate, and export without breaking the thread.',
+      primaryLabel: 'Download Latest Release',
+      secondaryLabel: 'Read User Guide',
+      secondaryHref: '/user-guide',
+      note: 'Windows, macOS, and Linux builds are pulled from the latest GitHub release.',
+    },
     footer: {
       license: 'Open sourced under MIT License.',
       repo: 'GitHub Repository',
@@ -456,6 +476,15 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         desc: '基于 React 的沉浸式富文本编辑器，允许你轻松调整生成的文字、校准时间戳，让校对变得顺滑。',
       },
     ],
+    finalCta: {
+      eyebrow: '从这里开始',
+      title: '下载 Sona，把整条转录工作流留在同一块编辑器里。',
+      desc: '安装后就能开始实时录音或批量导入，继续整理时间戳、润色、翻译，并按需导出。',
+      primaryLabel: '下载最新版本',
+      secondaryLabel: '阅读用户指南',
+      secondaryHref: '/zh/user-guide',
+      note: 'Windows、macOS 和 Linux 构建均来自最新 GitHub Release。',
+    },
     footer: {
       license: '基于 MIT 协议开源。',
       repo: 'GitHub 仓库',
