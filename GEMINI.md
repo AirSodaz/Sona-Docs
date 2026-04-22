@@ -1,6 +1,6 @@
 # Sona-Docs Project Context
 
-This project is a landing page for **Sona**, an offline transcript editor. It is built as a Next.js 15 application, specifically tailored to run as an **AI Studio Applet**.
+This project is a landing page for **Sona**, an offline transcript editor. It is built as a Next.js 15 application for the public `Sona-Docs` site and local agent-assisted editing workflows.
 
 ## Project Overview
 - **Purpose:** A minimalist, warm landing page showcasing the Sona offline transcript editor.
@@ -24,8 +24,8 @@ This project is a landing page for **Sona**, an offline transcript editor. It is
 
 ## Development Conventions
 
-### AI Studio Applet Specifics
-- **HMR Handling:** `next.config.ts` contains a specific Webpack configuration that disables file watching if `DISABLE_HMR=true`. This is to prevent flickering during agent-based edits in the AI Studio environment. **Do not modify this logic.**
+### Local Editing Specifics
+- **HMR Handling:** `next.config.ts` contains a specific Webpack configuration that disables file watching if `DISABLE_HMR=true`. This helps prevent flickering during agent-based edits in constrained host environments. **Do not modify this logic.**
 - **Output:** The project is configured for `standalone` output in `next.config.ts`.
 
 ### Coding Standards
@@ -41,6 +41,6 @@ This project is a landing page for **Sona**, an offline transcript editor. It is
 ## Key Files
 - `app/page.tsx`: Main landing page content and layout.
 - `app/layout.tsx`: Root layout with font configurations and global styles.
-- `metadata.json`: AI Studio specific applet metadata.
-- `next.config.ts`: Next.js configuration including AI Studio specific HMR overrides.
+- `metadata.json`: Local workspace metadata for the site wrapper.
+- `next.config.ts`: Next.js configuration including the optional `DISABLE_HMR` override for agent-driven editing.
 - `lib/utils.ts`: Tailwind CSS class merging utility.
