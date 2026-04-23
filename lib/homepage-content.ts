@@ -64,7 +64,6 @@ export interface DemoContent {
     waveform: string;
     source: string;
     language: string;
-    liveCaption: string;
     helperLocked: string;
     helperReady: string;
     recording: string;
@@ -76,13 +75,6 @@ export interface DemoContent {
     projectValue: string;
     sessionLabel: string;
     sessionValue: string;
-    settingsControl: string;
-    settingsValue: string;
-    captionToggle: string;
-    captionState: string;
-    captionHint: string;
-    model: string;
-    modelValue: string;
     autosave: string;
     autosaveState: string;
     summary: string;
@@ -269,7 +261,6 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         waveform: 'Waveform',
         source: 'Source',
         language: 'Language',
-        liveCaption: 'Live Caption ready',
         helperLocked: 'Scroll to finish recording.',
         helperReady: 'Recording finished. Try Recorded, AI Polish, or Translate.',
         recording: 'Recording',
@@ -281,13 +272,6 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         projectValue: 'Homepage proof',
         sessionLabel: 'Context',
         sessionValue: 'Product sync interview',
-        settingsControl: 'Capture preset',
-        settingsValue: 'Clean punctuation / Speaker split off',
-        captionToggle: 'Live Caption',
-        captionState: 'Preview overlay enabled',
-        captionHint: 'Captions stay local and follow the current timestamp.',
-        model: 'ASR model',
-        modelValue: 'sherpa-onnx streaming',
         autosave: 'Autosave',
         autosaveState: 'Saved just now',
         summary: 'Summary',
@@ -505,7 +489,6 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         waveform: '波形',
         source: '输入源',
         language: '语言',
-        liveCaption: 'Live Caption 已就绪',
         helperLocked: '下拉完成录音。',
         helperReady: '录音完成，可试试录音结果 / 润色 / 翻译。',
         recording: '录音中',
@@ -517,13 +500,6 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         projectValue: 'Homepage 演示',
         sessionLabel: '上下文',
         sessionValue: '产品同步访谈',
-        settingsControl: '录音预设',
-        settingsValue: '保留断句 / 说话人拆分关闭',
-        captionToggle: 'Live Caption',
-        captionState: '预览悬浮字幕已开启',
-        captionHint: '字幕预览留在本地，并跟随当前时间戳。',
-        model: '识别模型',
-        modelValue: 'sherpa-onnx 实时识别',
         autosave: '自动保存',
         autosaveState: '刚刚保存',
         summary: '摘要',
