@@ -70,6 +70,34 @@ export interface DemoContent {
     recording: string;
     finished: string;
     segments: string;
+    workspaceLabel: string;
+    workspaceValue: string;
+    projectLabel: string;
+    projectValue: string;
+    sessionLabel: string;
+    sessionValue: string;
+    settingsControl: string;
+    settingsValue: string;
+    captionToggle: string;
+    captionState: string;
+    captionHint: string;
+    model: string;
+    modelValue: string;
+    autosave: string;
+    autosaveState: string;
+    summary: string;
+    summaryRecorded: string;
+    summaryPolished: string;
+    summaryTranslated: string;
+    search: string;
+    words: string;
+    translationLabel: string;
+    segmentLabel: string;
+    player: string;
+    playerStateRecording: string;
+    playerStateFinished: string;
+    playerHint: string;
+    liveMonitor: string;
   };
   recording: {
     inputSource: string;
@@ -249,6 +277,38 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         recording: 'Recording',
         finished: 'Finished',
         segments: 'segments',
+        workspaceLabel: 'Workspace',
+        workspaceValue: 'Offline research',
+        projectLabel: 'Project',
+        projectValue: 'Homepage proof',
+        sessionLabel: 'Context',
+        sessionValue: 'Product sync interview',
+        settingsControl: 'Capture preset',
+        settingsValue: 'Clean punctuation / Speaker split off',
+        captionToggle: 'Live Caption',
+        captionState: 'Preview overlay enabled',
+        captionHint:
+          'Captions stay local and follow the active timestamp while you record.',
+        model: 'ASR model',
+        modelValue: 'sherpa-onnx streaming',
+        autosave: 'Autosave',
+        autosaveState: 'Saved just now',
+        summary: 'Summary teaser',
+        summaryRecorded:
+          'Timestamped raw transcript stays editable before any AI cleanup.',
+        summaryPolished:
+          'AI Polish tightens phrasing and punctuation without losing the source timing.',
+        summaryTranslated:
+          'Translate keeps each source segment visible and adds a bilingual line underneath.',
+        search: 'Search',
+        words: 'words',
+        translationLabel: 'Translation',
+        segmentLabel: 'Segment',
+        player: 'Audio player',
+        playerStateRecording: 'Live stream attached',
+        playerStateFinished: 'Playback ready',
+        playerHint: 'Stay in one document from capture to export.',
+        liveMonitor: 'Live monitor',
       },
       recording: {
         inputSource: 'Microphone',
@@ -457,6 +517,34 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         recording: '录音中',
         finished: '已完成',
         segments: '段',
+        workspaceLabel: '工作区',
+        workspaceValue: '离线整理',
+        projectLabel: '项目',
+        projectValue: 'Homepage 演示',
+        sessionLabel: '上下文',
+        sessionValue: '产品同步访谈',
+        settingsControl: '录音预设',
+        settingsValue: '保留断句 / 说话人拆分关闭',
+        captionToggle: 'Live Caption',
+        captionState: '预览悬浮字幕已开启',
+        captionHint: '字幕预览会继续留在本地，并跟随当前时间戳更新。',
+        model: '识别模型',
+        modelValue: 'sherpa-onnx 实时识别',
+        autosave: '自动保存',
+        autosaveState: '刚刚保存',
+        summary: '摘要预览',
+        summaryRecorded: '先保留带时间戳的原始转录，再决定是否继续交给 AI 处理。',
+        summaryPolished: '润色会整理语气和标点，但不会破坏原始分段与时间戳。',
+        summaryTranslated: '翻译模式会保留原文，并在每段下方补出对照译文。',
+        search: '搜索',
+        words: '字词',
+        translationLabel: '译文',
+        segmentLabel: '片段',
+        player: '音频播放器',
+        playerStateRecording: '实时流已接入',
+        playerStateFinished: '可回放',
+        playerHint: '从录音到导出都留在同一份文档里。',
+        liveMonitor: '实时监听',
       },
       recording: {
         inputSource: '麦克风',

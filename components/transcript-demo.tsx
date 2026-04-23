@@ -9,13 +9,19 @@ import {
   useSpring,
 } from 'motion/react';
 import {
+  AudioLines,
   CheckCircle2,
   Clock3,
   Download,
+  FileText,
   Languages,
   Mic,
+  Monitor,
   Pause,
+  Play,
+  Search,
   Shield,
+  SlidersHorizontal,
   Sparkles,
   Square,
 } from 'lucide-react';
@@ -28,8 +34,8 @@ const actionIcons = {
   translated: Languages,
 } as const;
 const finishThreshold = 0.88;
-const waveformSeeds = Array.from({ length: 28 }, (_, index) =>
-  0.24 + (((Math.sin(index * 1.7) + 1) / 2) * 0.72),
+const waveformSeeds = Array.from({ length: 30 }, (_, index) =>
+  0.24 + (((Math.sin(index * 1.55) + 1) / 2) * 0.78),
 );
 
 function clamp(value: number, min: number, max: number) {
@@ -47,6 +53,14 @@ function formatDuration(totalSeconds: number) {
   return `${minutes}:${seconds}`;
 }
 
+function countWords(text: string) {
+  const matches = text.match(
+    /[\p{sc=Han}\p{sc=Hiragana}\p{sc=Katakana}\p{sc=Hangul}]|[\p{L}\d]+/gu,
+  );
+
+  return matches ? matches.length : 0;
+}
+
 function getPrimaryText(segment: DemoSegment, action: DemoAction) {
   if (action === 'polished') {
     return segment.polished;
@@ -61,6 +75,21 @@ function getTypedText(text: string, progress: number) {
 
   return text.slice(0, visibleLength);
 }
+
+type RenderedSegment =
+  | {
+      kind: 'placeholder';
+      index: number;
+      segment: DemoSegment;
+    }
+  | {
+      kind: 'content';
+      index: number;
+      segment: DemoSegment;
+      text: string;
+      translation?: string;
+      active: boolean;
+    };
 
 export function TranscriptDemo({ demo }: { demo: DemoContent }) {
   const runwayRef = useRef<HTMLDivElement>(null);
@@ -96,7 +125,6 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
     const syncViewport = () => setIsDesktopViewport(mediaQuery.matches);
 
     syncViewport();
-
     mediaQuery.addEventListener('change', syncViewport);
 
     return () => {
@@ -135,7 +163,6 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
   }, [isDesktopViewport, prefersReducedMotion]);
 
   const effectiveRawScrollProgress = prefersReducedMotion ? 1 : rawScrollProgress;
-  // Leave a short click window before the sticky card releases.
   const effectiveRecordingProgress = prefersReducedMotion
     ? 1
     : clamp(effectiveRawScrollProgress / finishThreshold, 0, 1);
@@ -171,6 +198,66 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
   const helperText = isFinished
     ? demo.labels.helperReady
     : demo.labels.helperLocked;
+  const summaryText =
+    displayedAction === 'polished'
+      ? demo.labels.summaryPolished
+      : displayedAction === 'translated'
+        ? demo.labels.summaryTranslated
+        : demo.labels.summaryRecorded;
+
+  const renderedSegments: RenderedSegment[] = demo.segments.map((segment, index) => {
+    const isResolved = isFinished || index < completedSegments;
+    const isTyping = index === activeSegmentIndex && shouldRenderTypingRow;
+
+    if (!isResolved && !isTyping) {
+      return {
+        kind: 'placeholder',
+        index,
+        segment,
+      };
+    }
+
+    return {
+      kind: 'content',
+      index,
+      segment,
+      text: isTyping
+        ? getTypedText(segment.raw, activeFraction)
+        : getPrimaryText(segment, displayedAction),
+      translation:
+        isFinished && displayedAction === 'translated'
+          ? segment.translated
+          : undefined,
+      active: isTyping,
+    };
+  });
+
+  const displayedWordCount = renderedSegments.reduce((count, segment) => {
+    if (segment.kind !== 'content') {
+      return count;
+    }
+
+    return (
+      count +
+      countWords(segment.text) +
+      (segment.translation ? countWords(segment.translation) : 0)
+    );
+  }, 0);
+
+  const activeMonitorSegment = renderedSegments.find(
+    (segment): segment is Extract<RenderedSegment, { kind: 'content' }> =>
+      segment.kind === 'content' && segment.active,
+  );
+  const lastVisibleSegment = [...renderedSegments]
+    .reverse()
+    .find(
+      (segment): segment is Extract<RenderedSegment, { kind: 'content' }> =>
+        segment.kind === 'content',
+    );
+  const liveMonitorText =
+    activeMonitorSegment?.text ||
+    lastVisibleSegment?.text ||
+    getTypedText(demo.segments[0]?.raw ?? '', Math.max(effectiveRecordingProgress, 0.16));
 
   return (
     <section className="w-full">
@@ -201,34 +288,34 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
         <div className={prefersReducedMotion ? '' : 'lg:sticky lg:top-6'}>
           <div
             ref={demoCardRef}
-            className="relative mx-auto max-w-6xl overflow-hidden rounded-[30px] border border-stone-200/80 bg-white/82 shadow-[0_36px_120px_-62px_rgba(87,83,78,0.6)] backdrop-blur-xl dark:border-stone-800/80 dark:bg-stone-900/82 dark:shadow-[0_32px_110px_-58px_rgba(0,0,0,0.78)] sm:rounded-[34px]"
+            className="relative mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-[#d9d0c4] bg-[#f3ede3] shadow-[0_34px_95px_-58px_rgba(86,72,52,0.34)] dark:border-stone-800/90 dark:bg-[#151313] dark:shadow-[0_28px_95px_-60px_rgba(0,0,0,0.82)] sm:rounded-[32px]"
           >
-            <div className="pointer-events-none absolute inset-x-10 top-0 h-20 bg-gradient-to-r from-transparent via-stone-200/70 to-transparent blur-3xl dark:via-stone-700/35" />
-            <div className="pointer-events-none absolute -right-16 top-20 h-36 w-36 rounded-full bg-stone-200/60 blur-3xl dark:bg-stone-700/20" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[linear-gradient(180deg,rgba(255,255,255,0.46),rgba(255,255,255,0))] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0))]" />
+            <div className="pointer-events-none absolute right-8 top-8 h-28 w-28 rounded-full bg-white/35 blur-3xl dark:bg-stone-700/20" />
 
-            <div className="border-b border-stone-200/80 px-4 py-4 dark:border-stone-800/80 sm:px-6 sm:py-5">
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,260px)_minmax(0,1fr)_auto] xl:items-center">
-                <div className="flex items-start gap-3">
-                  <div className="hidden items-center gap-1.5 pt-1.5 sm:flex">
-                    <span className="h-2.5 w-2.5 rounded-full bg-stone-300 dark:bg-stone-700" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-stone-200 dark:bg-stone-800" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-stone-200 dark:bg-stone-800" />
+            <div className="border-b border-[#ddd3c6] bg-[#f6f1e8] px-3 py-3 dark:border-stone-800/90 dark:bg-[#1b1817] sm:px-5 sm:py-4">
+              <div className="grid gap-3 xl:grid-cols-[minmax(0,290px)_minmax(0,1fr)_auto] xl:items-center">
+                <div className="flex min-w-0 items-start gap-3">
+                  <div className="hidden items-center gap-1.5 pt-2 sm:flex">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#d8c9ba] dark:bg-stone-700" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#e6ddd3] dark:bg-stone-800" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#e6ddd3] dark:bg-stone-800" />
                   </div>
 
                   <div className="min-w-0 text-left">
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500 sm:tracking-[0.28em]">
+                    <p className="text-[11px] uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
                       {demo.appLabel}
                     </p>
-                    <p className="mt-1 break-words text-[0.96rem] font-medium text-stone-800 dark:text-stone-100 sm:text-lg">
+                    <p className="mt-1 truncate text-[0.98rem] font-medium text-stone-800 dark:text-stone-100 sm:text-[1.05rem]">
                       {demo.fileName}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 xl:justify-center">
-                  <TopTab label={demo.tabs.live} active />
-                  <TopTab label={demo.tabs.batch} />
-                  <TopTab label={demo.tabs.history} />
+                  <TopTab label={demo.tabs.live} icon={<Mic size={14} />} active />
+                  <TopTab label={demo.tabs.batch} icon={<AudioLines size={14} />} />
+                  <TopTab label={demo.tabs.history} icon={<Clock3 size={14} />} />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 xl:justify-end">
@@ -238,7 +325,7 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
                     return (
                       <ActionButton
                         key={action}
-                        icon={<Icon size={15} />}
+                        icon={<Icon size={14} />}
                         label={demo.actions[action]}
                         active={displayedAction === action}
                         disabled={!isFinished}
@@ -248,201 +335,375 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
                   })}
 
                   <StaticAction label={demo.actions.export} active={isFinished}>
-                    <Download size={15} />
+                    <Download size={14} />
                   </StaticAction>
                 </div>
               </div>
+            </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <StatusPill
-                  icon={<CheckCircle2 size={14} />}
-                  label={headerStatus}
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e3d9cc] bg-[#eee6da] px-3 py-2.5 text-left dark:border-stone-800/90 dark:bg-[#181514] sm:px-5">
+              <div className="flex flex-wrap items-center gap-2">
+                <ContextChip
+                  label={demo.labels.workspaceLabel}
+                  value={demo.labels.workspaceValue}
                 />
-                <StatusPill icon={<Clock3 size={14} />} label={timerLabel} />
+                <ContextChip
+                  label={demo.labels.projectLabel}
+                  value={demo.labels.projectValue}
+                />
+                <ContextChip
+                  label={demo.labels.sessionLabel}
+                  value={demo.labels.sessionValue}
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusPill icon={<Shield size={13} />} label={demo.labels.localBadge} />
+                <StatusPill icon={<Clock3 size={13} />} label={timerLabel} />
                 <StatusPill
-                  icon={<Shield size={14} />}
-                  label={demo.labels.localBadge}
+                  icon={<CheckCircle2 size={13} />}
+                  label={headerStatus}
                 />
               </div>
             </div>
 
-            <div className="grid gap-4 p-3 sm:gap-6 sm:p-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-              <div className="rounded-[24px] border border-stone-200/80 bg-stone-50/85 p-4 dark:border-stone-800/80 dark:bg-[#171717] sm:rounded-[28px] sm:p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="text-left">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500 sm:text-xs sm:tracking-[0.28em]">
-                      {demo.labels.recorderPanel}
-                    </p>
-                    <p className="mt-2 text-[1.25rem] font-medium text-stone-800 dark:text-stone-100">
-                      {isFinished
-                        ? demo.labels.finished
-                        : demo.labels.recording}
-                    </p>
+            <div className="grid gap-3 bg-[#f7f3ea] p-3 dark:bg-[#141211] sm:gap-4 sm:p-4 lg:grid-cols-[320px_minmax(0,1fr)]">
+              <div className="rounded-[22px] border border-[#d8cfc3] bg-[#f2ebdf] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] dark:border-stone-800/90 dark:bg-[#1a1716]">
+                <div className="border-b border-[#ddd3c6] px-4 py-4 dark:border-stone-800/90 sm:px-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="text-left">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
+                        {demo.labels.recorderPanel}
+                      </p>
+                      <div className="mt-2 flex items-center gap-2">
+                        <span
+                          className={`h-2.5 w-2.5 rounded-full ${
+                            isFinished
+                              ? 'bg-emerald-500'
+                              : 'animate-pulse bg-red-500'
+                          }`}
+                        />
+                        <p className="text-[1.1rem] font-medium text-stone-800 dark:text-stone-100">
+                          {isFinished
+                            ? demo.labels.finished
+                            : demo.labels.recording}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="rounded-[16px] border border-[#d7cdc0] bg-[#faf6ef] px-3 py-2 text-right dark:border-stone-800/90 dark:bg-[#121010]">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+                        {headerStatus}
+                      </p>
+                      <p className="mt-1 font-mono text-sm text-stone-700 dark:text-stone-200">
+                        {timerLabel}
+                      </p>
+                    </div>
                   </div>
 
-                  <span
-                    className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${
-                      isFinished
-                        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-300'
-                        : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/70 dark:bg-red-950/35 dark:text-red-300'
-                    }`}
-                  >
-                    {headerStatus}
-                  </span>
+                  <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+                    <RecorderControl
+                      icon={<Monitor size={15} />}
+                      label={demo.labels.source}
+                      value={demo.recording.inputSource}
+                    />
+                    <RecorderControl
+                      icon={<SlidersHorizontal size={15} />}
+                      label={demo.labels.settingsControl}
+                      value={demo.labels.settingsValue}
+                    />
+                    <RecorderControl
+                      icon={<FileText size={15} />}
+                      label={demo.labels.captionToggle}
+                      value={demo.labels.captionState}
+                    />
+                  </div>
                 </div>
 
-                <div className="mt-5 rounded-[22px] border border-stone-200/80 bg-white/80 p-4 dark:border-stone-800/80 dark:bg-stone-950/55">
-                  <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
-                    <span>{demo.labels.waveform}</span>
-                    <span className="font-mono text-stone-500 dark:text-stone-300">
-                      {timerLabel}
-                    </span>
+                <div className="space-y-4 p-4 sm:p-5">
+                  <div className="rounded-[18px] border border-[#d7cdc0] bg-[#fbf7f0] p-3.5 dark:border-stone-800/90 dark:bg-[#121111]">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="text-left">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+                          {demo.labels.waveform}
+                        </p>
+                        <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                          {demo.labels.liveMonitor}
+                        </p>
+                      </div>
+                      <span className="font-mono text-sm text-stone-600 dark:text-stone-300">
+                        {timerLabel}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex h-24 items-end gap-1 overflow-hidden rounded-[14px] border border-[#d8cec2] bg-[#f1e8db] px-3 py-4 dark:border-stone-800/90 dark:bg-[#181514]">
+                      {waveformSeeds.map((seed, index) => {
+                        const amplitude = isFinished
+                          ? 0.68
+                          : 0.34 +
+                            effectiveRecordingProgress * 0.78 +
+                            Math.abs(
+                              Math.sin(
+                                effectiveRecordingProgress * 7.1 + index * 0.5,
+                              ),
+                            ) *
+                              0.12;
+                        const height = Math.round(
+                          12 + seed * 44 * amplitude + seed * 10,
+                        );
+
+                        return (
+                          <div
+                            key={index}
+                            className={`w-1.5 rounded-full transition-[height,opacity] duration-150 ${
+                              isFinished
+                                ? 'bg-stone-400/90 dark:bg-stone-500/85'
+                                : 'bg-gradient-to-t from-[#af3328] via-[#d64b3d] to-[#ef968a] dark:from-red-500 dark:via-red-400 dark:to-red-200'
+                            }`}
+                            style={{
+                              height,
+                              opacity: isFinished ? 0.76 : 0.44 + seed * 0.54,
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-3 rounded-[14px] border border-[#ddd2c5] bg-white/85 px-3 py-2.5 dark:border-stone-800/90 dark:bg-[#181615]">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`h-2 w-2 rounded-full ${
+                            isFinished
+                              ? 'bg-emerald-500'
+                              : 'animate-pulse bg-red-500'
+                          }`}
+                        />
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+                          {demo.labels.liveMonitor}
+                        </p>
+                      </div>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-stone-700 dark:text-stone-200">
+                        {liveMonitorText || helperText}
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="mt-4 flex h-28 items-end gap-1.5 overflow-hidden rounded-[18px] border border-stone-200/80 bg-stone-50/90 px-3 py-4 dark:border-stone-800/80 dark:bg-stone-900/70">
-                    {waveformSeeds.map((seed, index) => {
-                      const amplitude = isFinished
-                        ? 0.68
-                        : 0.36 +
-                          effectiveRecordingProgress * 0.74 +
-                          Math.abs(
-                            Math.sin(
-                              effectiveRecordingProgress * 7.2 + index * 0.52,
-                            ),
-                          ) *
-                            0.12;
-                      const height = Math.round(
-                        14 + seed * 52 * amplitude + seed * 12,
-                      );
+                  <div className="rounded-[18px] border border-[#d7cdc0] bg-[#faf6ef] px-4 py-3 dark:border-stone-800/90 dark:bg-[#121010]">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <PlayerIconButton active={!isFinished}>
+                          <Pause size={16} />
+                        </PlayerIconButton>
+                        <button
+                          type="button"
+                          className={`flex h-14 w-14 items-center justify-center rounded-full shadow-[0_16px_32px_-20px_rgba(175,51,40,0.7)] transition-colors ${
+                            isFinished
+                              ? 'bg-emerald-500 text-white'
+                              : 'bg-[#b53f31] text-white'
+                          }`}
+                          aria-label={headerStatus}
+                        >
+                          {isFinished ? (
+                            <CheckCircle2 size={22} />
+                          ) : (
+                            <Square size={18} fill="currentColor" />
+                          )}
+                        </button>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+                          {headerStatus}
+                        </p>
+                        <p className="mt-1 font-mono text-sm text-stone-700 dark:text-stone-200">
+                          {timerLabel}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                    <InfoRow
+                      icon={<Mic size={14} />}
+                      label={demo.labels.source}
+                      value={demo.recording.inputSource}
+                    />
+                    <InfoRow
+                      icon={<Languages size={14} />}
+                      label={demo.labels.language}
+                      value={demo.recording.languageValue}
+                    />
+                    <InfoRow
+                      icon={<AudioLines size={14} />}
+                      label={demo.labels.model}
+                      value={demo.labels.modelValue}
+                    />
+                    <InfoRow
+                      icon={<FileText size={14} />}
+                      label={demo.labels.liveCaption}
+                      value={demo.labels.captionState}
+                    />
+                  </div>
+
+                  <p className="text-left text-xs leading-6 text-stone-500 dark:text-stone-400">
+                    {demo.labels.captionHint}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-[22px] border border-[#d8cfc3] bg-[#fcfaf6] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)] dark:border-stone-800/90 dark:bg-[#171514]">
+                <div className="border-b border-[#ddd3c6] px-4 py-4 dark:border-stone-800/90 sm:px-5">
+                  <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+                    <div className="min-w-0 text-left">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
+                          {demo.labels.editorPanel}
+                        </p>
+                        <span className="inline-flex items-center rounded-full border border-[#d6ccc0] bg-[#f5efe5] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500 dark:border-stone-800/90 dark:bg-[#100f0f] dark:text-stone-300">
+                          {demo.actions[displayedAction]}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm leading-7 text-stone-500 dark:text-stone-400">
+                        {helperText}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <MetaBadge
+                        icon={<CheckCircle2 size={13} />}
+                        label={`${demo.labels.autosave}: ${demo.labels.autosaveState}`}
+                      />
+                      <MetaBadge
+                        icon={<Search size={13} />}
+                        label={demo.labels.search}
+                      />
+                      <MetaBadge
+                        label={`${displayedWordCount} ${demo.labels.words}`}
+                      />
+                      <MetaBadge
+                        label={`${displayedCount}/${totalSegments} ${demo.labels.segments}`}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 p-4 sm:p-5">
+                  <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_220px]">
+                    <div className="rounded-[18px] border border-[#d7cdc0] bg-[#f6f0e4] p-4 dark:border-stone-800/90 dark:bg-[#121111]">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0 text-left">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+                            {demo.labels.summary}
+                          </p>
+                          <p className="mt-2 text-[1rem] font-medium text-stone-800 dark:text-stone-100">
+                            {demo.actions[displayedAction]}
+                          </p>
+                        </div>
+                        <span className="inline-flex items-center rounded-full border border-[#d7cdc0] bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500 dark:border-stone-800/90 dark:bg-[#181615] dark:text-stone-300">
+                          {headerStatus}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-stone-600 dark:text-stone-300">
+                        {summaryText}
+                      </p>
+                    </div>
+
+                    <div className="rounded-[18px] border border-[#d7cdc0] bg-[#faf6ef] p-4 text-left dark:border-stone-800/90 dark:bg-[#121010]">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+                        {demo.labels.autosave}
+                      </p>
+                      <p className="mt-2 text-sm font-medium text-stone-800 dark:text-stone-100">
+                        {demo.labels.autosaveState}
+                      </p>
+                      <p className="mt-3 text-sm leading-6 text-stone-500 dark:text-stone-400">
+                        {demo.labels.playerHint}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {renderedSegments.map((segment) => {
+                      if (segment.kind === 'placeholder') {
+                        return (
+                          <PlaceholderSegment
+                            key={segment.segment.time}
+                            index={segment.index}
+                            time={segment.segment.time}
+                            label={demo.labels.segmentLabel}
+                          />
+                        );
+                      }
 
                       return (
-                        <div
-                          key={index}
-                          className={`w-1.5 rounded-full transition-[height,opacity] duration-150 ${
-                            isFinished
-                              ? 'bg-stone-400/90 dark:bg-stone-500/80'
-                              : 'bg-gradient-to-t from-red-500 via-red-400 to-red-300 dark:from-red-500 dark:via-red-400 dark:to-red-200'
-                          }`}
-                          style={{
-                            height,
-                            opacity: isFinished
-                              ? 0.72
-                              : 0.42 + seed * 0.58,
-                          }}
+                        <SegmentRow
+                          key={segment.segment.time}
+                          index={segment.index}
+                          time={segment.segment.time}
+                          label={demo.labels.segmentLabel}
+                          text={segment.text}
+                          translation={segment.translation}
+                          translationLabel={demo.labels.translationLabel}
+                          activeLabel={demo.labels.recording}
+                          active={segment.active}
                         />
                       );
                     })}
                   </div>
                 </div>
-
-                <div className="mt-5 flex items-center justify-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 shadow-sm dark:border-stone-800 dark:bg-stone-950/70 dark:text-stone-300">
-                    <Pause size={18} />
-                  </div>
-                  <div
-                    className={`flex h-16 w-16 items-center justify-center rounded-full shadow-[0_12px_32px_-18px_rgba(239,68,68,0.85)] ${
-                      isFinished
-                        ? 'bg-emerald-500 text-white dark:bg-emerald-500'
-                        : 'bg-red-500 text-white dark:bg-red-500'
-                    }`}
-                  >
-                    {isFinished ? (
-                      <CheckCircle2 size={26} />
-                    ) : (
-                      <Square size={22} fill="currentColor" />
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-5 space-y-3">
-                  <InfoRow
-                    label={demo.labels.source}
-                    value={demo.recording.inputSource}
-                    icon={<Mic size={14} />}
-                  />
-                  <InfoRow
-                    label={demo.labels.language}
-                    value={demo.recording.languageValue}
-                  />
-                  <InfoRow
-                    label={demo.labels.liveCaption}
-                    value={
-                      isFinished
-                        ? demo.labels.finished
-                        : demo.labels.recording
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="rounded-[24px] border border-stone-200/80 bg-white/85 p-4 dark:border-stone-800/80 dark:bg-[#151515] sm:rounded-[28px] sm:p-5">
-                <div className="flex flex-col gap-3 border-b border-stone-200/80 pb-4 dark:border-stone-800/80 sm:flex-row sm:items-end sm:justify-between">
-                  <div className="min-w-0 text-left">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500 sm:text-xs sm:tracking-[0.28em]">
-                      {demo.labels.editorPanel}
-                    </p>
-                    <p className="mt-2 text-sm leading-7 text-stone-500 dark:text-stone-400 sm:text-[0.95rem]">
-                      {helperText}
-                    </p>
-                  </div>
-
-                  <div className="inline-flex shrink-0 items-center rounded-full border border-stone-200/80 bg-stone-50/85 px-3 py-1.5 text-[11px] font-medium tracking-[0.08em] text-stone-500 dark:border-stone-800/80 dark:bg-stone-950/55 dark:text-stone-300">
-                    {displayedCount}/{totalSegments} {demo.labels.segments}
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-3">
-                  {demo.segments.map((segment, index) => {
-                    const isResolved = isFinished || index < completedSegments;
-                    const isTyping =
-                      index === activeSegmentIndex && shouldRenderTypingRow;
-
-                    if (!isResolved && !isTyping) {
-                      return (
-                        <PlaceholderSegment
-                          key={segment.time}
-                          time={segment.time}
-                        />
-                      );
-                    }
-
-                    const primaryText = isTyping
-                      ? getTypedText(segment.raw, activeFraction)
-                      : getPrimaryText(segment, displayedAction);
-
-                    return (
-                      <SegmentRow
-                        key={segment.time}
-                        time={segment.time}
-                        text={primaryText}
-                        translation={
-                          isFinished && displayedAction === 'translated'
-                            ? segment.translated
-                            : undefined
-                        }
-                        active={isTyping}
-                      />
-                    );
-                  })}
-                </div>
               </div>
             </div>
 
-            <div className="border-t border-stone-200/80 px-4 py-3 dark:border-stone-800/80 sm:px-6">
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
-                  {isFinished ? demo.labels.finished : demo.labels.recording}
-                </span>
-                <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-stone-200 dark:bg-stone-800">
-                  <motion.div
-                    className={`absolute inset-y-0 left-0 rounded-full ${
-                      isFinished ? 'bg-emerald-500' : 'bg-stone-800 dark:bg-stone-100'
+            <div className="border-t border-[#ddd3c6] bg-[#efe6da] px-3 py-3 dark:border-stone-800/90 dark:bg-[#171514] sm:px-5 sm:py-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border ${
+                      isFinished
+                        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/35 dark:text-emerald-300'
+                        : 'border-[#d6cbbb] bg-[#faf5ed] text-stone-700 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-200'
                     }`}
-                    style={{
-                      width: `${effectiveRecordingProgress * 100}%`,
-                    }}
-                  />
+                  >
+                    {isFinished ? <Play size={17} /> : <AudioLines size={17} />}
+                  </div>
+
+                  <div className="min-w-0 text-left">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+                      {demo.labels.player}
+                    </p>
+                    <p className="mt-1 truncate text-sm font-medium text-stone-800 dark:text-stone-100">
+                      {demo.fileName}
+                    </p>
+                  </div>
+
+                  <span className="inline-flex items-center rounded-full border border-[#d7cdc0] bg-white/75 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-stone-500 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-300">
+                    {isFinished
+                      ? demo.labels.playerStateFinished
+                      : demo.labels.playerStateRecording}
+                  </span>
                 </div>
+
+                <div className="flex w-full items-center gap-3 lg:max-w-[420px]">
+                  <span className="font-mono text-xs text-stone-500 dark:text-stone-400">
+                    {timerLabel}
+                  </span>
+                  <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#dccfbe] dark:bg-stone-800">
+                    <motion.div
+                      className={`absolute inset-y-0 left-0 rounded-full ${
+                        isFinished ? 'bg-emerald-500' : 'bg-[#7d6951] dark:bg-stone-100'
+                      }`}
+                      style={{
+                        width: `${effectiveRecordingProgress * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <span className="font-mono text-xs text-stone-500 dark:text-stone-400">
+                    {demo.recording.finishedDuration}
+                  </span>
+                </div>
+
+                <p className="text-left text-xs leading-6 text-stone-500 dark:text-stone-400 lg:max-w-[240px] lg:text-right">
+                  {demo.labels.playerHint}
+                </p>
               </div>
             </div>
           </div>
@@ -452,15 +713,24 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
   );
 }
 
-function TopTab({ label, active = false }: { label: string; active?: boolean }) {
+function TopTab({
+  icon,
+  label,
+  active = false,
+}: {
+  icon: ReactNode;
+  label: string;
+  active?: boolean;
+}) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-3 py-1.5 text-[11px] font-medium tracking-[0.08em] ${
+      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium tracking-[0.08em] ${
         active
           ? 'border-stone-800 bg-stone-800 text-white dark:border-stone-200 dark:bg-stone-200 dark:text-stone-900'
-          : 'border-stone-200 bg-stone-50/80 text-stone-500 dark:border-stone-800 dark:bg-stone-900/60 dark:text-stone-300'
+          : 'border-[#d8cec2] bg-[#faf6ef] text-stone-500 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-300'
       }`}
     >
+      {icon}
       {label}
     </span>
   );
@@ -485,11 +755,15 @@ function ActionButton({
       onClick={onClick}
       disabled={disabled}
       aria-pressed={active}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-stone-500/60 dark:focus-visible:ring-offset-stone-900 ${
+      className={`inline-flex min-h-9 items-center justify-center gap-2 rounded-full border px-3.5 py-2 text-[13px] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6f1e8] dark:focus-visible:ring-stone-500/60 dark:focus-visible:ring-offset-[#1b1817] ${
         active
           ? 'border-stone-800 bg-stone-800 text-white dark:border-stone-200 dark:bg-stone-200 dark:text-stone-900'
-          : 'border-stone-200 bg-stone-50/80 text-stone-600 dark:border-stone-800 dark:bg-stone-900/60 dark:text-stone-300'
-      } ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:-translate-y-0.5 hover:border-stone-300 hover:bg-white dark:hover:border-stone-700 dark:hover:bg-stone-900'}`}
+          : 'border-[#d8cec2] bg-[#faf6ef] text-stone-600 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-300'
+      } ${
+        disabled
+          ? 'cursor-not-allowed opacity-50'
+          : 'hover:-translate-y-0.5 hover:border-[#cfc2b2] hover:bg-white dark:hover:border-stone-700 dark:hover:bg-[#171515]'
+      }`}
     >
       {icon}
       {label}
@@ -508,10 +782,10 @@ function StaticAction({
 }) {
   return (
     <div
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm ${
+      className={`inline-flex min-h-9 items-center justify-center gap-2 rounded-full border px-3.5 py-2 text-[13px] ${
         active
-          ? 'border-stone-200 bg-stone-50/80 text-stone-600 dark:border-stone-800 dark:bg-stone-900/60 dark:text-stone-300'
-          : 'border-stone-200 bg-stone-50/70 text-stone-400 dark:border-stone-800 dark:bg-stone-900/40 dark:text-stone-500'
+          ? 'border-[#d8cec2] bg-[#faf6ef] text-stone-600 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-300'
+          : 'border-[#e0d7cc] bg-[#f7f1e7] text-stone-400 dark:border-stone-800/70 dark:bg-[#121111] dark:text-stone-500'
       }`}
     >
       {children}
@@ -528,10 +802,84 @@ function StatusPill({
   label: string;
 }) {
   return (
-    <div className="inline-flex items-center gap-1.5 rounded-full border border-stone-200/80 bg-white/85 px-2.5 py-1.5 text-[11px] text-stone-500 dark:border-stone-800/80 dark:bg-stone-950/55 dark:text-stone-300 sm:gap-2 sm:px-3 sm:text-xs">
+    <div className="inline-flex items-center gap-1.5 rounded-full border border-[#d8cec2] bg-white/80 px-2.5 py-1.5 text-[11px] text-stone-500 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-300">
       <span className="text-stone-400 dark:text-stone-500">{icon}</span>
       <span>{label}</span>
     </div>
+  );
+}
+
+function ContextChip({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-[#d8cec2] bg-white/75 px-2.5 py-1.5 text-[11px] dark:border-stone-800/90 dark:bg-[#121111]">
+      <span className="uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+        {label}
+      </span>
+      <span className="text-stone-600 dark:text-stone-200">{value}</span>
+    </div>
+  );
+}
+
+function RecorderControl({
+  icon,
+  label,
+  value,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-[16px] border border-[#d8cec2] bg-[#faf6ef] px-3 py-2.5 dark:border-stone-800/90 dark:bg-[#121111]">
+      <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
+        {icon}
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
+          {label}
+        </span>
+      </div>
+      <p className="mt-2 text-sm text-stone-700 dark:text-stone-200">{value}</p>
+    </div>
+  );
+}
+
+function PlayerIconButton({
+  active,
+  children,
+}: {
+  active: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={`flex h-10 w-10 items-center justify-center rounded-full border ${
+        active
+          ? 'border-[#d3c6b8] bg-white text-stone-700 dark:border-stone-700 dark:bg-[#181615] dark:text-stone-200'
+          : 'border-[#e1d7cb] bg-[#f6efe5] text-stone-400 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-500'
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+function MetaBadge({
+  icon,
+  label,
+}: {
+  icon?: ReactNode;
+  label: string;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#d8cec2] bg-[#faf6ef] px-3 py-1.5 text-[11px] text-stone-500 dark:border-stone-800/90 dark:bg-[#121111] dark:text-stone-300">
+      {icon ? <span className="text-stone-400 dark:text-stone-500">{icon}</span> : null}
+      {label}
+    </span>
   );
 }
 
@@ -545,46 +893,62 @@ function InfoRow({
   value: string;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-[18px] border border-stone-200/80 bg-white/80 px-3.5 py-3 dark:border-stone-800/80 dark:bg-stone-950/55">
-      <div className="flex min-w-0 items-center gap-2">
-        {icon ? (
-          <span className="text-stone-400 dark:text-stone-500">{icon}</span>
-        ) : null}
-        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+    <div className="rounded-[16px] border border-[#d8cec2] bg-[#faf6ef] px-3.5 py-3 dark:border-stone-800/90 dark:bg-[#121111]">
+      <div className="flex items-center gap-2 text-stone-400 dark:text-stone-500">
+        {icon ? icon : null}
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em]">
           {label}
         </span>
       </div>
-      <span className="text-sm text-stone-700 dark:text-stone-200">{value}</span>
+      <p className="mt-2 text-sm text-stone-700 dark:text-stone-200">{value}</p>
     </div>
   );
 }
 
 function SegmentRow({
+  index,
   time,
+  label,
   text,
   translation,
+  translationLabel,
+  activeLabel,
   active,
 }: {
+  index: number;
   time: string;
+  label: string;
   text: string;
   translation?: string;
+  translationLabel: string;
+  activeLabel: string;
   active: boolean;
 }) {
   return (
     <div
-      className={`rounded-[22px] border px-3.5 py-3.5 transition-all duration-200 sm:px-4 ${
+      className={`rounded-[18px] border px-3.5 py-3.5 transition-all duration-200 sm:px-4 ${
         active
-          ? 'border-stone-800 bg-stone-50 shadow-[0_18px_40px_-28px_rgba(41,37,36,0.55)] dark:border-stone-300 dark:bg-stone-900'
-          : 'border-stone-200/80 bg-stone-50/80 dark:border-stone-800/80 dark:bg-stone-900/60'
+          ? 'border-stone-800 bg-[#f7f1e7] shadow-[0_18px_38px_-28px_rgba(56,44,30,0.45)] dark:border-stone-300 dark:bg-[#100f0f]'
+          : 'border-[#ddd2c6] bg-[#faf7f1] dark:border-stone-800/90 dark:bg-[#121111]'
       }`}
     >
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3">
-        <span className="w-fit shrink-0 rounded-full border border-stone-200 bg-white/90 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-stone-500 dark:border-stone-700 dark:bg-stone-800/80 dark:text-stone-300 sm:text-[11px] sm:tracking-[0.18em]">
-          {time}
-        </span>
+      <div className="grid gap-3 md:grid-cols-[92px_minmax(0,1fr)]">
+        <div className="space-y-2 text-left">
+          <span className="inline-flex w-fit items-center rounded-full border border-[#d7cdc0] bg-white/85 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-stone-500 dark:border-stone-800/90 dark:bg-[#181615] dark:text-stone-300 sm:text-[11px]">
+            {time}
+          </span>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+            {label} {String(index + 1).padStart(2, '0')}
+          </p>
+          {active ? (
+            <span className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-red-600 dark:border-red-900/70 dark:bg-red-950/35 dark:text-red-300">
+              {activeLabel}
+            </span>
+          ) : null}
+        </div>
 
-        <div className="min-w-0 flex-1 text-left">
-          <p className="text-[0.96rem] leading-7 text-stone-700 dark:text-stone-200 sm:text-[0.95rem]">
+        <div className="min-w-0 text-left">
+          <p className="text-[0.95rem] leading-7 text-stone-700 dark:text-stone-200">
             {text}
             {active ? (
               <span className="ml-1 inline-block animate-pulse text-stone-400 dark:text-stone-500">
@@ -594,9 +958,14 @@ function SegmentRow({
           </p>
 
           {translation ? (
-            <p className="mt-2 border-l border-stone-200 pl-3 text-[0.94rem] leading-7 text-stone-500 dark:border-stone-700 dark:text-stone-300">
-              {translation}
-            </p>
+            <div className="mt-3 border-l border-[#dad0c4] pl-3 dark:border-stone-700">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+                {translationLabel}
+              </p>
+              <p className="mt-1 text-[0.94rem] leading-7 text-stone-500 dark:text-stone-300">
+                {translation}
+              </p>
+            </div>
           ) : null}
         </div>
       </div>
@@ -604,17 +973,30 @@ function SegmentRow({
   );
 }
 
-function PlaceholderSegment({ time }: { time: string }) {
+function PlaceholderSegment({
+  index,
+  time,
+  label,
+}: {
+  index: number;
+  time: string;
+  label: string;
+}) {
   return (
-    <div className="rounded-[22px] border border-dashed border-stone-200/80 bg-stone-50/45 px-3.5 py-3.5 dark:border-stone-800/80 dark:bg-stone-900/35 sm:px-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3">
-        <span className="w-fit shrink-0 rounded-full border border-stone-200/70 bg-white/70 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-stone-300 dark:border-stone-800 dark:bg-stone-950/50 dark:text-stone-600 sm:text-[11px] sm:tracking-[0.18em]">
-          {time}
-        </span>
+    <div className="rounded-[18px] border border-dashed border-[#ddd3c6] bg-[#f7f2ea] px-3.5 py-3.5 dark:border-stone-800/90 dark:bg-[#11100f] sm:px-4">
+      <div className="grid gap-3 md:grid-cols-[92px_minmax(0,1fr)]">
+        <div className="space-y-2 text-left">
+          <span className="inline-flex w-fit items-center rounded-full border border-[#e2d8cc] bg-white/70 px-2.5 py-1 font-mono text-[10px] tracking-[0.16em] text-stone-300 dark:border-stone-800/90 dark:bg-[#171515] dark:text-stone-600 sm:text-[11px]">
+            {time}
+          </span>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-300 dark:text-stone-600">
+            {label} {String(index + 1).padStart(2, '0')}
+          </p>
+        </div>
 
-        <div className="flex-1 space-y-2 pt-1">
-          <div className="h-3 rounded-full bg-stone-200/80 dark:bg-stone-800/90" />
-          <div className="h-3 w-4/5 rounded-full bg-stone-200/65 dark:bg-stone-800/65" />
+        <div className="space-y-2 pt-1">
+          <div className="h-3 rounded-full bg-[#e4dbcf] dark:bg-stone-800/90" />
+          <div className="h-3 w-4/5 rounded-full bg-[#e9e0d5] dark:bg-stone-800/70" />
         </div>
       </div>
     </div>
