@@ -168,11 +168,14 @@ export function HomePage({
       </section>
 
       <main className="w-full px-4 pb-10 pt-6 sm:px-6 sm:pb-12 sm:pt-10 md:px-16 md:pt-12">
-        <div id={demoPreviewId} className="w-full scroll-mt-6 sm:scroll-mt-8">
+        <section
+          id={demoPreviewId}
+          className="relative w-full scroll-mt-6 sm:scroll-mt-8"
+        >
           <TranscriptDemo demo={content.demo} />
-        </div>
+        </section>
 
-        <div className="mt-20 w-full sm:mt-24">
+        <div className="mt-4 w-full sm:mt-6">
           <UseCasesSection content={content.useCases} />
         </div>
 

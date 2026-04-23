@@ -1,0 +1,233 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e6]
+        - text: ona
+      - generic [ref=e10]:
+        - button "Toggle theme" [ref=e11]:
+          - img [ref=e12]
+          - img [ref=e18]
+          - text: Toggle theme
+        - link "中文中" [ref=e20] [cursor=pointer]:
+          - /url: /zh
+          - img [ref=e21]
+          - text: 中文中
+        - link "GitHub" [ref=e24] [cursor=pointer]:
+          - /url: https://github.com/AirSodaz/sona
+          - img [ref=e25]
+          - text: GitHub
+    - generic [ref=e30]:
+      - paragraph [ref=e31]: Fast, accurate, private.
+      - heading "Transcription tools for the quiet spaces." [level=1] [ref=e32]:
+        - text: Transcription tools
+        - text: for the quiet spaces.
+      - paragraph [ref=e33]: Sona keeps speech-to-text on your own machine, then lets you review timestamps, clean up wording, translate, and export without leaving the same editor.
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - link "Download Latest Release" [ref=e37] [cursor=pointer]:
+            - /url: /downloads
+            - text: Download Latest Release
+            - img [ref=e38]
+          - link "All builds" [ref=e41] [cursor=pointer]:
+            - /url: /downloads
+        - link "Read User Guide" [ref=e42] [cursor=pointer]:
+          - /url: /user-guide
+      - generic [ref=e43]:
+        - paragraph [ref=e44]: Workflow
+        - list [ref=e45]:
+          - listitem [ref=e46]: 01Record or Import
+          - listitem [ref=e47]: 02Review Timestamps
+          - listitem [ref=e48]: 03Polish or Translate
+          - listitem [ref=e49]: 04Export
+  - main [ref=e50]:
+    - generic [ref=e52]:
+      - generic [ref=e53]:
+        - paragraph [ref=e54]: Scroll through a live capture
+        - heading "Watch the editor fill before AI steps in." [level=2] [ref=e55]
+        - paragraph [ref=e56]: "This mockup follows Sona's real flow: live recording writes timestamped segments first, then polish and translation stay inside the same workspace."
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e63]:
+              - paragraph [ref=e64]: Sona Demo Workspace
+              - paragraph [ref=e65]: product-sync-interview.sona
+            - generic [ref=e66]: Live RecordBatch ImportHistory
+            - generic [ref=e67]:
+              - button "Recorded" [disabled] [pressed] [ref=e68]:
+                - img [ref=e69]
+                - text: Recorded
+              - button "AI Polish" [disabled] [ref=e72]:
+                - img [ref=e73]
+                - text: AI Polish
+              - button "Translate" [disabled] [ref=e76]:
+                - img [ref=e77]
+                - text: Translate
+              - generic [ref=e81]:
+                - img [ref=e82]
+                - text: Export
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - img [ref=e88]
+              - text: Recording
+            - generic [ref=e91]:
+              - img [ref=e93]
+              - text: 00:00
+            - generic [ref=e96]:
+              - img [ref=e98]
+              - text: 100% local
+        - generic [ref=e100]:
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - paragraph [ref=e104]: Live Record
+                - paragraph [ref=e105]: Recording
+              - text: Recording
+            - generic [ref=e107]: Waveform00:00
+            - generic [ref=e137]:
+              - img [ref=e139]
+              - img [ref=e143]
+            - generic [ref=e145]:
+              - generic [ref=e146]:
+                - generic [ref=e147]:
+                  - img [ref=e149]
+                  - text: Source
+                - text: Microphone
+              - generic [ref=e152]:
+                - generic [ref=e153]: Language
+                - text: English
+              - generic [ref=e154]:
+                - generic [ref=e155]: Live Caption ready
+                - text: Recording
+          - generic [ref=e156]:
+            - generic [ref=e157]:
+              - generic [ref=e158]:
+                - paragraph [ref=e159]: Transcript Editor
+                - paragraph [ref=e160]: Keep scrolling to finish the recording, then inspect Recorded, AI Polish, or Translate.
+              - generic [ref=e161]: 0/6 segments
+            - generic [ref=e162]:
+              - generic [ref=e164]: 00:03
+              - generic [ref=e166]: 00:16
+              - generic [ref=e168]: 00:31
+              - generic [ref=e170]: 00:46
+              - generic [ref=e172]: 00:59
+              - generic [ref=e174]: 01:14
+        - generic [ref=e176]: Recording
+    - generic [ref=e178]:
+      - generic [ref=e179]:
+        - paragraph [ref=e180]: Use Cases
+        - heading "Made for the moments when audio needs to become usable text" [level=2] [ref=e181]
+        - paragraph [ref=e182]: Sona handles local transcription first, then keeps polish, translation, and export in the same working thread instead of sending you across separate tools.
+      - generic [ref=e184]:
+        - link "Meeting Notes" [ref=e185] [cursor=pointer]:
+          - /url: /user-guide/live-record
+          - article [ref=e186]:
+            - generic [ref=e187]:
+              - generic [ref=e188]:
+                - img [ref=e190]
+                - heading "Meeting Notes" [level=3] [ref=e193]
+              - generic [ref=e194]: "01"
+            - generic [ref=e195]: Live RecordTimestampsPolish
+            - generic [ref=e196]:
+              - generic [ref=e197]:
+                - paragraph [ref=e198]: Context
+                - paragraph [ref=e199]: Capture project syncs, interviews, or standups while the room is still talking.
+              - generic [ref=e200]:
+                - paragraph [ref=e201]: Workflow
+                - paragraph [ref=e202]: Use Live Record to keep timestamps attached, then run polish for a cleaner internal recap.
+              - generic [ref=e203]:
+                - paragraph [ref=e204]: Result
+                - paragraph [ref=e205]: You leave with a shareable draft that still points back to the original audio moments.
+        - link "Lecture Capture" [ref=e206] [cursor=pointer]:
+          - /url: /user-guide/edit-and-playback
+          - article [ref=e207]:
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - img [ref=e211]
+                - heading "Lecture Capture" [level=3] [ref=e214]
+              - generic [ref=e215]: "02"
+            - generic [ref=e216]: Lecture capturePlayback syncStudy notes
+            - generic [ref=e217]:
+              - generic [ref=e218]:
+                - paragraph [ref=e219]: Context
+                - paragraph [ref=e220]: Record lectures, seminars, or office-hour explanations without losing the structure of the talk.
+              - generic [ref=e221]:
+                - paragraph [ref=e222]: Workflow
+                - paragraph [ref=e223]: Transcribe locally, jump back through timestamps, and edit key segments into study-ready notes.
+              - generic [ref=e224]:
+                - paragraph [ref=e225]: Result
+                - paragraph [ref=e226]: The transcript stays tied to playback, so review and revision happen in one place.
+        - link "Video Subtitle Export" [ref=e227] [cursor=pointer]:
+          - /url: /user-guide/batch-import
+          - article [ref=e228]:
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - img [ref=e232]
+                - heading "Video Subtitle Export" [level=3] [ref=e234]
+              - generic [ref=e235]: "03"
+            - generic [ref=e236]: Batch ImportSRT / VTTExport
+            - generic [ref=e237]:
+              - generic [ref=e238]:
+                - paragraph [ref=e239]: Context
+                - paragraph [ref=e240]: Bring in local video or film files when you need subtitles instead of a blank timeline.
+              - generic [ref=e241]:
+                - paragraph [ref=e242]: Workflow
+                - paragraph [ref=e243]: Queue them through Batch Import, review the text, then export SRT or VTT once the segments look right.
+              - generic [ref=e244]:
+                - paragraph [ref=e245]: Result
+                - paragraph [ref=e246]: You get subtitle files that are ready for handoff, iteration, or platform upload.
+        - link "Subtitle Translation" [ref=e247] [cursor=pointer]:
+          - /url: /user-guide/ai-polish-and-translate
+          - article [ref=e248]:
+            - generic [ref=e249]:
+              - generic [ref=e250]:
+                - img [ref=e252]
+                - heading "Subtitle Translation" [level=3] [ref=e256]
+              - generic [ref=e257]: "04"
+            - generic [ref=e258]: TranslateBilingualSide-by-side
+            - generic [ref=e259]:
+              - generic [ref=e260]:
+                - paragraph [ref=e261]: Context
+                - paragraph [ref=e262]: Prepare subtitles for bilingual review or international delivery without separating the source text.
+              - generic [ref=e263]:
+                - paragraph [ref=e264]: Workflow
+                - paragraph [ref=e265]: Keep the original transcript visible, run Translate, and export translation-only or bilingual output when needed.
+              - generic [ref=e266]:
+                - paragraph [ref=e267]: Result
+                - paragraph [ref=e268]: The translated version stays aligned with the source so subtitle comparison is quick and readable.
+      - paragraph [ref=e269]: Local transcription works on-device; polish and translation require a configured LLM provider.
+    - generic [ref=e270]:
+      - generic [ref=e271]:
+        - img [ref=e273]
+        - heading "Locally Processed" [level=3] [ref=e275]
+        - paragraph [ref=e276]: Complete privacy. Everything runs entirely on your local hardware using Sherpa-onnx, avoiding internet bounds and data leaks.
+      - generic [ref=e277]:
+        - img [ref=e279]
+        - heading "LLM Assistant" [level=3] [ref=e282]
+        - paragraph [ref=e283]: Built-in capabilities with local Large Language Models to automatically polish, summarize, and translate your transcripts.
+      - generic [ref=e284]:
+        - img [ref=e286]
+        - heading "High Accuracy" [level=3] [ref=e289]
+        - paragraph [ref=e290]: Achieves commercial-grade speech recognition tailored for long audio files with intelligent phrasing.
+      - generic [ref=e291]:
+        - img [ref=e293]
+        - heading "Transcript Editor" [level=3] [ref=e299]
+        - paragraph [ref=e300]: Rich, interactive editor built with React to easily tweak generated text, align timestamps, and refine your audio.
+    - generic [ref=e303]:
+      - paragraph [ref=e304]: Start Here
+      - heading "Download Sona and keep the full transcript workflow in one editor." [level=2] [ref=e305]
+      - paragraph [ref=e306]: Install the latest release, then record or import audio, review timestamps, polish, translate, and export without breaking the thread.
+      - generic [ref=e307]:
+        - link "Download Latest Release" [ref=e308] [cursor=pointer]:
+          - /url: /downloads
+        - link "Read User Guide" [ref=e309] [cursor=pointer]:
+          - /url: /user-guide
+      - paragraph [ref=e310]: Windows, macOS, and Linux builds are pulled from the latest GitHub release.
+  - contentinfo [ref=e311]:
+    - generic [ref=e312]:
+      - paragraph [ref=e313]: © 2026 Sona. Open sourced under MIT License.
+      - generic [ref=e314]:
+        - link "GitHub Repository" [ref=e315] [cursor=pointer]:
+          - /url: https://github.com/AirSodaz/sona
+        - link "Report Issue" [ref=e316] [cursor=pointer]:
+          - /url: https://github.com/AirSodaz/sona/issues
