@@ -34,6 +34,17 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 - `Translation` and `Bilingual` only appear when the transcript already contains translation text.
 
+## Why do new items appear in `Inbox` first
+
+- `Inbox` is the default holding area for recordings and imports that are not assigned to a project yet.
+- Open a specific project before starting `Live Record` or `Batch Import` if you want new items to stay in that project automatically.
+- You can also move saved items later from `Inbox` into a project from [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+
+## What happens when I delete a project
+
+- Deleting a project removes the project itself, but it does not delete the recordings or imports that were inside it.
+- Sona moves those items back to `Inbox`, so you can reassign or continue using them later.
+
 ## `Live Caption` does not appear
 
 - Go back to [Live Record](guide:live-record) and make sure `Live Caption` is turned on there. `Settings > Subtitle Settings` only controls the window behavior and appearance.

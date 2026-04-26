@@ -1,4 +1,4 @@
-Sona 的润色与翻译是可选能力。离线转录本身不依赖它们，但如果你要继续做 AI 处理，就需要先在 `设置 > LLM 服务` 中完成配置。这一页只聚焦 `LLM 润色` 和 `翻译`；如果你主要想要只读归纳，请直接看 [AI 摘要](guide:ai-summary)。
+Sona 的润色与翻译是可选能力。离线转录本身不依赖它们，但如果你要继续做 AI 处理，就需要先在 `设置 > LLM 服务` 中完成配置。这一页只聚焦 `LLM 润色` 和 `翻译`；如果你主要想要一份贴着转录存在的归纳，请直接看 [AI 摘要](guide:ai-summary)。
 
 ## 适合这些场景
 
@@ -8,7 +8,7 @@ Sona 的润色与翻译是可选能力。离线转录本身不依赖它们，但
 
 ## 开始前
 
-- 你已经有来自 [实时录音](guide:live-record)、[批量转录](guide:batch-import) 或 `历史记录` 的转录分段。
+- 你已经有来自 [实时录音](guide:live-record)、[批量转录](guide:batch-import) 或 [工作区、项目与 Inbox](guide:workspace-projects-and-inbox) 的转录分段。
 - 你准备先在 `设置 > LLM 服务` 中配置需要的功能。
 
 ## 先完成 provider 配置
@@ -44,7 +44,7 @@ Sona 的润色与翻译是可选能力。离线转录本身不依赖它们，但
 - `润色模型` 与 `翻译模型` 是分开配置的。可以共用同一个 provider，也可以拆开。
 - 翻译可以使用 `Google Translate (Free)`、`Google Translate (API)` 这类专用翻译 provider；润色则需要真正的 LLM provider 与模型。
 - 当前支持的翻译目标语言包括 `简体中文`、`English`、`Japanese`、`Korean`、`French`、`German`、`Spanish`。
-- 只有当当前转录来自已保存的历史条目时，菜单里才会出现 `重新转录`。
-- 如果你下一步要做的是只读摘要，而不是改写转录正文，请继续看 [AI 摘要](guide:ai-summary)。
+- 只有当当前转录来自已保存的工作区条目时，菜单里才会出现 `重新转录`。
+- 如果你下一步要做的是贴着转录存在的摘要，而不是改写转录正文，请继续看 [AI 摘要](guide:ai-summary)。
 - 如果你现在关心的是 `Auto-Polish`、关键词或自定义上下文，请继续看 [词汇与高级设置](guide:vocabulary-and-advanced-settings)。
-- 当文本已经整理完成，下一步通常就是 [导出、历史记录与设置](guide:export-history-and-settings)。
+- 当文本已经整理完成，下一步通常就是 [导出与设置](guide:export-and-settings)。

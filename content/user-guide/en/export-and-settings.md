@@ -1,4 +1,4 @@
-This page covers the final stage of the workflow: exporting finished transcripts, reopening earlier work, and quickly locating the settings areas that matter most.
+This page covers the final stage of the workflow: exporting finished transcripts and quickly locating the settings areas that matter most.
 
 ## Export a finished transcript
 
@@ -15,14 +15,10 @@ This page covers the final stage of the workflow: exporting finished transcripts
 - If translation text exists, you can export translated-only or bilingual output.
 - `Translation` and `Bilingual` only appear when at least one segment already contains translation text.
 
-## Reopen earlier sessions from `History`
+## When to go back to `Workspace`
 
-1. Open the `History` tab.
-2. Search by title or transcript content.
-3. Filter by type with `All Types`, `Recordings`, or `Batch Imports`.
-4. Filter by time with `Any Time`, `Today`, `Last 7 Days`, or `Last 30 Days`.
-5. Click an item to load it.
-6. Use selection mode if you want to delete multiple items.
+- If you want to reopen, rename, move, or sort saved recordings and imports, go back to [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- `Workspace` is also where project context and `Inbox` organization live now.
 
 ## Settings areas worth learning first
 
@@ -38,7 +34,7 @@ This page covers the final stage of the workflow: exporting finished transcripts
 
 ## If you mainly came for an extension capability
 
-- Need a read-only recap: [AI Summary](guide:ai-summary)
+- Need a transcript-side recap: [AI Summary](guide:ai-summary)
 - Need floating captions or dictation in another app: [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - Need `Hotwords`, `Text Replacement`, `Auto-Polish`, or custom context tuning: [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 

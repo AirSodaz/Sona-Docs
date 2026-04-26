@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   Clock3,
   Download,
+  FolderOpen,
   Languages,
   Mic,
   Play,
@@ -341,7 +342,7 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
                 <div className="flex items-center gap-1.5 overflow-x-auto xl:justify-center">
                   <TopTab label={demo.tabs.live} icon={<Mic size={14} />} active />
                   <TopTab label={demo.tabs.batch} icon={<AudioLines size={14} />} />
-                  <TopTab label={demo.tabs.history} icon={<Clock3 size={14} />} />
+                  <TopTab label={demo.tabs.workspace} icon={<FolderOpen size={14} />} />
                 </div>
 
                 <div className="flex items-center gap-1.5 overflow-x-auto xl:justify-end">

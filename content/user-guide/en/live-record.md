@@ -39,7 +39,8 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 
 - Transcript segments appear in the editor on the right.
 - The active segment follows the live recording state while capture is running.
-- Once recording stops, the transcript remains available for editing, polishing, translation, export, and history saving.
+- Once recording stops, the transcript remains available for editing, polishing, translation, export, and later reopening from [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- If you were not already inside a project, the saved item usually lands in `Inbox`.
 
 ## Useful tips
 

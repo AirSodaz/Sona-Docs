@@ -1,4 +1,4 @@
-`AI Summary` is for the point where a transcript already exists and you want a shorter read-only recap beside it. It does not rewrite the transcript, and it does not automatically become part of export output.
+`AI Summary` is for the point where a transcript already exists and you want a shorter recap beside it. It does not rewrite the transcript, and it does not automatically become part of export output.
 
 ## Best for
 
@@ -8,7 +8,7 @@
 
 ## Before you start
 
-- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or `History`.
+- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
 - You are ready to configure `Summary Model` in `Settings > LLM Service`.
 
 ## Assign the summary model first
@@ -30,13 +30,13 @@
 ## What state the summary keeps
 
 - `AI Summary` stores the summary beside the transcript without changing the original text.
-- The current summary stays read-only, which makes it suitable for review and copy, not direct editing.
+- The current summary stays separate from the transcript, but you can still edit it directly when you want to adjust wording before reuse.
 - If the transcript is edited, polished, or re-transcribed later, the old summary stays visible but shows an outdated warning until you regenerate it manually.
 
 ## Useful notes
 
 - `Summary Model` is configured separately from `Polish Model` and `Translation Model`. One provider can serve all of them, or you can split them.
 - `AI Summary` needs an LLM-capable provider and model. The Google Translate providers are not supported for summaries.
-- If you mainly want to rewrite transcript text rather than create a read-only recap, continue to [AI Polish and Translate](guide:ai-polish-and-translate).
-- If your next step is export, go back to [Export, History, and Settings](guide:export-history-and-settings).
+- If you mainly want to rewrite transcript text rather than create a summary beside it, continue to [AI Polish and Translate](guide:ai-polish-and-translate).
+- If your next step is export, go back to [Export and Settings](guide:export-and-settings).
 - Summary output does not become part of exported files. Copy it from the panel if you want to reuse it elsewhere.

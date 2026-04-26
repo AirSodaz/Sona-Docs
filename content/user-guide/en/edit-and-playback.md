@@ -8,7 +8,7 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 
 ## Before you edit
 
-- Load transcript content from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or `History`.
+- Load transcript content from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
 
 ## Review and change transcript segments
 
@@ -36,4 +36,5 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 
 - The toolbar supports `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, and line breaks.
 - If you want to add optional LLM cleanup or translation after editing, continue to [AI Polish and Translate](guide:ai-polish-and-translate).
-- If you are done and mainly need files out of Sona, skip ahead to [Export, History, and Settings](guide:export-history-and-settings).
+- If you want to reopen or reorganize saved items around the editor, continue to [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- If you are done and mainly need files out of Sona, skip ahead to [Export and Settings](guide:export-and-settings).

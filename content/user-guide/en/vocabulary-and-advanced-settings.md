@@ -33,5 +33,5 @@ This page keeps a few tuning-oriented capabilities in one place: `Hotwords`, `Te
 ## Useful notes
 
 - `Advanced Settings` still belongs to the [AI Polish and Translate](guide:ai-polish-and-translate) workflow. It does not replace the base provider and model setup.
-- If you mainly want a read-only recap rather than polish behavior, switch to [AI Summary](guide:ai-summary).
+- If you mainly want a transcript-side recap rather than polish behavior, switch to [AI Summary](guide:ai-summary).
 - If a feature is already configured but still behaves incorrectly, continue to [FAQ and Troubleshooting](guide:faq).

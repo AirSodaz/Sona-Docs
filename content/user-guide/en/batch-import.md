@@ -27,7 +27,7 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 ## What happens after a file finishes
 
 - Completed items load into the main transcript editor.
-- From there, you can continue with [Edit and Playback](guide:edit-and-playback), [AI Polish and Translate](guide:ai-polish-and-translate), or [Export, History, and Settings](guide:export-history-and-settings).
+- From there, you can continue with [Edit and Playback](guide:edit-and-playback), [AI Polish and Translate](guide:ai-polish-and-translate), [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox), or [Export and Settings](guide:export-and-settings).
 
 ## Useful tips
 

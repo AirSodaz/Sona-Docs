@@ -8,7 +8,7 @@
 
 ## 开始前
 
-- 当前已经通过 [实时录音](guide:live-record)、[批量转录](guide:batch-import) 或 `历史记录` 载入转录内容。
+- 当前已经通过 [实时录音](guide:live-record)、[批量转录](guide:batch-import) 或 [工作区、项目与 Inbox](guide:workspace-projects-and-inbox) 载入转录内容。
 
 ## 如何整理转录分段
 
@@ -36,4 +36,5 @@
 
 - 工具栏支持 `撤销`、`重做`、加粗、斜体、下划线和换行。
 - 如果下一步要补充可选的 LLM 处理，可以继续看 [AI 润色与翻译](guide:ai-polish-and-translate)。
-- 如果主要目标已经变成导出文件，直接跳到 [导出、历史记录与设置](guide:export-history-and-settings) 即可。
+- 如果你还要重新整理或切换已保存条目，可以继续看 [工作区、项目与 Inbox](guide:workspace-projects-and-inbox)。
+- 如果主要目标已经变成导出文件，直接跳到 [导出与设置](guide:export-and-settings) 即可。

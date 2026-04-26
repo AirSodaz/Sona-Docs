@@ -27,7 +27,7 @@
 ## 文件完成后会发生什么
 
 - 已完成的文件会载入主编辑器。
-- 接下来可以继续进入 [编辑与播放](guide:edit-and-playback)、[AI 润色与翻译](guide:ai-polish-and-translate) 或 [导出、历史记录与设置](guide:export-history-and-settings)。
+- 接下来可以继续进入 [编辑与播放](guide:edit-and-playback)、[AI 润色与翻译](guide:ai-polish-and-translate)、[工作区、项目与 Inbox](guide:workspace-projects-and-inbox) 或 [导出与设置](guide:export-and-settings)。
 
 ## 补充说明
 

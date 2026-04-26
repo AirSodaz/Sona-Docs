@@ -15,7 +15,8 @@ const USER_GUIDE_PAGE_ORDER = [
   'batch-import',
   'edit-and-playback',
   'ai-polish-and-translate',
-  'export-history-and-settings',
+  'workspace-projects-and-inbox',
+  'export-and-settings',
   'ai-summary',
   'live-caption-and-voice-typing',
   'vocabulary-and-advanced-settings',
@@ -165,7 +166,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: 'Everything Inside',
       browseTitle: 'The full docs set, organized by the actual Sona workflow.',
       browseDescription:
-        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, export, extended capabilities, CLI reference, and troubleshooting.',
+        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, workspace organization, export, extended capabilities, CLI reference, and troubleshooting.',
     },
     codeBlock: {
       copyLabel: 'Copy code',
@@ -195,7 +196,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: '完整内容',
       browseTitle: '整套指南按照 Sona 的真实使用流程组织。',
       browseDescription:
-        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 导出 -> 扩展能力 -> CLI 参考 -> 排障”的顺序继续。',
+        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 工作区整理 -> 导出 -> 扩展能力 -> CLI 参考 -> 排障”的顺序继续。',
     },
     codeBlock: {
       copyLabel: '复制代码',
@@ -214,14 +215,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Sona User Guide',
         navLabel: 'Overview',
         description:
-          'A product-shaped entry point to the Sona docs, with the shortest paths for setup, live capture, file import, editing, optional AI steps, export, extended capabilities, and help.',
+          'A product-shaped entry point to the Sona docs, with the shortest paths for setup, live capture, file import, editing, optional AI steps, workspace organization, export, extended capabilities, and help.',
         contentFile: 'en/overview.md',
       },
       'zh-CN': {
         title: 'Sona 用户指南',
         navLabel: '总览',
         description:
-          '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、导出、扩展能力与排障。',
+          '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、工作区整理、导出、扩展能力与排障。',
         contentFile: 'zh-CN/overview.md',
       },
     },
@@ -332,23 +333,44 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
     },
   },
   {
-    id: 'export-history-and-settings',
-    slug: ['export-history-and-settings'],
+    id: 'workspace-projects-and-inbox',
+    slug: ['workspace-projects-and-inbox'],
     group: 'workflow',
     localizations: {
       en: {
-        title: 'Export, History, and Settings',
-        navLabel: 'Export / History / Settings',
+        title: 'Workspace, Projects, and Inbox',
+        navLabel: 'Workspace / Projects / Inbox',
         description:
-          'Export finished work, reopen saved sessions from History, and focus on the settings areas that matter most for everyday use.',
-        contentFile: 'en/export-history-and-settings.md',
+          'Organize saved recordings and imports, switch between All Items, Inbox, and projects, and understand how project defaults shape new work.',
+        contentFile: 'en/workspace-projects-and-inbox.md',
       },
       'zh-CN': {
-        title: '导出、历史记录与设置',
-        navLabel: '导出 / 历史记录 / 设置',
+        title: '工作区、项目与 Inbox',
+        navLabel: '工作区 / 项目 / Inbox',
         description:
-          '完成导出、重新打开历史条目，并快速理解哪些设置项最值得优先了解。',
-        contentFile: 'zh-CN/export-history-and-settings.md',
+          '了解如何在全部内容、Inbox 与项目之间整理已保存内容，以及项目默认值会如何影响后续工作。',
+        contentFile: 'zh-CN/workspace-projects-and-inbox.md',
+      },
+    },
+  },
+  {
+    id: 'export-and-settings',
+    slug: ['export-and-settings'],
+    group: 'workflow',
+    localizations: {
+      en: {
+        title: 'Export and Settings',
+        navLabel: 'Export / Settings',
+        description:
+          'Export finished work and focus on the settings areas that matter most for everyday use, without splitting saved items into a separate surface.',
+        contentFile: 'en/export-and-settings.md',
+      },
+      'zh-CN': {
+        title: '导出与设置',
+        navLabel: '导出 / 设置',
+        description:
+          '完成导出，并快速理解哪些设置项最值得优先了解，不再把已保存内容割裂成另一套独立入口。',
+        contentFile: 'zh-CN/export-and-settings.md',
       },
     },
   },
@@ -361,14 +383,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'AI Summary',
         navLabel: 'AI Summary',
         description:
-          'Assign a Summary Model, generate template-based summaries from existing transcripts, and understand what stays read-only, outdated, and separate from export.',
+          'Assign a Summary Model, generate template-based summaries from existing transcripts, and understand how summaries stay separate from export while remaining editable and refreshable.',
         contentFile: 'en/ai-summary.md',
       },
       'zh-CN': {
         title: 'AI 摘要',
         navLabel: 'AI 摘要',
         description:
-          '绑定摘要模型，用已有转录生成模板化摘要，并理解摘要为什么保持只读、何时会过期、以及为什么它不会进入导出文件。',
+          '绑定摘要模型，用已有转录生成模板化摘要，并理解摘要为何独立于导出、何时会过期，以及它仍然可以被编辑和刷新。',
         contentFile: 'zh-CN/ai-summary.md',
       },
     },

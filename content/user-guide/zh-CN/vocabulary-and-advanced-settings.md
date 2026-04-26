@@ -33,5 +33,5 @@
 ## 补充说明
 
 - `高级设置` 仍然属于 [AI 润色与翻译](guide:ai-polish-and-translate) 的延伸能力，不会替代基础的 provider 配置。
-- 如果你主要想做只读归纳而不是润色，改看 [AI 摘要](guide:ai-summary)。
+- 如果你主要想做贴着转录存在的归纳而不是润色，改看 [AI 摘要](guide:ai-summary)。
 - 如果某项能力已经配置但效果不对，请继续查看 [常见问题与排障](guide:faq)。

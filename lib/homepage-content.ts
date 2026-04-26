@@ -50,7 +50,7 @@ export interface DemoContent {
   tabs: {
     live: string;
     batch: string;
-    history: string;
+    workspace: string;
   };
   actions: Record<DemoAction, string> & {
     export: string;
@@ -244,7 +244,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       tabs: {
         live: 'Live Record',
         batch: 'Batch Import',
-        history: 'History',
+        workspace: 'Workspace',
       },
       actions: {
         recorded: 'Recorded',
@@ -472,7 +472,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       tabs: {
         live: '实时录音',
         batch: '批量导入',
-        history: '历史记录',
+        workspace: '工作区',
       },
       actions: {
         recorded: '录音结果',

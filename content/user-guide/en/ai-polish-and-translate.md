@@ -1,4 +1,4 @@
-Sona's polish and translation features are optional. Local transcription works without them, but the AI steps need a configured provider in `Settings > LLM Service`. This page stays focused on `LLM Polish` and `Translate`; if you mainly want a read-only recap, jump straight to [AI Summary](guide:ai-summary).
+Sona's polish and translation features are optional. Local transcription works without them, but the AI steps need a configured provider in `Settings > LLM Service`. This page stays focused on `LLM Polish` and `Translate`; if you mainly want a transcript-side recap, jump straight to [AI Summary](guide:ai-summary).
 
 ## Best for
 
@@ -8,7 +8,7 @@ Sona's polish and translation features are optional. Local transcription works w
 
 ## Before you start
 
-- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or `History`.
+- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
 - You are ready to configure the feature you need in `Settings > LLM Service`.
 
 ## Connect the provider first
@@ -44,7 +44,7 @@ Sona's polish and translation features are optional. Local transcription works w
 - `Polish Model` and `Translation Model` are configured separately. One provider can serve both, or you can split them.
 - Translation can use dedicated translation providers such as `Google Translate (Free)` or `Google Translate (API)`, but polish needs an LLM-capable provider and model.
 - Translation target languages currently include `Chinese (Simplified)`, `English`, `Japanese`, `Korean`, `French`, `German`, and `Spanish`.
-- `Re-transcribe` is only available when the current transcript came from a saved history item.
-- If what you need next is a read-only recap instead of rewritten transcript text, continue to [AI Summary](guide:ai-summary).
+- `Re-transcribe` is only available when the current transcript came from a saved workspace item.
+- If what you need next is a transcript-side recap instead of rewritten transcript text, continue to [AI Summary](guide:ai-summary).
 - If you are really here for `Auto-Polish`, keywords, or custom context, continue to [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
-- Once the text looks right, move to [Export, History, and Settings](guide:export-history-and-settings).
+- Once the text looks right, move to [Export and Settings](guide:export-and-settings).
