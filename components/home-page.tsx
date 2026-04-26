@@ -167,45 +167,55 @@ export function HomePage({
         <ScrollHint label={content.hero.scrollHint} targetId={demoPreviewId} />
       </section>
 
-      <main className="w-full px-4 pb-10 pt-6 sm:px-6 sm:pb-12 sm:pt-10 md:px-16 md:pt-12">
+      <main className="w-full pb-10 pt-6 sm:pb-12 sm:pt-10 md:pt-12">
         <section
           id={demoPreviewId}
-          className="relative w-full scroll-mt-6 sm:scroll-mt-8"
+          className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 scroll-mt-6 sm:scroll-mt-8"
         >
-          <TranscriptDemo demo={content.demo} />
+          <div className="relative overflow-hidden bg-[#191513] py-16 text-white sm:py-20 lg:py-24 dark:bg-[#080808]">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),rgba(255,255,255,0)_42%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),rgba(255,255,255,0)_38%)]" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,rgba(25,21,19,0),rgba(25,21,19,0.38))] dark:bg-[linear-gradient(180deg,rgba(8,8,8,0),rgba(8,8,8,0.52))]" />
+            <div className="pointer-events-none absolute left-1/2 top-12 h-52 w-[min(82vw,900px)] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(199,144,110,0.22),rgba(199,144,110,0))] blur-3xl dark:bg-[radial-gradient(circle,rgba(199,144,110,0.12),rgba(199,144,110,0))]" />
+
+            <div className="relative mx-auto w-full max-w-[1520px] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16">
+              <TranscriptDemo demo={content.demo} />
+            </div>
+          </div>
         </section>
 
-        <div className="mt-4 w-full sm:mt-6">
-          <UseCasesSection content={content.useCases} />
-        </div>
+        <div className="px-4 sm:px-6 md:px-16">
+          <div className="mt-8 w-full sm:mt-10">
+            <UseCasesSection content={content.useCases} />
+          </div>
 
-        <div className="mx-auto mt-16 grid w-full max-w-4xl gap-10 text-left sm:mt-20 sm:grid-cols-2 sm:gap-12">
-          <FeatureCard
-            icon={<Shield size={20} className="text-stone-600 dark:text-stone-400" />}
-            title={content.features[0].title}
-            description={content.features[0].desc}
-          />
-          <FeatureCard
-            icon={<Bot size={20} className="text-stone-600 dark:text-stone-400" />}
-            title={content.features[1].title}
-            description={content.features[1].desc}
-          />
-          <FeatureCard
-            icon={<Mic size={20} className="text-stone-600 dark:text-stone-400" />}
-            title={content.features[2].title}
-            description={content.features[2].desc}
-          />
-          <FeatureCard
-            icon={<Scissors size={20} className="text-stone-600 dark:text-stone-400" />}
-            title={content.features[3].title}
-            description={content.features[3].desc}
+          <div className="mx-auto mt-16 grid w-full max-w-4xl gap-10 text-left sm:mt-20 sm:grid-cols-2 sm:gap-12">
+            <FeatureCard
+              icon={<Shield size={20} className="text-stone-600 dark:text-stone-400" />}
+              title={content.features[0].title}
+              description={content.features[0].desc}
+            />
+            <FeatureCard
+              icon={<Bot size={20} className="text-stone-600 dark:text-stone-400" />}
+              title={content.features[1].title}
+              description={content.features[1].desc}
+            />
+            <FeatureCard
+              icon={<Mic size={20} className="text-stone-600 dark:text-stone-400" />}
+              title={content.features[2].title}
+              description={content.features[2].desc}
+            />
+            <FeatureCard
+              icon={<Scissors size={20} className="text-stone-600 dark:text-stone-400" />}
+              title={content.features[3].title}
+              description={content.features[3].desc}
+            />
+          </div>
+
+          <ClosingCtaSection
+            content={content.finalCta}
+            primaryHref={downloads.button.allBuildsHref}
           />
         </div>
-
-        <ClosingCtaSection
-          content={content.finalCta}
-          primaryHref={downloads.button.allBuildsHref}
-        />
       </main>
 
       <footer className="w-full border-t border-stone-200 bg-white transition-colors duration-300 dark:border-stone-800 dark:bg-[#121212]">

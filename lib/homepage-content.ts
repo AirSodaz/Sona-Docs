@@ -1,5 +1,5 @@
 export type HomeLocale = 'en' | 'zh-CN';
-export type DemoAction = 'recorded' | 'polished' | 'translated';
+export type DemoStageId = 'live' | 'refined';
 export type UseCaseId =
   | 'meetings'
   | 'lectures'
@@ -36,66 +36,42 @@ export interface UseCasesContent {
 
 export interface DemoSegment {
   time: string;
-  raw: string;
-  polished: string;
-  translated: string;
+  live: string;
+  refined: string;
+  translation?: string;
+}
+
+export interface DemoStage {
+  id: DemoStageId;
+  button: string;
+  eyebrow: string;
+  title: string;
+  desc: string;
+  status: string;
+}
+
+export interface DemoRevealContent {
+  eyebrow: string;
+  title: string;
+  desc: string;
+  note: string;
 }
 
 export interface DemoContent {
   eyebrow: string;
   title: string;
   desc: string;
-  appLabel: string;
+  stageLabel: string;
+  canvasLabel: string;
   fileName: string;
-  tabs: {
-    live: string;
-    batch: string;
-    workspace: string;
-  };
-  actions: Record<DemoAction, string> & {
-    export: string;
-  };
-  labels: {
-    windowStatusRecording: string;
-    windowStatusFinished: string;
-    localBadge: string;
-    recorderPanel: string;
-    editorPanel: string;
-    waveform: string;
-    source: string;
-    language: string;
-    helperLocked: string;
-    helperReady: string;
-    recording: string;
-    finished: string;
-    segments: string;
-    workspaceLabel: string;
-    workspaceValue: string;
-    projectLabel: string;
-    projectValue: string;
-    sessionLabel: string;
-    sessionValue: string;
-    autosave: string;
-    autosaveState: string;
-    summary: string;
-    summaryRecorded: string;
-    summaryPolished: string;
-    summaryTranslated: string;
-    search: string;
-    words: string;
-    translationLabel: string;
-    segmentLabel: string;
-    player: string;
-    playerStateRecording: string;
-    playerStateFinished: string;
-    playerHint: string;
-    liveMonitor: string;
-  };
+  transcriptLabel: string;
+  translationLabel: string;
+  stages: DemoStage[];
+  reveal: DemoRevealContent;
   recording: {
-    inputSource: string;
-    languageValue: string;
-    totalSeconds: number;
-    finishedDuration: string;
+    liveDuration: string;
+    finalDuration: string;
+    liveProgress: number;
   };
   segments: DemoSegment[];
 }
@@ -236,112 +212,75 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       ],
     },
     demo: {
-      eyebrow: 'Scroll through a live capture',
-      title: 'Watch the editor fill before AI steps in.',
-      desc: "This mockup follows Sona's real flow: live recording writes timestamped segments first, then polish and translation stay inside the same workspace.",
-      appLabel: 'Sona Demo Workspace',
-      fileName: 'product-sync-interview.sona',
-      tabs: {
-        live: 'Live Record',
-        batch: 'Batch Import',
-        workspace: 'Workspace',
-      },
-      actions: {
-        recorded: 'Recorded',
-        polished: 'AI Polish',
-        translated: 'Translate',
-        export: 'Export',
-      },
-      labels: {
-        windowStatusRecording: 'Recording',
-        windowStatusFinished: 'Recording finished',
-        localBadge: '100% local',
-        recorderPanel: 'Live Record',
-        editorPanel: 'Transcript Editor',
-        waveform: 'Waveform',
-        source: 'Source',
-        language: 'Language',
-        helperLocked: 'Scroll to finish recording.',
-        helperReady: 'Recording finished. Try Recorded, AI Polish, or Translate.',
-        recording: 'Recording',
-        finished: 'Finished',
-        segments: 'segments',
-        workspaceLabel: 'Workspace',
-        workspaceValue: 'Offline research',
-        projectLabel: 'Project',
-        projectValue: 'Homepage proof',
-        sessionLabel: 'Context',
-        sessionValue: 'Product sync interview',
-        autosave: 'Autosave',
-        autosaveState: 'Saved just now',
-        summary: 'Summary',
-        summaryRecorded: 'Raw transcript stays editable with timestamps.',
-        summaryPolished: 'AI Polish cleans wording without changing timing.',
-        summaryTranslated: 'Translate keeps the source and adds a bilingual line.',
-        search: 'Search',
-        words: 'words',
-        translationLabel: 'Translation',
-        segmentLabel: 'Segment',
-        player: 'Audio player',
-        playerStateRecording: 'Live stream attached',
-        playerStateFinished: 'Playback ready',
-        playerHint: 'One document, from capture to export.',
-        liveMonitor: 'Live monitor',
+      eyebrow: 'A cinematic product preview',
+      title: 'See one transcript settle into shape.',
+      desc: 'The story stays narrow on purpose: local capture fills the page first, then Sona tightens wording and adds translation without leaving the same surface.',
+      stageLabel: 'Stage',
+      canvasLabel: 'Sona editor',
+      fileName: 'demo-session.sona',
+      transcriptLabel: 'Timestamped transcript',
+      translationLabel: 'Translation',
+      stages: [
+        {
+          id: 'live',
+          button: 'Live Capture',
+          eyebrow: 'Stage 01',
+          title: 'Words land while the conversation is still moving.',
+          desc: 'The transcript arrives first, with timing intact and almost no chrome between the audio and the page.',
+          status: 'Capturing locally',
+        },
+        {
+          id: 'refined',
+          button: 'Refined Output',
+          eyebrow: 'Stage 02',
+          title: 'Clean wording appears without splitting the thread.',
+          desc: 'Once the capture is there, polish and translation stay attached to the same transcript instead of becoming a second document.',
+          status: 'Ready for review',
+        },
+      ],
+      reveal: {
+        eyebrow: 'Refined output',
+        title: 'One pass, same surface.',
+        desc: 'Polished wording stays readable, and the bilingual line appears only where it adds value.',
+        note: 'The result still reads like a transcript, not a detached summary card.',
       },
       recording: {
-        inputSource: 'Microphone',
-        languageValue: 'English',
-        totalSeconds: 78,
-        finishedDuration: '01:18',
+        liveDuration: '00:54',
+        finalDuration: '01:18',
+        liveProgress: 68,
       },
       segments: [
         {
           time: '00:03',
-          raw: 'Let us keep the local recording path for the next release and maybe tighten the onboarding copy after the build settles.',
-          polished:
+          live: 'Let us keep the local recording path for the next release and tighten the onboarding copy once the build settles.',
+          refined:
             'Keep the local recording path for the next release, then tighten the onboarding copy once the build is stable.',
-          translated:
-            '下一版先保留本地录音流程，等构建稳定之后再统一收紧引导文案。',
         },
         {
-          time: '00:16',
-          raw: 'And I want the timestamps to stay attached so reviewers can jump back to the exact moment in the audio.',
-          polished:
+          time: '00:18',
+          live: 'And keep the timestamps attached so reviewers can jump back to the exact moment in the audio.',
+          refined:
             'Keep timestamps attached so reviewers can jump back to the exact moment in the audio while proofreading.',
-          translated:
-            '时间戳也要继续保留，审阅的人需要能直接回到音频里的对应位置。',
         },
         {
-          time: '00:31',
-          raw: 'Once the first pass is done, run AI polish so the draft reads cleaner before we share it with the rest of the team.',
-          polished:
-            'After the first pass, run AI Polish to produce a cleaner draft before sharing it with the rest of the team.',
-          translated:
-            '初稿出来后先跑一遍 AI Polish，再把更顺的版本发给团队看。',
+          time: '00:34',
+          live: 'Once the first pass is done, run AI polish so the draft reads cleaner before the team sees it.',
+          refined:
+            'After the first pass, run AI Polish to produce a cleaner draft before the rest of the team reviews it.',
         },
         {
-          time: '00:46',
-          raw: 'For external collaborators, generate a Chinese version too, but keep the original English visible right beside it.',
-          polished:
-            'Generate a Chinese version for external collaborators, but keep the original English visible alongside it.',
-          translated:
+          time: '00:49',
+          live: 'For external collaborators, generate a Chinese version too, but keep the original English visible beside it.',
+          refined:
+            'Generate a Chinese version for external collaborators, while keeping the original English visible alongside it.',
+          translation:
             '如果要发给外部协作者，再补一份中文版本，但原始英文要继续并排保留。',
         },
         {
-          time: '00:59',
-          raw: 'That way we can compare wording quickly without splitting the transcript into a separate document.',
-          polished:
+          time: '01:06',
+          live: 'That way we can compare wording quickly without splitting the transcript into a separate document.',
+          refined:
             'That way the team can compare wording quickly without splitting the transcript into a separate document.',
-          translated:
-            '这样大家可以直接对照措辞，不必把同一段内容拆成另一份文档。',
-        },
-        {
-          time: '01:14',
-          raw: 'If the whole thing stays offline, it still matches the workflow we promised from day one.',
-          polished:
-            'If the workflow stays offline end to end, it still matches what we promised from day one.',
-          translated:
-            '只要整条流程继续离线运行，就仍然符合我们一开始承诺的使用体验。',
         },
       ],
     },
@@ -464,112 +403,75 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       ],
     },
     demo: {
-      eyebrow: '跟着滚动看实时出字',
-      title: '先看录音落进编辑器，再看 AI 接手。',
-      desc: '这个展示型 mockup 按照 Sona 的真实顺序来走：先实时录音出字，停录后再在同一块编辑器里查看润色和翻译。',
-      appLabel: 'Sona 演示工作区',
-      fileName: '产品同步访谈.sona',
-      tabs: {
-        live: '实时录音',
-        batch: '批量导入',
-        workspace: '工作区',
-      },
-      actions: {
-        recorded: '录音结果',
-        polished: '润色',
-        translated: '翻译',
-        export: '导出',
-      },
-      labels: {
-        windowStatusRecording: '录音中',
-        windowStatusFinished: '录音已完成',
-        localBadge: '全程离线',
-        recorderPanel: '实时录音',
-        editorPanel: '转录编辑器',
-        waveform: '波形',
-        source: '输入源',
-        language: '语言',
-        helperLocked: '下拉完成录音。',
-        helperReady: '录音完成，可试试录音结果 / 润色 / 翻译。',
-        recording: '录音中',
-        finished: '已完成',
-        segments: '段',
-        workspaceLabel: '工作区',
-        workspaceValue: '离线整理',
-        projectLabel: '项目',
-        projectValue: 'Homepage 演示',
-        sessionLabel: '上下文',
-        sessionValue: '产品同步访谈',
-        autosave: '自动保存',
-        autosaveState: '刚刚保存',
-        summary: '摘要',
-        summaryRecorded: '原始转录连同时间戳一起保留。',
-        summaryPolished: '润色会整理措辞，但不改时间定位。',
-        summaryTranslated: '翻译会保留原文，并补一行对照译文。',
-        search: '搜索',
-        words: '字词',
-        translationLabel: '译文',
-        segmentLabel: '片段',
-        player: '音频播放器',
-        playerStateRecording: '实时流已接入',
-        playerStateFinished: '可回放',
-        playerHint: '同一份文档完成录音到导出。',
-        liveMonitor: '实时监听',
+      eyebrow: '一段更像发布页主视觉的产品预览',
+      title: '先看转录落稳，再看文字变得干净。',
+      desc: '这个展示刻意只讲一条线：内容先在本地落进编辑器，再在同一块界面里完成整理和翻译，不再像一张完整软件截图。',
+      stageLabel: '阶段',
+      canvasLabel: 'Sona 编辑器',
+      fileName: '演示会话.sona',
+      transcriptLabel: '带时间戳的转录',
+      translationLabel: '译文',
+      stages: [
+        {
+          id: 'live',
+          button: '实时出字',
+          eyebrow: '阶段 01',
+          title: '先让内容落进编辑器，再决定怎么整理。',
+          desc: '最先出现的是带时间的转录正文，界面本身尽量退后，不把注意力抢走。',
+          status: '本地转录进行中',
+        },
+        {
+          id: 'refined',
+          button: '整理后',
+          eyebrow: '阶段 02',
+          title: '文字变顺了，但仍然留在同一份稿子里。',
+          desc: '录音结束之后，再继续润色和翻译；原文、时间点和译文仍然挂在同一条阅读线上。',
+          status: '已可继续校对',
+        },
+      ],
+      reveal: {
+        eyebrow: '整理后输出',
+        title: '不用拆第二份稿。',
+        desc: '措辞被收紧后依然像转录正文，译文只在需要的地方轻轻附上。',
+        note: '重点不是功能堆叠，而是同一块界面里的连续感。',
       },
       recording: {
-        inputSource: '麦克风',
-        languageValue: '中文',
-        totalSeconds: 78,
-        finishedDuration: '01:18',
+        liveDuration: '00:54',
+        finalDuration: '01:18',
+        liveProgress: 68,
       },
       segments: [
         {
           time: '00:03',
-          raw: '下一版先保留本地录音流程，等构建稳定之后再统一调整引导文案。',
-          polished:
+          live: '下一版先保留本地录音流程，等构建稳定之后再统一调整引导文案。',
+          refined:
             '下一版本继续保留本地录音流程，待构建稳定后再统一优化引导文案。',
-          translated:
-            'Keep the local recording workflow for the next release, then revisit the onboarding copy once the build is stable.',
         },
         {
-          time: '00:16',
-          raw: '转录里的时间戳也别去掉，审阅的人需要能直接回到音频里的对应位置。',
-          polished:
+          time: '00:18',
+          live: '转录里的时间戳也别去掉，审阅的人需要能直接回到音频里的对应位置。',
+          refined:
             '转录文本应继续保留时间戳，方便审阅者在校对时快速定位回原始音频。',
-          translated:
-            'Timestamps should stay attached so reviewers can jump back to the matching point in the audio.',
         },
         {
-          time: '00:31',
-          raw: '初稿出来后先做一遍润色，把语气和标点整理顺一点，再发给团队看。',
-          polished:
+          time: '00:34',
+          live: '初稿出来后先做一遍润色，把语气和标点整理顺一点，再发给团队看。',
+          refined:
             '初稿生成后，可先执行一次润色，统一语气、断句与标点，再发给团队审阅。',
-          translated:
-            'Once the first draft is ready, run a polish pass to smooth tone and punctuation before sharing it with the team.',
         },
         {
-          time: '00:46',
-          raw: '如果要发给海外同事，再补一份英文翻译，但原始中文要一直留在旁边。',
-          polished:
+          time: '00:49',
+          live: '如果要发给海外同事，再补一份英文翻译，但原始中文要一直留在旁边。',
+          refined:
             '若需要面向海外同事共享，则补充英文译文，同时保留原始中文内容。',
-          translated:
+          translation:
             'If overseas colleagues need it, add an English translation too, while keeping the original Chinese visible.',
         },
         {
-          time: '00:59',
-          raw: '这样大家可以直接对照措辞，不用把同一段内容拆成两份文件来回切换。',
-          polished:
+          time: '01:06',
+          live: '这样大家可以直接对照措辞，不用把同一段内容拆成两份文件来回切换。',
+          refined:
             '这样各方可以直接对照措辞，不必把同一段内容拆成两份文件来回切换。',
-          translated:
-            'That way everyone can compare wording directly without splitting the same passage into two separate files.',
-        },
-        {
-          time: '01:14',
-          raw: '只要整个流程继续离线运行，就符合我们一开始承诺的使用体验。',
-          polished:
-            '只要整条流程继续离线运行，就仍然符合我们最初承诺的使用体验。',
-          translated:
-            'As long as the whole workflow stays offline, it still matches the experience we promised from day one.',
         },
       ],
     },
