@@ -8,7 +8,7 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 
 ## Before you queue files
 
-- Configure a `Batch Import Model` in `Settings > Model Hub`.
+- Configure a `Batch Import Model` in `Settings > Model Settings`.
 - Confirm your files use a supported audio or video format.
 
 ## Add files to the queue
@@ -32,5 +32,5 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 ## Useful tips
 
 - If no offline batch model is configured, Sona reopens onboarding instead of starting import.
-- `Settings > Local Setup` includes `VAD Buffer Size` and `Max Concurrent Transcriptions`, which affect batch behavior.
+- `Settings > Model Settings` includes `VAD Buffer Size` and `Max Concurrent Transcriptions`, which affect batch behavior.
 - `Batch Import` plus export is the main path when you want subtitle files from existing media.

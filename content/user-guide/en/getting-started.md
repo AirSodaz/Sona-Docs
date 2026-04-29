@@ -45,6 +45,6 @@ If you are opening Sona for the first time, this is the shortest route to a usab
 
 - You can click `Later` during onboarding and return from the reminder banner.
 - If you hide the reminder banner, it stops appearing on the home screen until setup is complete.
-- You can change models later in `Settings > Model Hub`.
+- You can change models later in `Settings > Model Settings`.
 - You can change the default microphone later in `Settings > Input Device`.
 - If you want command-line batch transcription later, continue to the in-site [CLI Guide](guide:cli-guide).

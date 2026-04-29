@@ -257,14 +257,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Live Record',
         navLabel: 'Live Record',
         description:
-          'Capture live audio, keep timestamps attached, and understand the controls around input source, subtitles, shortcuts, and recording flow.',
+          'Capture live audio, keep timestamps attached, surface the session as a draft while recording, and understand the controls around input source, subtitles, shortcuts, and recording flow.',
         contentFile: 'en/live-record.md',
       },
       'zh-CN': {
         title: '实时录音',
         navLabel: '实时录音',
         description:
-          '了解实时录音的适用场景、输入源、字幕设置、快捷键，以及录音结束后转录内容如何继续留在编辑器中。',
+          '了解实时录音的适用场景、输入源、字幕设置、快捷键，以及录音草稿在工作区中如何一路延续到录音完成。',
         contentFile: 'zh-CN/live-record.md',
       },
     },
@@ -362,14 +362,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Export and Settings',
         navLabel: 'Export / Settings',
         description:
-          'Export finished work and focus on the settings areas that matter most for everyday use, without splitting saved items into a separate surface.',
+          'Export finished work and quickly find Dashboard, Diagnostics, Backup & Restore, Automation, Voice Typing, and notification entry points for everyday use.',
         contentFile: 'en/export-and-settings.md',
       },
       'zh-CN': {
         title: '导出与设置',
         navLabel: '导出 / 设置',
         description:
-          '完成导出，并快速理解哪些设置项最值得优先了解，不再把已保存内容割裂成另一套独立入口。',
+          '完成导出，并快速理解仪表盘、诊断、备份与恢复、自动化、语音输入法和通知这些日常支持入口分别在哪里。',
         contentFile: 'zh-CN/export-and-settings.md',
       },
     },
@@ -383,14 +383,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'AI Summary',
         navLabel: 'AI Summary',
         description:
-          'Assign a Summary Model, generate template-based summaries from existing transcripts, and understand how summaries stay separate from export while remaining editable and refreshable.',
+          'Assign a Summary Model, generate or manually edit the current summary record beside a transcript, and understand how stale summaries, templates, and export boundaries work.',
         contentFile: 'en/ai-summary.md',
       },
       'zh-CN': {
         title: 'AI 摘要',
         navLabel: 'AI 摘要',
         description:
-          '绑定摘要模型，用已有转录生成模板化摘要，并理解摘要为何独立于导出、何时会过期，以及它仍然可以被编辑和刷新。',
+          '绑定摘要模型，在转录旁生成或手动编辑当前摘要记录，并理解摘要为何独立于导出、何时会过期，以及模板切换真正影响什么。',
         contentFile: 'zh-CN/ai-summary.md',
       },
     },
@@ -404,14 +404,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Live Caption and Voice Typing',
         navLabel: 'Live Caption & Voice Typing',
         description:
-          'Understand where Live Caption starts, which settings shape the floating window, and how Voice Typing uses the same offline live transcription stack in other apps.',
+          'Understand where Live Caption starts, how Settings > Voice Typing handles shortcut and readiness, and how both features reuse the same offline live transcription stack.',
         contentFile: 'en/live-caption-and-voice-typing.md',
       },
       'zh-CN': {
         title: '实时字幕与语音输入法',
         navLabel: '实时字幕与语音输入法',
         description:
-          '理解实时字幕的入口在哪里、字幕浮窗设置负责什么，以及语音输入法如何复用同一套离线实时转录能力进入其他应用。',
+          '理解实时字幕的入口在哪里、字幕浮窗设置负责什么，以及语音输入法页如何管理快捷键、就绪状态与同一套离线实时转录依赖。',
         contentFile: 'zh-CN/live-caption-and-voice-typing.md',
       },
     },
@@ -468,14 +468,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'FAQ and Troubleshooting',
         navLabel: 'FAQ',
         description:
-          'Find the common blockers around setup reminders, missing models, recording, import, translation, voice typing, playback, and source builds.',
+          'Find the common blockers around setup reminders, missing models, recording, drafts, recovery, voice typing, playback, and source builds.',
         contentFile: 'en/faq.md',
       },
       'zh-CN': {
         title: '常见问题与排障',
         navLabel: 'FAQ',
         description:
-          '汇总首次设置、模型缺失、录音、导入、翻译、语音输入法、播放器与源码构建等常见问题。',
+          '汇总首次设置、模型缺失、录音草稿、恢复中心、语音输入法、播放器与源码构建等常见问题。',
         contentFile: 'zh-CN/faq.md',
       },
     },

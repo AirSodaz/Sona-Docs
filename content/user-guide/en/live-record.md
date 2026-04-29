@@ -4,11 +4,11 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 
 - Meetings, interviews, lectures, or voice notes
 - Workflows where timestamps need to stay attached during capture
-- Users who want to keep everything in the main Sona workspace after recording stops
+- Users who want to keep everything in the main Sona workspace, including visible live drafts, after recording stops
 
 ## Before you start
 
-- Finish [Getting Started](guide:getting-started), or manually configure a `Live Record Model` in `Settings > Model Hub`.
+- Finish [Getting Started](guide:getting-started), or manually configure a `Live Record Model` in `Settings > Model Settings`.
 - Make sure your operating system has granted microphone permission if you want to record from a microphone.
 
 ## Record a live session
@@ -35,11 +35,12 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 - If you mainly want the split between the page entry point and the settings layer, or you also need `Voice Typing`, go straight to [Live Caption and Voice Typing](guide:live-caption-and-voice-typing).
 - If `Live Caption` is turned on but the window still does not appear, check [FAQ and Troubleshooting](guide:faq).
 
-## What you get after stopping
+## What you get during and after recording
 
 - Transcript segments appear in the editor on the right.
 - The active segment follows the live recording state while capture is running.
-- Once recording stops, the transcript remains available for editing, polishing, translation, export, and later reopening from [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- While capture is still running, Sona can already surface the session as a `Draft` item in [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- Once recording stops, the transcript remains available for editing, polishing, translation, export, and later reopening from [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox), and Sona completes that same draft item instead of creating a second saved copy.
 - If you were not already inside a project, the saved item usually lands in `Inbox`.
 
 ## Useful tips
@@ -47,5 +48,5 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 - `Ctrl + Space` starts or stops live recording by default.
 - `Space` pauses or resumes while recording is active.
 - `Parameter Settings` only covers transcription behavior like `Subtitle Mode` and `Language`; it is not the full LLM polish workflow.
-- If Sona says a model is missing, reopen onboarding or configure the model in `Settings > Model Hub`.
+- If Sona says a model is missing, reopen onboarding or configure the model in `Settings > Model Settings`.
 - After capture, the next practical page is usually [Edit and Playback](guide:edit-and-playback).

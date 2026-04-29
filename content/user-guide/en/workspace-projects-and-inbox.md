@@ -17,7 +17,7 @@ Use `Workspace` when you want to organize saved recordings and imports without l
 1. Open the `Workspace` tab.
 2. Use the left rail to switch between `All Items`, `Inbox`, and any named project.
 3. Click `New Project` when you want a dedicated space for a client, course, meeting series, or other recurring work.
-4. Enter the project name and optional description, then create it.
+4. Enter the project name and optional description, then create it. New projects start without a custom icon.
 5. Open a project before starting `Live Record` or `Batch Import` if you want new items to stay in that project automatically.
 
 ## Open and organize saved items
@@ -40,6 +40,7 @@ Use `Workspace` when you want to organize saved recordings and imports without l
 
 - `All Items` is for browsing across saved content. It does not replace the active project's defaults.
 - `Inbox` is the default landing place for new recordings and imports when you are not already inside a project.
+- The active live recording session can already appear here as a `Draft` item while capture is still running. When you stop recording, that same item becomes the finished saved entry.
 - Project icons support system icons, recommended emoji, and custom emoji.
 - Saved recordings and imports also support title and icon changes through their own rename flow, but that is separate from `Project Settings`.
 - If you switch away from a project while its settings drawer has unsaved changes, Sona asks whether to discard those edits first.

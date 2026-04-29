@@ -8,7 +8,7 @@
 
 ## Before you start
 
-- Finish [Getting Started](guide:getting-started), or configure a working `Live Record Model` in `Settings > Model Hub`.
+- Finish [Getting Started](guide:getting-started), or configure a working `Live Record Model` in `Settings > Model Settings`.
 - If you want to send text into another app, the feature still depends on the same offline live transcription stack.
 
 ## Where `Live Caption` starts
@@ -26,16 +26,18 @@
 
 ## How `Voice Typing` starts
 
-1. Open `Settings > Shortcuts`.
+1. Open `Settings > Voice Typing`.
 2. Turn on `Voice Typing`.
-3. Assign a global shortcut.
+3. Assign a global shortcut on that page.
 4. Choose either `Push to Talk (Hold)` or `Toggle (Press once)`.
+5. If it still is not ready, review the readiness and dependency status shown there.
 
 ## `Push to Talk` versus `Toggle`
 
 - `Push to Talk (Hold)` works better for short bursts because capture only runs while you hold the shortcut.
 - `Toggle (Press once)` works better for longer dictation because one press starts and the next press stops.
-- In both modes, `Voice Typing` still depends on a working `Live Record Model`.
+- In both modes, `Voice Typing` still depends on a working `Live Record Model`, any required `VAD` model, an available input device, and background warm-up.
+- If `Voice Typing` is not ready yet, the same settings page tells you whether the blocker is the shortcut, model, VAD, input device, or runtime warm-up.
 
 ## When to choose which one
 

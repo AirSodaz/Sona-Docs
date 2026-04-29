@@ -3,7 +3,7 @@ Use this page when the main workflow is clear but one part is still blocking you
 ## Sona keeps asking me to finish setup
 
 - Open the onboarding banner and complete the model and microphone steps.
-- If you skipped setup earlier, make sure both `Live Record Model` and `Batch Import Model` are configured in `Settings > Model Hub`.
+- If you skipped setup earlier, make sure both `Live Record Model` and `Batch Import Model` are configured in `Settings > Model Settings`.
 - If you hid the reminder banner, reopen setup manually from the banner flow or settings-related entry points when Sona prompts again.
 
 ## `Live Record` does not start
@@ -45,6 +45,12 @@ Use this page when the main workflow is clear but one part is still blocking you
 - Deleting a project removes the project itself, but it does not delete the recordings or imports that were inside it.
 - Sona moves those items back to `Inbox`, so you can reassign or continue using them later.
 
+## Why do I see a `Draft` item while I am still recording
+
+- During an active live recording, Sona can create a visible `Draft` item so the session already has a saved place in `Workspace`.
+- When you stop recording, Sona completes that same item instead of creating a second saved copy.
+- Treat the draft as the live session while capture is still running; the finished transcript stays on the same entry.
+
 ## `Live Caption` does not appear
 
 - Go back to [Live Record](guide:live-record) and make sure `Live Caption` is turned on there. `Settings > Subtitle Settings` only controls the window behavior and appearance.
@@ -54,10 +60,16 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 ## Voice Typing does not work
 
-- Turn on `Voice Typing` in `Settings > Shortcuts`.
-- Confirm that the voice typing shortcut is set the way you expect.
+- Turn on `Voice Typing` in `Settings > Voice Typing`.
+- Confirm that the page shows the shortcut, model, VAD, input device, and readiness state you expect.
 - Make sure a live transcription model is configured, because Voice Typing depends on the same offline transcription setup.
 - If you still need the setup path or the mode choice explained, continue to [Live Caption and Voice Typing](guide:live-caption-and-voice-typing).
+
+## Where do I recover interrupted batch or automation work
+
+- Open the header notification center if Sona reports pending recovery items.
+- Use `Recovery Center` to resume or discard interrupted batch and automation work.
+- If you were looking for diagnostics or backup instead, go to `Settings > General`.
 
 ## Playback controls are missing
 
