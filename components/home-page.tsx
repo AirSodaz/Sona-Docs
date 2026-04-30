@@ -225,6 +225,18 @@ export function HomePage({
           </p>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 font-medium md:justify-end">
             <Link
+              href={content.footer.trustHref}
+              className="hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+            >
+              {content.footer.trust}
+            </Link>
+            <Link
+              href={content.footer.privacyHref}
+              className="hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+            >
+              {content.footer.privacy}
+            </Link>
+            <Link
               href="https://github.com/AirSodaz/sona"
               className="hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
               target="_blank"

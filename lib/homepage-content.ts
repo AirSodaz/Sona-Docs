@@ -114,8 +114,12 @@ export interface HomePageContent {
   features: FeatureContent[];
   finalCta: FinalCtaContent;
   footer: {
+    privacy: string;
+    privacyHref: string;
     license: string;
     repo: string;
+    trust: string;
+    trustHref: string;
     issue: string;
   };
 }
@@ -313,7 +317,11 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     },
     footer: {
       license: 'Open sourced under MIT License.',
+      privacy: 'Privacy',
+      privacyHref: '/privacy',
       repo: 'GitHub Repository',
+      trust: 'Trust',
+      trustHref: '/trust',
       issue: 'Report Issue',
     },
   },
@@ -504,7 +512,11 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     },
     footer: {
       license: '基于 MIT 协议开源。',
+      privacy: '隐私',
+      privacyHref: '/zh/privacy',
       repo: 'GitHub 仓库',
+      trust: '信任',
+      trustHref: '/zh/trust',
       issue: '报告问题',
     },
   },
