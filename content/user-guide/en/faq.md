@@ -65,6 +65,23 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 - `Translation` and `Bilingual` only appear when the transcript already contains translation text.
 
+## `Speaker Review` is empty or has no candidates
+
+- `Speaker Review` groups existing speaker metadata. If the transcript was created without speaker attribution, there may be nothing to review.
+- Candidate suggestions depend on `Speaker Profiles` in `Settings > Vocabulary`, imported reference samples, configured speaker models, and the profiles enabled for the current project.
+- If a speaker badge is visible in the editor, you can still click it and assign a profile manually.
+
+## I cannot find `Version Snapshots`
+
+- `Version Snapshots` only appears for saved workspace items that already contain transcript segments.
+- It is hidden for the temporary `current` transcript and for live recording drafts that are still in progress.
+- Snapshots are created before bulk rewrite operations such as `LLM Polish`, `Translate`, `Re-transcribe`, and before restoring from another snapshot.
+
+## A restored backup opens text but no audio playback
+
+- Backup archives are intentionally lightweight. They include config, workspace data, light history transcripts and summaries, automation state, and dashboard LLM usage.
+- Original audio files are not included, so restored entries may reopen for reading and editing but lack playback until the source audio is available through another path.
+
 ## Why do new items appear in `Inbox` first
 
 - `Inbox` is the default holding area for recordings and imports that are not assigned to a project yet.
