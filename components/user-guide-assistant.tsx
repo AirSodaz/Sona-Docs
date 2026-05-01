@@ -1,6 +1,7 @@
 'use client';
 
 import { startTransition, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { ChevronDown, ChevronUp, Send, ShieldCheck, Sparkles } from 'lucide-react';
 import { TurnstileWidget } from '@/components/turnstile-widget';
 
@@ -19,6 +20,9 @@ type AssistantCopy = {
   submittingLabel: string;
   youLabel: string;
   assistantLabel: string;
+  detailsLabel: string;
+  sourcesLabel: string;
+  nextPagesLabel: string;
   disabledInline: string;
   genericError: string;
   networkError: string;
@@ -50,6 +54,14 @@ type Message = {
   id: string;
   role: 'assistant' | 'user';
   content: string;
+  nextPages?: AssistantPageLink[];
+  sources?: AssistantPageLink[];
+};
+
+type AssistantPageLink = {
+  id: string;
+  path: string;
+  title: string;
 };
 
 type ChallengeState =
@@ -110,11 +122,17 @@ function getApiErrorMessage({
   return fallback || copy.genericError;
 }
 
-function createMessage(role: Message['role'], content: string): Message {
+function createMessage(
+  role: Message['role'],
+  content: string,
+  details?: Pick<Message, 'nextPages' | 'sources'>,
+): Message {
   return {
     content,
     id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    nextPages: details?.nextPages,
     role,
+    sources: details?.sources,
   };
 }
 
@@ -143,18 +161,60 @@ function resizeTextarea(element: HTMLTextAreaElement | null) {
   element.style.overflowY = element.scrollHeight > maxHeight ? 'auto' : 'hidden';
 }
 
+function sanitizeAssistantPageLinks(value: unknown): AssistantPageLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    if (!item || typeof item !== 'object') {
+      return [];
+    }
+
+    const candidate = item as Record<string, unknown>;
+
+    if (
+      typeof candidate.id !== 'string' ||
+      typeof candidate.path !== 'string' ||
+      typeof candidate.title !== 'string'
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        id: candidate.id,
+        path: candidate.path,
+        title: candidate.title,
+      },
+    ];
+  });
+}
+
 function MessageBubble({
   content,
+  detailsLabel,
   isPending = false,
   label,
+  nextPages = [],
+  nextPagesLabel,
   role,
+  sources = [],
+  sourcesLabel,
 }: {
   content: string;
+  detailsLabel?: string;
   isPending?: boolean;
   label: string;
+  nextPages?: AssistantPageLink[];
+  nextPagesLabel?: string;
   role: Message['role'];
+  sources?: AssistantPageLink[];
+  sourcesLabel?: string;
 }) {
   const isUser = role === 'user';
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const hasDetails = !isUser && (sources.length > 0 || nextPages.length > 0);
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
@@ -177,6 +237,63 @@ function MessageBubble({
         >
           {content}
         </div>
+
+        {hasDetails && detailsLabel ? (
+          <div className="mt-2">
+            <button
+              type="button"
+              onClick={() => setDetailsOpen((open) => !open)}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-500 transition-colors hover:text-stone-800 focus:outline-none focus-visible:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 dark:focus-visible:text-white"
+            >
+              {detailsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+              {detailsLabel}
+            </button>
+
+            {detailsOpen ? (
+              <div className="mt-2 rounded-[16px] border border-stone-200/80 bg-white/60 px-3 py-3 text-sm dark:border-stone-800/80 dark:bg-stone-950/45">
+                {sources.length > 0 && sourcesLabel ? (
+                  <GuideLinkGroup label={sourcesLabel} links={sources} />
+                ) : null}
+                {nextPages.length > 0 && nextPagesLabel ? (
+                  <GuideLinkGroup
+                    label={nextPagesLabel}
+                    links={nextPages}
+                    className={sources.length > 0 ? 'mt-3' : ''}
+                  />
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function GuideLinkGroup({
+  className = '',
+  label,
+  links,
+}: {
+  className?: string;
+  label: string;
+  links: AssistantPageLink[];
+}) {
+  return (
+    <div className={className}>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+        {label}
+      </p>
+      <div className="mt-1.5 flex flex-wrap gap-2">
+        {links.map((link) => (
+          <Link
+            key={`${label}-${link.id}`}
+            href={link.path}
+            className="rounded-full border border-stone-200/80 bg-white/80 px-3 py-1 text-xs font-medium text-stone-600 transition-colors hover:border-stone-300 hover:text-stone-900 dark:border-stone-800/80 dark:bg-stone-900/80 dark:text-stone-300 dark:hover:border-stone-700 dark:hover:text-white"
+          >
+            {link.title}
+          </Link>
+        ))}
       </div>
     </div>
   );
@@ -282,7 +399,13 @@ export function UserGuideAssistant({
         method: 'POST',
       });
       const payload = (await response.json().catch(() => null)) as
-        | { answer?: string; code?: ApiErrorCode; error?: string }
+        | {
+            answer?: string;
+            code?: ApiErrorCode;
+            error?: string;
+            nextPages?: unknown;
+            sources?: unknown;
+          }
         | null;
 
       if (!response.ok && payload?.code === 'disabled') {
@@ -327,12 +450,17 @@ export function UserGuideAssistant({
       }
 
       const answer = payload.answer;
+      const nextPages = sanitizeAssistantPageLinks(payload.nextPages);
+      const sources = sanitizeAssistantPageLinks(payload.sources);
 
       startTransition(() => {
         setMessages((currentMessages) => [
           ...currentMessages,
           createMessage('user', trimmedQuestion),
-          createMessage('assistant', answer),
+          createMessage('assistant', answer, {
+            nextPages,
+            sources,
+          }),
         ]);
         setQuestion('');
         setChallenge((current) => createIdleChallengeState(current.nonce));
@@ -536,12 +664,17 @@ export function UserGuideAssistant({
                   <MessageBubble
                     key={message.id}
                     content={message.content}
+                    detailsLabel={copy.detailsLabel}
                     label={
                       message.role === 'user'
                         ? copy.youLabel
                         : copy.assistantLabel
                     }
+                    nextPages={message.nextPages}
+                    nextPagesLabel={copy.nextPagesLabel}
                     role={message.role}
+                    sources={message.sources}
+                    sourcesLabel={copy.sourcesLabel}
                   />
                 ))}
 

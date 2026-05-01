@@ -30,6 +30,7 @@ import {
 import {
   getUserGuidePageById,
   isUserGuidePageId,
+  type UserGuidePageId,
 } from '@/lib/user-guide-content';
 
 export const runtime = 'nodejs';
@@ -39,6 +40,9 @@ const MAX_HISTORY_MESSAGES = 6;
 const MAX_HISTORY_MESSAGE_LENGTH = 1200;
 const MAX_HISTORY_TOTAL_LENGTH = 4000;
 const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
+const MAX_ANSWER_LENGTH = 4000;
+const MAX_SOURCE_LINKS = 3;
+const MAX_NEXT_LINKS = 2;
 const GEMINI_TIMEOUT_MS = 12000;
 const VERIFIED_WINDOW_MS = 30 * 60 * 1000;
 
@@ -56,6 +60,18 @@ type RouteErrorCode =
 type ChatHistoryItem = {
   content: string;
   role: ChatRole;
+};
+
+type GuideAssistantPageLink = {
+  id: UserGuidePageId;
+  path: string;
+  title: string;
+};
+
+type StructuredGuideAssistantAnswer = {
+  answer: string;
+  nextPageIds: UserGuidePageId[];
+  sourcePageIds: UserGuidePageId[];
 };
 
 class EmptyGeminiResponseError extends Error {
@@ -178,7 +194,7 @@ function buildHistoryContents(history: ChatHistoryItem[]) {
   }));
 }
 
-function extractAnswer(response: GenerateContentResponse) {
+function extractResponseText(response: GenerateContentResponse) {
   const directText = response.text?.trim();
 
   if (directText) {
@@ -198,6 +214,139 @@ function extractAnswer(response: GenerateContentResponse) {
   }
 
   throw new EmptyGeminiResponseError();
+}
+
+function stripJsonCodeFence(text: string) {
+  const trimmed = text.trim();
+  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+
+  return fenceMatch ? fenceMatch[1].trim() : trimmed;
+}
+
+function normalizePageIds({
+  exclude,
+  max,
+  value,
+}: {
+  exclude?: Set<UserGuidePageId>;
+  max: number;
+  value: unknown;
+}) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const seen = new Set<UserGuidePageId>();
+  const ids: UserGuidePageId[] = [];
+
+  for (const item of value) {
+    if (typeof item !== 'string' || !isUserGuidePageId(item)) {
+      continue;
+    }
+
+    if (exclude?.has(item) || seen.has(item)) {
+      continue;
+    }
+
+    seen.add(item);
+    ids.push(item);
+
+    if (ids.length >= max) {
+      break;
+    }
+  }
+
+  return ids;
+}
+
+function parseStructuredGuideAssistantAnswer(
+  response: GenerateContentResponse,
+): StructuredGuideAssistantAnswer {
+  const responseText = extractResponseText(response);
+  const jsonText = stripJsonCodeFence(responseText);
+
+  try {
+    const parsed = JSON.parse(jsonText) as Record<string, unknown>;
+    const answer = sanitizeText(parsed.answer, MAX_ANSWER_LENGTH);
+
+    if (!answer) {
+      throw new EmptyGeminiResponseError();
+    }
+
+    return {
+      answer,
+      nextPageIds: normalizePageIds({
+        max: MAX_NEXT_LINKS,
+        value: parsed.nextPageIds,
+      }),
+      sourcePageIds: normalizePageIds({
+        max: MAX_SOURCE_LINKS,
+        value: parsed.sourcePageIds,
+      }),
+    };
+  } catch (error) {
+    if (error instanceof EmptyGeminiResponseError) {
+      throw error;
+    }
+
+    return {
+      answer: responseText,
+      nextPageIds: [],
+      sourcePageIds: [],
+    };
+  }
+}
+
+function getAssistantPageLink(
+  locale: HomeLocale,
+  pageId: UserGuidePageId,
+): GuideAssistantPageLink {
+  const page = getUserGuidePageById(locale, pageId);
+
+  return {
+    id: page.id,
+    path: page.path,
+    title: page.title,
+  };
+}
+
+function getFallbackNextPageIds(locale: HomeLocale, pageId: UserGuidePageId) {
+  const page = getUserGuidePageById(locale, pageId);
+
+  return page.nextPage ? [page.nextPage.id] : [];
+}
+
+function buildGuideAssistantSuccessBody({
+  locale,
+  pageId,
+  response,
+}: {
+  locale: HomeLocale;
+  pageId: UserGuidePageId;
+  response: GenerateContentResponse;
+}) {
+  const parsed = parseStructuredGuideAssistantAnswer(response);
+  const sourcePageIds =
+    parsed.sourcePageIds.length > 0 ? parsed.sourcePageIds : [pageId];
+  const parsedNextPageIds = normalizePageIds({
+    exclude: new Set([pageId]),
+    max: MAX_NEXT_LINKS,
+    value: parsed.nextPageIds,
+  });
+  const nextPageIds =
+    parsedNextPageIds.length > 0
+      ? parsedNextPageIds
+      : getFallbackNextPageIds(locale, pageId);
+
+  return {
+    answer: parsed.answer,
+    nextPages: nextPageIds.map((nextPageId) =>
+      getAssistantPageLink(locale, nextPageId),
+    ),
+    sources: sourcePageIds.map((sourcePageId) =>
+      getAssistantPageLink(locale, sourcePageId),
+    ),
+  };
 }
 
 function collectErrorDiagnostics(error: unknown) {
@@ -627,7 +776,7 @@ export async function POST(request: NextRequest) {
       ai.models.generateContent({
         config: {
           maxOutputTokens: 700,
-          responseMimeType: 'text/plain',
+          responseMimeType: 'application/json',
           systemInstruction: buildUserGuideSystemInstruction({
             context,
             currentPageTitle: page.title,
@@ -659,7 +808,11 @@ export async function POST(request: NextRequest) {
     );
 
     const successResponse = jsonResponse({
-      answer: extractAnswer(response),
+      ...buildGuideAssistantSuccessBody({
+        locale,
+        pageId,
+        response,
+      }),
     });
 
     return applyUserGuideSessionCookies({

@@ -20,17 +20,20 @@ function getAnswerLanguage(locale: HomeLocale) {
 
 function formatGuideSection({
   heading,
+  id,
   path,
   description,
   markdown,
 }: {
   heading: string;
+  id: UserGuidePageId;
   path: string;
   description: string;
   markdown: string;
 }) {
   return [
     `## ${heading}`,
+    `Page ID: ${id}`,
     `Path: ${path}`,
     `Description: ${description}`,
     'Content:',
@@ -68,6 +71,7 @@ export const getUserGuideAiContext = cache(
       '',
       formatGuideSection({
         heading: `Current page - ${currentPage.title}`,
+        id: currentPage.id,
         path: currentPage.path,
         description: currentPage.description,
         markdown: currentPage.markdown,
@@ -77,6 +81,7 @@ export const getUserGuideAiContext = cache(
       ...referencePages.map((page) =>
         formatGuideSection({
           heading: page.title,
+          id: page.id,
           path: page.path,
           description: page.description,
           markdown: page.markdown,
@@ -115,6 +120,10 @@ export function buildUserGuideSystemInstruction({
     'Do not invent product behavior, setup steps, UI labels, pricing, release details, or troubleshooting advice that are not covered by the guide.',
     'If the guide does not cover the answer, say that the current user guide does not cover it and suggest the closest guide page when possible.',
     'Keep the answer practical and concise.',
+    'Return strict JSON only, with no Markdown fences or extra prose.',
+    'Use this exact shape: {"answer":"...","sourcePageIds":["page-id"],"nextPageIds":["page-id"]}.',
+    'Use only Page ID values from the provided guide context. Include 1-3 sourcePageIds and 0-2 nextPageIds.',
+    'sourcePageIds should identify the pages used for the answer. nextPageIds should identify useful follow-up pages to read after the answer.',
     '',
     'User guide context starts below.',
     context,

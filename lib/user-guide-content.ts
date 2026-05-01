@@ -120,6 +120,9 @@ interface UserGuideAssistantCopy {
   submittingLabel: string;
   youLabel: string;
   assistantLabel: string;
+  detailsLabel: string;
+  sourcesLabel: string;
+  nextPagesLabel: string;
   disabledInline: string;
   genericError: string;
   networkError: string;
@@ -690,6 +693,9 @@ export function getUserGuideAssistantCopy(
       submittingLabel: 'Thinking...',
       youLabel: 'You',
       assistantLabel: 'Guide AI',
+      detailsLabel: 'Sources and next step',
+      sourcesLabel: 'Sources',
+      nextPagesLabel: 'Next pages',
       disabledInline:
         'This deployment has not enabled protected guide Q&A.',
       genericError:
@@ -737,6 +743,9 @@ export function getUserGuideAssistantCopy(
     submittingLabel: '正在思考...',
     youLabel: '你',
     assistantLabel: '指南 AI',
+    detailsLabel: '来源与下一步',
+    sourcesLabel: '来源页',
+    nextPagesLabel: '下一步',
     disabledInline: '当前部署尚未启用受保护的文档问答。',
     genericError: '指南助手暂时无法回答，请稍后再试。',
     networkError:
