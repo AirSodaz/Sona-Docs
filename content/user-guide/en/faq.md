@@ -1,16 +1,47 @@
 Use this page when the main workflow is clear but one part is still blocking you.
 
+## Which desktop build should I install?
+
+- Most users should install the latest release build from [Desktop downloads](/downloads) or [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest), not a source build.
+- Pick the build that matches your operating system, CPU architecture, and preferred installer format.
+- Source builds and development commands belong in the [project README](readme).
+
 ## Sona keeps asking me to finish setup
 
 - Open the onboarding banner and complete the model and microphone steps.
 - If you skipped setup earlier, make sure both `Live Record Model` and `Batch Import Model` are configured in `Settings > Model Settings`.
 - If you hid the reminder banner, reopen setup manually from the banner flow or settings-related entry points when Sona prompts again.
 
+## `Download Recommended Models` fails or never finishes
+
+- Keep Sona open and stay on a stable network; the recommended model package can take time to download and extract.
+- Check available disk space, then retry from `Settings > Model Settings` if onboarding was interrupted.
+- If it repeatedly stalls, open `Diagnostics` and review the model download or local runtime message before retrying.
+
+## A model is downloaded, but Sona still says it is missing
+
+- Open `Settings > Model Settings` and confirm the right slot is selected: `Live Record Model` for live transcription or `Batch Import Model` for file transcription.
+- Make sure the model folder still contains the extracted files. Moving or renaming model folders after download can make Sona lose the path.
+- If the model was downloaded outside Sona, choose it manually in `Settings > Model Settings` instead of relying on first-run setup.
+
 ## `Live Record` does not start
 
 - Check microphone permission in your operating system.
 - Confirm that a `Live Record Model` is configured.
 - Make sure the input source is correct: `Microphone` or `Desktop Audio`.
+
+## `Live Record` starts but still cannot hear the microphone
+
+- Open `Settings > Input Device` and select the microphone you actually want Sona to use.
+- Check operating-system microphone permission and make sure another app is not holding the device exclusively.
+- If the current source is `Desktop Audio`, switch back to `Microphone` to confirm the input path.
+- Open `Diagnostics` if the selected device looks correct but Sona still reports no input.
+
+## Where can I check local transcription diagnostics?
+
+- Open `Settings > General`, then select `Diagnostics`.
+- Use it to inspect local transcription readiness, model paths, input device state, and the packaged runtime environment.
+- When asking for help, share the visible diagnostic message or error text instead of guessing from the symptom alone.
 
 ## `Batch Import` does not start
 
@@ -78,3 +109,4 @@ Use this page when the main workflow is clear but one part is still blocking you
 ## I want to build or develop Sona
 
 - Use the [project README](readme) for source builds and development commands.
+- If you only want to use Sona, install a release build instead; source builds are mainly for contributors and development work.

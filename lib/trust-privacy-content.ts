@@ -15,6 +15,30 @@ interface DetailSection {
   items: string[];
 }
 
+interface DataFlowColumns {
+  feature: string;
+  trigger: string;
+  data: string;
+  destination: string;
+  control: string;
+}
+
+interface DataFlowRow {
+  feature: string;
+  trigger: string;
+  data: string;
+  destination: string;
+  control: string;
+}
+
+interface DataFlowSection {
+  eyebrow: string;
+  title: string;
+  description: string;
+  columns: DataFlowColumns;
+  rows: DataFlowRow[];
+}
+
 export interface TrustPrivacyPageCopy {
   id: TrustPrivacyPageId;
   locale: HomeLocale;
@@ -37,6 +61,7 @@ export interface TrustPrivacyPageCopy {
     updatedLabel: string;
   };
   facts: FactItem[];
+  dataFlow?: DataFlowSection;
   sections: DetailSection[];
   closing: {
     title: string;
@@ -143,7 +168,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         title: 'Want the data-flow version?',
         description:
           'The privacy page explains what the desktop app and this website do with data in more direct operational terms.',
-        primaryHref: '/privacy',
+        primaryHref: '/privacy#data-flow',
         primaryLabel: 'Read Privacy',
         secondaryHref: '/user-guide',
         secondaryLabel: 'Open User Guide',
@@ -201,6 +226,133 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
             'The site checks GitHub release data for downloads and can offer a protected guide assistant when configured.',
         },
       ],
+      dataFlow: {
+        eyebrow: 'Data Flow',
+        title: 'What moves where',
+        description:
+          'This table separates Sona desktop actions from public docs-site behavior, so optional network paths are visible before you use them.',
+        columns: {
+          feature: 'Feature',
+          trigger: 'Trigger',
+          data: 'Data',
+          destination: 'Destination',
+          control: 'Control',
+        },
+        rows: [
+          {
+            feature: 'Local transcription',
+            trigger: 'Record or import audio and run local recognition.',
+            data: 'Audio or video input, transcript segments, and timestamps.',
+            destination: 'Your device and the local model runtime.',
+            control:
+              'Keep recognition local; export or share files only when you choose.',
+          },
+          {
+            feature: 'Local editing/export',
+            trigger: 'Edit a transcript or export SRT, VTT, TXT, or other files.',
+            data:
+              'Transcript text, timestamps, and any summary or metadata included in the export.',
+            destination: 'The local workspace and the save location you select.',
+            control:
+              'You choose the export format, save location, and any later sharing.',
+          },
+          {
+            feature: 'Model downloads',
+            trigger: 'Download or install speech models.',
+            data: 'Model request metadata and network request details.',
+            destination: 'The configured model or release host.',
+            control:
+              'Manually triggered; downloading models does not require sending audio.',
+          },
+          {
+            feature: 'App release downloads/update checks',
+            trigger: 'Open download UI, download a build, or check for updates.',
+            data:
+              'Release metadata requests, plus app, platform, or version information during update checks.',
+            destination: 'GitHub Releases or the configured update source.',
+            control:
+              'Triggered by download or update actions; you choose whether to install.',
+          },
+          {
+            feature: 'LLM polish',
+            trigger: 'Run Polish with a configured provider.',
+            data: 'Selected transcript text and task prompt/context.',
+            destination: 'Your configured LLM provider or local endpoint.',
+            control:
+              'Optional; it stays inactive until you configure and run a provider-backed action.',
+          },
+          {
+            feature: 'Translate',
+            trigger: 'Run Translate with a configured provider or service.',
+            data: 'Transcript text and language settings.',
+            destination:
+              'Your configured translation or LLM provider, or a local endpoint.',
+            control:
+              'Optional; the provider you choose determines the data boundary.',
+          },
+          {
+            feature: 'AI summary',
+            trigger: 'Generate a summary.',
+            data: 'Transcript text and summary template/context.',
+            destination: 'Your configured LLM provider or local endpoint.',
+            control:
+              'Optional; generated summaries can be edited or cleared in the app.',
+          },
+          {
+            feature: 'Automation',
+            trigger: 'Enable folder watches, presets, or automation runs.',
+            data:
+              'Watched or imported files, transcript text, and workflow export outputs.',
+            destination:
+              'The local workspace plus any configured provider or export destination used by the workflow.',
+            control:
+              'Off unless configured; review preset actions and export mode before running.',
+          },
+          {
+            feature: 'Backup/restore archive',
+            trigger: 'Export a backup archive or import one back into Sona.',
+            data:
+              'Config, workspace, light history transcripts, summaries, automation state, and dashboard LLM usage. Audio files, onboarding, current project, and recovery state are excluded.',
+            destination: 'The local archive path you choose.',
+            control:
+              'You choose when to export, where to save, and whether to import an archive later.',
+          },
+          {
+            feature: 'WebDAV Cloud Sync',
+            trigger: 'Configure sync and run backup, restore, or sync actions.',
+            data: 'Backup archives and sync metadata.',
+            destination: 'Your configured WebDAV server.',
+            control:
+              'Optional; controlled by your server URL, credentials, and sync actions.',
+          },
+          {
+            feature: 'Docs download API',
+            trigger: 'Open the downloads UI or request latest release links.',
+            data: 'Public request metadata and GitHub release lookup results.',
+            destination: 'The Sona docs API and GitHub Releases.',
+            control:
+              'Used only for download choices; no audio or transcript data is involved.',
+          },
+          {
+            feature: 'User guide assistant',
+            trigger: 'Ask the guide assistant after it is enabled.',
+            data:
+              'Your question, short conversation history, locale, current guide page context, and anti-abuse cookie or Turnstile status.',
+            destination:
+              'The Sona docs API, Gemini, and Cloudflare Turnstile when challenged.',
+            control:
+              'Optional site feature; you can read the docs without using the assistant.',
+          },
+          {
+            feature: 'External GitHub links',
+            trigger: 'Click GitHub, release, or source-code links.',
+            data: 'Browser request details such as referrer and IP, handled by GitHub and your browser.',
+            destination: 'GitHub.',
+            control:
+              'Only happens when you follow the link; GitHub policies apply.',
+          },
+        ],
+      },
       sections: [
         {
           eyebrow: 'Desktop app data',
@@ -350,7 +502,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         title: '想看数据流版本？',
         description:
           '隐私页用更直接的方式说明桌面应用和这个网站分别会如何处理数据。',
-        primaryHref: '/zh/privacy',
+        primaryHref: '/zh/privacy#data-flow',
         primaryLabel: '阅读隐私说明',
         secondaryHref: '/zh/user-guide',
         secondaryLabel: '打开用户指南',
@@ -408,6 +560,117 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
             '站点会为下载页读取 GitHub release 数据，并可在配置后提供受保护的文档助手。',
         },
       ],
+      dataFlow: {
+        eyebrow: '数据流',
+        title: '数据会流向哪里',
+        description:
+          '这张表把 Sona 桌面端动作和公开文档站点行为分开，方便在使用可选联网能力之前先看清边界。',
+        columns: {
+          feature: '功能',
+          trigger: '触发方式',
+          data: '数据',
+          destination: '去向',
+          control: '控制方式',
+        },
+        rows: [
+          {
+            feature: '本地转录',
+            trigger: '录音或导入音频，并运行本地识别。',
+            data: '音频或视频输入、本地转录分段和时间戳。',
+            destination: '你的设备和本地模型运行时。',
+            control:
+              '识别保持在本地；只有你主动导出或分享时文件才离开应用边界。',
+          },
+          {
+            feature: '本地编辑/导出',
+            trigger: '编辑转录，或导出 SRT、VTT、TXT 等文件。',
+            data: '转录文本、时间戳，以及导出中包含的摘要或元数据。',
+            destination: '本地工作区和你选择的保存位置。',
+            control: '你选择导出格式、保存位置和后续分享方式。',
+          },
+          {
+            feature: '模型下载',
+            trigger: '下载或安装语音模型。',
+            data: '模型请求相关信息和网络请求信息。',
+            destination: '配置的模型或 release 托管地址。',
+            control: '由你手动触发；下载模型不需要发送音频。',
+          },
+          {
+            feature: '应用 release 下载/更新检查',
+            trigger: '打开下载页、下载安装包或检查更新。',
+            data: 'release 元数据请求，以及检查更新时的应用、平台或版本信息。',
+            destination: 'GitHub Releases 或配置的更新源。',
+            control: '由下载或更新动作触发；是否安装由你决定。',
+          },
+          {
+            feature: 'LLM 润色',
+            trigger: '使用已配置的 provider 运行润色。',
+            data: '选中的转录文本和任务所需 prompt/context。',
+            destination: '你配置的 LLM provider 或本地 endpoint。',
+            control: '可选；只有配置并触发 provider 动作后才会运行。',
+          },
+          {
+            feature: '翻译',
+            trigger: '使用已配置的 provider 或服务运行翻译。',
+            data: '转录文本和语言设置。',
+            destination: '配置的翻译或 LLM provider，或本地 endpoint。',
+            control: '可选；你选择的 provider 决定数据边界。',
+          },
+          {
+            feature: 'AI 摘要',
+            trigger: '生成摘要。',
+            data: '转录文本和摘要模板/上下文。',
+            destination: '你配置的 LLM provider 或本地 endpoint。',
+            control: '可选；生成后的摘要可在应用内编辑或清空。',
+          },
+          {
+            feature: '自动化',
+            trigger: '启用文件夹监听、预设或自动化任务。',
+            data: '监听或导入的文件、转录文本，以及工作流需要的导出结果。',
+            destination:
+              '本地工作区，以及工作流中配置的 provider 或导出位置。',
+            control: '未配置时不运行；运行前可检查预设动作和导出模式。',
+          },
+          {
+            feature: '备份/恢复归档',
+            trigger: '导出备份归档，或把归档重新导入 Sona。',
+            data:
+              '配置、工作区、轻量历史转录与摘要、自动化状态，以及仪表盘 LLM 使用记录。不包含音频文件、onboarding、当前项目和恢复态数据。',
+            destination: '你选择的本地归档保存位置。',
+            control: '你决定何时导出、保存到哪里，以及之后是否导入归档。',
+          },
+          {
+            feature: 'WebDAV Cloud Sync',
+            trigger: '配置同步，并运行备份、恢复或同步动作。',
+            data: '备份归档和同步元数据。',
+            destination: '你配置的 WebDAV 服务器。',
+            control: '可选；由服务器地址、凭据和应用内同步动作控制。',
+          },
+          {
+            feature: '文档下载 API',
+            trigger: '打开下载 UI 或请求最新 release 链接。',
+            data: '公开请求信息和 GitHub release 查询结果。',
+            destination: 'Sona 文档站 API 和 GitHub Releases。',
+            control: '仅用于下载选择；不涉及音频或转录数据。',
+          },
+          {
+            feature: '用户指南助手',
+            trigger: '启用后向指南助手提问。',
+            data:
+              '你的问题、较短对话历史、语言、当前指南页上下文，以及防滥用 cookie 或 Turnstile 状态。',
+            destination:
+              'Sona 文档站 API、Gemini，以及触发验证时的 Cloudflare Turnstile。',
+            control: '可选站点功能；不使用助手也能阅读文档。',
+          },
+          {
+            feature: '外部 GitHub 链接',
+            trigger: '点击 GitHub、release 或源码链接。',
+            data: '由浏览器和 GitHub 处理的 referrer、IP 等请求信息。',
+            destination: 'GitHub。',
+            control: '只有点击时发生；GitHub 的政策适用。',
+          },
+        ],
+      },
       sections: [
         {
           eyebrow: '桌面应用数据',

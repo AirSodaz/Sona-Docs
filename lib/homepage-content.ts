@@ -291,7 +291,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     features: [
       {
         title: 'Locally Processed',
-        desc: 'Complete privacy. Everything runs entirely on your local hardware using Sherpa-onnx, avoiding internet bounds and data leaks.',
+        desc: 'Local-first by default. Transcription runs on your hardware with Sherpa-onnx; optional downloads, updates, sync, and provider-backed AI actions connect only when you choose them.',
       },
       {
         title: 'LLM Assistant',
@@ -485,8 +485,8 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     },
     features: [
       {
-        title: '完全本土运行',
-        desc: '绝对的隐私安全。所有处理均在你的本地硬件上使用 Sherpa-onnx 完成，无需联网，远离数据泄露的担忧。',
+        title: '本地优先处理',
+        desc: '默认先在本地完成转录。Sona 使用 Sherpa-onnx 在你的设备上处理音频；模型下载、更新、同步和 provider 支持的 AI 动作只在你选择时联网。',
       },
       {
         title: '内置大模型智能助手',

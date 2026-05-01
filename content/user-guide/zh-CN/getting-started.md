@@ -13,9 +13,11 @@
 
 ## 先完成安装
 
-1. 从 [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) 下载最新发布版本。
+1. 先打开 [Sona 下载页](/zh/downloads)，按你的桌面系统选择构建。如果站点暂时无法读取 release 详情，再使用 [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) 作为备用入口。
 2. 启动应用。
 3. 如果你是从源码构建，请改看 [项目 README](readme)。
+
+如果遇到 Windows SmartScreen、macOS Gatekeeper 或 Linux 可执行权限提示，请先确认安装包来自 Sona 下载页或 GitHub Releases，再按系统提示处理；不要全局关闭系统安全防护。
 
 ## 完成 `首次运行设置`
 
@@ -47,4 +49,5 @@
 - 如果你主动关闭提醒横幅，它会在首页停止显示，直到设置完成。
 - 后续可以在 `设置 > 模型设置` 中改用其他模型。
 - 默认麦克风可以在 `设置 > 输入设备` 中重新调整。
+- 如果模型下载卡住，先确认网络可用且模型托管地址可访问，再重新尝试引导；如果仍失败，到 `设置 > 模型设置` 下载或选择模型，再用 `设置 > 常规 > 诊断` 查看详情。
 - 如果你之后要改用命令行批量转录，可以继续看站内的 [CLI 指南](guide:cli-guide)。

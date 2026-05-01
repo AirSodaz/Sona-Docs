@@ -3,16 +3,25 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Github, Globe } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  ExternalLink,
+  Github,
+  Globe,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { downloadContent } from '@/lib/download-content';
+import { downloadContent, type DownloadContent } from '@/lib/download-content';
 import type { HomeLocale } from '@/lib/homepage-content';
 import {
   FALLBACK_RELEASE_URL,
+  type DownloadFormat,
   formatAssetSize,
   getDownloadsForKey,
+  getRecommendedForKey,
   type DownloadPlatformKey,
   type ReleaseResponseBody,
   type StructuredDownload,
@@ -34,6 +43,16 @@ const PAGE_SECTIONS: Array<{
     id: 'linux',
     keys: ['linux-x64'],
   },
+];
+
+const FORMAT_DECISION_ORDER: DownloadFormat[] = [
+  'exe',
+  'msi',
+  'dmg',
+  'app-tar-gz',
+  'appimage',
+  'deb',
+  'rpm',
 ];
 
 interface ReleaseState {
@@ -77,6 +96,19 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
 
   const githubHref = release.data?.url ?? FALLBACK_RELEASE_URL;
   const readyRelease = release.status === 'ready' ? release.data : null;
+  const downloadSections = readyRelease
+    ? PAGE_SECTIONS.map((section) => ({
+        ...section,
+        items: section.keys
+          .map((key) => ({
+            downloads: getDownloadsForKey(readyRelease, key),
+            key,
+            recommended: getRecommendedForKey(readyRelease, key),
+          }))
+          .filter((item) => item.downloads.length > 0),
+      })).filter((section) => section.items.length > 0)
+    : [];
+  const hasDesktopBuilds = downloadSections.length > 0;
 
   return (
     <main className="relative min-h-[100svh] overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0] px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
@@ -172,6 +204,15 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
             ) : null}
           </motion.section>
 
+          <motion.section
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+            }}
+          >
+            <DecisionHelper content={content} />
+          </motion.section>
+
           {release.status === 'loading' ? (
             <motion.div
               variants={{
@@ -207,55 +248,74 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
             </motion.div>
           ) : null}
 
-          {readyRelease
-            ? PAGE_SECTIONS.map((section) => {
-                const items = section.keys
-                  .map((key) => ({
-                    downloads: getDownloadsForKey(readyRelease, key),
-                    key,
-                  }))
-                  .filter((item) => item.downloads.length > 0);
+          {readyRelease && !hasDesktopBuilds ? (
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+              }}
+            >
+              <StatusPanel>
+                <p className="text-lg font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
+                  {content.page.emptyBuildsTitle}
+                </p>
+                <p className="mt-3 text-base font-light leading-[1.8] text-stone-500 dark:text-stone-400">
+                  {content.page.emptyBuildsDescription}
+                </p>
+                <HeaderLink href={githubHref} external className="mt-6">
+                  <span className="inline-flex items-center gap-2">
+                    <ExternalLink size={16} />
+                    {content.page.githubLabel}
+                  </span>
+                </HeaderLink>
+              </StatusPanel>
+            </motion.div>
+          ) : null}
 
-                if (!items.length) {
-                  return null;
-                }
-
-                return (
-                  <motion.section
-                    key={section.id}
-                    variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
-                    }}
-                    className="flex flex-col gap-6"
-                  >
-                    <h2 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-                      {content.platformGroups[section.id]}
-                    </h2>
-                    <div className="grid gap-6 md:grid-cols-2">
-                      {items.map((item) => (
-                        <div
-                          key={item.key}
-                          className="flex flex-col gap-4 rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-colors dark:bg-stone-900/30 dark:ring-stone-800/50"
-                        >
+          {readyRelease && hasDesktopBuilds
+            ? downloadSections.map((section) => (
+                <motion.section
+                  key={section.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+                  }}
+                  className="flex flex-col gap-6"
+                >
+                  <h2 className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+                    {content.platformGroups[section.id]}
+                  </h2>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {section.items.map((item) => (
+                      <div
+                        key={item.key}
+                        className="flex flex-col gap-4 rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-colors dark:bg-stone-900/30 dark:ring-stone-800/50"
+                      >
+                        <div>
                           <h3 className="text-sm font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
                             {content.platforms[item.key]}
                           </h3>
-                          <div className="flex flex-col gap-3">
-                            {item.downloads.map((download) => (
-                              <DownloadRow
-                                key={download.url}
-                                download={download}
-                                label={content.formats[download.format]}
-                              />
-                            ))}
-                          </div>
+                          <p className="mt-2 text-sm font-light leading-[1.7] text-stone-500 dark:text-stone-400">
+                            {content.platformDescriptions[item.key]}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  </motion.section>
-                );
-              })
+                        <div className="flex flex-col gap-3">
+                          {item.downloads.map((download) => (
+                            <DownloadRow
+                              key={download.url}
+                              download={download}
+                              guidance={content.formatDescriptions[download.format]}
+                              label={content.formats[download.format]}
+                              recommended={item.recommended?.url === download.url}
+                              recommendedLabel={content.page.recommendedLabel}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.section>
+              ))
             : null}
 
           <motion.div
@@ -263,8 +323,15 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
             }}
-            className="pt-8 text-center"
+            className="flex flex-col items-center gap-4 pt-8 text-center sm:flex-row sm:justify-center"
           >
+            <Link
+              href={content.page.firstRunHref}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-stone-800 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-700 dark:bg-stone-200 dark:text-stone-900 dark:hover:bg-white"
+            >
+              {content.page.firstRunLabel}
+              <ArrowRight size={16} />
+            </Link>
             <HeaderLink href={githubHref} external>
               <span className="inline-flex items-center gap-2">
                 <Github size={16} />
@@ -278,25 +345,116 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
   );
 }
 
+function DecisionHelper({ content }: { content: DownloadContent }) {
+  return (
+    <div className="rounded-2xl bg-white/40 p-5 ring-1 ring-stone-200/50 transition-colors dark:bg-stone-900/30 dark:ring-stone-800/50 sm:p-6">
+      <div className="max-w-2xl">
+        <h2 className="text-base font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
+          {content.page.decisionTitle}
+        </h2>
+        <p className="mt-2 text-sm font-light leading-[1.7] text-stone-500 dark:text-stone-400">
+          {content.page.decisionDescription}
+        </p>
+      </div>
+
+      <div className="mt-5 grid gap-5 lg:grid-cols-[1.35fr_1fr]">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
+            {content.page.platformChoiceLabel}
+          </p>
+          <div className="mt-3 grid gap-3 md:grid-cols-3">
+            {PAGE_SECTIONS.map((section) => (
+              <div key={section.id} className="space-y-2">
+                <h3 className="text-sm font-medium text-stone-700 dark:text-stone-200">
+                  {content.platformGroups[section.id]}
+                </h3>
+                <ul className="space-y-2">
+                  {section.keys.map((key) => (
+                    <li key={key} className="text-sm leading-[1.55]">
+                      <span className="block font-medium text-stone-600 dark:text-stone-300">
+                        {content.platforms[key]}
+                      </span>
+                      <span className="block text-xs text-stone-500 dark:text-stone-400">
+                        {content.platformDescriptions[key]}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
+            {content.page.formatChoiceLabel}
+          </p>
+          <div className="mt-3 grid gap-2">
+            {FORMAT_DECISION_ORDER.map((format) => (
+              <div
+                key={format}
+                className="grid grid-cols-[6.5rem_1fr] gap-3 text-sm leading-[1.55] sm:grid-cols-[7.5rem_1fr]"
+              >
+                <span className="font-medium text-stone-600 dark:text-stone-300">
+                  {content.formats[format]}
+                </span>
+                <span className="text-xs text-stone-500 dark:text-stone-400">
+                  {content.formatDescriptions[format]}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <p className="mt-5 border-t border-stone-200/70 pt-4 text-xs leading-[1.7] text-stone-500 dark:border-stone-800/70 dark:text-stone-400">
+        {content.page.desktopOnlyNote}
+      </p>
+      <p className="mt-3 text-xs leading-[1.7] text-stone-500 dark:text-stone-400">
+        {content.page.installSafetyNote}
+      </p>
+    </div>
+  );
+}
+
 function DownloadRow({
   download,
+  guidance,
   label,
+  recommended,
+  recommendedLabel,
 }: {
   download: StructuredDownload;
+  guidance: string;
   label: string;
+  recommended: boolean;
+  recommendedLabel: string;
 }) {
   return (
     <Link
       href={download.url}
       target="_blank"
       rel="noreferrer"
-      className="group flex items-center justify-between rounded-xl bg-white/60 px-5 py-4 text-sm ring-1 ring-stone-200 transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:bg-stone-900/50 dark:ring-stone-800 dark:hover:bg-stone-800"
+      className="group grid gap-3 rounded-xl bg-white/60 px-5 py-4 text-sm ring-1 ring-stone-200 transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:bg-stone-900/50 dark:ring-stone-800 dark:hover:bg-stone-800 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
     >
-      <span className="font-medium text-[#2D2D2D] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white">
-        {label}
+      <span>
+        <span className="block font-medium text-[#2D2D2D] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white">
+          {label}
+        </span>
+        <span className="mt-1 block text-xs leading-[1.55] text-stone-500 dark:text-stone-400">
+          {guidance}
+        </span>
       </span>
-      <span className="text-xs font-mono tracking-widest text-stone-400 dark:text-stone-500">
-        {formatAssetSize(download.size)}
+      <span className="flex flex-wrap items-center gap-2 sm:justify-end">
+        {recommended ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-stone-800 px-2.5 py-1 text-[11px] font-medium text-white dark:bg-stone-200 dark:text-stone-900">
+            <CheckCircle2 size={13} />
+            {recommendedLabel}
+          </span>
+        ) : null}
+        <span className="text-xs font-mono tracking-widest text-stone-400 dark:text-stone-500">
+          {formatAssetSize(download.size)}
+        </span>
       </span>
     </Link>
   );

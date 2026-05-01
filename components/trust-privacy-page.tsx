@@ -12,6 +12,17 @@ import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import type { TrustPrivacyPageCopy } from '@/lib/trust-privacy-content';
 
+type DataFlowContent = NonNullable<TrustPrivacyPageCopy['dataFlow']>;
+type DataFlowColumnKey = keyof DataFlowContent['columns'];
+
+const dataFlowColumnKeys: DataFlowColumnKey[] = [
+  'feature',
+  'trigger',
+  'data',
+  'destination',
+  'control',
+];
+
 export function TrustPrivacyPage({
   content,
 }: {
@@ -118,6 +129,10 @@ export function TrustPrivacyPage({
             ))}
           </section>
 
+          {content.dataFlow ? (
+            <DataFlowSection dataFlow={content.dataFlow} />
+          ) : null}
+
           <div className="divide-y divide-stone-200/80 border-y border-stone-200/80 dark:divide-stone-800/80 dark:border-stone-800/80">
             {content.sections.map((section, index) => (
               <section
@@ -212,6 +227,106 @@ export function TrustPrivacyPage({
         </footer>
       </div>
     </main>
+  );
+}
+
+function DataFlowSection({ dataFlow }: { dataFlow: DataFlowContent }) {
+  return (
+    <section
+      id="data-flow"
+      className="scroll-mt-24 border-t border-stone-200/80 py-10 dark:border-stone-800/80 sm:py-12"
+    >
+      <div className="grid gap-4 lg:grid-cols-[0.35fr_1fr] lg:gap-7">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
+            {dataFlow.eyebrow}
+          </p>
+        </div>
+        <div className="max-w-3xl">
+          <h2
+            className="text-[1.65rem] leading-tight text-stone-900 dark:text-stone-100 sm:text-[2rem]"
+            style={{ fontFamily: 'var(--font-serif)' }}
+          >
+            {dataFlow.title}
+          </h2>
+          <p className="mt-4 text-base font-light leading-8 text-stone-600 dark:text-stone-300">
+            {dataFlow.description}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-8 hidden overflow-hidden rounded-lg border border-stone-200/80 bg-white/55 shadow-[0_22px_70px_-58px_rgba(87,83,78,0.55)] dark:border-stone-800/80 dark:bg-stone-900/45 dark:shadow-none lg:block">
+        <table className="w-full table-fixed border-collapse text-left">
+          <colgroup>
+            <col className="w-[17%]" />
+            <col className="w-[20%]" />
+            <col className="w-[22%]" />
+            <col className="w-[20%]" />
+            <col className="w-[21%]" />
+          </colgroup>
+          <thead>
+            <tr className="border-b border-stone-200/80 bg-stone-100/55 dark:border-stone-800/80 dark:bg-stone-950/35">
+              {dataFlowColumnKeys.map((columnKey) => (
+                <th
+                  key={columnKey}
+                  scope="col"
+                  className="px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400"
+                >
+                  {dataFlow.columns[columnKey]}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-stone-200/70 dark:divide-stone-800/70">
+            {dataFlow.rows.map((row) => (
+              <tr key={row.feature}>
+                {dataFlowColumnKeys.map((columnKey) => (
+                  <td
+                    key={columnKey}
+                    className="break-words px-4 py-4 align-top text-[13px] font-light leading-6 text-stone-600 dark:text-stone-400"
+                  >
+                    <span
+                      className={
+                        columnKey === 'feature'
+                          ? 'font-medium text-stone-900 dark:text-stone-100'
+                          : undefined
+                      }
+                    >
+                      {row[columnKey]}
+                    </span>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-7 space-y-4 lg:hidden">
+        {dataFlow.rows.map((row) => (
+          <article
+            key={row.feature}
+            className="rounded-lg border border-stone-200/80 bg-white/55 p-4 shadow-[0_18px_55px_-48px_rgba(87,83,78,0.5)] dark:border-stone-800/80 dark:bg-stone-900/45 dark:shadow-none"
+          >
+            <h3 className="text-base font-medium leading-6 text-stone-900 dark:text-stone-100">
+              {row.feature}
+            </h3>
+            <dl className="mt-4 grid gap-3">
+              {dataFlowColumnKeys.slice(1).map((columnKey) => (
+                <div key={columnKey} className="grid gap-1">
+                  <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">
+                    {dataFlow.columns[columnKey]}
+                  </dt>
+                  <dd className="break-words text-sm font-light leading-7 text-stone-600 dark:text-stone-400">
+                    {row[columnKey]}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

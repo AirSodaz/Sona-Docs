@@ -13,9 +13,11 @@ If you are opening Sona for the first time, this is the shortest route to a usab
 
 ## Install the desktop app
 
-1. Download the latest release from [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest).
+1. Open [Sona Downloads](/downloads) and choose the build for your desktop system. If the site cannot load release details, use [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) as the fallback.
 2. Launch the app.
 3. If you are building from source instead, use the [project README](readme).
+
+If Windows SmartScreen, macOS Gatekeeper, or Linux executable-permission prompts appear, first confirm that the installer came from Sona Downloads or GitHub Releases, then follow the operating-system prompt. Do not turn off system protection globally.
 
 ## Complete `First Run Setup`
 
@@ -47,4 +49,5 @@ If you are opening Sona for the first time, this is the shortest route to a usab
 - If you hide the reminder banner, it stops appearing on the home screen until setup is complete.
 - You can change models later in `Settings > Model Settings`.
 - You can change the default microphone later in `Settings > Input Device`.
+- If model download stalls, check that your internet connection is available and the model host can be reached, then retry onboarding. If it still fails, use `Settings > Model Settings` to download or select models, then open `Settings > General > Diagnostics` for details.
 - If you want command-line batch transcription later, continue to the in-site [CLI Guide](guide:cli-guide).
