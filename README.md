@@ -24,8 +24,8 @@ Sona is designed for people who want privacy, speed, and local-first transcripti
 ## Local Development
 
 ### Prerequisites
-- Node.js 20+
-- pnpm 10+
+- Node.js 22.13+
+- pnpm 11+
 
 ### Install
 
