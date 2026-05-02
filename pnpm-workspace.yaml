@@ -1,4 +1,5 @@
 onlyBuiltDependencies:
+  - '@google/genai'
   - '@tailwindcss/oxide'
   - protobufjs
   - re2

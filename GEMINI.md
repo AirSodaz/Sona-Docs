@@ -30,7 +30,7 @@ This project is a landing page for **Sona**, an offline transcript editor. It is
 
 ### Coding Standards
 - **Component Pattern:** Uses `'use client'` for interactive components (e.g., `Home` component in `app/page.tsx`).
-- **Styling:** Prefers utility-first CSS with Tailwind CSS 4. Uses `clsx` and `tailwind-merge` (via `lib/utils.ts` `cn` helper) for dynamic class names.
+- **Styling:** Prefers utility-first CSS with Tailwind CSS 4 and component-local class strings.
 - **Icons:** Use `lucide-react` for consistent iconography.
 - **Animations:** Use `motion` for polished UI transitions and entry animations.
 - **Fonts:** Uses Google Fonts (`Inter` for sans, `Cormorant Garamond` for serif) configured via `next/font`.
@@ -43,4 +43,3 @@ This project is a landing page for **Sona**, an offline transcript editor. It is
 - `app/layout.tsx`: Root layout with font configurations and global styles.
 - `metadata.json`: Local workspace metadata for the site wrapper.
 - `next.config.ts`: Next.js configuration including the optional `DISABLE_HMR` override for agent-driven editing.
-- `lib/utils.ts`: Tailwind CSS class merging utility.
