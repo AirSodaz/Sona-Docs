@@ -1,11 +1,11 @@
 # Sona-Docs Project Context
 
-This project is a landing page for **Sona**, an offline transcript editor. It is built as a Next.js 15 application for the public `Sona-Docs` site and local agent-assisted editing workflows.
+This project is a landing page for **Sona**, an offline transcript editor. It is built as a Next.js 16 application for the public `Sona-Docs` site and local agent-assisted editing workflows.
 
 ## Project Overview
 - **Purpose:** A minimalist, warm landing page showcasing the Sona offline transcript editor.
 - **Key Technologies:** 
-  - **Framework:** Next.js 15 (App Router)
+  - **Framework:** Next.js 16 (App Router)
   - **Library:** React 19
   - **Styling:** Tailwind CSS 4, Lucide React (icons)
   - **Animations:** Motion (Framer Motion)
@@ -13,12 +13,12 @@ This project is a landing page for **Sona**, an offline transcript editor. It is
 - **Architecture:** Standard Next.js App Router structure with a focus on high-quality frontend design and internationalization (supports English and Chinese).
 
 ## Building and Running
-- **Install Dependencies:** `npm install`
-- **Development Server:** `npm run dev`
-- **Build for Production:** `npm run build`
-- **Start Production Server:** `npm run start`
-- **Linting:** `npm run lint`
-- **Cleanup:** `npm run clean`
+- **Install Dependencies:** `pnpm install`
+- **Development Server:** `pnpm dev`
+- **Build for Production:** `pnpm build`
+- **Start Production Server:** `pnpm start`
+- **Linting:** `pnpm lint`
+- **Cleanup:** `pnpm clean`
 
 *Note: For local development, set `GEMINI_API_KEY` in `.env.local`.*
 

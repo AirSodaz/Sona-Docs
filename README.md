@@ -14,7 +14,7 @@ Sona is designed for people who want privacy, speed, and local-first transcripti
 
 ## Tech Stack
 
-- **Framework:** [Next.js 15](https://nextjs.org/) with App Router
+- **Framework:** [Next.js 16](https://nextjs.org/) with App Router
 - **Library:** [React 19](https://react.dev/)
 - **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
 - **Animations:** [Motion](https://motion.dev/)
@@ -25,12 +25,12 @@ Sona is designed for people who want privacy, speed, and local-first transcripti
 
 ### Prerequisites
 - Node.js 20+
-- npm
+- pnpm 10+
 
 ### Install
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Environment Variables
@@ -52,7 +52,7 @@ TURNSTILE_SECRET_KEY=your_turnstile_secret_key
 ### Run
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -60,9 +60,9 @@ Open [http://localhost:3000](http://localhost:3000).
 ### Production Build
 
 ```bash
-npm run lint
-npm run build
-npm run start
+pnpm lint
+pnpm build
+pnpm start
 ```
 
 ## Deployment
