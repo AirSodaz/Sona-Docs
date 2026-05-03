@@ -32,6 +32,7 @@ import {
   isUserGuidePageId,
   type UserGuidePageId,
 } from '@/lib/user-guide-content';
+import { createRequestLogger } from '@/lib/server-logger';
 
 export const runtime = 'nodejs';
 
@@ -56,6 +57,8 @@ type RouteErrorCode =
   | 'network_unreachable'
   | 'throttled'
   | 'upstream_error';
+
+type RequestLogger = ReturnType<typeof createRequestLogger>;
 
 type ChatHistoryItem = {
   content: string;
@@ -504,6 +507,7 @@ function logGuideChatSecurityEvent({
   challenged = false,
   error,
   host,
+  logger,
   originHost,
   path,
   reason,
@@ -518,6 +522,7 @@ function logGuideChatSecurityEvent({
   code: RouteErrorCode;
   error?: string;
   host: null | string;
+  logger: RequestLogger;
   originHost: null | string;
   path: string;
   reason?: null | string;
@@ -528,7 +533,7 @@ function logGuideChatSecurityEvent({
   turnstileValidated?: boolean;
   verifiedSession?: boolean;
 }) {
-  console.warn('Guide chat security event:', {
+  logger.warn('guide_chat_security_event', {
     challenged,
     code,
     error,
@@ -549,6 +554,7 @@ function logGuideChatError({
   code,
   error,
   host,
+  logger,
   model,
   sessionFingerprint,
   status,
@@ -558,6 +564,7 @@ function logGuideChatError({
   code: RouteErrorCode;
   error: unknown;
   host: string;
+  logger: RequestLogger;
   model: string;
   sessionFingerprint: string;
   status: number;
@@ -569,7 +576,7 @@ function logGuideChatError({
   const cause = diagnostics[1];
   const transport = getGeminiTransportDiagnostics();
 
-  console.error('Error in /api/user-guide-chat:', {
+  logger.error('guide_chat_route_error', {
     causeCode: cause?.code,
     causeMessage: cause?.message,
     code,
@@ -589,12 +596,24 @@ function logGuideChatError({
 export async function POST(request: NextRequest) {
   const requestPath = request.nextUrl.pathname;
   const contentType = request.headers.get('content-type');
+  const logger = createRequestLogger(request, {
+    method: 'POST',
+    route: '/api/user-guide-chat',
+  });
+  const finalizeResponse = <T extends NextResponse>(response: T) => {
+    const responseWithRequestId = logger.withRequestId(response);
+    logger.logSlowRequest(responseWithRequestId.status);
+
+    return responseWithRequestId;
+  };
 
   if (!isJsonContentType(contentType)) {
-    return jsonError(
-      400,
-      'invalid_request',
-      'Request body must use application/json.',
+    return finalizeResponse(
+      jsonError(
+        400,
+        'invalid_request',
+        'Request body must use application/json.',
+      ),
     );
   }
 
@@ -611,6 +630,7 @@ export async function POST(request: NextRequest) {
       code: 'forbidden_origin',
       error: getForbiddenOriginMessage(requestGuard.reason),
       host: requestGuard.host,
+      logger,
       originHost: requestGuard.originHost,
       path: requestPath,
       reason: requestGuard.reason,
@@ -619,7 +639,7 @@ export async function POST(request: NextRequest) {
       status: 403,
     });
 
-    return response;
+    return finalizeResponse(response);
   }
 
   let body: Record<string, unknown>;
@@ -627,7 +647,9 @@ export async function POST(request: NextRequest) {
   try {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
-    return jsonError(400, 'invalid_request', 'Request body must be valid JSON.');
+    return finalizeResponse(
+      jsonError(400, 'invalid_request', 'Request body must be valid JSON.'),
+    );
   }
 
   const locale = body.locale;
@@ -640,25 +662,35 @@ export async function POST(request: NextRequest) {
     typeof pageId !== 'string' ||
     !isUserGuidePageId(pageId)
   ) {
-    return jsonError(400, 'invalid_request', 'Invalid locale or page id.');
+    return finalizeResponse(
+      jsonError(400, 'invalid_request', 'Invalid locale or page id.'),
+    );
   }
 
   if (!question) {
-    return jsonError(400, 'invalid_request', 'Question is required.');
+    return finalizeResponse(
+      jsonError(400, 'invalid_request', 'Question is required.'),
+    );
   }
 
   if (question.length > MAX_QUESTION_LENGTH) {
-    return jsonError(400, 'invalid_request', 'Question is too long.');
+    return finalizeResponse(
+      jsonError(400, 'invalid_request', 'Question is too long.'),
+    );
   }
 
   if (!isUserGuideAiEnabled()) {
-    return jsonError(503, 'disabled', 'AI questions are not enabled.');
+    return finalizeResponse(
+      jsonError(503, 'disabled', 'AI questions are not enabled.'),
+    );
   }
 
   const abuseState = readUserGuideSession(request);
 
   if (!abuseState) {
-    return jsonError(503, 'disabled', 'AI questions are not enabled.');
+    return finalizeResponse(
+      jsonError(503, 'disabled', 'AI questions are not enabled.'),
+    );
   }
 
   const sessionFingerprint = getUserGuideSessionFingerprint(abuseState.session.id);
@@ -671,11 +703,13 @@ export async function POST(request: NextRequest) {
 
   if (!ai) {
     const response = jsonError(503, 'disabled', 'AI questions are not enabled.');
-    return applyUserGuideSessionCookies({
-      clearVerifiedCookie: hadExpiredVerifiedCookie,
-      response,
-      session: abuseState.session,
-    });
+    return finalizeResponse(
+      applyUserGuideSessionCookies({
+        clearVerifiedCookie: hadExpiredVerifiedCookie,
+        response,
+        session: abuseState.session,
+      }),
+    );
   }
 
   let verifiedSession = abuseState.verified;
@@ -700,6 +734,7 @@ export async function POST(request: NextRequest) {
         code: 'challenge_required',
         error: 'Missing Turnstile token after challenge threshold.',
         host: requestGuard.host,
+        logger,
         originHost: requestGuard.originHost,
         path: requestPath,
         referrerHost: requestGuard.referrerHost,
@@ -709,11 +744,13 @@ export async function POST(request: NextRequest) {
         verifiedSession,
       });
 
-      return applyUserGuideSessionCookies({
-        clearVerifiedCookie: hadExpiredVerifiedCookie,
-        response,
-        session: abuseState.session,
-      });
+      return finalizeResponse(
+        applyUserGuideSessionCookies({
+          clearVerifiedCookie: hadExpiredVerifiedCookie,
+          response,
+          session: abuseState.session,
+        }),
+      );
     }
 
     const turnstileResult = await verifyUserGuideTurnstileToken({
@@ -739,6 +776,7 @@ export async function POST(request: NextRequest) {
         code,
         error: turnstileResult.reason,
         host: requestGuard.host,
+        logger,
         originHost: requestGuard.originHost,
         path: requestPath,
         reason: turnstileResult.errorCodes.join(',') || turnstileResult.reason,
@@ -750,11 +788,13 @@ export async function POST(request: NextRequest) {
         verifiedSession,
       });
 
-      return applyUserGuideSessionCookies({
-        clearVerifiedCookie: hadExpiredVerifiedCookie,
-        response,
-        session: abuseState.session,
-      });
+      return finalizeResponse(
+        applyUserGuideSessionCookies({
+          clearVerifiedCookie: hadExpiredVerifiedCookie,
+          response,
+          session: abuseState.session,
+        }),
+      );
     }
 
     turnstileValidated = true;
@@ -815,12 +855,14 @@ export async function POST(request: NextRequest) {
       }),
     });
 
-    return applyUserGuideSessionCookies({
-      clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
-      response: successResponse,
-      session: abuseState.session,
-      verifiedUntil,
-    });
+    return finalizeResponse(
+      applyUserGuideSessionCookies({
+        clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+        response: successResponse,
+        session: abuseState.session,
+        verifiedUntil,
+      }),
+    );
   } catch (error) {
     const errorResponse = getErrorResponse(error);
 
@@ -828,6 +870,7 @@ export async function POST(request: NextRequest) {
       code: errorResponse.code,
       error,
       host: requestGuard.host,
+      logger,
       model,
       sessionFingerprint,
       status: errorResponse.status,
@@ -841,11 +884,13 @@ export async function POST(request: NextRequest) {
       errorResponse.message,
     );
 
-    return applyUserGuideSessionCookies({
-      clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
-      response,
-      session: abuseState.session,
-      verifiedUntil,
-    });
+    return finalizeResponse(
+      applyUserGuideSessionCookies({
+        clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+        response,
+        session: abuseState.session,
+        verifiedUntil,
+      }),
+    );
   }
 }

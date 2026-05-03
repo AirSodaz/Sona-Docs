@@ -45,9 +45,12 @@ API_ABUSE_SECRET=replace_with_a_long_random_secret
 ALLOWED_PUBLIC_HOSTS=localhost
 TURNSTILE_SITE_KEY=your_turnstile_site_key
 TURNSTILE_SECRET_KEY=your_turnstile_secret_key
+SERVER_LOG_LEVEL=info
+SERVER_LOG_SLOW_MS=3000
 ```
 
 `GITHUB_TOKEN` is optional locally, but recommended if you want `/api/github-release` to avoid anonymous GitHub API rate limits.
+`SERVER_LOG_LEVEL` and `SERVER_LOG_SLOW_MS` are optional; server API logs default to structured diagnostic JSON on stdout/stderr.
 
 ### Run
 
@@ -89,12 +92,19 @@ pnpm start
   - Required for rendering the Turnstile challenge in the guide UI.
 - `TURNSTILE_SECRET_KEY`
   - Required for server-side Turnstile verification.
+- `SERVER_LOG_LEVEL`
+  - Optional; defaults to `info`.
+  - Supported values are `info`, `warn`, `error`, and `silent`.
+- `SERVER_LOG_SLOW_MS`
+  - Optional; defaults to `3000`.
+  - Requests at or above this duration emit a slow-request diagnostic event.
 
 ### Notes
 
 - `/` and `/zh` are statically generated.
 - `/api/github-release` stays dynamic, but its upstream GitHub response is cached and protected with a timeout.
 - `/api/user-guide-chat` is protected with same-site origin checks, signed anonymous session cookies, and an inline Turnstile challenge after the anonymous threshold is exceeded.
+- API routes write structured server logs for security events, upstream errors, and slow requests. These logs include request IDs and diagnostic metadata, but not user question text, chat history, cookies, authorization headers, API keys, Turnstile tokens, proxy URLs, or full IP addresses.
 - `robots.txt`, `sitemap.xml`, a stable Open Graph image, and a branded global 404 page are generated from the app itself.
 - Deployed builds should provide a public `SITE_URL`; otherwise metadata generation will fail in CI/Vercel/Pages environments instead of silently emitting `localhost` URLs.
 

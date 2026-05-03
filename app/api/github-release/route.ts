@@ -9,6 +9,7 @@ import type {
   StructuredDownload,
   StructuredDownloads,
 } from '@/lib/release-downloads';
+import { createRequestLogger } from '@/lib/server-logger';
 
 const GITHUB_RELEASE_URL =
   'https://api.github.com/repos/AirSodaz/sona/releases/latest';
@@ -16,6 +17,8 @@ const SUCCESS_CACHE_SECONDS = 60 * 60;
 const FAILURE_CACHE_SECONDS = 60 * 5;
 const STALE_WHILE_REVALIDATE_SECONDS = 60 * 60 * 24;
 const REQUEST_TIMEOUT_MS = 8000;
+
+type RequestLogger = ReturnType<typeof createRequestLogger>;
 
 interface GitHubReleaseAsset {
   name: string;
@@ -45,22 +48,34 @@ function jsonResponse(body: null | ReleaseResponseBody, cacheSeconds: number) {
   });
 }
 
+function finalizeResponse(
+  logger: RequestLogger,
+  body: null | ReleaseResponseBody,
+  cacheSeconds: number,
+) {
+  const response = logger.withRequestId(jsonResponse(body, cacheSeconds));
+  logger.logSlowRequest(response.status);
+
+  return response;
+}
+
 function logGitHubReleaseEvent({
   code,
   error,
   host,
+  logger,
   status,
 }: {
   code: 'invalid_payload' | 'upstream_error' | 'upstream_status';
   error?: string;
   host: null | string;
+  logger: RequestLogger;
   status: number;
 }) {
-  console.warn('GitHub release route event:', {
+  logger.warn('github_release_route_event', {
     code,
     error,
     host,
-    path: '/api/github-release',
     status,
   });
 }
@@ -311,6 +326,10 @@ function buildStructuredDownloads(downloads: StructuredDownload[]) {
 
 export async function GET(request: Request) {
   const requestHost = request.headers.get('host');
+  const logger = createRequestLogger(request, {
+    method: 'GET',
+    route: '/api/github-release',
+  });
 
   try {
     const headers: Record<string, string> = {
@@ -329,9 +348,10 @@ export async function GET(request: Request) {
         code: 'upstream_status',
         error: `GitHub returned ${response.status}.`,
         host: requestHost,
+        logger,
         status: response.status,
       });
-      return jsonResponse(null, FAILURE_CACHE_SECONDS);
+      return finalizeResponse(logger, null, FAILURE_CACHE_SECONDS);
     }
 
     const data = (await response.json()) as GitHubRelease;
@@ -341,9 +361,10 @@ export async function GET(request: Request) {
         code: 'invalid_payload',
         error: 'Missing tag_name or html_url in GitHub release payload.',
         host: requestHost,
+        logger,
         status: 502,
       });
-      return jsonResponse(null, FAILURE_CACHE_SECONDS);
+      return finalizeResponse(logger, null, FAILURE_CACHE_SECONDS);
     }
 
     const assets = normalizeAssets(data.assets ?? []);
@@ -354,7 +375,8 @@ export async function GET(request: Request) {
       structuredDownloads,
     );
 
-    return jsonResponse(
+    return finalizeResponse(
+      logger,
       {
         assets,
         downloads,
@@ -369,8 +391,9 @@ export async function GET(request: Request) {
       code: 'upstream_error',
       error: error instanceof Error ? error.message : 'Unknown error',
       host: requestHost,
+      logger,
       status: 502,
     });
-    return jsonResponse(null, FAILURE_CACHE_SECONDS);
+    return finalizeResponse(logger, null, FAILURE_CACHE_SECONDS);
   }
 }

@@ -126,7 +126,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           label: 'Site',
           title: 'No ad tracking in this repo',
           description:
-            'The current docs site code does not include analytics or advertising trackers; public API surfaces are limited and guarded.',
+            'The current docs site code does not include analytics or advertising trackers; server API logs are limited to security, error, and slow-request diagnostics.',
         },
       ],
       sections: [
@@ -328,10 +328,11 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           {
             feature: 'Docs download API',
             trigger: 'Open the downloads UI or request latest release links.',
-            data: 'Public request metadata and GitHub release lookup results.',
+            data:
+              'Public request metadata, request IDs, limited diagnostic logs, and GitHub release lookup results.',
             destination: 'The Sona docs API and GitHub Releases.',
             control:
-              'Used only for download choices; no audio or transcript data is involved.',
+              'Used only for download choices and operational diagnostics; no audio, transcript data, cookies, tokens, or full IP addresses are logged.',
           },
           {
             feature: 'User guide assistant',
@@ -341,7 +342,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
             destination:
               'The Sona docs API, Gemini, and Cloudflare Turnstile when challenged.',
             control:
-              'Optional site feature; you can read the docs without using the assistant.',
+              'Optional site feature; server diagnostic logs do not store question text, chat history, cookies, tokens, or full IP addresses.',
           },
           {
             feature: 'External GitHub links',
@@ -385,6 +386,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
             'The download UI calls `/api/github-release`, which fetches public release metadata from GitHub and returns structured build links.',
             'The guide assistant sends your question, short conversation history, locale, and current guide page context to Gemini when the feature is configured.',
             'The assistant route uses signed anonymous anti-abuse cookies and may show Cloudflare Turnstile after usage thresholds.',
+            'Server API logs are structured diagnostics for security events, upstream errors, and slow requests, not client analytics.',
           ],
         },
         {
@@ -395,7 +397,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           items: [
             'It does not claim that every third-party provider follows the same privacy practices.',
             'It does not replace reading the policies of GitHub, Gemini, Cloudflare, your LLM provider, or your WebDAV host.',
-            'It does not add new analytics, persistence, tracking, or API behavior.',
+            'It does not add client analytics, persistent user tracking, or a new user-data collection flow.',
           ],
         },
       ],
@@ -460,7 +462,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           label: '站点',
           title: '当前仓库没有广告追踪',
           description:
-            '当前文档站点代码没有接入 analytics 或广告追踪器；公开 API 面较少，并带有防滥用保护。',
+            '当前文档站点代码没有接入 analytics 或广告追踪器；服务端 API 日志仅用于安全、错误和慢请求诊断。',
         },
       ],
       sections: [
@@ -649,9 +651,10 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           {
             feature: '文档下载 API',
             trigger: '打开下载 UI 或请求最新 release 链接。',
-            data: '公开请求信息和 GitHub release 查询结果。',
+            data: '公开请求信息、请求 ID、有限诊断日志和 GitHub release 查询结果。',
             destination: 'Sona 文档站 API 和 GitHub Releases。',
-            control: '仅用于下载选择；不涉及音频或转录数据。',
+            control:
+              '仅用于下载选择和运行诊断；不会记录音频、转录数据、cookie、token 或完整 IP 地址。',
           },
           {
             feature: '用户指南助手',
@@ -660,7 +663,8 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
               '你的问题、较短对话历史、语言、当前指南页上下文，以及防滥用 cookie 或 Turnstile 状态。',
             destination:
               'Sona 文档站 API、Gemini，以及触发验证时的 Cloudflare Turnstile。',
-            control: '可选站点功能；不使用助手也能阅读文档。',
+            control:
+              '可选站点功能；服务端诊断日志不会保存问题正文、对话历史、cookie、token 或完整 IP 地址。',
           },
           {
             feature: '外部 GitHub 链接',
@@ -703,6 +707,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
             '下载 UI 会调用 `/api/github-release`，由它从 GitHub 读取公开 release 元数据并返回结构化构建链接。',
             '文档助手启用后，会把你的问题、较短的对话历史、语言和当前指南页上下文发送给 Gemini。',
             '助手路由使用签名匿名防滥用 cookie，并可能在达到使用阈值后显示 Cloudflare Turnstile。',
+            '服务端 API 日志是用于安全事件、上游错误和慢请求的结构化诊断，不是客户端 analytics。',
           ],
         },
         {
@@ -713,7 +718,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           items: [
             '它不声称所有第三方 provider 都采用同样的隐私实践。',
             '它不能替代 GitHub、Gemini、Cloudflare、你的 LLM provider 或 WebDAV 服务商各自的政策。',
-            '它不会新增 analytics、持久化、追踪或 API 行为。',
+            '它不会新增客户端 analytics、持久化用户追踪或新的用户数据收集流程。',
           ],
         },
       ],
