@@ -18,6 +18,7 @@ import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
+import { UserGuideSearch } from '@/components/user-guide-search';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
   getUserGuideTurnstileSiteKey,
@@ -34,7 +35,12 @@ import {
   resolveUserGuideHref,
   type UserGuideNavGroup,
   type UserGuideNavItem,
+  type UserGuidePageModel,
 } from '@/lib/user-guide-content';
+import {
+  getUserGuideSearchCopy,
+  getUserGuideSearchEntries,
+} from '@/lib/user-guide-search';
 import type { HomeLocale } from '@/lib/homepage-content';
 
 const preserveUserGuideInternalLinks: UrlTransform = (url) => {
@@ -185,6 +191,44 @@ function HeaderLink({
   );
 }
 
+function HeaderActions({
+  className = '',
+  page,
+}: {
+  className?: string;
+  page: UserGuidePageModel;
+}) {
+  return (
+    <div
+      className={`flex flex-wrap items-center justify-end gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8 ${className}`}
+    >
+      <ThemeToggle />
+      <HeaderLink href={page.homeHref}>
+        <span className="inline-flex items-center gap-1.5">
+          <Home size={16} />
+          <span className="hidden sm:inline">{page.homeLabel}</span>
+        </span>
+      </HeaderLink>
+      <Link
+        href={page.alternatePath}
+        className="flex cursor-pointer items-center gap-1.5 transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
+      >
+        <Globe size={16} />
+        <span className="hidden sm:inline">{page.alternateLanguageLabel}</span>
+        <span className="sm:hidden">
+          {page.alternateLanguageLabel === '中文' ? '中' : 'En'}
+        </span>
+      </Link>
+      <HeaderLink href={page.sourceHref} external>
+        <span className="inline-flex items-center gap-1.5">
+          <Github size={16} />
+          <span className="hidden sm:inline">{page.sourceLabel}</span>
+        </span>
+      </HeaderLink>
+    </div>
+  );
+}
+
 function SidebarNavigation({
   groups,
   title,
@@ -314,7 +358,11 @@ export async function UserGuidePage({
   const ui = getUserGuideUiCopy(locale);
   const navigation = getUserGuideNavigation(locale, page.id);
   const overviewCards = getUserGuideOverviewCards(locale);
-  const markdown = await getUserGuideMarkdown(locale, page.id);
+  const searchCopy = getUserGuideSearchCopy(locale);
+  const [markdown, searchEntries] = await Promise.all([
+    getUserGuideMarkdown(locale, page.id),
+    getUserGuideSearchEntries(locale),
+  ]);
   const markdownComponents = createMarkdownComponents(locale, ui);
   const assistantCopy = getUserGuideAssistantCopy(locale, page.navLabel);
   const aiEnabled = isUserGuideAiEnabled();
@@ -326,45 +374,32 @@ export async function UserGuidePage({
       <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-12 sm:gap-16">
-        <header className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href={page.homeHref}
-            className="group flex items-center transition-colors focus:outline-none"
-          >
-            <div className="flex items-center transition-transform duration-300 group-hover:scale-105 origin-left will-change-transform">
-              <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
-              <span
-                className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
-                style={{ fontFamily: 'Georgia, serif' }}
-              >
-                ona
-              </span>
-            </div>
-          </Link>
-
-          <div className="flex flex-wrap items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
-            <ThemeToggle />
-            <HeaderLink href={page.homeHref}>
-              <span className="inline-flex items-center gap-1.5">
-                <Home size={16} />
-                <span className="hidden sm:inline">{page.homeLabel}</span>
-              </span>
-            </HeaderLink>
+        <header className="grid gap-4 lg:grid-cols-[auto_minmax(18rem,32rem)_auto] lg:items-center">
+          <div className="flex items-center justify-between gap-4">
             <Link
-              href={page.alternatePath}
-              className="flex items-center gap-1.5 cursor-pointer transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
+              href={page.homeHref}
+              className="group flex items-center transition-colors focus:outline-none"
             >
-              <Globe size={16} />
-              <span className="hidden sm:inline">{page.alternateLanguageLabel}</span>
-              <span className="sm:hidden">{page.alternateLanguageLabel === '中文' ? '中' : 'En'}</span>
+              <div className="flex origin-left items-center transition-transform duration-300 will-change-transform group-hover:scale-105">
+                <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
+                <span
+                  className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
+                  style={{ fontFamily: 'Georgia, serif' }}
+                >
+                  ona
+                </span>
+              </div>
             </Link>
-            <HeaderLink href={page.sourceHref} external>
-              <span className="inline-flex items-center gap-1.5">
-                <Github size={16} />
-                <span className="hidden sm:inline">{page.sourceLabel}</span>
-              </span>
-            </HeaderLink>
+            <HeaderActions className="lg:hidden" page={page} />
           </div>
+
+          <UserGuideSearch
+            copy={searchCopy}
+            currentPageId={page.id}
+            entries={searchEntries}
+          />
+
+          <HeaderActions className="hidden lg:flex" page={page} />
         </header>
 
         <div className="flex flex-col lg:flex-row lg:items-start lg:gap-16 pb-20">
