@@ -597,31 +597,10 @@ export function getUserGuideRequestGuard(
   };
 }
 
-export function getUserGuideRemoteIp(request: NextRequest) {
-  const cfConnectingIp = request.headers.get('cf-connecting-ip')?.trim();
-  if (cfConnectingIp) {
-    return cfConnectingIp;
-  }
-
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (!forwardedFor) {
-    return null;
-  }
-
-  const first = forwardedFor
-    .split(',')
-    .map((value) => value.trim())
-    .find(Boolean);
-
-  return first ?? null;
-}
-
 export async function verifyUserGuideTurnstileToken({
-  remoteIp,
   requestHost,
   token,
 }: {
-  remoteIp: null | string;
   requestHost: string;
   token: string;
 }): Promise<TurnstileValidationResult> {
@@ -639,7 +618,6 @@ export async function verifyUserGuideTurnstileToken({
     const response = await fetch(TURNSTILE_VERIFY_URL, {
       body: JSON.stringify({
         idempotency_key: randomUUID(),
-        remoteip: remoteIp ?? undefined,
         response: token,
         secret,
       }),

@@ -111,6 +111,7 @@ pnpm start
 ### Recommended Edge Rules
 
 - Put coarse rate limiting in the reverse proxy / CDN in front of the app.
+- The app does not trust forwarded client-IP headers; keep IP-based throttling at the proxy/CDN layer where the real peer/proxy chain is known.
 - Suggested defaults:
   - `/api/user-guide-chat`: `10 req/min/IP`, `30 req/10min/IP`, then challenge or short block.
   - `/api/github-release`: `120 req/min/IP`, `1000 req/hour/IP`.

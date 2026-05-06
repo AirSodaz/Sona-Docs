@@ -5,7 +5,6 @@ import type { HomeLocale } from '@/lib/homepage-content';
 import {
   applyUserGuideSessionCookies,
   clearUserGuideChallengeFailures,
-  getUserGuideRemoteIp,
   getUserGuideRequestGuard,
   getUserGuideSessionFingerprint,
   isUserGuideThrottled,
@@ -754,7 +753,6 @@ export async function POST(request: NextRequest) {
     }
 
     const turnstileResult = await verifyUserGuideTurnstileToken({
-      remoteIp: getUserGuideRemoteIp(request),
       requestHost: requestGuard.host,
       token: turnstileToken,
     });
