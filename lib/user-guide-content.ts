@@ -489,17 +489,17 @@ const userGuidePageDefinitionById = Object.fromEntries(
   userGuidePageDefinitions.map((definition) => [definition.id, definition]),
 ) as Record<UserGuidePageId, UserGuidePageDefinition>;
 
+const userGuidePageDefinitionBySlug = Object.fromEntries(
+  userGuidePageDefinitions.map((definition) => [
+    definition.slug.join('/'),
+    definition,
+  ]),
+) as Record<string, UserGuidePageDefinition>;
+
 const userGuidePageIdSet = new Set<string>(USER_GUIDE_PAGE_ORDER);
 
 function isExternalHref(href: string) {
   return href.startsWith('http://') || href.startsWith('https://');
-}
-
-function arraysEqual(left: string[], right: string[]) {
-  return (
-    left.length === right.length &&
-    left.every((segment, index) => segment === right[index])
-  );
 }
 
 function getOtherLocale(locale: HomeLocale): HomeLocale {
@@ -611,9 +611,7 @@ export function getUserGuidePageFromSlug(
   slug: string[] | undefined,
 ) {
   const normalizedSlug = slug ?? [];
-  const definition = userGuidePageDefinitions.find((candidate) =>
-    arraysEqual(candidate.slug, normalizedSlug),
-  );
+  const definition = userGuidePageDefinitionBySlug[normalizedSlug.join('/')];
 
   if (!definition) {
     return null;
