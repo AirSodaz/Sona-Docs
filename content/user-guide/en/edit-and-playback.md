@@ -18,7 +18,7 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 2. Click a timestamp to seek playback to that moment.
 3. Double-click segment text, or use the edit action, to enter editing mode.
 4. Press `Enter` to save the current segment.
-5. Press `Shift + Enter` if you want a line break while editing.
+5. Press `Shift + Enter` to split the current segment at the cursor.
 6. Use the merge action to combine a segment with the next one.
 7. Use the delete action to remove a segment after confirmation.
 
@@ -54,7 +54,7 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 
 ## Useful tips
 
-- The toolbar supports `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, and line breaks.
+- The toolbar supports `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, and segment splitting.
 - `Speaker Profiles` are created in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings). Profiles help with suggestions and automatic matching, but manual confirmation is still available.
 - `Version Snapshots` only appears for saved workspace items that are not drafts or the temporary `current` transcript.
 - If you want to add optional LLM cleanup or translation after editing, continue to [AI Polish and Translate](guide:ai-polish-and-translate).

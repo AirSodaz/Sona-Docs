@@ -323,14 +323,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'AI Polish and Translate',
         navLabel: 'AI Polish & Translate',
         description:
-          'Configure providers in Settings > LLM Service, run polish or translation only when needed, and understand what stays optional versus required.',
+          'Configure providers, feature models, and reasoning options in Settings > LLM Service, then run polish or translation only when needed.',
         contentFile: 'en/ai-polish-and-translate.md',
       },
       'zh-CN': {
         title: 'AI 润色与翻译',
         navLabel: 'AI 润色与翻译',
         description:
-          '在设置中绑定 provider 与功能模型，再按需使用润色或翻译，而不把离线转录本身和 LLM 功能混在一起。',
+          '在设置中绑定 provider、功能模型与深度思考选项，再按需使用润色或翻译。',
         contentFile: 'zh-CN/ai-polish-and-translate.md',
       },
     },
@@ -365,14 +365,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Export and Settings',
         navLabel: 'Export / Settings',
         description:
-          'Export finished work and quickly find Dashboard, Diagnostics, Backup & Restore, Automation, Voice Typing, and notification entry points for everyday use.',
+          'Export finished work and quickly find Dashboard, Diagnostics, Backup & Restore, Automation, LLM Service, Shortcuts, Voice Typing, and notification entry points.',
         contentFile: 'en/export-and-settings.md',
       },
       'zh-CN': {
         title: '导出与设置',
         navLabel: '导出 / 设置',
         description:
-          '完成导出，并快速理解仪表盘、诊断、备份与恢复、自动化、语音输入法和通知这些日常支持入口分别在哪里。',
+          '完成导出，并快速理解仪表盘、诊断、备份与恢复、自动化、LLM 服务、快捷键、语音输入法和通知入口分别在哪里。',
         contentFile: 'zh-CN/export-and-settings.md',
       },
     },
@@ -386,14 +386,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'AI Summary',
         navLabel: 'AI Summary',
         description:
-          'Assign a Summary Model, generate or manually edit the current summary record beside a transcript, and understand how stale summaries, templates, and export boundaries work.',
+          'Assign a Summary Model, configure supported reasoning options, generate or edit the current summary, and understand stale summaries, templates, and export boundaries.',
         contentFile: 'en/ai-summary.md',
       },
       'zh-CN': {
         title: 'AI 摘要',
         navLabel: 'AI 摘要',
         description:
-          '绑定摘要模型，在转录旁生成或手动编辑当前摘要记录，并理解摘要为何独立于导出、何时会过期，以及模板切换真正影响什么。',
+          '绑定摘要模型，配置支持的深度思考选项，生成或编辑当前摘要，并理解摘要过期、模板切换和导出边界。',
         contentFile: 'zh-CN/ai-summary.md',
       },
     },

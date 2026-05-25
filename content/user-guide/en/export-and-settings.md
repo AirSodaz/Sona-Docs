@@ -32,8 +32,8 @@ Before exporting, open `Speaker Review` from the transcript header if speaker la
 - `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, and downloadable recognition, punctuation, speaker, and VAD models
 - `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, and `Speaker Profiles`; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 - `Settings > Automation`: watched-folder rules that can transcribe, polish, translate, and export new media while Sona is running
-- `Settings > LLM Service`: feature model bindings and provider credentials; use [AI Polish and Translate](guide:ai-polish-and-translate) for polish/translation and [AI Summary](guide:ai-summary) for summaries
-- `Settings > Shortcuts`: live recording shortcuts
+- `Settings > LLM Service`: feature model bindings, reasoning options, and provider credentials; use [AI Polish and Translate](guide:ai-polish-and-translate) for polish/translation and [AI Summary](guide:ai-summary) for summaries
+- `Settings > Shortcuts`: live recording, playback, search, workspace navigation, and editor shortcuts
 - `Settings > About`: source code, logs, and update-related actions
 
 ## Diagnostics, backup, and notifications

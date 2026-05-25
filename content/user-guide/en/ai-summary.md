@@ -16,8 +16,9 @@
 1. Open `Settings > LLM Service`.
 2. In `Feature Models`, assign a model to `Summary Model`.
 3. In `Provider Credentials`, open the provider you want to use and fill in the required connection details.
-4. Click `Test Connection`.
-5. Return to the main workspace after `Summary Model` is available.
+4. If the selected model supports it, enable `Reasoning Mode` and choose a `Reasoning Level`.
+5. Click `Test Connection`.
+6. Return to the main workspace after `Summary Model` is available.
 
 ## Generate or update the current summary
 

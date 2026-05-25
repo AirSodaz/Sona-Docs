@@ -32,8 +32,8 @@
 - `设置 > 模型设置`：`实时录音模型`、`批量转录模型`、`转录设置`、`ITN`、`VAD Buffer Size`、`Max Concurrent Transcriptions`、`恢复默认设置`，以及可下载的识别模型、标点模型、说话人模型、VAD 模型
 - `设置 > 词汇`：`文本替换`、`热词`、润色关键词规则集、润色上下文预设、摘要模板与 `说话人档案`；更具体的使用场景见 [词汇与高级设置](guide:vocabulary-and-advanced-settings)
 - `设置 > 自动化`：监控文件夹规则，可在 Sona 运行时自动转录、润色、翻译并导出新媒体文件
-- `设置 > LLM 服务`：功能模型绑定与 Provider 凭据；润色/翻译看 [AI 润色与翻译](guide:ai-polish-and-translate)，摘要看 [AI 摘要](guide:ai-summary)
-- `设置 > 快捷键`：实时录音快捷键
+- `设置 > LLM 服务`：功能模型绑定、深度思考选项与 Provider 凭据；润色/翻译看 [AI 润色与翻译](guide:ai-polish-and-translate)，摘要看 [AI 摘要](guide:ai-summary)
+- `设置 > 快捷键`：实时录音、播放、搜索、工作区导航与编辑器快捷键
 - `设置 > 关于`：源码、日志与更新相关入口
 
 ## 诊断、备份与通知
