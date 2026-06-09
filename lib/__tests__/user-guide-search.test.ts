@@ -23,8 +23,14 @@ describe('user guide search index', () => {
     expect(searchUserGuideEntries(englishEntries, 'AI Summary')[0]?.id).toBe(
       'ai-summary',
     );
+    expect(searchUserGuideEntries(englishEntries, 'HTTP API')[0]?.id).toBe(
+      'api-guide',
+    );
     expect(searchUserGuideEntries(chineseEntries, '实时字幕')[0]?.id).toBe(
       'live-caption-and-voice-typing',
+    );
+    expect(searchUserGuideEntries(chineseEntries, 'API 服务')[0]?.id).toBe(
+      'api-guide',
     );
   });
 

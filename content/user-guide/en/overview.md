@@ -37,6 +37,7 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 ## Other docs you might need
 
 - Command-line batch transcription: [CLI Guide](guide:cli-guide)
+- Local HTTP API integration: [HTTP API Guide](guide:api-guide)
 - Source builds and development commands: [project README](readme)
 
 > The normal Sona path is simple: set up local transcription, create or reopen a transcript, review it in the editor, and then use workspace organization, polish, translation, summary, or export when needed.

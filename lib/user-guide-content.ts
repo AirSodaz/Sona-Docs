@@ -21,11 +21,12 @@ const USER_GUIDE_PAGE_ORDER = [
   'live-caption-and-voice-typing',
   'vocabulary-and-advanced-settings',
   'cli-guide',
+  'api-guide',
   'faq',
 ] as const;
 
 type UserGuideNavGroupId = 'start' | 'workflow' | 'extended' | 'reference';
-type UserGuideSourceDocId = 'user-guide' | 'cli';
+type UserGuideSourceDocId = 'user-guide' | 'cli' | 'api';
 
 export type UserGuidePageId = (typeof USER_GUIDE_PAGE_ORDER)[number];
 
@@ -463,6 +464,28 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
     },
   },
   {
+    id: 'api-guide',
+    slug: ['api'],
+    group: 'reference',
+    sourceDoc: 'api',
+    localizations: {
+      en: {
+        title: 'HTTP API Guide',
+        navLabel: 'HTTP API',
+        description:
+          'Start the local HTTP API server, authenticate requests, submit transcription jobs, inspect status, use configured Cloud ASR providers, and verify webhooks.',
+        contentFile: 'en/api-guide.md',
+      },
+      'zh-CN': {
+        title: 'HTTP API 指南',
+        navLabel: 'HTTP API',
+        description:
+          '启动本地 HTTP API 服务，配置认证，提交转录任务，查询状态，使用已配置的云端 ASR，并校验 webhook 签名。',
+        contentFile: 'zh-CN/api-guide.md',
+      },
+    },
+  },
+  {
     id: 'faq',
     slug: ['faq'],
     group: 'reference',
@@ -522,10 +545,21 @@ function getCliSourceHref(locale: HomeLocale) {
     : `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
 }
 
+function getApiSourceHref(locale: HomeLocale) {
+  return locale === 'en'
+    ? `${GITHUB_BLOB_ROOT}/docs/api.md`
+    : `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`;
+}
+
 function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale) {
-  return sourceDocId === 'cli'
-    ? getCliSourceHref(locale)
-    : getGuideSourceHref(locale);
+  switch (sourceDocId) {
+    case 'api':
+      return getApiSourceHref(locale);
+    case 'cli':
+      return getCliSourceHref(locale);
+    case 'user-guide':
+      return getGuideSourceHref(locale);
+  }
 }
 
 function getReadmeHref(locale: HomeLocale) {
@@ -780,6 +814,9 @@ const legacyRelativeLinkOverrides: Record<string, string> = {
   cli: 'guide:cli-guide',
   'cli.md': 'guide:cli-guide',
   'cli.zh-CN.md': 'guide:cli-guide',
+  api: 'guide:api-guide',
+  'api.md': 'guide:api-guide',
+  'api.zh-CN.md': 'guide:api-guide',
   '../README.md': 'readme',
   '../README.zh-CN.md': 'readme',
 };
