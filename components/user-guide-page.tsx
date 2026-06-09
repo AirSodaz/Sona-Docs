@@ -14,6 +14,7 @@ import ReactMarkdown, {
   type Components,
   type UrlTransform,
 } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
@@ -113,6 +114,56 @@ function createMarkdownComponents(
       <blockquote className="mt-8 rounded-2xl border-l-4 border-stone-300 bg-stone-100/50 px-6 py-5 text-stone-700 dark:border-stone-600 dark:bg-stone-800/30 dark:text-stone-200">
         {children}
       </blockquote>
+    ),
+    table: ({ children, ...props }) => (
+      <div className="-mx-1 mt-8 overflow-x-auto rounded-xl border border-stone-200/70 bg-white/45 shadow-sm shadow-stone-200/30 dark:border-stone-800/70 dark:bg-stone-950/25 dark:shadow-none">
+        <table
+          {...props}
+          className="m-0 min-w-[720px] w-full border-collapse text-left text-[0.92rem] text-stone-600 dark:text-stone-300"
+        >
+          {children}
+        </table>
+      </div>
+    ),
+    thead: ({ children, ...props }) => (
+      <thead
+        {...props}
+        className="border-b border-stone-200/80 bg-stone-100/70 text-stone-800 dark:border-stone-800/80 dark:bg-stone-900/80 dark:text-stone-100"
+      >
+        {children}
+      </thead>
+    ),
+    tbody: ({ children, ...props }) => (
+      <tbody
+        {...props}
+        className="divide-y divide-stone-200/70 dark:divide-stone-800/70"
+      >
+        {children}
+      </tbody>
+    ),
+    tr: ({ children, ...props }) => (
+      <tr
+        {...props}
+        className="transition-colors hover:bg-stone-50/80 dark:hover:bg-stone-900/55"
+      >
+        {children}
+      </tr>
+    ),
+    th: ({ children, ...props }) => (
+      <th
+        {...props}
+        className="px-4 py-3 text-left align-top text-[0.78rem] font-semibold uppercase leading-[1.45] tracking-[0.08em] text-stone-600 dark:text-stone-300"
+      >
+        {children}
+      </th>
+    ),
+    td: ({ children, ...props }) => (
+      <td
+        {...props}
+        className="px-4 py-3.5 align-top text-[0.92rem] font-light leading-[1.65] text-stone-600 first:font-normal first:text-stone-800 dark:text-stone-300 dark:first:text-stone-100"
+      >
+        {children}
+      </td>
     ),
     a: ({ href, children }) => {
       const resolved = resolveUserGuideHref(locale, href);
@@ -535,6 +586,7 @@ export async function UserGuidePage({
             <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:text-inherit prose-pre:shadow-none">
               <ReactMarkdown
                 components={markdownComponents}
+                remarkPlugins={[remarkGfm]}
                 urlTransform={preserveUserGuideInternalLinks}
               >
                 {markdown}
