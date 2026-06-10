@@ -50,27 +50,80 @@ export interface DemoStage {
   status: string;
 }
 
-export interface DemoRevealContent {
-  eyebrow: string;
-  title: string;
-  desc: string;
-  note: string;
+interface DemoActions {
+  rename: string;
+  summary: string;
+  speakerReview: string;
+  versions: string;
+  polish: string;
+  translate: string;
+  export: string;
+  close: string;
+}
+
+interface DemoSegmentActions {
+  edit: string;
+  merge: string;
+  delete: string;
+}
+
+interface DemoPlayerContent {
+  play: string;
+  speed: string;
+  volume: string;
+}
+
+interface DemoShellContent {
+  modes: {
+    live: string;
+    batch: string;
+    projects: string;
+  };
+  headerActions: {
+    notifications: string;
+    settings: string;
+  };
+  live: {
+    inputSource: string;
+    microphone: string;
+    timer: string;
+    pause: string;
+    stop: string;
+    recordingActive: string;
+  };
+  editor: {
+    toolbarUndo: string;
+    toolbarRedo: string;
+    toolbarBold: string;
+    toolbarItalic: string;
+    toolbarUnderline: string;
+    toolbarSplit: string;
+    autosaved: string;
+    wordCount: string;
+    speaker: string;
+  };
 }
 
 export interface DemoContent {
   eyebrow: string;
   title: string;
   desc: string;
+  appName: string;
   stageLabel: string;
-  canvasLabel: string;
+  workflowSteps: string[];
   fileName: string;
-  transcriptLabel: string;
   translationLabel: string;
+  inputTitle: string;
+  actions: DemoActions;
+  segmentActions: DemoSegmentActions;
+  player: DemoPlayerContent;
+  shell: DemoShellContent;
   stages: DemoStage[];
-  reveal: DemoRevealContent;
   recording: {
     liveDuration: string;
     finalDuration: string;
+    liveCurrentTime: string;
+    finalCurrentTime: string;
     liveProgress: number;
   };
   segments: DemoSegment[];
@@ -216,14 +269,65 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       ],
     },
     demo: {
-      eyebrow: 'A cinematic product preview',
-      title: 'See one transcript settle into shape.',
-      desc: 'The story stays narrow on purpose: local capture fills the page first, then Sona tightens wording and adds translation without leaving the same surface.',
+      eyebrow: 'Product Preview',
+      title: 'One editor from first words to final text.',
+      desc: 'Sona keeps the capture, timestamps, polish, translation, and export path inside one working surface.',
+      appName: 'Sona',
       stageLabel: 'Stage',
-      canvasLabel: 'Sona editor',
+      workflowSteps: ['Record', 'Edit', 'Polish / Translate', 'Export'],
       fileName: 'demo-session.sona',
-      transcriptLabel: 'Timestamped transcript',
       translationLabel: 'Translation',
+      inputTitle: 'Live Record',
+      actions: {
+        rename: 'Rename',
+        summary: 'Summary',
+        speakerReview: 'Speaker Review',
+        versions: 'Versions',
+        polish: 'Polish',
+        translate: 'Translate',
+        export: 'Export',
+        close: 'Close',
+      },
+      segmentActions: {
+        edit: 'Edit segment',
+        merge: 'Merge with next segment',
+        delete: 'Delete segment',
+      },
+      player: {
+        play: 'Play',
+        speed: 'Playback speed',
+        volume: 'Volume',
+      },
+      shell: {
+        modes: {
+          live: 'Live Record',
+          batch: 'Batch Import',
+          projects: 'Workspace',
+        },
+        headerActions: {
+          notifications: 'Notifications',
+          settings: 'Settings',
+        },
+        live: {
+          inputSource: 'Input source',
+          microphone: 'Microphone',
+          timer: '00:00:54',
+          pause: 'Pause',
+          stop: 'Stop',
+          recordingActive: 'Recording active',
+        },
+        editor: {
+          toolbarUndo: 'Undo',
+          toolbarRedo: 'Redo',
+          toolbarBold: 'Bold',
+          toolbarItalic: 'Italic',
+          toolbarUnderline: 'Underline',
+          toolbarSplit: 'Split segment',
+          autosaved: 'Saved',
+          wordCount: '89 words',
+          speaker: 'Speaker 1',
+        },
+      },
       stages: [
         {
           id: 'live',
@@ -235,22 +339,18 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'refined',
-          button: 'Refined Output',
+          button: 'Refined Text',
           eyebrow: 'Stage 02',
           title: 'Clean wording appears without splitting the thread.',
           desc: 'Once the capture is there, polish and translation stay attached to the same transcript instead of becoming a second document.',
-          status: 'Ready for review',
+          status: 'Text polished',
         },
       ],
-      reveal: {
-        eyebrow: 'Refined output',
-        title: 'One pass, same surface.',
-        desc: 'Polished wording stays readable, and the bilingual line appears only where it adds value.',
-        note: 'The result still reads like a transcript, not a detached summary card.',
-      },
       recording: {
         liveDuration: '00:54',
         finalDuration: '01:18',
+        liveCurrentTime: '00:37',
+        finalCurrentTime: '01:18',
         liveProgress: 68,
       },
       segments: [
@@ -411,14 +511,65 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       ],
     },
     demo: {
-      eyebrow: '一段更像发布页主视觉的产品预览',
-      title: '先看转录落稳，再看文字变得干净。',
-      desc: '这个展示刻意只讲一条线：内容先在本地落进编辑器，再在同一块界面里完成整理和翻译，不再像一张完整软件截图。',
+      eyebrow: '产品预览',
+      title: '从实时出字到成稿，都留在同一块编辑器里。',
+      desc: 'Sona 把转录、时间戳、润色、翻译和导出路径收进同一个工作界面。',
+      appName: 'Sona',
       stageLabel: '阶段',
-      canvasLabel: 'Sona 编辑器',
+      workflowSteps: ['录音', '整理', '润色 / 翻译', '导出'],
       fileName: '演示会话.sona',
-      transcriptLabel: '带时间戳的转录',
       translationLabel: '译文',
+      inputTitle: '实时录音',
+      actions: {
+        rename: '重命名',
+        summary: '摘要',
+        speakerReview: '说话人校正',
+        versions: '版本',
+        polish: '润色',
+        translate: '翻译',
+        export: '导出',
+        close: '关闭',
+      },
+      segmentActions: {
+        edit: '编辑分段',
+        merge: '合并下一段',
+        delete: '删除分段',
+      },
+      player: {
+        play: '播放',
+        speed: '播放速度',
+        volume: '音量',
+      },
+      shell: {
+        modes: {
+          live: '实时录音',
+          batch: '批量导入',
+          projects: '工作区',
+        },
+        headerActions: {
+          notifications: '通知',
+          settings: '设置',
+        },
+        live: {
+          inputSource: '输入来源',
+          microphone: '麦克风',
+          timer: '00:00:54',
+          pause: '暂停',
+          stop: '停止',
+          recordingActive: '录音进行中',
+        },
+        editor: {
+          toolbarUndo: '撤销',
+          toolbarRedo: '重做',
+          toolbarBold: '加粗',
+          toolbarItalic: '斜体',
+          toolbarUnderline: '下划线',
+          toolbarSplit: '拆分分段',
+          autosaved: '已保存',
+          wordCount: '89 字',
+          speaker: '说话人 1',
+        },
+      },
       stages: [
         {
           id: 'live',
@@ -434,18 +585,14 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
           eyebrow: '阶段 02',
           title: '文字变顺了，但仍然留在同一份稿子里。',
           desc: '录音结束之后，再继续润色和翻译；原文、时间点和译文仍然挂在同一条阅读线上。',
-          status: '已可继续校对',
+          status: '文本已整理',
         },
       ],
-      reveal: {
-        eyebrow: '整理后输出',
-        title: '不用拆第二份稿。',
-        desc: '措辞被收紧后依然像转录正文，译文只在需要的地方轻轻附上。',
-        note: '重点不是功能堆叠，而是同一块界面里的连续感。',
-      },
       recording: {
         liveDuration: '00:54',
         finalDuration: '01:18',
+        liveCurrentTime: '00:37',
+        finalCurrentTime: '01:18',
         liveProgress: 68,
       },
       segments: [

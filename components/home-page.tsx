@@ -172,10 +172,9 @@ export function HomePage({
           id={demoPreviewId}
           className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 scroll-mt-6 sm:scroll-mt-8"
         >
-          <div className="relative overflow-hidden bg-[#191513] py-16 text-white sm:py-20 lg:py-24 dark:bg-[#080808]">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),rgba(255,255,255,0)_42%)] dark:bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),rgba(255,255,255,0)_38%)]" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,rgba(25,21,19,0),rgba(25,21,19,0.38))] dark:bg-[linear-gradient(180deg,rgba(8,8,8,0),rgba(8,8,8,0.52))]" />
-            <div className="pointer-events-none absolute left-1/2 top-12 h-52 w-[min(82vw,900px)] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(199,144,110,0.22),rgba(199,144,110,0))] blur-3xl dark:bg-[radial-gradient(circle,rgba(199,144,110,0.12),rgba(199,144,110,0))]" />
+          <div className="relative overflow-hidden bg-[#ece8df] py-16 text-[#37352f] sm:py-20 lg:py-24 dark:bg-[#171717] dark:text-[#d4d4d4]">
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(55,53,47,0.045)_1px,transparent_1px),linear-gradient(180deg,rgba(55,53,47,0.04)_1px,transparent_1px)] bg-[size:72px_72px] opacity-50 dark:bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.035)_1px,transparent_1px)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.62),rgba(255,255,255,0)_42%),linear-gradient(225deg,rgba(230,226,218,0.6),rgba(230,226,218,0)_44%)] dark:bg-[linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0)_42%)]" />
 
             <div className="relative mx-auto w-full max-w-[1520px] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16">
               <TranscriptDemo demo={content.demo} />
