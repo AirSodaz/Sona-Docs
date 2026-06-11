@@ -96,7 +96,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
       },
       nav: {
         alternateHref: '/zh/trust',
-        alternateLanguageLabel: '中文',
+        alternateLanguageLabel: '简体中文',
         alternateLanguageShortLabel: '中',
         githubLabel: 'GitHub',
         homeHref: '/',
@@ -193,7 +193,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
       },
       nav: {
         alternateHref: '/zh/privacy',
-        alternateLanguageLabel: '中文',
+        alternateLanguageLabel: '简体中文',
         alternateLanguageShortLabel: '中',
         githubLabel: 'GitHub',
         homeHref: '/',

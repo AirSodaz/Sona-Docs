@@ -14,6 +14,7 @@ import {
 import { motion } from 'motion/react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { SiteHeader } from '@/components/site-header';
 import { downloadContent, type DownloadContent } from '@/lib/download-content';
 import type { HomeLocale } from '@/lib/homepage-content';
 import {
@@ -111,12 +112,15 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
   const hasDesktopBuilds = downloadSections.length > 0;
 
   return (
-    <main className="relative min-h-[100svh] overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0] px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
-      <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[500px] sm:w-[500px] sm:blur-[100px]" />
-      <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
+    <main className="relative min-h-[100svh] bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
+      {/* Background Blobs Wrapper to prevent horizontal overflow without blocking sticky child elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[500px] sm:w-[500px] sm:blur-[100px]" />
+        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
+      </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-12 sm:gap-16">
-        <header className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <SiteHeader>
+        <div className="flex items-center justify-between">
           <Link
             href={content.page.homeHref}
             className="group flex items-center transition-colors focus:outline-none"
@@ -146,7 +150,7 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
             >
               <Globe size={16} />
               <span className="hidden sm:inline">{content.page.alternateLanguageLabel}</span>
-              <span className="sm:hidden">{content.page.alternateLanguageLabel === '中文' ? '中' : 'En'}</span>
+              <span className="sm:hidden">{content.page.alternateLanguageLabel === '简体中文' ? '中' : 'En'}</span>
             </Link>
             <HeaderLink href={githubHref} external>
               <span className="inline-flex items-center gap-1.5">
@@ -155,7 +159,10 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
               </span>
             </HeaderLink>
           </div>
-        </header>
+        </div>
+      </SiteHeader>
+
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-12 sm:gap-16 px-4 py-8 sm:px-6 sm:py-10 md:px-16">
 
         <motion.div
           className="mx-auto flex w-full max-w-4xl flex-col gap-12 pb-16"

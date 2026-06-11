@@ -72,7 +72,7 @@ export const downloadContent: Record<HomeLocale, DownloadContent> = {
     },
     page: {
       alternateHref: '/zh/downloads',
-      alternateLanguageLabel: '中文',
+      alternateLanguageLabel: '简体中文',
       decisionDescription:
         'Start with your operating system and processor, then choose the installer format that fits how you manage apps.',
       decisionTitle: 'Choose the right build',

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { SiteHeader } from '@/components/site-header';
 import type { TrustPrivacyPageCopy } from '@/lib/trust-privacy-content';
 
 type DataFlowContent = NonNullable<TrustPrivacyPageCopy['dataFlow']>;
@@ -42,14 +43,14 @@ export function TrustPrivacyPage({
 
   return (
     <main className="min-h-[100svh] bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
-      <div className="mx-auto flex w-full max-w-[1400px] flex-col px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
-        <header className="flex flex-col gap-6 border-b border-stone-200/70 pb-6 dark:border-stone-800/70 sm:flex-row sm:items-center sm:justify-between">
+      <SiteHeader>
+        <div className="flex items-center justify-between">
           <Link
             href={content.nav.homeHref}
             className="group flex w-fit items-center transition-colors focus:outline-none"
             aria-label={content.nav.homeLabel}
           >
-            <div className="flex items-center transition-transform duration-300 group-hover:scale-105">
+            <div className="flex items-center transition-transform duration-300 group-hover:scale-105 origin-left will-change-transform">
               <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
               <span
                 className="-ml-1 mt-0.5 text-[1.55rem] italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
@@ -80,7 +81,10 @@ export function TrustPrivacyPage({
               <span className="hidden sm:inline">{content.nav.githubLabel}</span>
             </HeaderLink>
           </div>
-        </header>
+        </div>
+      </SiteHeader>
+
+      <div className="mx-auto flex w-full max-w-[1400px] flex-col px-4 py-8 sm:px-6 sm:py-10 md:px-16">
 
         <article className="mx-auto w-full max-w-5xl py-14 sm:py-16 lg:py-20">
           <section

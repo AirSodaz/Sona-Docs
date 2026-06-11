@@ -2,11 +2,11 @@
 
 import { useState, useEffect, type ReactNode } from 'react';
 
-interface UserGuideHeaderProps {
+interface SiteHeaderProps {
   children: ReactNode;
 }
 
-export function UserGuideHeader({ children }: UserGuideHeaderProps) {
+export function SiteHeader({ children }: SiteHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {

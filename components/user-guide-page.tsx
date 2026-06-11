@@ -20,7 +20,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { UserGuideSearch } from '@/components/user-guide-search';
-import { UserGuideHeader } from '@/components/user-guide-header';
+import { SiteHeader } from '@/components/site-header';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
   getUserGuideTurnstileSiteKey,
@@ -268,7 +268,7 @@ function HeaderActions({
         <Globe size={16} />
         <span className="hidden sm:inline">{page.alternateLanguageLabel}</span>
         <span className="sm:hidden">
-          {page.alternateLanguageLabel === '中文' ? '中' : 'En'}
+          {page.alternateLanguageLabel === '简体中文' ? '中' : 'En'}
         </span>
       </Link>
       <HeaderLink href={page.sourceHref} external>
@@ -428,7 +428,7 @@ export async function UserGuidePage({
         <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
       </div>
 
-      <UserGuideHeader>
+      <SiteHeader>
         <div className="grid gap-4 lg:grid-cols-[auto_minmax(18rem,32rem)_auto] lg:items-center">
           <div className="flex items-center justify-between gap-4">
             <Link
@@ -456,7 +456,7 @@ export async function UserGuidePage({
 
           <HeaderActions className="hidden lg:flex" page={page} />
         </div>
-      </UserGuideHeader>
+      </SiteHeader>
 
       <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 md:px-16">
         <div className="flex flex-col lg:flex-row lg:items-start lg:gap-16 pb-20">

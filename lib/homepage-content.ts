@@ -187,7 +187,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     nav: {
       github: 'GitHub',
       languageToggleHref: '/zh',
-      languageToggleLabel: '中文',
+      languageToggleLabel: '简体中文',
       languageToggleShortLabel: '中',
     },
     hero: {
