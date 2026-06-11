@@ -2,9 +2,10 @@ import React from 'react';
 
 interface LogoProps {
   className?: string;
+  forceLight?: boolean;
 }
 
-export function Logo({ className }: LogoProps) {
+export function Logo({ className, forceLight = false }: LogoProps) {
   return (
     <svg 
       xmlns="http://www.w3.org/2000/svg" 
@@ -12,9 +13,21 @@ export function Logo({ className }: LogoProps) {
       className={className}
     >
       {/* Background */}
-      <rect width="512" height="512" rx="112" className="fill-[#f9f5f0] dark:fill-[#1A1A1A] transition-colors" />
+      <rect 
+        width="512" 
+        height="512" 
+        rx="112" 
+        className={forceLight ? "fill-[#f9f5f0]" : "fill-[#f9f5f0] dark:fill-[#1A1A1A] transition-colors"} 
+      />
       
-      <g transform="translate(256, 256)" className="stroke-[#5c4d43] dark:stroke-[#E0E0E0] transition-colors" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" fill="none">
+      <g 
+        transform="translate(256, 256)" 
+        className={forceLight ? "stroke-[#5c4d43]" : "stroke-[#5c4d43] dark:stroke-[#E0E0E0] transition-colors"} 
+        strokeWidth="48" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        fill="none"
+      >
         {/* Abstract "S" formed by an audio wave. 
              Starting from top right, curving down left (top half of S), 
              curving down right (middle wave), curving down left (bottom half of S).

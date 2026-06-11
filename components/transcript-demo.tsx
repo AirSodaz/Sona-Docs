@@ -37,6 +37,7 @@ import {
   X,
 } from 'lucide-react';
 import type { DemoContent, DemoSegment, DemoStageId } from '@/lib/homepage-content';
+import { Logo } from '@/components/Logo';
 
 const stageTransition = {
   duration: 0.48,
@@ -231,9 +232,15 @@ function SonaAppHeader({ demo }: { demo: DemoContent }) {
   return (
     <header className="grid min-h-14 grid-cols-1 gap-3 border-b border-black/8 bg-[#f3f3f2] px-3 py-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:px-5">
       <div className="flex min-w-0 items-center gap-2 justify-self-start">
-        <h3 className="truncate text-base font-medium tracking-[-0.01em] text-[#37352f]">
-          {demo.appName}
-        </h3>
+        <div className="flex items-center">
+          <Logo className="h-5 w-5 rounded-md sm:h-6 sm:w-6" forceLight />
+          <span
+            className="-ml-1 mt-0.5 text-[1.2rem] font-serif italic tracking-tighter text-[#5c4d43] sm:text-[1.35rem]"
+            style={{ fontFamily: 'Georgia, serif' }}
+          >
+            ona
+          </span>
+        </div>
       </div>
 
       <div
