@@ -1,33 +1,46 @@
 import type { MetadataRoute } from 'next';
 import { getAbsoluteUrl } from '@/lib/site-url';
-import { getAllTrustPrivacyPaths } from '@/lib/trust-privacy-content';
 import { getAllUserGuidePaths } from '@/lib/user-guide-content';
-
-const routes = [
-  '/',
-  '/zh',
-  '/downloads',
-  '/zh/downloads',
-  ...getAllTrustPrivacyPaths(),
-  ...getAllUserGuidePaths(),
-] as const;
+import { routing } from '@/i18n/routing';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return routes.map((route) => ({
-    url: getAbsoluteUrl(route),
-    changeFrequency: 'weekly',
-    priority:
-      route === '/'
-        ? 1
-        : route === '/downloads' || route === '/zh/downloads'
-          ? 0.92
-        : route === '/user-guide' || route === '/zh/user-guide'
-          ? 0.95
-          : route === '/trust' ||
-              route === '/zh/trust' ||
-              route === '/privacy' ||
-              route === '/zh/privacy'
-            ? 0.88
-          : 0.9,
-  }));
+  const locales = routing.locales;
+
+  // Base pages for each locale
+  const basePaths = locales.flatMap((locale) => [
+    `/${locale}`,
+    `/${locale}/downloads`,
+    `/${locale}/trust`,
+    `/${locale}/privacy`,
+  ]);
+
+  // User guide pages (already includes all locales)
+  const userGuidePaths = getAllUserGuidePaths();
+
+  const allPaths = [...basePaths, ...userGuidePaths];
+
+  return allPaths.map((route) => {
+    let priority = 0.9;
+    
+    // Home pages
+    if (locales.some(l => route === `/${l}`)) {
+      priority = 1;
+    } 
+    // High value pages
+    else if (route.endsWith('/downloads')) {
+      priority = 0.92;
+    } else if (route.includes('/user-guide')) {
+      priority = 0.95;
+    } 
+    // Legal/Trust pages
+    else if (route.endsWith('/trust') || route.endsWith('/privacy')) {
+      priority = 0.88;
+    }
+
+    return {
+      url: getAbsoluteUrl(route),
+      changeFrequency: 'weekly',
+      priority,
+    };
+  });
 }

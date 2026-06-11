@@ -9,11 +9,14 @@ describe('user guide search index', () => {
   it('builds locale-specific guide paths', async () => {
     const englishEntries = await getUserGuideSearchEntries('en');
     const chineseEntries = await getUserGuideSearchEntries('zh-CN');
+    const japaneseEntries = await getUserGuideSearchEntries('ja');
 
     expect(englishEntries).not.toHaveLength(0);
     expect(chineseEntries).not.toHaveLength(0);
+    expect(japaneseEntries).not.toHaveLength(0);
     expect(englishEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
-    expect(chineseEntries.every((entry) => entry.path.startsWith('/zh/user-guide'))).toBe(true);
+    expect(chineseEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
+    expect(japaneseEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
   });
 
   it('finds expected English and Chinese guide pages', async () => {

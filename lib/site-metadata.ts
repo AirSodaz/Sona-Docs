@@ -6,16 +6,18 @@ import {
   getTrustPrivacyPageContent,
   type TrustPrivacyPageId,
 } from '@/lib/trust-privacy-content';
-import { getUserGuidePageFromSlug } from '@/lib/user-guide-content';
+import { getUserGuidePageFromSlug, buildUserGuidePath } from '@/lib/user-guide-content';
 
 const localePaths: Record<HomeLocale, string> = {
-  en: '/',
-  'zh-CN': '/zh',
+  en: '/en',
+  'zh-CN': '/zh-CN',
+  ja: '/ja',
 };
 
 const openGraphLocales: Record<HomeLocale, string> = {
   en: 'en_US',
   'zh-CN': 'zh_CN',
+  ja: 'ja_JP',
 };
 
 export function createHomePageMetadata(locale: HomeLocale): Metadata {
@@ -34,6 +36,7 @@ export function createHomePageMetadata(locale: HomeLocale): Metadata {
       languages: {
         en: localePaths.en,
         'zh-CN': localePaths['zh-CN'],
+        ja: localePaths.ja,
         'x-default': localePaths.en,
       },
     },
@@ -76,20 +79,12 @@ export function createGuidePageMetadata(
       icon: '/icon.svg',
     },
     alternates: {
-      canonical: page.path,
+      canonical: buildUserGuidePath(locale, page.id),
       languages: {
-        en:
-          page.locale === 'en'
-            ? page.path
-            : page.alternatePath,
-        'zh-CN':
-          page.locale === 'zh-CN'
-            ? page.path
-            : page.alternatePath,
-        'x-default':
-          page.locale === 'en'
-            ? page.path
-            : page.alternatePath,
+        en: buildUserGuidePath('en', page.id),
+        'zh-CN': buildUserGuidePath('zh-CN', page.id),
+        ja: buildUserGuidePath('ja', page.id),
+        'x-default': buildUserGuidePath('en', page.id),
       },
     },
     openGraph: {
@@ -113,7 +108,7 @@ export function createGuidePageMetadata(
 
 export function createDownloadsPageMetadata(locale: HomeLocale): Metadata {
   const content = downloadContent[locale];
-  const currentPath = locale === 'en' ? '/downloads' : '/zh/downloads';
+  const currentPath = `${localePaths[locale]}/downloads`;
 
   return {
     metadataBase: getSiteUrl(),
@@ -125,9 +120,10 @@ export function createDownloadsPageMetadata(locale: HomeLocale): Metadata {
     alternates: {
       canonical: currentPath,
       languages: {
-        en: '/downloads',
-        'zh-CN': '/zh/downloads',
-        'x-default': '/downloads',
+        en: `${localePaths.en}/downloads`,
+        'zh-CN': `${localePaths['zh-CN']}/downloads`,
+        ja: `${localePaths.ja}/downloads`,
+        'x-default': `${localePaths.en}/downloads`,
       },
     },
     openGraph: {
@@ -154,6 +150,7 @@ export function createTrustPrivacyPageMetadata(
   pageId: TrustPrivacyPageId,
 ): Metadata {
   const content = getTrustPrivacyPageContent(locale, pageId);
+  const currentPath = `${localePaths[locale]}/${pageId}`;
 
   return {
     metadataBase: getSiteUrl(),
@@ -163,17 +160,18 @@ export function createTrustPrivacyPageMetadata(
       icon: '/icon.svg',
     },
     alternates: {
-      canonical: content.path,
+      canonical: currentPath,
       languages: {
-        en: locale === 'en' ? content.path : content.alternatePath,
-        'zh-CN': locale === 'zh-CN' ? content.path : content.alternatePath,
-        'x-default': locale === 'en' ? content.path : content.alternatePath,
+        en: `${localePaths.en}/${pageId}`,
+        'zh-CN': `${localePaths['zh-CN']}/${pageId}`,
+        ja: `${localePaths.ja}/${pageId}`,
+        'x-default': `${localePaths.en}/${pageId}`,
       },
     },
     openGraph: {
       title: content.metadata.title,
       description: content.metadata.description,
-      url: content.path,
+      url: currentPath,
       locale: openGraphLocales[locale],
       alternateLocale: Object.values(openGraphLocales).filter(
         (value) => value !== openGraphLocales[locale],

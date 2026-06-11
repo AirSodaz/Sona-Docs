@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import './globals.css';
 import { Logo } from '@/components/Logo';
 import { cormorantGaramond, inter } from '@/lib/fonts';
@@ -47,34 +46,30 @@ export default function GlobalNotFound() {
               </h1>
               <p className="text-base leading-7 text-stone-600 sm:text-lg sm:leading-8">
                 The page you requested does not exist, or the link has moved.
-                Start from the English landing page, jump to the Chinese page,
-                or head back to the repository.
               </p>
               <p className="text-base leading-7 text-stone-600 sm:text-lg sm:leading-8">
-                你访问的页面不存在，或者链接已经变更。你可以返回英文首页、切换到中文页面，或直接前往 GitHub 仓库继续查看。
+                你访问的页面不存在，或者链接已经变更。
+              </p>
+              <p className="text-base leading-7 text-stone-600 sm:text-lg sm:leading-8">
+                お探しのページは存在しないか、移動した可能性があります。
               </p>
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap">
-              <Link
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+              <a
                 href="/"
                 className="inline-flex min-h-12 items-center justify-center rounded-full bg-stone-800 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-700 sm:min-h-0"
               >
-                Back to /
-              </Link>
-              <Link
-                href="/zh"
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-stone-300 px-6 py-3 text-sm font-medium text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50 sm:min-h-0"
-              >
-                前往 /zh
-              </Link>
+                Back to Home / 返回首页
+              </a>
               <a
                 href="https://github.com/AirSodaz/sona"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex min-h-12 items-center justify-center rounded-full border border-stone-300 px-6 py-3 text-sm font-medium text-stone-700 transition-colors hover:border-stone-400 hover:bg-stone-50 sm:min-h-0"
               >
-                View Repository
+                GitHub Repository
               </a>
             </div>
           </div>

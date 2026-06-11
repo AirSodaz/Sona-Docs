@@ -1,7 +1,7 @@
 'use client';
 
 import { startTransition, useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { ChevronDown, ChevronUp, Send, ShieldCheck, Sparkles } from 'lucide-react';
 import { TurnstileWidget } from '@/components/turnstile-widget';
 
@@ -317,7 +317,7 @@ export function UserGuideAssistant({
 }: {
   copy: AssistantCopy;
   enabled: boolean;
-  locale: 'en' | 'zh-CN';
+  locale: 'en' | 'zh-CN' | 'ja';
   pageId: string;
   turnstileSiteKey: null | string;
 }) {

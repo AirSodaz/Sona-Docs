@@ -13,7 +13,7 @@
 
 ## 先完成安装
 
-1. 先打开 [Sona 下载页](/zh/downloads)，按你的桌面系统选择构建。如果站点暂时无法读取 release 详情，再使用 [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) 作为备用入口。
+1. 先打开 [Sona 下载页](/downloads)，按你的桌面系统选择构建。如果站点暂时无法读取 release 详情，再使用 [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) 作为备用入口。
 2. 启动应用。
 3. 如果你是从源码构建，请改看 [项目 README](readme)。
 

@@ -1,15 +1,17 @@
-import Link from 'next/link';
+'use client';
+
+import { Link, usePathname } from '@/i18n/routing';
 import type { ReactNode } from 'react';
 import {
   ArrowLeft,
   ExternalLink,
   Github,
-  Globe,
   LockKeyhole,
   ShieldCheck,
 } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { SiteHeader } from '@/components/site-header';
 import type { TrustPrivacyPageCopy } from '@/lib/trust-privacy-content';
 
@@ -29,6 +31,7 @@ export function TrustPrivacyPage({
 }: {
   content: TrustPrivacyPageCopy;
 }) {
+  const pathname = usePathname();
   const HeroIcon = content.id === 'trust' ? ShieldCheck : LockKeyhole;
   const isChinese = content.locale === 'zh-CN';
   const heroGridClass = isChinese
@@ -67,15 +70,7 @@ export function TrustPrivacyPage({
               <ArrowLeft size={16} />
               <span className="hidden sm:inline">{content.nav.homeLabel}</span>
             </HeaderLink>
-            <HeaderLink href={content.nav.alternateHref}>
-              <Globe size={16} />
-              <span className="hidden sm:inline">
-                {content.nav.alternateLanguageLabel}
-              </span>
-              <span className="sm:hidden">
-                {content.nav.alternateLanguageShortLabel}
-              </span>
-            </HeaderLink>
+            <LanguageSwitcher />
             <HeaderLink href="https://github.com/AirSodaz/sona" external>
               <Github size={16} />
               <span className="hidden sm:inline">{content.nav.githubLabel}</span>

@@ -1,0 +1,580 @@
+{
+  "HomePage": {
+    "metadata": {
+      "title": "Sona | Offline Transcript Editor",
+      "description": "Powerful, offline transcript editor built with Tauri and Sherpa-onnx. Fast, accurate, and private speech-to-text."
+    },
+    "nav": {
+      "github": "GitHub",
+      "languageToggleLabel": "简体中文",
+      "languageToggleShortLabel": "中"
+    },
+    "hero": {
+      "badge": "Fast, accurate, private.",
+      "title1": "Transcription tools",
+      "title2": "for the quiet spaces.",
+      "desc": "Sona keeps speech-to-text on your own machine, then lets you review timestamps, clean up wording, translate, and export without leaving the same editor.",
+      "workflowLabel": "Workflow",
+      "workflowSteps": [
+        "Record or Import",
+        "Review Timestamps",
+        "Polish or Translate",
+        "Export"
+      ],
+      "scrollHint": "Scroll for the editor preview",
+      "btnDownload": "Download Latest Release",
+      "btnDocs": "Read User Guide"
+    },
+    "useCases": {
+      "eyebrow": "Use Cases",
+      "title": "Made for the moments when audio needs to become usable text",
+      "desc": "Sona handles local transcription first, then keeps polish, translation, and export in the same working thread instead of sending you across separate tools.",
+      "labels": {
+        "context": "Context",
+        "workflow": "Workflow",
+        "result": "Result"
+      },
+      "note": "Local transcription works on-device; polish and translation require a configured LLM provider.",
+      "items": {
+        "meetings": {
+          "title": "Meeting Notes",
+          "context": "Capture project syncs, interviews, or standups while the room is still talking.",
+          "workflow": "Use Live Record to keep timestamps attached, then run polish for a cleaner internal recap.",
+          "result": "You leave with a shareable draft that still points back to the original audio moments.",
+          "tags": ["Live Record", "Timestamps", "Polish"]
+        },
+        "lectures": {
+          "title": "Lecture Capture",
+          "context": "Record lectures, seminars, or office-hour explanations without losing the structure of the talk.",
+          "workflow": "Transcribe locally, jump back through timestamps, and edit key segments into study-ready notes.",
+          "result": "The transcript stays tied to playback, so review and revision happen in one place.",
+          "tags": ["Lecture capture", "Playback sync", "Study notes"]
+        },
+        "subtitle-export": {
+          "title": "Video Subtitle Export",
+          "context": "Bring in local video or film files when you need subtitles instead of a blank timeline.",
+          "workflow": "Queue them through Batch Import, review the text, then export SRT or VTT once the segments look right.",
+          "result": "You get subtitle files that are ready for handoff, iteration, or platform upload.",
+          "tags": ["Batch Import", "SRT / VTT", "Export"]
+        },
+        "subtitle-translation": {
+          "title": "Subtitle Translation",
+          "context": "Prepare subtitles for bilingual review or international delivery without separating the source text.",
+          "workflow": "Keep the original transcript visible, run Translate, and export translation-only or bilingual output when needed.",
+          "result": "The translated version stays aligned with the source so subtitle comparison is quick and readable.",
+          "tags": ["Translate", "Bilingual", "Side-by-side"]
+        }
+      }
+    },
+    "demo": {
+      "eyebrow": "Product Preview",
+      "title": "One editor from first words to final text.",
+      "desc": "Sona keeps the capture, timestamps, polish, translation, and export path inside one working surface.",
+      "appName": "Sona",
+      "stageLabel": "Stage",
+      "workflowSteps": ["Record", "Edit", "Polish / Translate", "Export"],
+      "fileName": "demo-session.sona",
+      "translationLabel": "Translation",
+      "inputTitle": "Live Record",
+      "actions": {
+        "rename": "Rename",
+        "summary": "Summary",
+        "speakerReview": "Speaker Review",
+        "versions": "Versions",
+        "polish": "Polish",
+        "translate": "Translate",
+        "export": "Export",
+        "close": "Close"
+      },
+      "segmentActions": {
+        "edit": "Edit segment",
+        "merge": "Merge with next segment",
+        "delete": "Delete segment"
+      },
+      "player": {
+        "play": "Play",
+        "speed": "Playback speed",
+        "volume": "Volume"
+      },
+      "shell": {
+        "modes": {
+          "live": "Live Record",
+          "batch": "Batch Import",
+          "projects": "Workspace"
+        },
+        "headerActions": {
+          "notifications": "Notifications",
+          "settings": "Settings"
+        },
+        "live": {
+          "inputSource": "Input source",
+          "microphone": "Microphone",
+          "timer": "00:00:54",
+          "pause": "Pause",
+          "stop": "Stop",
+          "recordingActive": "Recording active"
+        },
+        "editor": {
+          "toolbarUndo": "Undo",
+          "toolbarRedo": "Redo",
+          "toolbarBold": "Bold",
+          "toolbarItalic": "Italic",
+          "toolbarUnderline": "Underline",
+          "toolbarSplit": "Split segment",
+          "autosaved": "Saved",
+          "wordCount": "89 words",
+          "speaker": "Speaker 1"
+        }
+      },
+      "stages": [
+        {
+          "id": "live",
+          "button": "Live Capture",
+          "eyebrow": "Stage 01",
+          "title": "Words land while the conversation is still moving.",
+          "desc": "The transcript arrives first, with timing intact and almost no chrome between the audio and the page.",
+          "status": "Capturing locally"
+        },
+        {
+          "id": "refined",
+          "button": "Refined Text",
+          "eyebrow": "Stage 02",
+          "title": "Clean wording appears without splitting the thread.",
+          "desc": "Once the capture is there, polish and translation stay attached to the same transcript instead of becoming a second document.",
+          "status": "Text polished"
+        }
+      ],
+      "recording": {
+        "liveDuration": "00:54",
+        "finalDuration": "01:18",
+        "liveCurrentTime": "00:37",
+        "finalCurrentTime": "01:18"
+      },
+      "segments": [
+        {
+          "time": "00:03",
+          "live": "Let us keep the local recording path for the next release and tighten the onboarding copy once the build settles.",
+          "refined": "Keep the local recording path for the next release, then tighten the onboarding copy once the build is stable."
+        },
+        {
+          "time": "00:18",
+          "live": "And keep the timestamps attached so reviewers can jump back to the exact moment in the audio.",
+          "refined": "Keep timestamps attached so reviewers can jump back to the exact moment in the audio while proofreading."
+        },
+        {
+          "time": "00:34",
+          "live": "Once the first pass is done, run AI polish so the draft reads cleaner before the team sees it.",
+          "refined": "After the first pass, run AI Polish to produce a cleaner draft before the rest of the team reviews it."
+        },
+        {
+          "time": "00:49",
+          "live": "For external collaborators, generate a Chinese version too, but keep the original English visible beside it.",
+          "refined": "Generate a Chinese version for external collaborators, while keeping the original English visible alongside it.",
+          "translation": "如果要发给外部协作者，再补一份中文版本，但原始英文要继续并排保留。"
+        },
+        {
+          "time": "01:06",
+          "live": "That way we can compare wording quickly without splitting the transcript into a separate document.",
+          "refined": "That way the team can compare wording quickly without splitting the transcript into a separate document."
+        }
+      ]
+    },
+    "features": [
+      {
+        "title": "Locally Processed",
+        "desc": "Local-first by default. Transcription runs on your hardware with Sherpa-onnx; optional downloads, updates, sync, and provider-backed AI actions connect only when you choose them."
+      },
+      {
+        "title": "LLM Assistant",
+        "desc": "Built-in capabilities with local Large Language Models to automatically polish, summarize, and translate your transcripts."
+      },
+      {
+        "title": "High Accuracy",
+        "desc": "Achieves commercial-grade speech recognition tailored for long audio files with intelligent phrasing."
+      },
+      {
+        "title": "Transcript Editor",
+        "desc": "Rich, interactive editor built with React to easily tweak generated text, align timestamps, and refine your audio."
+      }
+    ],
+    "finalCta": {
+      "eyebrow": "Start Here",
+      "title": "Download Sona and keep the full transcript workflow in one editor.",
+      "desc": "Install the latest release, then record or import audio, review timestamps, polish, translate, and export without breaking the thread.",
+      "primaryLabel": "Download Latest Release",
+      "secondaryLabel": "Read User Guide",
+      "note": "Windows, macOS, and Linux builds are pulled from the latest GitHub release."
+    },
+    "footer": {
+      "license": "Open sourced under MIT License.",
+      "privacy": "Privacy",
+      "trust": "Trust",
+      "repo": "GitHub Repository",
+      "issue": "Report Issue"
+    }
+  },
+  "DownloadsPage": {
+    "metadata": {
+      "title": "Sona | Desktop Downloads",
+      "description": "Download the latest Sona desktop builds for Windows, macOS, and Linux from one place."
+    },
+    "button": {
+      "allBuildsLabel": "All builds",
+      "currentPlatformLabel": "Downloads for your platform",
+      "menuAriaLabel": "Show more download options",
+      "viewAllLabel": "View all desktop builds"
+    },
+    "page": {
+      "alternateLanguageLabel": "简体中文",
+      "decisionDescription": "Start with your operating system and processor, then choose the installer format that fits how you manage apps.",
+      "decisionTitle": "Choose the right build",
+      "description": "Pick the desktop build that matches your system, architecture, and preferred installer format.",
+      "desktopOnlyNote": "Sona runs as a desktop app. If you are on a phone or tablet, open this page again on the computer where you want to install it.",
+      "emptyBuildsDescription": "The release loaded, but it does not include Windows, macOS, or Linux desktop assets that this page can recognize. GitHub Releases may still list manual artifacts.",
+      "emptyBuildsTitle": "No desktop builds found",
+      "firstRunLabel": "Continue with Getting Started",
+      "formatChoiceLabel": "Format",
+      "githubLabel": "View on GitHub Releases",
+      "homeLabel": "Back to home",
+      "installSafetyNote": "If Windows SmartScreen, macOS Gatekeeper, or Linux executable-permission prompts appear, first confirm the file came from Sona Downloads or GitHub Releases, then follow the operating-system prompt. Do not turn off system protection globally.",
+      "loadingLabel": "Checking the latest release...",
+      "platformChoiceLabel": "Platform",
+      "recommendedLabel": "Recommended",
+      "releaseLabel": "Latest release",
+      "title": "Desktop downloads",
+      "unavailableDescription": "The latest release details could not be loaded right now. GitHub Releases still has the complete list of builds.",
+      "unavailableTitle": "Release details are temporarily unavailable",
+      "updatedLabel": "Updated from the latest GitHub release"
+    },
+    "platformGroups": {
+      "windows": "Windows",
+      "macos": "macOS",
+      "linux": "Linux"
+    },
+    "formats": {
+      "exe": "Installer (.exe)",
+      "msi": "MSI package (.msi)",
+      "dmg": "Disk image (.dmg)",
+      "app-tar-gz": "App bundle (.app.tar.gz)",
+      "appimage": "AppImage",
+      "deb": "Deb package (.deb)",
+      "rpm": "RPM package (.rpm)"
+    },
+    "formatDescriptions": {
+      "exe": "Guided Windows installer for most personal setups.",
+      "msi": "Windows package suited to managed or scripted installs.",
+      "dmg": "Standard macOS disk image for drag-to-install setup.",
+      "app-tar-gz": "Raw macOS app bundle for manual or automated installs.",
+      "appimage": "Portable Linux build that runs outside a package manager.",
+      "deb": "Debian and Ubuntu package for system installation.",
+      "rpm": "Fedora, RHEL, and openSUSE package for system installation."
+    },
+    "platforms": {
+      "windows-x64": "Windows x64",
+      "windows-arm64": "Windows ARM64",
+      "macos-arm64": "macOS Apple Silicon",
+      "macos-x64": "macOS Intel",
+      "macos-universal": "macOS Universal",
+      "linux-x64": "Linux x64"
+    },
+    "platformDescriptions": {
+      "windows-x64": "Most Windows PCs with Intel or AMD processors.",
+      "windows-arm64": "Windows on ARM devices.",
+      "macos-arm64": "Apple Silicon Macs.",
+      "macos-x64": "Older Intel Macs.",
+      "macos-universal": "One macOS build that covers both Apple Silicon and Intel.",
+      "linux-x64": "Most 64-bit Linux desktops."
+    }
+  },
+  "TrustPrivacyPage": {
+    "nav": {
+      "alternateLanguageLabel": "简体中文",
+      "alternateLanguageShortLabel": "中",
+      "githubLabel": "GitHub",
+      "homeLabel": "Home"
+    },
+    "footer": {
+      "license": "Open sourced under MIT License.",
+      "privacyLabel": "Privacy",
+      "trustLabel": "Trust"
+    },
+    "trust": {
+      "metadata": {
+        "title": "Sona | Trust",
+        "description": "How Sona keeps transcription local by default, makes optional network features explicit, and protects the public docs site."
+      },
+      "hero": {
+        "eyebrow": "Trust",
+        "title": "Local first, explicit when networked.",
+        "description": "Sona is built around a simple boundary: transcription starts on your own machine, and networked features should be visible, optional, and tied to the action you asked for.",
+        "updatedLabel": "Product trust principles"
+      },
+      "facts": [
+        {
+          "label": "Default",
+          "title": "Transcription runs on-device",
+          "description": "Speech recognition is designed around local Sherpa-onnx models instead of sending audio to a hosted transcription service by default."
+        },
+        {
+          "label": "Choice",
+          "title": "AI assistance is optional",
+          "description": "Polish, translation, and summary features depend on the provider you configure. If you do not configure them, the local transcript workflow still works."
+        },
+        {
+          "label": "Site",
+          "title": "No ad tracking in this repo",
+          "description": "The current docs site code does not include analytics or advertising trackers; server API logs are limited to security, error, and slow-request diagnostics."
+        }
+      ],
+      "sections": [
+        {
+          "eyebrow": "Desktop app",
+          "title": "The core workflow stays close to the device",
+          "body": "Sona is a desktop transcript editor. The primary path is recording or importing audio, transcribing it with local models, reviewing timestamps, editing text, and exporting files from the app.",
+          "items": [
+            "Local transcription does not require a Sona-hosted speech service.",
+            "Model downloads and app updates may contact external release or model hosts when you ask for them.",
+            "Backups, restores, and WebDAV sync are controlled from the app and should be treated as user-selected data movement."
+          ]
+        },
+        {
+          "eyebrow": "Optional AI",
+          "title": "Provider-backed features follow your configuration",
+          "body": "Sona can call configured LLM or translation providers for polish, translation, and summaries. Those features are separate from local transcription and depend on the provider settings you enter.",
+          "items": [
+            "Transcript text can be sent to the provider you choose when you run an AI action.",
+            "Provider credentials and behavior are managed in the desktop app settings, not by the public docs site.",
+            "If you use a local provider such as a local model server, the data boundary depends on that provider endpoint."
+          ]
+        },
+        {
+          "eyebrow": "Transparency",
+          "title": "Open source keeps the claims inspectable",
+          "body": "Sona and this docs site are built in public. That makes the product flow, website routes, release handling, and current anti-abuse controls reviewable from the repository.",
+          "items": [
+            "Downloads are pulled from GitHub Releases, and the site exposes the release source instead of hiding it behind a custom installer flow.",
+            "The docs assistant is only enabled when the required Gemini and abuse-protection environment variables are configured.",
+            "Security headers and same-site checks are part of the current site implementation, with stronger traffic controls recommended at the edge."
+          ]
+        }
+      ],
+      "closing": {
+        "title": "Want the data-flow version?",
+        "description": "The privacy page explains what the desktop app and this website do with data in more direct operational terms.",
+        "primaryLabel": "Read Privacy",
+        "secondaryLabel": "Open User Guide"
+      }
+    },
+    "privacy": {
+      "metadata": {
+        "title": "Sona | Privacy",
+        "description": "A practical explanation of what Sona keeps local, when optional features may send data, and how the docs site handles requests."
+      },
+      "hero": {
+        "eyebrow": "Privacy",
+        "title": "A practical privacy map, not legal fine print.",
+        "description": "This page describes the current product and website behavior in plain language: what stays local, what may leave the device when you choose networked features, and what the public docs site handles.",
+        "updatedLabel": "Privacy principles"
+      },
+      "facts": [
+        {
+          "label": "Local",
+          "title": "Audio and transcripts start on your device",
+          "description": "The normal Sona workflow is built around local transcription, local editing, and user-controlled export."
+        },
+        {
+          "label": "Optional",
+          "title": "Network features are action-based",
+          "description": "AI provider calls, model downloads, updates, backups, and WebDAV sync are tied to features you configure or trigger."
+        },
+        {
+          "label": "Website",
+          "title": "The docs site has limited dynamic surfaces",
+          "description": "The site checks GitHub release data for downloads and can offer a protected guide assistant when configured."
+        }
+      ],
+      "dataFlow": {
+        "eyebrow": "Data Flow",
+        "title": "What moves where",
+        "description": "This table separates Sona desktop actions from public docs-site behavior, so optional network paths are visible before you use them.",
+        "columns": {
+          "feature": "Feature",
+          "trigger": "Trigger",
+          "data": "Data",
+          "destination": "Destination",
+          "control": "Control"
+        },
+        "rows": [
+          {
+            "feature": "Local transcription",
+            "trigger": "Record or import audio and run local recognition.",
+            "data": "Audio or video input, transcript segments, and timestamps.",
+            "destination": "Your device and the local model runtime.",
+            "control": "Keep recognition local; export or share files only when you choose."
+          },
+          {
+            "feature": "Local editing/export",
+            "trigger": "Edit a transcript or export SRT, VTT, TXT, or other files.",
+            "data": "Transcript text, timestamps, and any summary or metadata included in the export.",
+            "destination": "The local workspace and the save location you select.",
+            "control": "You choose the export format, save location, and any later sharing."
+          },
+          {
+            "feature": "Model downloads",
+            "trigger": "Download or install speech models.",
+            "data": "Model request metadata and network request details.",
+            "destination": "The configured model or release host.",
+            "control": "Manually triggered; downloading models does not require sending audio."
+          },
+          {
+            "feature": "App release downloads/update checks",
+            "trigger": "Open download UI, download a build, or check for updates.",
+            "data": "Release metadata requests, plus app, platform, or version information during update checks.",
+            "destination": "GitHub Releases or the configured update source.",
+            "control": "Triggered by download or update actions; you choose whether to install."
+          },
+          {
+            "feature": "LLM polish",
+            "trigger": "Run Polish with a configured provider.",
+            "data": "Selected transcript text and task prompt/context.",
+            "destination": "Your configured LLM provider or local endpoint.",
+            "control": "Optional; it stays inactive until you configure and run a provider-backed action."
+          },
+          {
+            "feature": "Translate",
+            "trigger": "Run Translate with a configured provider or service.",
+            "data": "Transcript text and language settings.",
+            "destination": "Your configured translation or LLM provider, or a local endpoint.",
+            "control": "Optional; the provider you choose determines the data boundary."
+          },
+          {
+            "feature": "AI summary",
+            "trigger": "Generate a summary.",
+            "data": "Transcript text and summary template/context.",
+            "destination": "Your configured LLM provider or local endpoint.",
+            "control": "Optional; generated summaries can be edited or cleared in the app."
+          },
+          {
+            "feature": "Automation",
+            "trigger": "Enable folder watches, presets, or automation runs.",
+            "data": "Watched or imported files, transcript text, and workflow export outputs.",
+            "destination": "The local workspace plus any configured provider or export destination used by the workflow.",
+            "control": "Off unless configured; review preset actions and export mode before running."
+          },
+          {
+            "feature": "Backup/restore archive",
+            "trigger": "Export a backup archive or import one back into Sona.",
+            "data": "Config, workspace, light history transcripts, summaries, automation state, and dashboard LLM usage. Audio files, onboarding, current project, and recovery state are excluded.",
+            "destination": "The local archive path you choose.",
+            "control": "You choose when to export, where to save, and whether to import an archive later."
+          },
+          {
+            "feature": "WebDAV Cloud Sync",
+            "trigger": "Configure sync and run backup, restore, or sync actions.",
+            "data": "Backup archives and sync metadata.",
+            "destination": "Your configured WebDAV server.",
+            "control": "Optional; controlled by your server URL, credentials, and sync actions."
+          },
+          {
+            "feature": "Docs download API",
+            "trigger": "Open the downloads UI or request latest release links.",
+            "data": "Public request metadata, request IDs, limited diagnostic logs, and GitHub release lookup results.",
+            "destination": "The Sona docs API and GitHub Releases.",
+            "control": "Used only for download choices and operational diagnostics; no audio, transcript data, cookies, tokens, or full IP addresses are logged."
+          },
+          {
+            "feature": "User guide assistant",
+            "trigger": "Ask the guide assistant after it is enabled.",
+            "data": "Your question, short conversation history, locale, current guide page context, and anti-abuse cookie or Turnstile status.",
+            "destination": "The Sona docs API, Gemini, and Cloudflare Turnstile when challenged.",
+            "control": "Optional site feature; server diagnostic logs do not store question text, chat history, cookies, tokens, or full IP addresses."
+          },
+          {
+            "feature": "External GitHub links",
+            "trigger": "Click GitHub, release, or source-code links.",
+            "data": "Browser request details such as referrer and IP, handled by GitHub and your browser.",
+            "destination": "GitHub.",
+            "control": "Only happens when you follow the link; GitHub policies apply."
+          }
+        ]
+      },
+      "sections": [
+        {
+          "eyebrow": "Desktop app data",
+          "title": "What stays local by design",
+          "body": "Sona is intended for people who want transcript work to happen on their own machine by default. Recording, importing, local recognition, timestamp review, editing, and export are desktop workflows.",
+          "items": [
+            "Local transcription uses installed models and does not need a Sona cloud transcription account.",
+            "Workspace records, light history transcripts, summaries, settings, and backups are managed by the desktop app.",
+            "Exported files go where you choose to save or share them."
+          ]
+        },
+        {
+          "eyebrow": "User-selected sharing",
+          "title": "When data may leave your device",
+          "body": "Some features are useful because they connect to another service. In those cases, the destination is determined by the feature and provider you chose.",
+          "items": [
+            "LLM polish, translation, and summary actions may send transcript text to your configured provider.",
+            "Model downloads, update checks, and release downloads contact their relevant hosting services.",
+            "WebDAV cloud sync uploads or restores backup archives through the server you configure."
+          ]
+        },
+        {
+          "eyebrow": "Website behavior",
+          "title": "What this public site handles",
+          "body": "The Sona docs site is separate from the desktop transcript workflow. It serves pages, checks GitHub release metadata for download options, and may enable an AI guide assistant for documentation questions.",
+          "items": [
+            "The download UI calls `/api/github-release`, which fetches public release metadata from GitHub and returns structured build links.",
+            "The guide assistant sends your question, short conversation history, locale, and current guide page context to Gemini when the feature is configured.",
+            "The assistant route uses signed anonymous anti-abuse cookies and may show Cloudflare Turnstile after usage thresholds.",
+            "Server API logs are structured diagnostics for security events, upstream errors, and slow requests, not client analytics."
+          ]
+        },
+        {
+          "eyebrow": "Limits",
+          "title": "What this page is not claiming",
+          "body": "This is a practical product explanation, not a lawyer-reviewed privacy policy or compliance statement. It reflects the current repository shape and should be updated when product behavior changes.",
+          "items": [
+            "It does not claim that every third-party provider follows the same privacy practices.",
+            "It does not replace reading the policies of GitHub, Gemini, Cloudflare, your LLM provider, or your WebDAV host.",
+            "It does not add client analytics, persistent user tracking, or a new user-data collection flow."
+          ]
+        }
+      ],
+      "closing": {
+        "title": "Prefer the trust summary?",
+        "description": "The trust page gives the higher-level view of Sona’s local-first product boundary and site safeguards.",
+        "primaryLabel": "Read Trust",
+        "secondaryLabel": "Open User Guide"
+      }
+    }
+  },
+  "UserGuidePage": {
+    "guideLabel": "User Guide",
+    "homeLabel": "Back Home",
+    "alternateLanguageLabel": "简体中文",
+    "sourceLabel": "Source Doc",
+    "mobileNavLabel": "Guide pages",
+    "sidebarTitle": "Browse the guide",
+    "previousLabel": "Previous",
+    "nextLabel": "Next",
+    "groupLabels": {
+      "start": "Start Here",
+      "workflow": "Core Workflows",
+      "extended": "Extended Capabilities",
+      "reference": "Reference & Help"
+    },
+    "overview": {
+      "cardsEyebrow": "Start Here",
+      "cardsTitle": "Pick the shortest path to your first useful result.",
+      "cardsDescription": "Most people only need one or two pages to get moving. Start with the path that matches what you are doing right now.",
+      "browseEyebrow": "Everything Inside",
+      "browseTitle": "The full docs set, organized by the actual Sona workflow.",
+      "browseDescription": "Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, workspace organization, export, extended capabilities, CLI reference, and troubleshooting."
+    },
+    "codeBlock": {
+      "copyLabel": "Copy code",
+      "copiedLabel": "Copied"
+    }
+  }
+}

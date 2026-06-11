@@ -42,7 +42,7 @@ interface UserGuidePageDefinition {
   slug: string[];
   group: UserGuideNavGroupId;
   sourceDoc?: UserGuideSourceDocId;
-  localizations: Record<HomeLocale, UserGuideLocalizedPageCopy>;
+  localizations: Record<string, UserGuideLocalizedPageCopy>;
 }
 
 interface UserGuideUiCopy {
@@ -143,7 +143,8 @@ interface UserGuideAssistantCopy {
 
 const GUIDE_PREFIXES: Record<HomeLocale, string> = {
   en: '/user-guide',
-  'zh-CN': '/zh/user-guide',
+  'zh-CN': '/user-guide',
+  ja: '/user-guide',
 };
 
 const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
@@ -207,6 +208,36 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       copiedLabel: '已复制',
     },
   },
+  ja: {
+    guideLabel: 'ユーザーガイド',
+    homeLabel: 'ホームに戻る',
+    alternateLanguageLabel: 'English',
+    sourceLabel: '源ドキュメント',
+    mobileNavLabel: 'ガイドページ',
+    sidebarTitle: 'ガイドを参照',
+    previousLabel: '前へ',
+    nextLabel: '次へ',
+    groupLabels: {
+      start: 'ここから開始',
+      workflow: 'コアワークフロー',
+      extended: '拡張機能',
+      reference: '参照とヘルプ',
+    },
+    overview: {
+      cardsEyebrow: 'ここから開始',
+      cardsTitle: '最初の有益な結果への最短ルートを選択してください。',
+      cardsDescription:
+        '多くの人は1、2ページ読むだけで開始できます。今やりたいタスクに一致するパスから開始してください。',
+      browseEyebrow: 'すべてのコンテンツ',
+      browseTitle: 'Sonaの実際のワークフローごとに整理された完全なドキュメントセット。',
+      browseDescription:
+        '最初は概要を使用し、その後セットアップ、文字起こし作成、編集、オプションのAI手順、ワークスペース整理、エクスポート、拡張機能、CLI参照、トラブルシューティングに進んでください。',
+    },
+    codeBlock: {
+      copyLabel: 'コピー',
+      copiedLabel: 'コピーしました',
+    },
+  },
 };
 
 const userGuidePageDefinitions: UserGuidePageDefinition[] = [
@@ -229,6 +260,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、工作区整理、导出、扩展能力与排障。',
         contentFile: 'zh-CN/overview.md',
       },
+      ja: {
+        title: 'Sona ユーザーガイド',
+        navLabel: '概要',
+        description:
+          'Sonaドキュメントの入り口。セットアップ、録音、ファイルインポート、編集、AI手順、エクスポート、ヘルプへの最短パスを案内します。',
+        contentFile: 'ja/overview.md',
+      },
     },
   },
   {
@@ -249,6 +287,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '完成安装、首次运行设置与推荐离线模型下载，让 Sona 进入第一个可用的本地转录状态。',
         contentFile: 'zh-CN/getting-started.md',
+      },
+      ja: {
+        title: 'はじめに',
+        navLabel: 'はじめに',
+        description:
+          'Sonaのインストール、初回セットアップ、推奨オフラインモデルのダウンロード、そして最初のローカル文字起こしの開始まで。',
+        contentFile: 'ja/getting-started.md',
       },
     },
   },
@@ -271,6 +316,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '了解实时录音的适用场景、输入源、字幕设置、快捷键，以及录音草稿在工作区中如何一路延续到录音完成。',
         contentFile: 'zh-CN/live-record.md',
       },
+      ja: {
+        title: 'ライブ録音',
+        navLabel: 'ライブ録音',
+        description:
+          'リアルタイム録音、タイムスタンプの保持、録音中のドラフト表示、入力ソースやショートカットの制御について。',
+        contentFile: 'ja/live-record.md',
+      },
     },
   },
   {
@@ -291,6 +343,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '把已有音频或视频文件排进同一条处理队列，再回到主编辑器继续检查、翻译与导出。',
         contentFile: 'zh-CN/batch-import.md',
+      },
+      ja: {
+        title: 'バッチインポート',
+        navLabel: 'バッチインポート',
+        description:
+          '既存の音声・動画ファイルをキューに追加して進捗を監視し、完了した文字起こしをエディタで確認・エクスポートします。',
+        contentFile: 'ja/batch-import.md',
       },
     },
   },
@@ -313,6 +372,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '围绕时间戳、分段编辑、搜索与播放器，了解 Sona 的主编辑区应该如何配合使用。',
         contentFile: 'zh-CN/edit-and-playback.md',
       },
+      ja: {
+        title: '編集と再生',
+        navLabel: '編集と再生',
+        description:
+          'セグメントの確認、再生と同期したタイムスタンプの追跡、文字起こしの検索、およびエディタツールの使用方法。',
+        contentFile: 'ja/edit-and-playback.md',
+      },
     },
   },
   {
@@ -333,6 +399,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '在设置中绑定 provider、功能模型与深度思考选项，再按需使用润色或翻译。',
         contentFile: 'zh-CN/ai-polish-and-translate.md',
+      },
+      ja: {
+        title: 'AI推敲と翻訳',
+        navLabel: 'AI推敲と翻訳',
+        description:
+          'プロバイダ、モデル、推論オプションの設定（設定 > LLMサービス）と、推敲や翻訳の実行方法。',
+        contentFile: 'ja/ai-polish-and-translate.md',
       },
     },
   },
@@ -355,6 +428,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '了解如何在全部内容、Inbox 与项目之间整理已保存内容，以及项目默认值会如何影响后续工作。',
         contentFile: 'zh-CN/workspace-projects-and-inbox.md',
       },
+      ja: {
+        title: 'ワークスペース、プロジェクト、Inbox',
+        navLabel: 'ワークスペース / プロジェクト / Inbox',
+        description:
+          '録音やインポートの整理、Inboxやプロジェクトの切り替え、プロジェクトのデフォルト設定によるワークフローへの影響について。',
+        contentFile: 'ja/workspace-projects-and-inbox.md',
+      },
     },
   },
   {
@@ -375,6 +455,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '完成导出，并快速理解仪表盘、诊断、备份与恢复、自动化、LLM 服务、快捷键、语音输入法和通知入口分别在哪里。',
         contentFile: 'zh-CN/export-and-settings.md',
+      },
+      ja: {
+        title: 'エクスポートと設定',
+        navLabel: 'エクスポート / 設定',
+        description:
+          '成果物のエクスポート、診断、バックアップと復元、自動化、LLMサービス、ショートカット、音声入力などの設定。',
+        contentFile: 'ja/export-and-settings.md',
       },
     },
   },
@@ -397,6 +484,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '绑定摘要模型，配置支持的深度思考选项，生成或编辑当前摘要，并理解摘要过期、模板切换和导出边界。',
         contentFile: 'zh-CN/ai-summary.md',
       },
+      ja: {
+        title: 'AI要約',
+        navLabel: 'AI要約',
+        description:
+          '要約モデルの割り当て、推論オプションの設定、要約の生成と編集、およびテンプレートとエクスポートについて。',
+        contentFile: 'ja/ai-summary.md',
+      },
     },
   },
   {
@@ -418,6 +512,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '理解实时字幕的入口在哪里、字幕浮窗设置负责什么，以及语音输入法页如何管理快捷键、就绪状态与同一套离线实时转录依赖。',
         contentFile: 'zh-CN/live-caption-and-voice-typing.md',
       },
+      ja: {
+        title: 'ライブ字幕と音声入力',
+        navLabel: 'ライブ字幕 & 音声入力',
+        description:
+          'ライブ字幕の開始方法、音声入力のショートカットと準備設定、および共通のオフライン文字起こしスタックの利用について。',
+        contentFile: 'ja/live-caption-and-voice-typing.md',
+      },
     },
   },
   {
@@ -438,6 +539,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '在需要更细调校时使用热词、文本替换和润色高级设置，而不是把整份指南扩写成完整设置手册。',
         contentFile: 'zh-CN/vocabulary-and-advanced-settings.md',
+      },
+      ja: {
+        title: '語彙と高度な設定',
+        navLabel: '語彙 & 高度な設定',
+        description:
+          'ホットワード、テキスト置換、およびより細かい制御が必要な場合の高度な推敲設定の使用方法。',
+        contentFile: 'ja/vocabulary-and-advanced-settings.md',
       },
     },
   },
@@ -461,6 +569,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '从终端运行 Sona 的离线批量转录，理解安装包与源码构建两种入口，并确认当前命令行能力边界。',
         contentFile: 'zh-CN/cli-guide.md',
       },
+      ja: {
+        title: 'CLIガイド',
+        navLabel: 'CLIガイド',
+        description:
+          'ターミナルからのオフラインバッチ文字起こしの実行、パッケージ版とソースビルド版の違い、およびコマンドリファレンス。',
+        contentFile: 'ja/cli-guide.md',
+      },
     },
   },
   {
@@ -483,6 +598,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '启动本地 HTTP API 服务，配置认证，提交转录任务，查询状态，使用已配置的云端 ASR，并校验 webhook 签名。',
         contentFile: 'zh-CN/api-guide.md',
       },
+      ja: {
+        title: 'HTTP APIガイド',
+        navLabel: 'HTTP API',
+        description:
+          'ローカルHTTP APIサーバーの起動、認証、ジョブの送信、ステータスの確認、およびWebhookの検証について。',
+        contentFile: 'ja/api-guide.md',
+      },
     },
   },
   {
@@ -503,6 +625,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '汇总首次设置、模型缺失、录音草稿、恢复中心、语音输入法、播放器与源码构建等常见问题。',
         contentFile: 'zh-CN/faq.md',
+      },
+      ja: {
+        title: 'FAQとトラブルシューティング',
+        navLabel: 'FAQ',
+        description:
+          'セットアップ時のリマインダー、モデル不足、録音、ドラフト、復元、再生、ビルドなどに関するよくある問題。',
+        contentFile: 'ja/faq.md',
       },
     },
   },
@@ -530,25 +659,37 @@ function getOtherLocale(locale: HomeLocale): HomeLocale {
 }
 
 function getLocaleHomeHref(locale: HomeLocale) {
-  return locale === 'en' ? '/' : '/zh';
+  return '/';
 }
 
 function getGuideSourceHref(locale: HomeLocale) {
-  return locale === 'en'
-    ? `${GITHUB_BLOB_ROOT}/docs/user-guide.md`
-    : `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`;
+  if (locale === 'zh-CN') {
+    return `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`;
+  }
+  if (locale === 'ja') {
+    return `${GITHUB_BLOB_ROOT}/docs/user-guide.ja.md`;
+  }
+  return `${GITHUB_BLOB_ROOT}/docs/user-guide.md`;
 }
 
 function getCliSourceHref(locale: HomeLocale) {
-  return locale === 'en'
-    ? `${GITHUB_BLOB_ROOT}/docs/cli.md`
-    : `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
+  if (locale === 'zh-CN') {
+    return `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
+  }
+  if (locale === 'ja') {
+    return `${GITHUB_BLOB_ROOT}/docs/cli.ja.md`;
+  }
+  return `${GITHUB_BLOB_ROOT}/docs/cli.md`;
 }
 
 function getApiSourceHref(locale: HomeLocale) {
-  return locale === 'en'
-    ? `${GITHUB_BLOB_ROOT}/docs/api.md`
-    : `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`;
+  if (locale === 'zh-CN') {
+    return `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`;
+  }
+  if (locale === 'ja') {
+    return `${GITHUB_BLOB_ROOT}/docs/api.ja.md`;
+  }
+  return `${GITHUB_BLOB_ROOT}/docs/api.md`;
 }
 
 function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale) {
@@ -563,9 +704,13 @@ function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale)
 }
 
 function getReadmeHref(locale: HomeLocale) {
-  return locale === 'en'
-    ? `${GITHUB_BLOB_ROOT}/README.md`
-    : `${GITHUB_BLOB_ROOT}/README.zh-CN.md`;
+  if (locale === 'zh-CN') {
+    return `${GITHUB_BLOB_ROOT}/README.zh-CN.md`;
+  }
+  if (locale === 'ja') {
+    return `${GITHUB_BLOB_ROOT}/README.ja.md`;
+  }
+  return `${GITHUB_BLOB_ROOT}/README.md`;
 }
 
 export function buildUserGuidePath(
@@ -694,8 +839,13 @@ export function getUserGuideStaticParams() {
 }
 
 export function getAllUserGuidePaths() {
-  return (['en', 'zh-CN'] as HomeLocale[]).flatMap((locale) =>
-    USER_GUIDE_PAGE_ORDER.map((pageId) => buildUserGuidePath(locale, pageId)),
+  const localePrefixes: Record<HomeLocale, string> = {
+    en: '/en',
+    'zh-CN': '/zh-CN',
+    ja: '/ja',
+  };
+  return (['en', 'zh-CN', 'ja'] as HomeLocale[]).flatMap((locale) =>
+    USER_GUIDE_PAGE_ORDER.map((pageId) => `${localePrefixes[locale]}${buildUserGuidePath(locale, pageId)}`),
   );
 }
 
@@ -707,6 +857,57 @@ export function getUserGuideAssistantCopy(
   locale: HomeLocale,
   pageTitle: string,
 ): UserGuideAssistantCopy {
+  if (locale === 'ja') {
+    return {
+      title: 'AIに質問',
+      summary: 'ガイドの内容のみを回答し、このページを優先します。',
+      expandLabel: '開く',
+      collapseLabel: '閉じる',
+      examplesLabel: '質問例',
+      examples: [
+        `「${pageTitle}」ページは何のためのものですか？`,
+        `「${pageTitle}」の後に何を読むべきですか？`,
+        'SonaでAIの校正や翻訳はどこで設定しますか？',
+      ],
+      inputPlaceholder:
+        'このページ、次のステップ、または機能の場所について質問してください...',
+      submitLabel: '質問',
+      submittingLabel: '思考中...',
+      youLabel: 'あなた',
+      assistantLabel: 'ガイドAI',
+      detailsLabel: 'ソースと次のステップ',
+      sourcesLabel: 'ソース',
+      nextPagesLabel: '次のページ',
+      disabledInline:
+        'このデプロイメントでは、保護されたガイドQAが有効になっていません。',
+      genericError:
+        '現在ガイドアシスタントが回答できません。しばらくしてからもう一度お試しください。',
+      networkError:
+        'サーバーが現在Geminiに接続できません。サーバーのネットワークまたはプロキシを確認して、もう一度お試しください。',
+      upstreamError:
+        'Geminiがこの質問に対してアップストリームエラーを返しました。しばらくしてからもう一度お試しください。',
+      emptyResponseError:
+        'Geminiが利用可能な回答テキストなしで返答しました。もう一度質問してみてください。',
+      unavailableError:
+        'このデプロイメントでは、現在AIの質問は利用できません。',
+      emptyQuestionError: '送信する前に質問を入力してください。',
+      forbiddenOriginError:
+        'このホストは、保護されたガイドアシスタントの使用を許可されていません。',
+      challengeError:
+        '質問を続けるには、確認チャレンジを完了してください。',
+      challengeExpiredError:
+        '確認の期限が切れました。もう一度チャレンジを完了してください。',
+      challengePrompt:
+        'ガイドQAを引き続き使用するには、確認チャレンジを完了してください。',
+      challengeVerifyingLabel: '検証中...',
+      challengeLoadingError:
+        '検証ウィジェットを読み込めませんでした。リフレッシュしてもう一度お試しください。',
+      throttledError:
+        '検証の失敗が多すぎます。しばらく待ってからもう一度お試しください。',
+      tooLongError: '質問は1200文字以内で入力してください。',
+    };
+  }
+
   if (locale === 'en') {
     return {
       title: 'Ask AI',

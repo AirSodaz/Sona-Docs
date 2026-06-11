@@ -73,7 +73,7 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
       ? demo.recording.liveCurrentTime
       : demo.recording.finalCurrentTime;
   const progressWidth =
-    displayedStage === 'live' ? `${demo.recording.liveProgress}%` : '100%';
+    displayedStage === 'live' ? `${demo.recording?.liveProgress ?? 0}%` : '100%';
   const isRefined = displayedStage === 'refined';
 
   useEffect(() => {

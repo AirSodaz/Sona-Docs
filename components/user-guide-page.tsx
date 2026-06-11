@@ -1,12 +1,11 @@
 import { Children, isValidElement, type ReactNode } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
   ChevronRight,
   Github,
-  Globe,
   Home,
 } from 'lucide-react';
 import ReactMarkdown, {
@@ -16,6 +15,7 @@ import ReactMarkdown, {
 } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { UserGuideSearch } from '@/components/user-guide-search';
@@ -245,9 +245,11 @@ function HeaderLink({
 function HeaderActions({
   className = '',
   page,
+  slug,
 }: {
   className?: string;
   page: UserGuidePageModel;
+  slug?: string[];
 }) {
   return (
     <div
@@ -260,16 +262,7 @@ function HeaderActions({
           <span className="hidden sm:inline">{page.homeLabel}</span>
         </span>
       </HeaderLink>
-      <Link
-        href={page.alternatePath}
-        className="flex cursor-pointer items-center gap-1.5 shrink-0 transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
-      >
-        <Globe size={16} />
-        <span className="hidden sm:inline">{page.alternateLanguageLabel}</span>
-        <span className="sm:hidden">
-          {page.alternateLanguageLabel === '简体中文' ? '中' : 'En'}
-        </span>
-      </Link>
+      <LanguageSwitcher />
       <HeaderLink href={page.sourceHref} external>
         <span className="inline-flex items-center gap-1.5">
           <Github size={16} />
@@ -352,13 +345,14 @@ export async function UserGuidePage({
       navigation={navigation}
       searchBar={
         <UserGuideSearch
+          key="user-guide-search"
           copy={searchCopy}
           currentPageId={page.id}
           entries={searchEntries}
         />
       }
-      headerActionsMobile={<HeaderActions className="lg:hidden" page={page} />}
-      headerActionsDesktop={<HeaderActions className="hidden lg:flex" page={page} />}
+      headerActionsMobile={<HeaderActions key="header-actions-mobile" className="lg:hidden" page={page} slug={slug} />}
+      headerActionsDesktop={<HeaderActions key="header-actions-desktop" className="hidden lg:flex" page={page} slug={slug} />}
     >
       <AnimatedContainer className="flex-1 min-w-0">
         <AnimatedItem>
@@ -367,7 +361,7 @@ export async function UserGuidePage({
               Sona
             </Link>
             <ChevronRight size={14} className="opacity-50" />
-            <Link href={page.locale === 'en' ? '/user-guide' : '/zh/user-guide'} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
+            <Link href="/user-guide" className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
               {page.guideLabel}
             </Link>
             {page.id !== 'overview' ? (
@@ -499,15 +493,17 @@ export async function UserGuidePage({
           <AnimatedItem as="section" className="mt-16 grid gap-4 border-t border-stone-200/50 pt-8 dark:border-stone-800/50 md:grid-cols-2">
             {page.previousPage ? (
               <PaginationCard
+                key="prev-page"
                 item={page.previousPage}
                 label={page.previousLabel}
                 direction="previous"
               />
             ) : (
-              <div className="hidden md:block" />
+              <div key="prev-placeholder" className="hidden md:block" />
             )}
             {page.nextPage ? (
               <PaginationCard
+                key="next-page"
                 item={page.nextPage}
                 label={page.nextLabel}
                 direction="next"

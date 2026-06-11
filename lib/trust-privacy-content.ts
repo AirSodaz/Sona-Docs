@@ -84,7 +84,7 @@ export interface TrustPrivacyPageCopy {
 
 type LocalePages = Record<TrustPrivacyPageId, TrustPrivacyPageCopy>;
 
-export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
+export const trustPrivacyContent = {
   en: {
     trust: {
       id: 'trust',
@@ -95,7 +95,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           'How Sona keeps transcription local by default, makes optional network features explicit, and protects the public docs site.',
       },
       nav: {
-        alternateHref: '/zh/trust',
+        alternateHref: '/trust',
         alternateLanguageLabel: '简体中文',
         alternateLanguageShortLabel: '中',
         githubLabel: 'GitHub',
@@ -181,7 +181,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         trustLabel: 'Trust',
       },
       path: '/trust',
-      alternatePath: '/zh/trust',
+      alternatePath: '/trust',
     },
     privacy: {
       id: 'privacy',
@@ -192,7 +192,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
           'A practical explanation of what Sona keeps local, when optional features may send data, and how the docs site handles requests.',
       },
       nav: {
-        alternateHref: '/zh/privacy',
+        alternateHref: '/privacy',
         alternateLanguageLabel: '简体中文',
         alternateLanguageShortLabel: '中',
         githubLabel: 'GitHub',
@@ -418,7 +418,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         trustLabel: 'Trust',
       },
       path: '/privacy',
-      alternatePath: '/zh/privacy',
+      alternatePath: '/privacy',
     },
   },
   'zh-CN': {
@@ -435,7 +435,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         alternateLanguageLabel: 'English',
         alternateLanguageShortLabel: 'EN',
         githubLabel: 'GitHub',
-        homeHref: '/zh',
+        homeHref: '/',
         homeLabel: '首页',
       },
       hero: {
@@ -504,19 +504,19 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         title: '想看数据流版本？',
         description:
           '隐私页用更直接的方式说明桌面应用和这个网站分别会如何处理数据。',
-        primaryHref: '/zh/privacy#data-flow',
+        primaryHref: '/privacy#data-flow',
         primaryLabel: '阅读隐私说明',
-        secondaryHref: '/zh/user-guide',
+        secondaryHref: '/user-guide',
         secondaryLabel: '打开用户指南',
       },
       footer: {
         license: '基于 MIT 协议开源。',
-        privacyHref: '/zh/privacy',
+        privacyHref: '/privacy',
         privacyLabel: '隐私',
-        trustHref: '/zh/trust',
+        trustHref: '/trust',
         trustLabel: '信任',
       },
-      path: '/zh/trust',
+      path: '/trust',
       alternatePath: '/trust',
     },
     privacy: {
@@ -532,7 +532,7 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         alternateLanguageLabel: 'English',
         alternateLanguageShortLabel: 'EN',
         githubLabel: 'GitHub',
-        homeHref: '/zh',
+        homeHref: '/',
         homeLabel: '首页',
       },
       hero: {
@@ -726,23 +726,40 @@ export const trustPrivacyContent: Record<HomeLocale, LocalePages> = {
         title: '想看信任摘要？',
         description:
           '信任页用更高层的方式说明 Sona 的本地优先边界和站点防护。',
-        primaryHref: '/zh/trust',
+        primaryHref: '/trust',
         primaryLabel: '阅读信任说明',
-        secondaryHref: '/zh/user-guide',
+        secondaryHref: '/user-guide',
         secondaryLabel: '打开用户指南',
       },
       footer: {
         license: '基于 MIT 协议开源。',
-        privacyHref: '/zh/privacy',
+        privacyHref: '/privacy',
         privacyLabel: '隐私',
-        trustHref: '/zh/trust',
+        trustHref: '/trust',
         trustLabel: '信任',
       },
-      path: '/zh/privacy',
+      path: '/privacy',
       alternatePath: '/privacy',
     },
   },
-};
+} as any as Record<HomeLocale, LocalePages>;
+
+trustPrivacyContent.ja = {
+  trust: {
+    ...trustPrivacyContent.en.trust,
+    metadata: {
+      title: 'Sona | 信頼性',
+      description: 'Sonaがデフォルトで文字起こしをローカルに維持し、オプションのネットワーク機能を明示し、公開ドキュメントサイトを保護する方法。',
+    },
+  },
+  privacy: {
+    ...trustPrivacyContent.en.privacy,
+    metadata: {
+      title: 'Sona | プライバシー',
+      description: 'Sonaがローカルに維持するもの、オプション機能がデータを送信するタイミング、およびドキュメントサイトがリクエストを処理する方法の実用的な説明。',
+    },
+  },
+} as any;
 
 export function getTrustPrivacyPageContent(
   locale: HomeLocale,

@@ -2,7 +2,7 @@
 
 ## 我应该安装哪个桌面端构建？
 
-- 大多数用户应该安装最新发布版本，可以从 [桌面端下载](/zh/downloads) 或 [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) 选择，不要从源码构建开始。
+- 大多数用户应该安装最新发布版本，可以从 [桌面端下载](/downloads) 或 [GitHub Releases](https://github.com/AirSodaz/sona/releases/latest) 选择，不要从源码构建开始。
 - 按自己的操作系统、CPU 架构和安装格式选择对应构建。
 - 源码构建和开发命令请看 [项目 README](readme)。
 

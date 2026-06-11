@@ -2,18 +2,19 @@
 
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/routing';
 import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
   ExternalLink,
   Github,
-  Globe,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { SiteHeader } from '@/components/site-header';
 import { downloadContent, type DownloadContent } from '@/lib/download-content';
 import type { HomeLocale } from '@/lib/homepage-content';
@@ -62,7 +63,33 @@ interface ReleaseState {
 }
 
 export function DownloadsPage({ locale }: { locale: HomeLocale }) {
-  const content = downloadContent[locale];
+  const t = useTranslations('DownloadsPage');
+  const pathname = usePathname();
+
+  const buttonRaw = t.raw('button') as any;
+  const pageRaw = t.raw('page') as any;
+
+  const content: DownloadContent = {
+    metadata: {
+      title: t('metadata.title'),
+      description: t('metadata.description'),
+    },
+    button: {
+      ...buttonRaw,
+      allBuildsHref: '/downloads',
+    },
+    page: {
+      ...pageRaw,
+      homeHref: '/',
+      firstRunHref: '/user-guide/getting-started',
+    },
+    platformGroups: t.raw('platformGroups') as any,
+    formats: t.raw('formats') as any,
+    formatDescriptions: t.raw('formatDescriptions') as any,
+    platforms: t.raw('platforms') as any,
+    platformDescriptions: t.raw('platformDescriptions') as any,
+  };
+
   const [release, setRelease] = useState<ReleaseState>({
     data: null,
     status: 'loading',
@@ -144,14 +171,7 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
                 <span className="hidden sm:inline">{content.page.homeLabel}</span>
               </span>
             </HeaderLink>
-            <Link
-              href={content.page.alternateHref}
-              className="flex items-center gap-1.5 cursor-pointer transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
-            >
-              <Globe size={16} />
-              <span className="hidden sm:inline">{content.page.alternateLanguageLabel}</span>
-              <span className="sm:hidden">{content.page.alternateLanguageLabel === '简体中文' ? '中' : 'En'}</span>
-            </Link>
+            <LanguageSwitcher />
             <HeaderLink href={githubHref} external>
               <span className="inline-flex items-center gap-1.5">
                 <Github size={16} />

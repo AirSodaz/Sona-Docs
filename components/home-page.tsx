@@ -1,28 +1,84 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import Link from 'next/link';
-import { Github, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/routing';
+import { Github, Mic, Shield, Bot, Scissors } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { DownloadButton } from '@/components/download-button';
 import { SiteHeader } from '@/components/site-header';
 import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
 import { downloadContent } from '@/lib/download-content';
-import type { HomeLocale, HomePageContent } from '@/lib/homepage-content';
+import type { HomeLocale, HomePageContent, UseCaseId } from '@/lib/homepage-content';
 import { motion } from 'motion/react';
 
 export function HomePage({
-  content,
   locale,
 }: {
-  content: HomePageContent;
-  locale: HomeLocale;
+  locale: 'en' | 'zh-CN' | 'ja';
 }) {
+  const t = useTranslations('HomePage');
+  const pathname = usePathname();
+
+  const useCasesRaw = t.raw('useCases') as any;
+  const hrefMap: Record<UseCaseId, string> = {
+    meetings: '/user-guide/live-record',
+    lectures: '/user-guide/edit-and-playback',
+    'subtitle-export': '/user-guide/batch-import',
+    'subtitle-translation': '/user-guide/ai-polish-and-translate',
+  };
+
+  const useCasesItemsArray = Object.entries(useCasesRaw.items || {}).map(([key, value]: [string, any]) => ({
+    id: key as UseCaseId,
+    href: hrefMap[key as UseCaseId] || '/user-guide',
+    title: value.title,
+    context: value.context,
+    workflow: value.workflow,
+    result: value.result,
+    tags: value.tags || [],
+  }));
+
+  const heroRaw = t.raw('hero') as any;
+  const finalCtaRaw = t.raw('finalCta') as any;
+  const footerRaw = t.raw('footer') as any;
+
+  const content: HomePageContent = {
+    metadata: {
+      title: t('metadata.title'),
+      description: t('metadata.description'),
+    },
+    nav: t.raw('nav') as any,
+    hero: {
+      ...heroRaw,
+      docsHref: '/user-guide',
+    },
+    useCases: {
+      eyebrow: useCasesRaw.eyebrow,
+      title: useCasesRaw.title,
+      desc: useCasesRaw.desc,
+      labels: useCasesRaw.labels,
+      note: useCasesRaw.note,
+      items: useCasesItemsArray,
+    },
+    demo: t.raw('demo') as any,
+    features: t.raw('features') as any,
+    finalCta: {
+      ...finalCtaRaw,
+      secondaryHref: '/user-guide',
+    },
+    footer: {
+      ...footerRaw,
+      privacyHref: '/privacy',
+      trustHref: '/trust',
+    },
+  };
+
   const demoPreviewId = 'homepage-demo-preview';
-  const downloads = downloadContent[locale];
+  const downloads = downloadContent[locale === 'ja' ? 'en' : locale]; // fallback downloads config to English for Japanese for now
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -61,14 +117,7 @@ export function HomePage({
           </button>
           <div className="flex items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
             <ThemeToggle />
-            <Link
-              href={content.nav.languageToggleHref}
-              className="flex items-center gap-1.5 cursor-pointer transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
-            >
-              <Globe size={16} />
-              <span className="hidden sm:inline">{content.nav.languageToggleLabel}</span>
-              <span className="sm:hidden">{content.nav.languageToggleShortLabel}</span>
-            </Link>
+            <LanguageSwitcher />
             <Link
               href="https://github.com/AirSodaz/sona"
               className="flex items-center gap-1.5 transition-colors hover:text-stone-800 dark:hover:text-stone-200 sm:gap-2"

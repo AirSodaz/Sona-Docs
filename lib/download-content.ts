@@ -56,7 +56,7 @@ export interface DownloadContent {
   platforms: Record<DownloadPlatformKey, string>;
 }
 
-export const downloadContent: Record<HomeLocale, DownloadContent> = {
+export const downloadContent = {
   en: {
     metadata: {
       title: 'Sona | Desktop Downloads',
@@ -71,7 +71,7 @@ export const downloadContent: Record<HomeLocale, DownloadContent> = {
       viewAllLabel: 'View all desktop builds',
     },
     page: {
-      alternateHref: '/zh/downloads',
+      alternateHref: '/downloads',
       alternateLanguageLabel: '简体中文',
       decisionDescription:
         'Start with your operating system and processor, then choose the installer format that fits how you manage apps.',
@@ -148,7 +148,7 @@ export const downloadContent: Record<HomeLocale, DownloadContent> = {
         '在一个页面中查看并下载 Sona 最新的 Windows、macOS 与 Linux 桌面构建。',
     },
     button: {
-      allBuildsHref: '/zh/downloads',
+      allBuildsHref: '/downloads',
       allBuildsLabel: '全部构建',
       currentPlatformLabel: '当前平台可选下载',
       menuAriaLabel: '显示更多下载选项',
@@ -167,11 +167,11 @@ export const downloadContent: Record<HomeLocale, DownloadContent> = {
       emptyBuildsDescription:
         'release 已成功载入，但其中没有本页可识别的 Windows、macOS 或 Linux 桌面端资源。GitHub Releases 中可能仍有可手动查看的构建。',
       emptyBuildsTitle: '没有找到桌面端构建',
-      firstRunHref: '/zh/user-guide/getting-started',
+      firstRunHref: '/user-guide/getting-started',
       firstRunLabel: '继续查看快速开始',
       formatChoiceLabel: '格式',
       githubLabel: '前往 GitHub Releases',
-      homeHref: '/zh',
+      homeHref: '/',
       homeLabel: '返回首页',
       installSafetyNote:
         '如果遇到 Windows SmartScreen、macOS Gatekeeper 或 Linux 可执行权限提示，请先确认文件来自 Sona 下载页或 GitHub Releases，再按系统提示处理；不要全局关闭系统安全防护。',
@@ -225,4 +225,12 @@ export const downloadContent: Record<HomeLocale, DownloadContent> = {
       'linux-x64': '大多数 64 位 Linux 桌面系统。',
     },
   },
-};
+} as any as Record<HomeLocale, DownloadContent>;
+
+downloadContent.ja = {
+  metadata: {
+    title: 'Sona | デスクトップダウンロード',
+    description: 'Windows、macOS、Linux用の最新Sonaデスクトップビルドを1箇所からダウンロード。',
+  },
+} as any;
+

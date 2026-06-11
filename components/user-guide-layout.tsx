@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { PanelLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Logo } from '@/components/Logo';

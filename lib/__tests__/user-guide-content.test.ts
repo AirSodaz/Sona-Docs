@@ -7,8 +7,9 @@ import {
 
 describe('user guide content', () => {
   it('generates localized API guide pages with API source docs', () => {
-    expect(getAllUserGuidePaths()).toContain('/user-guide/api');
-    expect(getAllUserGuidePaths()).toContain('/zh/user-guide/api');
+    expect(getAllUserGuidePaths()).toContain('/en/user-guide/api');
+    expect(getAllUserGuidePaths()).toContain('/zh-CN/user-guide/api');
+    expect(getAllUserGuidePaths()).toContain('/ja/user-guide/api');
 
     const englishPage = getUserGuidePageFromSlug('en', ['api']);
     const chinesePage = getUserGuidePageFromSlug('zh-CN', ['api']);
@@ -30,7 +31,7 @@ describe('user guide content', () => {
     });
     expect(resolveUserGuideHref('zh-CN', 'api.zh-CN.md')).toEqual({
       external: false,
-      href: '/zh/user-guide/api',
+      href: '/user-guide/api',
     });
   });
 });

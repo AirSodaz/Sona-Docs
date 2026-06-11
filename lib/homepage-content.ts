@@ -1,4 +1,4 @@
-export type HomeLocale = 'en' | 'zh-CN';
+export type HomeLocale = 'en' | 'zh-CN' | 'ja';
 export type DemoStageId = 'live' | 'refined';
 export type UseCaseId =
   | 'meetings'
@@ -177,7 +177,7 @@ export interface HomePageContent {
   };
 }
 
-export const homePageContent: Record<HomeLocale, HomePageContent> = {
+export const homePageContent = {
   en: {
     metadata: {
       title: 'Sona | Offline Transcript Editor',
@@ -186,7 +186,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     },
     nav: {
       github: 'GitHub',
-      languageToggleHref: '/zh',
+      languageToggleHref: '/',
       languageToggleLabel: '简体中文',
       languageToggleShortLabel: '中',
     },
@@ -447,7 +447,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       scrollHint: '向下查看编辑界面',
       btnDownload: '下载最新版本',
       btnDocs: '阅读用户指南',
-      docsHref: '/zh/user-guide',
+      docsHref: '/user-guide',
     },
     useCases: {
       eyebrow: '适合这些场景',
@@ -462,7 +462,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
       items: [
         {
           id: 'meetings',
-          href: '/zh/user-guide/live-record',
+          href: '/user-guide/live-record',
           title: '会议记录',
           context:
             '记录项目例会、访谈或同步会时，希望边说边留下一份可回看的文本。',
@@ -474,7 +474,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'lectures',
-          href: '/zh/user-guide/edit-and-playback',
+          href: '/user-guide/edit-and-playback',
           title: '课堂记录',
           context:
             '上课、讲座或讨论课内容较长，需要先完整记下，再回看重点段落。',
@@ -486,7 +486,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'subtitle-export',
-          href: '/zh/user-guide/batch-import',
+          href: '/user-guide/batch-import',
           title: '视频/影片字幕导出',
           context:
             '手头已经有本地视频或影片素材，需要尽快整理出可交付的字幕文件。',
@@ -498,7 +498,7 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
         },
         {
           id: 'subtitle-translation',
-          href: '/zh/user-guide/ai-polish-and-translate',
+          href: '/user-guide/ai-polish-and-translate',
           title: '字幕翻译',
           context:
             '需要在保留原文的前提下生成译文，方便双语审阅或海外发布。',
@@ -651,20 +651,28 @@ export const homePageContent: Record<HomeLocale, HomePageContent> = {
     finalCta: {
       eyebrow: '从这里开始',
       title: '下载 Sona，把整条转录工作流留在同一块编辑器里。',
-      desc: '安装后就能开始实时录音或批量导入，继续整理时间戳、润色、翻译，并按需导出。',
+      desc: '安装后就能开始实时录音 or 批量导入，继续整理时间戳、润色、翻译，并按需导出。',
       primaryLabel: '下载最新版本',
       secondaryLabel: '阅读用户指南',
-      secondaryHref: '/zh/user-guide',
+      secondaryHref: '/user-guide',
       note: 'Windows、macOS 和 Linux 构建均来自最新 GitHub Release。',
     },
     footer: {
       license: '基于 MIT 协议开源。',
       privacy: '隐私',
-      privacyHref: '/zh/privacy',
+      privacyHref: '/privacy',
       repo: 'GitHub 仓库',
       trust: '信任',
-      trustHref: '/zh/trust',
+      trustHref: '/trust',
       issue: '报告问题',
     },
   },
-};
+} as any as Record<HomeLocale, HomePageContent>;
+
+homePageContent.ja = {
+  metadata: {
+    title: 'Sona | オフライン文字起こしエディタ',
+    description:
+      'TauriとSherpa-onnxで構築された強力なオフライン文字起こしエディタ。高速、正確、かつプライベートな音声テキスト変換。',
+  },
+} as any;
