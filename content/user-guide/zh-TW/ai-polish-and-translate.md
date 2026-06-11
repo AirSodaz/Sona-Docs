@@ -24,8 +24,8 @@ Sona 的潤飾與翻譯是可選能力。離線轉錄本身不依賴它們，但
 
 1. 確認 `設定 > LLM 服務` 中已經指定 `潤飾模型`。
 2. 在應用程式裡打開 `LLM 潤飾` 動作。
-3. 按需選擇： `LLM 潤飾`、`重新轉錄`、`復原`、`重做`、`進階設定`。
-4. 如果需要管理 `Auto-Polish`、`Auto-Polish Frequency`、`關鍵詞`、`場景預設`、`自訂上下文`，請進入 `進階設定`，更完整的集中說明見 [詞彙與高級設定](guide:vocabulary-and-advanced-settings)。
+3. 視需要選擇： `LLM 潤飾`、`重新轉錄`、`復原`、`重做`、`進階設定`。
+4. 如果需要管理 `Auto-Polish`、`Auto-Polish Frequency`、`關鍵詞`、`場景預設`、`自訂上下文`，請進入 `進階設定`，更完整的集中說明見 [詞彙與進階設定](guide:vocabulary-and-advanced-settings)。
 
 ## 需要雙語內容時，執行翻譯
 
@@ -47,5 +47,5 @@ Sona 的潤飾與翻譯是可選能力。離線轉錄本身不依賴它們，但
 - 目前支援的翻譯目標語言包括 `繁體中文`、`简体中文`、`English`、`Japanese`、`Korean`、`French`、`German`、`Spanish`。
 - 只有當目前轉錄來自已儲存的工作區條目時，選單裡才會出現 `重新轉錄`。
 - 如果您下一步要做的是貼著轉錄存在的摘要，而不是改寫轉錄正文，請繼續看 [AI 摘要](guide:ai-summary)。
-- 如果您現在關心的是 `Auto-Polish`、關鍵詞或自訂上下文，請繼續看 [詞彙與高級設定](guide:vocabulary-and-advanced-settings)。
+- 如果您現在關心的是 `Auto-Polish`、關鍵詞或自訂上下文，請繼續看 [詞彙與進階設定](guide:vocabulary-and-advanced-settings)。
 - 當文字已經整理完成，下一步通常就是 [匯出與設定](guide:export-and-settings)。

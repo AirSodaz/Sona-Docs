@@ -67,8 +67,8 @@ format = "srt"
 | `vad_model_id` | 條件必要 | 預設模型 ID | 無 | 選取的模型需要 VAD 時必要。 |
 | `punctuation_model_id` | 條件必要 | 預設模型 ID | 無 | 選取的模型需要標點時必要。 |
 | `language` | 可選 | `auto` 或模型語言代碼，如 `zh`、`en`、`ja` | `auto` | 覆寫自動語言偵測。 |
-| `threads` | 可選 | 大於 `0` 的整數 | `4` | 識別執行緒數。 |
-| `enable_itn` | 可选 | `true` 或 `false` | `false` | 啟用逆文字正規化。 |
+| `threads` | 可選 | 大於 `0` 的整數 | `4` | 辨識執行緒數。 |
+| `enable_itn` | 可選 | `true` 或 `false` | `false` | 啟用逆文字正規化。 |
 | `vad_buffer_size` | 可選 | 大於 `0` 的數字 | `5.0` | VAD 緩衝秒數。 |
 | `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 使用 `cpu` 可顯式關閉 GPU 加速。 |
 | `format` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 時為 `json`，否則從 `--output` 推斷 | 覆寫輸出副檔名推斷。 |
@@ -87,13 +87,13 @@ format = "srt"
 | `max_queue_size` | 可選 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
 | `max_upload_size_mb` | 可選 | 非負整數 | `50` | `0` 表示關閉上傳大小限制。 |
 | `job_ttl_minutes` | 可選 | 非負整數 | `60` | `0` 表示關閉完成/失敗任務清理。 |
-| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 本地批次和串流任務的服務級預設值。 |
+| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 本機批次和串流任務的服務級預設值。 |
 | `vad_model_id` | 可選 | 預設模型 ID | `silero-vad` | API 服務任務的預設 VAD 伴生模型。 |
-| `punctuation_model_id` | 可选 | 預設模型 ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API 服務任務的預設標點伴生模型。 |
+| `punctuation_model_id` | 可選 | 預設模型 ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API 服務任務的預設標點伴生模型。 |
 
 ## 參數
 
-### 全局
+### 全域
 
 ```text
 sona
@@ -119,7 +119,7 @@ sona transcribe --help
 
 | 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
 | --- | --- | --- | --- | --- |
-| `<input>` | 必要 | 本地音訊或影片檔案路徑 | 無 | 要轉錄的檔案。 |
+| `<input>` | 必要 | 本機音訊或影片檔案路徑 | 無 | 要轉錄的檔案。 |
 | `--config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
 | `--output <path>` | 可選 | 檔案系統路徑 | `stdout` | 輸出檔案路徑。 |
 | `--format <format>` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 時為 `json`，否則從 `--output` 推斷 | 覆寫設定與輸出副檔名推斷。 |
@@ -169,7 +169,7 @@ sona transcribe --help
 | `--ip-whitelist <rules>` | 可選 | 逗號分隔規則 | `localhost` | 支援 `localhost`、精確 IP、CIDR、`*`，以及 `192.168.*` 這類 IPv4 萬用字元。 |
 | `--max-streaming <n>` | 可選 | 非負整數 | `2` | 最大並行串流連線數。 |
 | `--max-concurrent <n>` | 可選 | 非負整數 | `2` | 最大並行批次任務數。 |
-| `--max-queue-size <n>` | 可选 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
+| `--max-queue-size <n>` | 可選 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
 | `--max-upload-size-mb <n>` | 可選 | 非負整數 | `50` | `0` 表示關閉上傳大小限制。 |
 | `--job-ttl-minutes <n>` | 可選 | 非負整數 | `60` | `0` 表示關閉完成/失敗任務清理。 |
 | `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | HTTP API 請求不支援依個別請求覆寫 GPU 設定。 |

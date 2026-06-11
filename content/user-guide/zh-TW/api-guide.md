@@ -1,10 +1,10 @@
-Sona 提供隱私優先的本地 HTTP API 服務，面向外部無外介面 (headless) 整合。自動化工具、批次處理腳本或輔助用戶端可以透過 REST 端點在本機控制語音轉文字流程。
+Sona 提供隱私優先的本機 HTTP API 服務，面向外部無外介面 (headless) 整合。自動化工具、批次處理腳本或輔助客戶端可以透過 REST 端點在本機控制語音轉文字流程。
 
 ## 設定與服務啟用
 
 API 服務可以透過兩種方式啟動。
 
-### GUI 用戶端設定
+### GUI 應用程式設定
 
 在主介面打開 `設定 > API 服務` 並設定：
 
@@ -101,7 +101,7 @@ Authorization: Bearer your_secure_key
 
 ## 提交轉錄任務
 
-提交本地音訊或影片檔案進行語音轉文字處理。任務會進入佇列，並由背景轉錄 worker 執行。
+提交本機音訊或影片檔案進行語音轉文字處理。任務會進入佇列，並由背景轉錄 worker 執行。
 
 - URL：`/v1/transcriptions`
 - Method：`POST`
@@ -112,9 +112,9 @@ Authorization: Bearer your_secure_key
 | 參數名稱 | 類型 | 是否必填 | 參數說明 |
 | --- | --- | --- | --- |
 | `file` | 二進位 | 是 | 要轉錄的音訊或影片檔案。 |
-| `model_id` | 字串 | 是 | 本地 ASR 模型 ID，例如 `sensevoice`；或已設定的雲端 ASR 提供者，例如 `volcengine-doubao`。 |
-| `language` | 字串 | 否 | 目標識別語言，例如 `zh`、`en`、`ja`、`ko`、`yue`。預設是 `auto`。 |
-| `hotwords` | 字串 | 否 | 用於增強識別的自訂詞彙或關鍵詞，依換行分隔。 |
+| `model_id` | 字串 | 是 | 本機 ASR 模型 ID，例如 `sensevoice`；或已設定的雲端 ASR 提供者，例如 `volcengine-doubao`。 |
+| `language` | 字串 | 否 | 目標辨識語言，例如 `zh`、`en`、`ja`、`ko`、`yue`。預設是 `auto`。 |
+| `hotwords` | 字串 | 否 | 用於增強辨識的自訂詞彙或關鍵詞，依換行分隔。 |
 | `webhook_url` | 字串 | 否 | 轉錄任務完成或失敗後接收 POST 通知的 HTTP URL。 |
 | `webhook_secret` | 字串 | 否 | 用於透過 HMAC-SHA256 簽名 webhook payload 的金鑰。 |
 
@@ -159,7 +159,7 @@ curl -X POST http://127.0.0.1:14200/v1/transcriptions \
 
 #### 處理中
 
-任務正在由識別引擎執行轉錄。
+任務正在由辨識引擎執行轉錄。
 
 ```json
 "Processing"
@@ -167,7 +167,7 @@ curl -X POST http://127.0.0.1:14200/v1/transcriptions \
 
 #### 成功完成
 
-語音識別成功。回應會傳回包含毫秒級時間戳記的分段轉錄文字：
+語音辨識成功。回應會傳回包含毫秒級時間戳記的分段轉錄文字：
 
 ```json
 {
@@ -183,14 +183,14 @@ curl -X POST http://127.0.0.1:14200/v1/transcriptions \
       "id": 1,
       "start": 3100,
       "end": 5600,
-      "text": "我們正在您的本地機器上處理語音識別。",
+      "text": "我們正在您的本機上處理語音辨識。",
       "speaker": "Speaker 1"
     }
   ]
 }
 ```
 
-#### 識別失敗
+#### 辨識失敗
 
 轉錄任務失敗，並包含具體失敗原因：
 
@@ -207,7 +207,7 @@ curl http://127.0.0.1:14200/v1/transcriptions/c86e0c65-2746-4e56-9141-866d51bbca
   -H "Authorization: Bearer your_secure_key"
 ```
 
-## Webhooks 結果推送與安全校驗
+## Webhooks 結果推送與安全驗證
 
 如果提交任務時指定了 `webhook_url`，Sona 會在任務完成或失敗時，將最終 JSON 狀態 POST 到該 URL。
 
@@ -218,7 +218,7 @@ curl http://127.0.0.1:14200/v1/transcriptions/c86e0c65-2746-4e56-9141-866d51bbca
 - 請求標頭名稱：`X-Sona-Signature`
 - 格式：`sha256=<hex_encoded_signature>`
 
-### 校驗演算法
+### 驗證演算法
 
 ```javascript
 const crypto = require('crypto');

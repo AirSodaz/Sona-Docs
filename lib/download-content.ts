@@ -251,7 +251,7 @@ downloadContent['zh-TW'] = {
     desktopOnlyNote:
       'Sona 是桌面端應用程式。如果您正在手機或平板上瀏覽，請在準備安裝的電腦上重新打開本頁。',
     emptyBuildsDescription:
-      'release 已成功載入，但其中沒有本頁可識別的 Windows、macOS 或 Linux 桌面端資源。GitHub Releases 中可能仍有可手動查看的建構。',
+      'release 已成功載入，但其中沒有本頁可辨識的 Windows、macOS 或 Linux 桌面端資源。GitHub Releases 中可能仍有可手動查看的建構。',
     emptyBuildsTitle: '沒有找到桌面端建構',
     firstRunHref: '/user-guide/getting-started',
     firstRunLabel: '繼續查看快速入門',

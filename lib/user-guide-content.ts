@@ -258,7 +258,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       cardsEyebrow: '從這裡開始',
       cardsTitle: '先選最接近您目前任務的那條路徑。',
       cardsDescription:
-        '大多數使用者並不需要一次看完整份文件。先進入最短上手路徑，再按需要繼續查看後續頁面。',
+        '大多數使用者並不需要一次看完整份文件。先進入最短上手路徑，再視需要繼續查看後續頁面。',
       browseEyebrow: '完整內容',
       browseTitle: '整套指南按照 Sona 的真實使用流程組織。',
       browseDescription:
@@ -375,7 +375,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '即時錄音',
         navLabel: '即時錄音',
         description:
-          '了解即時錄音的適用場景、輸入來源、字幕設定、快捷鍵，以及錄音草稿在工作區中如何一路延續到錄音完成。',
+          '了解即時錄音的適用場景、輸入來源、字幕設定、快速鍵，以及錄音草稿在工作區中如何一路延續到錄音完成。',
         contentFile: 'zh-TW/live-record.md',
       },
     },
@@ -660,10 +660,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
       },
     
       'zh-TW': {
-        title: '詞彙與高級設定',
+        title: '詞彙與進階設定',
         navLabel: '進階詞彙設定',
         description:
-          '管理說話者檔案以協助校對，設定文字替換與熱詞以增強特定術語識別，並設定 Auto-Polish 以進行自動正文清洗。',
+          '管理說話者檔案以協助校對，設定文字替換與熱詞以增強特定術語辨識，並設定 Auto-Polish 以進行自動正文清洗。',
         contentFile: 'zh-TW/vocabulary-and-advanced-settings.md',
       },
     },
@@ -737,7 +737,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'HTTP API 指南',
         navLabel: 'HTTP API 參考',
         description:
-          '本地 HTTP API 服務參考：認證、提交轉錄任務、查詢狀態、獲取健康指標，以及設定 Webhook 簽名驗證。',
+          '本機 HTTP API 服務參考：認證、提交轉錄任務、查詢狀態、取得健康指標，以及設定 Webhook 簽名驗證。',
         contentFile: 'zh-TW/api-guide.md',
       },
     },
@@ -773,7 +773,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '常見問題與疑難排解',
         navLabel: 'FAQ & 排障',
         description:
-          '彙整首次設定、模型缺失、錄音草稿、復原中心、語音輸入法、播放器與原始碼建構等常見問題。',
+          '彙整首次設定、模型缺少、錄音草稿、復原中心、語音輸入法、播放器與原始碼建構等常見問題。',
         contentFile: 'zh-TW/faq.md',
       },
     },

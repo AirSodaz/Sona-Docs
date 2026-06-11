@@ -15,7 +15,16 @@ import {
 export const DEFAULT_USER_GUIDE_CHAT_MODEL = 'gemini-2.5-flash';
 
 function getAnswerLanguage(locale: HomeLocale) {
-  return locale === 'en' ? 'English' : 'Simplified Chinese';
+  switch (locale) {
+    case 'en':
+      return 'English';
+    case 'zh-CN':
+      return 'Simplified Chinese';
+    case 'zh-TW':
+      return 'Traditional Chinese using Taiwan terminology and style';
+    case 'ja':
+      return 'Japanese';
+  }
 }
 
 function formatGuideSection({
