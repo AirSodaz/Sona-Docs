@@ -1,16 +1,16 @@
 `sona` exposes offline transcription commands through the main desktop executable. Packaged installs do not add `sona` to your shell `PATH`, so run the installed app binary with CLI subcommands. Source builds can run the same commands with Cargo.
 
-The CLI is intentionally narrow: single-file offline transcription, preset model listing/download, and headless HTTP API server startup. It does not include live recording, LLM polish, or LLM translation.
+The CLI is intentionally narrow: single-file and directory offline transcription, preset model listing/download/deletion, and headless HTTP API server startup. It does not include live recording, LLM polish, or LLM translation.
 
-## Run it
+## Run It
 
-- Windows: run `Sona.exe transcribe ...` from the installation directory.
-- macOS: run `/Applications/Sona.app/Contents/MacOS/Sona transcribe ...`.
-- Linux packages: run the packaged `Sona` binary with CLI subcommands from the install location.
-- AppImage: run the mounted AppImage executable with CLI subcommands.
-- Source: `cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 --config ./sona-cli.toml`.
+- Windows: run `Sona.exe transcribe ...` from the installation directory
+- macOS: run `/Applications/Sona.app/Contents/MacOS/Sona transcribe ...`
+- Linux packages: run the packaged `Sona` binary with CLI subcommands from the install location
+- AppImage: run the mounted AppImage executable with CLI subcommands
+- Source: `cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 --config ./sona-cli.toml`
 
-## Common commands
+## Common Commands
 
 ### Transcribe a file
 
@@ -22,15 +22,31 @@ sona transcribe ./sample.mp4 \
 
 Without `--output`, transcription writes JSON to `stdout`. With `--output`, the format is inferred from the file extension unless `--format` is provided.
 
-### List or download models
+### Transcribe a directory
+
+```bash
+sona transcribe \
+  --input-dir ./media \
+  --output-dir ./transcripts \
+  --format srt \
+  --recursive \
+  --jobs 1 \
+  --config ./sona-cli.toml
+```
+
+Directory mode writes one transcript per supported media file into `--output-dir`. By default it scans only direct children; add `--recursive` to include subdirectories. Transcript content goes to files, while a JSON success/failure summary is written to `stdout`.
+
+### List, download, or delete models
 
 ```bash
 sona models list --mode offline --type whisper
 sona models list --language zh --installed
 sona models download sherpa-onnx-whisper-turbo
+sona models delete sherpa-onnx-whisper-turbo
 ```
 
 `models download` automatically downloads required companion models, such as `silero-vad` or the default punctuation model, when the selected preset needs them.
+`models delete` removes only the specified model. It does not delete companion models automatically.
 
 ### Start the API server
 
@@ -40,7 +56,7 @@ sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
 
 For HTTP API endpoints and request examples, continue to the [HTTP API Guide](guide:api-guide).
 
-## Config file
+## Config File
 
 Pass a TOML file with `--config`. Command-line flags override config file values.
 
@@ -71,7 +87,7 @@ format = "srt"
 | `enable_itn` | Optional | `true` or `false` | `false` | Enables inverse text normalization. |
 | `vad_buffer_size` | Optional | Number greater than `0` | `5.0` | VAD buffer size in seconds. |
 | `gpu_acceleration` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Use `cpu` to disable GPU acceleration. |
-| `format` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout, otherwise inferred from `--output` | Overrides output extension inference. |
+| `format` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout or in directory mode, otherwise inferred from `--output` | Overrides output extension inference. |
 
 ### `serve` config keys
 
@@ -119,10 +135,14 @@ Verbose diagnostics are written to `stderr`. Command output, including JSON outp
 
 | Parameter / config key | Required | Range | Default | Notes |
 | --- | --- | --- | --- | --- |
-| `<input>` | Required | Local audio or video file path | None | File to transcribe. |
+| `<input>` | Required unless `--input-dir` is passed | Local audio or video file path | None | Single file to transcribe. |
+| `--input-dir <dir>` | Required for directory mode | Directory path | None | Transcribes supported media files in the directory. |
 | `--config <path>` | Optional | TOML file path | None | Loads defaults from config. |
 | `--output <path>` | Optional | Filesystem path | `stdout` | Output file path. |
-| `--format <format>` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout, otherwise inferred from `--output` | Overrides config and output extension inference. |
+| `--output-dir <dir>` | Required with `--input-dir` | Directory path | None | Writes one transcript per input file. |
+| `--recursive` | Optional | Flag | Off | Scans subdirectories and preserves relative output paths. |
+| `--jobs <n>` | Optional | Integer greater than `0` | `1` | Maximum concurrent file jobs in directory mode. |
+| `--format <format>` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout or in directory mode, otherwise inferred from `--output` | Overrides config and output extension inference. |
 | `--language <code>` | Optional | `auto` or a model language code | `auto` | Overrides config. |
 | `--model-id <id>` | Required unless `model_id` is configured | Offline preset model id | None | Main transcription model. |
 | `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Overrides config. |
@@ -134,7 +154,7 @@ Verbose diagnostics are written to `stderr`. Command output, including JSON outp
 | `--hotwords <words>` | Optional | Comma-separated words | None | CLI-only; currently supported by Transducer and Qwen3 models. |
 | `--gpu-acceleration <provider>` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Overrides config. |
 | `--vad-buffer <seconds>` | Optional | Number greater than `0` | `5.0` | CLI name for `vad_buffer_size`. |
-| `--save-wav <path>` | Optional | Filesystem path | None | CLI-only; saves the intermediate resampled WAV. |
+| `--save-wav <path>` | Optional | Filesystem path | None | CLI-only; saves the intermediate resampled WAV. Not supported with `--input-dir`. |
 | `--quiet` | Optional | Flag | Off | CLI-only; hides transcription progress. |
 
 ### `models list`
@@ -157,6 +177,16 @@ Verbose diagnostics are written to `stderr`. Command output, including JSON outp
 | `--quiet` | Optional | Flag | Off | Hides per-download progress. |
 | Companion downloads | Automatic | Required VAD and punctuation presets | Automatic | Downloading a main model also downloads required companions. |
 
+### `models delete`
+
+| Parameter / config key | Required | Range | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `<model_id>` | Required | Known preset model id | None | Model to delete. |
+| `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Target models directory. |
+| `--yes` | Optional | Flag | Off | Skips the interactive confirmation prompt. |
+| Missing install path | No | Known but not installed preset | Successful no-op | Prints a notice to `stderr` and exits with status 0. |
+| Companion deletion | No | Required VAD and punctuation presets | Not deleted | Delete companion models explicitly if you no longer need them. |
+
 ### `serve`
 
 | Parameter / config key | Required | Range | Default | Notes |
@@ -177,5 +207,3 @@ Verbose diagnostics are written to `stderr`. Command output, including JSON outp
 | `--punctuation-model-id <id>` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | Default punctuation companion for API server jobs. |
 
 Run `sona <command> --help` for the full clap-generated help text.
-
-If you want the normal desktop workflow instead, return to [Getting Started](guide:getting-started) or [Batch Import](guide:batch-import).

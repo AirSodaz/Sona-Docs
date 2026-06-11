@@ -12,7 +12,7 @@ Sona は、音声の文字起こしをできるだけ自分のマシン上で完
 - 保存済みの録音、プロジェクト、Inbox の内容を整理したい: [ワークスペース、プロジェクト、Inbox](guide:workspace-projects-and-inbox)
 - 完成した内容を書き出す、または設定画面の場所を確認したい: [エクスポートと設定](guide:export-and-settings)
 - 本文を書き換えずに要約だけ作りたい: [AI Summary](guide:ai-summary)
-- フローティング字幕や他のアプリへの音声入力を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
+- フローティング字幕や他のアプリへの Voice Typing を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
 - Hotwords、Text Replacement、Speaker Profiles、Auto-Polish を調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
 - ターミナルからオフラインのバッチ文字起こしを実行したい: [CLI ガイド](guide:cli-guide)
 - 問題の切り分けやよくある詰まりを確認したい: [FAQ とトラブルシューティング](guide:faq)

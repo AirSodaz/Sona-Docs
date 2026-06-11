@@ -15,6 +15,7 @@ describe('user guide content', () => {
     const englishPage = getUserGuidePageFromSlug('en', ['api']);
     const chinesePage = getUserGuidePageFromSlug('zh-CN', ['api']);
     const taiwanPage = getUserGuidePageFromSlug('zh-TW', ['api']);
+    const japanesePage = getUserGuidePageFromSlug('ja', ['api']);
 
     expect(englishPage?.id).toBe('api-guide');
     expect(englishPage?.sourceHref).toBe(
@@ -27,6 +28,10 @@ describe('user guide content', () => {
     expect(taiwanPage?.id).toBe('api-guide');
     expect(taiwanPage?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/api.zh-TW.md',
+    );
+    expect(japanesePage?.id).toBe('api-guide');
+    expect(japanesePage?.sourceHref).toBe(
+      'https://github.com/AirSodaz/sona/blob/master/docs/api.ja.md',
     );
   });
 
@@ -42,6 +47,22 @@ describe('user guide content', () => {
     expect(resolveUserGuideHref('zh-TW', 'api.zh-TW.md')).toEqual({
       external: false,
       href: '/user-guide/api',
+    });
+    expect(resolveUserGuideHref('ja', 'api.ja.md')).toEqual({
+      external: false,
+      href: '/user-guide/api',
+    });
+    expect(resolveUserGuideHref('ja', 'cli.ja.md')).toEqual({
+      external: false,
+      href: '/user-guide/cli',
+    });
+    expect(resolveUserGuideHref('ja', 'user-guide.ja.md')).toEqual({
+      external: false,
+      href: '/user-guide',
+    });
+    expect(resolveUserGuideHref('ja', '../README.ja.md')).toEqual({
+      external: true,
+      href: 'https://github.com/AirSodaz/sona/blob/master/README.ja.md',
     });
   });
 });

@@ -619,7 +619,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Live Caption と Voice Typing',
         navLabel: 'Live Caption / Voice Typing',
         description:
-          'フローティング字幕と、他のアプリへ入力する音声入力の違い、準備、設定場所を確認します。',
+          'フローティング字幕と、他のアプリへ入力する Voice Typing の違い、準備、設定場所を確認します。',
         contentFile: 'ja/live-caption-and-voice-typing.md',
       },
     
@@ -1172,17 +1172,21 @@ const legacyRelativeLinkOverrides: Record<string, string> = {
   'user-guide.md': 'guide:overview',
   'user-guide.zh-CN.md': 'guide:overview',
   'user-guide.zh-TW.md': 'guide:overview',
+  'user-guide.ja.md': 'guide:overview',
   cli: 'guide:cli-guide',
   'cli.md': 'guide:cli-guide',
   'cli.zh-CN.md': 'guide:cli-guide',
   'cli.zh-TW.md': 'guide:cli-guide',
+  'cli.ja.md': 'guide:cli-guide',
   api: 'guide:api-guide',
   'api.md': 'guide:api-guide',
   'api.zh-CN.md': 'guide:api-guide',
   'api.zh-TW.md': 'guide:api-guide',
+  'api.ja.md': 'guide:api-guide',
   '../README.md': 'readme',
   '../README.zh-CN.md': 'readme',
   '../README.zh-TW.md': 'readme',
+  '../README.ja.md': 'readme',
 };
 
 function normalizeUserGuideHrefToken(href: string) {

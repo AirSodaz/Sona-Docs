@@ -49,7 +49,7 @@
 ## 主に拡張機能を探している場合
 
 - 文字起こしの要約を作りたい: [AI Summary](guide:ai-summary)
-- フローティング字幕や他のアプリへの音声入力を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
+- フローティング字幕や他のアプリへの Voice Typing を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
 - 監視フォルダーやエクスポートを自動化したい: `Settings > Automation` から始めてください。
 - Hotwords、Text Replacement、Speaker Profiles、Auto-Polish、カスタムコンテキストを調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
 
