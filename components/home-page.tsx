@@ -6,6 +6,7 @@ import { Github, Mic, Shield, Bot, Scissors, Globe } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { DownloadButton } from '@/components/download-button';
+import { SiteHeader } from '@/components/site-header';
 import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
@@ -23,22 +24,41 @@ export function HomePage({
   const demoPreviewId = 'homepage-demo-preview';
   const downloads = downloadContent[locale];
 
-  return (
-    <div className="relative overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
-      <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[500px] sm:w-[500px] sm:blur-[100px]"></div>
-      <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[600px] sm:w-[600px] sm:blur-[120px]"></div>
+  const scrollToTop = () => {
+    if (typeof window !== 'undefined') {
+      const shouldReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({
+        top: 0,
+        behavior: shouldReduceMotion ? 'auto' : 'smooth',
+      });
+    }
+  };
 
-      <section className="relative flex min-h-[100svh] flex-col">
-        <header className="mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
-          <div className="flex items-center">
-            <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
-            <span
-              className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
-              style={{ fontFamily: 'Georgia, serif' }}
-            >
-              ona
-            </span>
-          </div>
+  return (
+    <div className="relative bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
+      {/* Background Blobs Wrapper to prevent horizontal overflow without blocking sticky child elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[500px] sm:w-[500px] sm:blur-[100px]"></div>
+        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[600px] sm:w-[600px] sm:blur-[120px]"></div>
+      </div>
+
+      <SiteHeader>
+        <div className="flex items-center justify-between">
+          <button
+            onClick={scrollToTop}
+            className="group flex items-center transition-colors focus:outline-none cursor-pointer"
+            aria-label="Scroll to top"
+          >
+            <div className="flex items-center transition-transform duration-300 group-hover:scale-105 active:scale-95 origin-left will-change-transform">
+              <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
+              <span
+                className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
+                style={{ fontFamily: 'Georgia, serif' }}
+              >
+                ona
+              </span>
+            </div>
+          </button>
           <div className="flex items-center gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8">
             <ThemeToggle />
             <Link
@@ -59,7 +79,10 @@ export function HomePage({
               <span className="hidden sm:inline">{content.nav.github}</span>
             </Link>
           </div>
-        </header>
+        </div>
+      </SiteHeader>
+
+      <section className="relative flex min-h-[calc(100svh-4.5rem)] flex-col">
 
         <div className="flex flex-1 items-center">
           <div className="mx-auto flex w-full max-w-[1400px] px-4 pb-22 pt-0 sm:px-6 sm:pb-24 sm:pt-3 md:px-16 md:pb-28 md:pt-4">
