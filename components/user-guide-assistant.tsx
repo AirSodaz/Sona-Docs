@@ -4,6 +4,7 @@ import { startTransition, useEffect, useRef, useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { ChevronDown, ChevronUp, Send, ShieldCheck, Sparkles } from 'lucide-react';
 import { TurnstileWidget } from '@/components/turnstile-widget';
+import type { HomeLocale } from '@/lib/homepage-content';
 
 const MAX_QUESTION_LENGTH = 1200;
 const USER_GUIDE_TURNSTILE_ACTION = 'user_guide_chat';
@@ -317,7 +318,7 @@ export function UserGuideAssistant({
 }: {
   copy: AssistantCopy;
   enabled: boolean;
-  locale: 'en' | 'zh-CN' | 'ja';
+  locale: HomeLocale;
   pageId: string;
   turnstileSiteKey: null | string;
 }) {

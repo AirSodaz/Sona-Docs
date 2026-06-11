@@ -744,6 +744,343 @@ export const trustPrivacyContent = {
   },
 } as any as Record<HomeLocale, LocalePages>;
 
+trustPrivacyContent['zh-TW'] = {
+  trust: {
+    id: 'trust',
+    locale: 'zh-TW',
+    metadata: {
+      title: 'Sona | 信任',
+      description:
+        '了解 Sona 如何預設在本機完成轉錄、明確區分可選聯網能力，並保護公開文件站台。',
+    },
+    nav: {
+      alternateHref: '/trust',
+      alternateLanguageLabel: 'English',
+      alternateLanguageShortLabel: 'EN',
+      githubLabel: 'GitHub',
+      homeHref: '/',
+      homeLabel: '首頁',
+    },
+    hero: {
+      eyebrow: '信任',
+      title: '本機優先，\n聯網時說清楚。',
+      description:
+        'Sona 的邊界很明確：轉錄先在您自己的裝置上完成；需要聯網的能力應當可見、可選，並且對應到您主動觸發的動作。',
+      updatedLabel: '產品信任原則',
+    },
+    facts: [
+      {
+        label: '預設',
+        title: '轉錄在本機執行',
+        description:
+          '語音識別圍繞本機 Sherpa-onnx 模型設計，預設不把音訊發往代管式轉錄服務。',
+      },
+      {
+        label: '選擇',
+        title: 'AI 輔助是可選能力',
+        description:
+          '潤飾、翻譯和摘要取決於您設定的 provider；即使不設定這些能力，本機轉錄流程仍可使用。',
+      },
+      {
+        label: '站台',
+        title: '目前儲存庫沒有廣告追蹤',
+        description:
+          '目前文件站台程式碼沒有接入分析或廣告追蹤器；伺服器 API 日誌僅用於安全、錯誤和慢請求診斷。',
+      },
+    ],
+    sections: [
+      {
+        eyebrow: '桌面應用程式',
+        title: '核心工作流程儘量留在裝置附近',
+        body:
+          'Sona 是一款桌面端轉錄編輯器。主流程是錄音或匯入音訊，用本機模型轉錄，檢查時間戳記，編輯文字，再從應用程式裡匯出檔案。',
+        items: [
+          '本機轉錄不需要依賴 Sona 代管的語音服務。',
+          '當您主動下載模型或檢查更新時，應用程式可能存取對應的 release 或模型代管地址。',
+          '備份、復原和 WebDAV 同步由應用程式內操作觸發，應視為使用者主動選擇的資料移動。',
+        ],
+      },
+      {
+        eyebrow: '可選 AI',
+        title: '依賴 provider 的能力跟隨您的設定',
+        body:
+          'Sona 可以調用您設定的 LLM 或翻譯 provider 來做潤飾、翻譯和摘要。這些能力與本機轉錄分開，取決於您在設定中填寫的 provider 資訊。',
+        items: [
+          '當您執行 AI 動作時，轉錄文字可能會發送給您選擇的 provider。',
+          'Provider 憑證和調用行為由桌面應用程式設定管理，不由公開文件站台代管。',
+          '如果您使用本機 provider，例如本機模型服務，資料邊界取決於您設定的 endpoint。',
+        ],
+      },
+      {
+        eyebrow: '透明度',
+        title: '開源讓這些說法可以被檢查',
+        body:
+          'Sona 和這個文件站台都在公開儲存庫中建構。產品流程、網站路由、release 處理和目前防濫用控制都可以從程式碼中查看。',
+        items: [
+          '下載資訊來自 GitHub Releases，站台不會把來源藏在自訂安裝流程後面。',
+          '文件助手只有在 Gemini 和防濫用相關環境變數都設定好時才會啟用。',
+          '目前站台包含安全回應標頭和 same-site 檢查；更強的流量限制建議放在 CDN/邊緣層。',
+        ],
+      },
+    ],
+    closing: {
+      title: '想看資料流版本？',
+      description:
+        '隱私頁用更直接的方式說明桌面應用程式和這個網站分別會如何處理資料。',
+      primaryHref: '/privacy#data-flow',
+      primaryLabel: '閱讀隱私說明',
+      secondaryHref: '/user-guide',
+      secondaryLabel: '打開使用者指南',
+    },
+    footer: {
+      license: '基於 MIT 協定開源。',
+      privacyHref: '/privacy',
+      privacyLabel: '隱私',
+      trustHref: '/trust',
+      trustLabel: '信任',
+    },
+    path: '/trust',
+    alternatePath: '/trust',
+  },
+  privacy: {
+    id: 'privacy',
+    locale: 'zh-TW',
+    metadata: {
+      title: 'Sona | 隱私',
+      description:
+        '用實際產品和站台行為說明 Sona 哪些內容留在本機、有些可選功能可能發送資料，以及文件站台如何處理請求。',
+    },
+    nav: {
+      alternateHref: '/privacy',
+      alternateLanguageLabel: 'English',
+      alternateLanguageShortLabel: 'EN',
+      githubLabel: 'GitHub',
+      homeHref: '/',
+      homeLabel: '首頁',
+    },
+    hero: {
+      eyebrow: '隱私',
+      title: '實用隱私地圖，\n不是法律細則。',
+      description:
+        '這一頁用普通語言說明目前產品和網站的行為：哪些內容預設留在本機，哪些聯網能力會在您選擇後發生，以及公開文件站台會處理什麼。',
+      updatedLabel: '隱私原則',
+    },
+    facts: [
+      {
+        label: '本機',
+        title: '音訊和轉錄先在裝置上處理',
+        description:
+          'Sona 的常規流程圍繞本機轉錄、本機編輯和使用者主動匯出來設計。',
+      },
+      {
+        label: '可選',
+        title: '聯網能力跟隨具體動作',
+        description:
+          'AI provider 調用、模型下載、更新、備份和 WebDAV 同步都與使用者設定或觸發的功能相關。',
+      },
+      {
+        label: '網站',
+        title: '文件站台的動態面較少',
+        description:
+          '站台會為下載頁讀取 GitHub release 資料，並可在設定後提供受保護的文件助手。',
+      },
+    ],
+    dataFlow: {
+      eyebrow: '資料流',
+      title: '資料會流向哪裡',
+      description:
+        '這張表把 Sona 桌面端動作和公開文件站台行為分開，方便在使用可選聯網能力之前先看清邊界。',
+      columns: {
+        feature: '功能',
+        trigger: '觸發方式',
+        data: '資料',
+        destination: '去向',
+        control: '控制方式',
+      },
+      rows: [
+        {
+          feature: '本機轉錄',
+          trigger: '錄音或匯入音訊，並執行本機識別。',
+          data: '音訊或影片輸入、本機轉錄分段和時間戳記。',
+          destination: '您的裝置和本機模型執行期。',
+          control:
+            '識別保持在本機；只有您主動匯出或分享時檔案才離開應用程式邊界。',
+        },
+        {
+          feature: '本機編輯/匯出',
+          trigger: '編輯轉錄，或匯出 SRT、VTT、TXT 等檔案。',
+          data:
+            '轉錄文字、時間戳記，以及匯出中包含的摘要或元資料。',
+          destination: '本機工作區和您選擇的儲存位置。',
+          control:
+            '您選擇匯出格式、儲存位置和後續分享方式。',
+        },
+        {
+          feature: '模型下載',
+          trigger: '下載或安裝語音模型。',
+          data: '模型請求相關資訊和網路請求資訊。',
+          destination: '設定的模型或 release 代管地址。',
+          control:
+            '由您手動觸發；下載模型不需要發送音訊。',
+        },
+        {
+          feature: '應用程式 release 下載/更新檢查',
+          trigger: '打開下載頁、下載安裝包或檢查更新。',
+          data:
+            'release 元資料請求，以及檢查更新時的應用程式、平台或版本資訊。',
+          destination: 'GitHub Releases 或設定的更新源。',
+          control:
+            '由下載或更新動作觸發；是否安裝由您決定。',
+        },
+        {
+          feature: 'LLM 潤飾',
+          trigger: '使用已設定的 provider 執行潤飾。',
+          data: '選中的轉錄文字和任務所需 prompt/context。',
+          destination: '您設定的 LLM provider 或本機 endpoint。',
+          control:
+            '可選；只有設定並觸發 provider 動作後才會執行。',
+        },
+        {
+          feature: '翻譯',
+          trigger: '使用已設定的 provider 或服務執行翻譯。',
+          data: '轉錄文字和語言設定。',
+          destination:
+            '設定的翻譯或 LLM provider，或本機 endpoint。',
+          control:
+            '可選；您選擇的 provider 決定資料邊界。',
+        },
+        {
+          feature: 'AI 摘要',
+          trigger: '生成摘要。',
+          data: '轉錄文字和摘要範本/上下文。',
+          destination: '您設定的 LLM provider 或本機 endpoint。',
+          control:
+            '可選；生成後的摘要可在應用程式內編輯或清空。',
+        },
+        {
+          feature: '自動化',
+          trigger: '啟用資料夾監聽、預設或自動化任務。',
+          data:
+            '監聽或匯入的檔案、轉錄文字，以及工作流程需要的匯出結果。',
+          destination:
+            '本機工作區，以及工作流程中設定的 provider 或匯出位置。',
+          control:
+            '未設定時不執行；執行前可檢查預設動作和匯出模式。',
+        },
+        {
+          feature: '備份/復原歸檔',
+          trigger: '匯出備份歸檔，或把歸檔重新匯入 Sona。',
+          data:
+            '設定、工作區、輕量歷史轉錄與摘要、自動化狀態，以及儀表板 LLM 使用記錄。不包含音訊檔案、新手引導、目前專案和復原態資料。',
+          destination: '您選擇的本機歸檔儲存位置。',
+          control:
+            '您決定何時匯出、儲存到哪裡，以及之後是否匯入歸檔。',
+        },
+        {
+          feature: 'WebDAV Cloud Sync',
+          trigger: '設定同步，並執行備份、復原或同步動作。',
+          data: '備份歸檔和同步元資料。',
+          destination: '您設定的 WebDAV 伺服器。',
+          control:
+            '可選；由伺服器地址、憑證和應用程式內同步動作控制。',
+        },
+        {
+          feature: '文件下載 API',
+          trigger: '打開下載 UI 或請求最新 release 連結。',
+          data:
+            '公開請求資訊、請求 ID、有限診斷日誌和 GitHub release 查詢結果。',
+          destination: 'Sona 文件站台 API 和 GitHub Releases。',
+          control:
+            '僅用於下載選擇和執行診斷；不會記錄音訊、轉錄資料、cookie、token 或完整 IP 地址。',
+        },
+        {
+          feature: '使用者指南助手',
+          trigger: '啟用後向指南助手提問。',
+          data:
+            '您的問題、較短對話歷史、語言、目前指南頁上下文，以及防濫用 cookie 或 Turnstile 狀態。',
+          destination:
+            'Sona 文件站台 API、Gemini，以及觸發驗證時的 Cloudflare Turnstile。',
+          control:
+            '可選站台功能；伺服器診斷日誌不會儲存問題正文、對話歷史、cookie、token 或完整 IP 地址。',
+        },
+        {
+          feature: '外部 GitHub 連結',
+          trigger: '點擊 GitHub、release 或原始碼連結。',
+          data: '由瀏覽器和 GitHub 處理的 referrer、IP 等請求資訊。',
+          destination: 'GitHub。',
+          control:
+            '只有點擊時發生；GitHub 的政策適用。',
+        },
+      ],
+    },
+    sections: [
+      {
+        eyebrow: '桌面應用程式資料',
+        title: '預設留在本機的內容',
+        body:
+          'Sona 面向希望把轉錄工作預設留在自己機器上的使用者。錄音、匯入、本機識別、時間戳記檢查、編輯和匯出都是桌面端工作流程。',
+        items: [
+          '本機轉錄使用已安裝模型，不需要 Sona 雲端轉錄帳號。',
+          '工作區記錄、輕量歷史轉錄、摘要、設定和備份由桌面應用程式管理。',
+          '匯出的檔案會儲存到您選擇的位置，之後如何分享也由您決定。',
+        ],
+      },
+      {
+        eyebrow: '使用者選擇的資料發送',
+        title: '什麼時候資料可能離開裝置',
+        body:
+          '有些能力之所以有用，是因為它們會連接到另一個服務。此時資料去向取決於您選擇的功能和 provider。',
+        items: [
+          'LLM 潤飾、翻譯和摘要動作可能會把轉錄文字發送給您設定的 provider。',
+          '模型下載、更新檢查和 release 下載會存取相應的代管服務。',
+          'WebDAV 雲同步會通過您設定的伺服器上傳或復原備份歸檔。',
+        ],
+      },
+      {
+        eyebrow: '網站行為',
+        title: '這個公開站台會處理什麼',
+        body:
+          'Sona 文件站台與桌面端轉錄工作流程是分開的。它負責提供頁面、為下載選項檢查 GitHub release 元資料，並可為文件問題啟用 AI 助手。',
+        items: [
+          '下載 UI 會調用 `/api/github-release`，由它從 GitHub 讀取公開 release 元資料並返回結構化建構連結。',
+          '文件助手啟用後，會把您的問題、較短的對話歷史、語言和目前指南頁上下文發送給 Gemini。',
+          '助手路由使用簽名匿名防濫用 cookie，並可能在達到使用閾值後顯示 Cloudflare Turnstile。',
+          '伺服器 API 日誌是用於安全事件、上游錯誤和慢請求的結構化診斷，不是用戶端分析。',
+        ],
+      },
+      {
+        eyebrow: '邊界',
+        title: '這一頁沒有聲稱什麼',
+        body:
+          '這是一份實際產品說明，不是經過律師審閱的隱私政策或合規聲明。它反映目前儲存庫形態，產品行為變化時也應同步更新。',
+        items: [
+          '它不聲稱所有第三方 provider 都採用同樣的隱私實踐。',
+          '它不能替代 GitHub、Gemini、Cloudflare、您的 LLM provider 或 WebDAV 服務商各自的政策。',
+          '它不會新增用戶端分析、持久化使用者追蹤或新的使用者資料收集流程。',
+        ],
+      },
+    ],
+    closing: {
+      title: '想看信任說明？',
+      description:
+        '信任頁用更高層的方式說明 Sona 的本機優先邊界和站台防護。',
+      primaryHref: '/trust',
+      primaryLabel: '閱讀信任說明',
+      secondaryHref: '/user-guide',
+      secondaryLabel: '打開使用者指南',
+    },
+    footer: {
+      license: '基於 MIT 協定開源。',
+      privacyHref: '/privacy',
+      privacyLabel: '隱私',
+      trustHref: '/trust',
+      trustLabel: '信任',
+    },
+    path: '/privacy',
+    alternatePath: '/privacy',
+  },
+} as any;
+
 trustPrivacyContent.ja = {
   trust: {
     ...trustPrivacyContent.en.trust,

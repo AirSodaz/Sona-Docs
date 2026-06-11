@@ -144,6 +144,7 @@ interface UserGuideAssistantCopy {
 const GUIDE_PREFIXES: Record<HomeLocale, string> = {
   en: '/user-guide',
   'zh-CN': '/user-guide',
+  'zh-TW': '/user-guide',
   ja: '/user-guide',
 };
 
@@ -238,6 +239,36 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       copiedLabel: 'コピーしました',
     },
   },
+  'zh-TW': {
+    guideLabel: '使用者指南',
+    homeLabel: '返回首頁',
+    alternateLanguageLabel: 'English',
+    sourceLabel: '原始文件',
+    mobileNavLabel: '指南頁面',
+    sidebarTitle: '瀏覽指南',
+    previousLabel: '上一頁',
+    nextLabel: '下一頁',
+    groupLabels: {
+      start: '開始使用',
+      workflow: '核心流程',
+      extended: '擴充能力',
+      reference: '參考與幫助',
+    },
+    overview: {
+      cardsEyebrow: '從這裡開始',
+      cardsTitle: '先選最接近您目前任務的那條路徑。',
+      cardsDescription:
+        '大多數使用者並不需要一次看完整份文件。先進入最短上手路徑，再按需要繼續查看後續頁面。',
+      browseEyebrow: '完整內容',
+      browseTitle: '整套指南按照 Sona 的真實使用流程組織。',
+      browseDescription:
+        '建議先看總覽，再按「首次設定 -> 建立轉錄 -> 編輯整理 -> 可選 AI 處理 -> 工作區整理 -> 匯出 -> 擴充能力 -> CLI 參考 -> 疑難排解」的順序繼續。',
+    },
+    codeBlock: {
+      copyLabel: '複製程式碼',
+      copiedLabel: '已複製',
+    },
+  },
 };
 
 const userGuidePageDefinitions: UserGuidePageDefinition[] = [
@@ -267,6 +298,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'Sonaドキュメントの入り口。セットアップ、録音、ファイルインポート、編集、AI手順、エクスポート、ヘルプへの最短パスを案内します。',
         contentFile: 'ja/overview.md',
       },
+    
+      'zh-TW': {
+        title: 'Sona 使用者指南',
+        navLabel: '總覽',
+        description:
+          '站內文件進入點，先幫您找到最短上手路徑，再進入首次設定、錄音轉錄、檔案匯入、編輯整理、AI 處理、工作區整理、匯出、擴充能力與疑難排解。',
+        contentFile: 'zh-TW/overview.md',
+      },
     },
   },
   {
@@ -294,6 +333,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           'Sonaのインストール、初回セットアップ、推奨オフラインモデルのダウンロード、そして最初のローカル文字起こしの開始まで。',
         contentFile: 'ja/getting-started.md',
+      },
+    
+      'zh-TW': {
+        title: '快速開始',
+        navLabel: '快速開始',
+        description:
+          '完成安裝、首次執行設定與推薦離線模型下載，讓 Sona 進入第一個可用的本機轉錄狀態。',
+        contentFile: 'zh-TW/getting-started.md',
       },
     },
   },
@@ -323,6 +370,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'リアルタイム録音、タイムスタンプの保持、録音中のドラフト表示、入力ソースやショートカットの制御について。',
         contentFile: 'ja/live-record.md',
       },
+    
+      'zh-TW': {
+        title: '即時錄音',
+        navLabel: '即時錄音',
+        description:
+          '了解即時錄音的適用場景、輸入來源、字幕設定、快捷鍵，以及錄音草稿在工作區中如何一路延續到錄音完成。',
+        contentFile: 'zh-TW/live-record.md',
+      },
     },
   },
   {
@@ -350,6 +405,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '既存の音声・動画ファイルをキューに追加して進捗を監視し、完了した文字起こしをエディタで確認・エクスポートします。',
         contentFile: 'ja/batch-import.md',
+      },
+    
+      'zh-TW': {
+        title: '批次轉錄',
+        navLabel: '批次轉錄',
+        description:
+          '把已有音訊或影片檔案排進同一條處理佇列，再回到主編輯器繼續檢查、翻譯與匯出。',
+        contentFile: 'zh-TW/batch-import.md',
       },
     },
   },
@@ -379,6 +442,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'セグメントの確認、再生と同期したタイムスタンプの追跡、文字起こしの検索、およびエディタツールの使用方法。',
         contentFile: 'ja/edit-and-playback.md',
       },
+    
+      'zh-TW': {
+        title: '編輯與播放',
+        navLabel: '編輯與播放',
+        description:
+          '在編輯器中檢查文字、跳轉時間戳記、校對說話者標籤，並在 LLM 潤飾、翻譯或重新轉錄後使用版本快照進行對照和復原。',
+        contentFile: 'zh-TW/edit-and-playback.md',
+      },
     },
   },
   {
@@ -406,6 +477,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           'プロバイダ、モデル、推論オプションの設定（設定 > LLMサービス）と、推敲や翻訳の実行方法。',
         contentFile: 'ja/ai-polish-and-translate.md',
+      },
+    
+      'zh-TW': {
+        title: 'AI 潤飾與翻譯',
+        navLabel: 'AI 潤飾與翻譯',
+        description:
+          '使用 LLM 對轉錄文字進行語氣優化、標點整理，或使用翻譯服務生成並排對照的雙語字幕。',
+        contentFile: 'zh-TW/ai-polish-and-translate.md',
       },
     },
   },
@@ -435,6 +514,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '録音やインポートの整理、Inboxやプロジェクトの切り替え、プロジェクトのデフォルト設定によるワークフローへの影響について。',
         contentFile: 'ja/workspace-projects-and-inbox.md',
       },
+    
+      'zh-TW': {
+        title: '工作區、專案與 Inbox',
+        navLabel: '工作區與專案',
+        description:
+          '使用工作區跨專案瀏覽或在專案間移動內容，修改專案圖示，並為每個獨立主題設定不同的預設摘要範本、翻譯語言和文字替換規則。',
+        contentFile: 'zh-TW/workspace-projects-and-inbox.md',
+      },
     },
   },
   {
@@ -462,6 +549,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           '成果物のエクスポート、診断、バックアップと復元、自動化、LLMサービス、ショートカット、音声入力などの設定。',
         contentFile: 'ja/export-and-settings.md',
+      },
+    
+      'zh-TW': {
+        title: '匯出與設定',
+        navLabel: '匯出與設定',
+        description:
+          '匯出 SRT、WebVTT、JSON 或純文字，並快速了解儀表板、輸入裝置、自動化監控資料夾、診斷與備份的正確入口。',
+        contentFile: 'zh-TW/export-and-settings.md',
       },
     },
   },
@@ -491,6 +586,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           '要約モデルの割り当て、推論オプションの設定、要約の生成と編集、およびテンプレートとエクスポートについて。',
         contentFile: 'ja/ai-summary.md',
       },
+    
+      'zh-TW': {
+        title: 'AI 摘要',
+        navLabel: 'AI 摘要',
+        description:
+          '在設定中繫結摘要模型並設定 provider，為轉錄建立通用、會議或課堂等不同範本的 AI 歸納摘要，並支援手動微調與複製。',
+        contentFile: 'zh-TW/ai-summary.md',
+      },
     },
   },
   {
@@ -519,6 +622,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'ライブ字幕の開始方法、音声入力のショートカットと準備設定、および共通のオフライン文字起こしスタックの利用について。',
         contentFile: 'ja/live-caption-and-voice-typing.md',
       },
+    
+      'zh-TW': {
+        title: '即時字幕與語音輸入法',
+        navLabel: '即時字幕/聽寫',
+        description:
+          '啟用置頂與點擊穿透的懸浮字幕，或使用語音輸入法（按住說話/切換模式）在其他任何應用程式的文字框中直接進行語音聽寫。',
+        contentFile: 'zh-TW/live-caption-and-voice-typing.md',
+      },
     },
   },
   {
@@ -546,6 +657,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         description:
           'ホットワード、テキスト置換、およびより細かい制御が必要な場合の高度な推敲設定の使用方法。',
         contentFile: 'ja/vocabulary-and-advanced-settings.md',
+      },
+    
+      'zh-TW': {
+        title: '詞彙與高級設定',
+        navLabel: '進階詞彙設定',
+        description:
+          '管理說話者檔案以協助校對，設定文字替換與熱詞以增強特定術語識別，並設定 Auto-Polish 以進行自動正文清洗。',
+        contentFile: 'zh-TW/vocabulary-and-advanced-settings.md',
       },
     },
   },
@@ -576,6 +695,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'ターミナルからのオフラインバッチ文字起こしの実行、パッケージ版とソースビルド版の違い、およびコマンドリファレンス。',
         contentFile: 'ja/cli-guide.md',
       },
+    
+      'zh-TW': {
+        title: 'CLI 指南',
+        navLabel: 'CLI 參考',
+        description:
+          '從終端機執行 Sona 的離線批次轉錄，理解安裝包與原始碼建構兩種入口，並確認目前命令列能力邊界。',
+        contentFile: 'zh-TW/cli-guide.md',
+      },
     },
   },
   {
@@ -605,6 +732,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'ローカルHTTP APIサーバーの起動、認証、ジョブの送信、ステータスの確認、およびWebhookの検証について。',
         contentFile: 'ja/api-guide.md',
       },
+    
+      'zh-TW': {
+        title: 'HTTP API 指南',
+        navLabel: 'HTTP API 參考',
+        description:
+          '本地 HTTP API 服務參考：認證、提交轉錄任務、查詢狀態、獲取健康指標，以及設定 Webhook 簽名驗證。',
+        contentFile: 'zh-TW/api-guide.md',
+      },
     },
   },
   {
@@ -633,6 +768,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
           'セットアップ時のリマインダー、モデル不足、録音、ドラフト、復元、再生、ビルドなどに関するよくある問題。',
         contentFile: 'ja/faq.md',
       },
+    
+      'zh-TW': {
+        title: '常見問題與疑難排解',
+        navLabel: 'FAQ & 排障',
+        description:
+          '彙整首次設定、模型缺失、錄音草稿、復原中心、語音輸入法、播放器與原始碼建構等常見問題。',
+        contentFile: 'zh-TW/faq.md',
+      },
     },
   },
 ];
@@ -655,6 +798,9 @@ function isExternalHref(href: string) {
 }
 
 function getOtherLocale(locale: HomeLocale): HomeLocale {
+  if (locale === 'zh-TW') {
+    return 'en';
+  }
   return locale === 'en' ? 'zh-CN' : 'en';
 }
 
@@ -666,6 +812,9 @@ function getGuideSourceHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`;
   }
+  if (locale === 'zh-TW') {
+    return `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-TW.md`;
+  }
   if (locale === 'ja') {
     return `${GITHUB_BLOB_ROOT}/docs/user-guide.ja.md`;
   }
@@ -676,6 +825,9 @@ function getCliSourceHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
   }
+  if (locale === 'zh-TW') {
+    return `${GITHUB_BLOB_ROOT}/docs/cli.zh-TW.md`;
+  }
   if (locale === 'ja') {
     return `${GITHUB_BLOB_ROOT}/docs/cli.ja.md`;
   }
@@ -685,6 +837,9 @@ function getCliSourceHref(locale: HomeLocale) {
 function getApiSourceHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`;
+  }
+  if (locale === 'zh-TW') {
+    return `${GITHUB_BLOB_ROOT}/docs/api.zh-TW.md`;
   }
   if (locale === 'ja') {
     return `${GITHUB_BLOB_ROOT}/docs/api.ja.md`;
@@ -706,6 +861,9 @@ function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale)
 function getReadmeHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/README.zh-CN.md`;
+  }
+  if (locale === 'zh-TW') {
+    return `${GITHUB_BLOB_ROOT}/README.zh-TW.md`;
   }
   if (locale === 'ja') {
     return `${GITHUB_BLOB_ROOT}/README.ja.md`;
@@ -842,9 +1000,10 @@ export function getAllUserGuidePaths() {
   const localePrefixes: Record<HomeLocale, string> = {
     en: '/en',
     'zh-CN': '/zh-CN',
+    'zh-TW': '/zh-TW',
     ja: '/ja',
   };
-  return (['en', 'zh-CN', 'ja'] as HomeLocale[]).flatMap((locale) =>
+  return (['en', 'zh-CN', 'zh-TW', 'ja'] as HomeLocale[]).flatMap((locale) =>
     USER_GUIDE_PAGE_ORDER.map((pageId) => `${localePrefixes[locale]}${buildUserGuidePath(locale, pageId)}`),
   );
 }
@@ -1012,14 +1171,18 @@ export const getUserGuideMarkdown = cache(
 const legacyRelativeLinkOverrides: Record<string, string> = {
   'user-guide.md': 'guide:overview',
   'user-guide.zh-CN.md': 'guide:overview',
+  'user-guide.zh-TW.md': 'guide:overview',
   cli: 'guide:cli-guide',
   'cli.md': 'guide:cli-guide',
   'cli.zh-CN.md': 'guide:cli-guide',
+  'cli.zh-TW.md': 'guide:cli-guide',
   api: 'guide:api-guide',
   'api.md': 'guide:api-guide',
   'api.zh-CN.md': 'guide:api-guide',
+  'api.zh-TW.md': 'guide:api-guide',
   '../README.md': 'readme',
   '../README.zh-CN.md': 'readme',
+  '../README.zh-TW.md': 'readme',
 };
 
 function normalizeUserGuideHrefToken(href: string) {

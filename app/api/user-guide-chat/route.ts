@@ -84,7 +84,7 @@ class EmptyGeminiResponseError extends Error {
 }
 
 function isHomeLocale(value: unknown): value is HomeLocale {
-  return value === 'en' || value === 'zh-CN';
+  return value === 'en' || value === 'zh-CN' || value === 'zh-TW' || value === 'ja';
 }
 
 function withGeminiTimeout<T>(promise: Promise<T>) {

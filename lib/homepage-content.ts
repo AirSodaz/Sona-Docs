@@ -1,4 +1,4 @@
-export type HomeLocale = 'en' | 'zh-CN' | 'ja';
+export type HomeLocale = 'en' | 'zh-CN' | 'zh-TW' | 'ja';
 export type DemoStageId = 'live' | 'refined';
 export type UseCaseId =
   | 'meetings'
@@ -668,6 +668,249 @@ export const homePageContent = {
     },
   },
 } as any as Record<HomeLocale, HomePageContent>;
+
+homePageContent['zh-TW'] = {
+  metadata: {
+    title: 'Sona | 離線轉錄編輯器',
+    description:
+      '基於 Tauri 和 Sherpa-onnx 建構的離線轉錄編輯器，提供快速、準確、注重隱私的本機語音轉文字體驗。',
+  },
+  nav: {
+    github: 'GitHub',
+    languageToggleHref: '/',
+    languageToggleLabel: 'English',
+    languageToggleShortLabel: 'EN',
+  },
+  hero: {
+    badge: '快速 · 準確 · 隱私',
+    title1: '靜謐空間的',
+    title2: '轉錄工具。',
+    desc: 'Sona 把語音轉文字留在本機電腦上完成，再把時間戳記整理、潤飾、翻譯和匯出接回同一塊編輯介面裡。',
+    workflowLabel: '工作流程',
+    workflowSteps: ['即時錄音/批次匯入', '整理時間戳記', '潤飾/翻譯', '匯出'],
+    scrollHint: '向下查看編輯介面',
+    btnDownload: '下載最新版本',
+    btnDocs: '閱讀使用者指南',
+    docsHref: '/user-guide',
+  },
+  useCases: {
+    eyebrow: '適合這些場景',
+    title: '適合這些需要把聲音整理成稿的時刻',
+    desc: 'Sona 先把本機轉錄和整理做好，再把潤飾、翻譯、匯出接到同一條工作流程裡，不用在幾套工具之間來回切換。',
+    labels: {
+      context: '場景',
+      workflow: '流程',
+      result: '結果',
+    },
+    note: '離線轉錄本身不依賴雲端服務；潤飾與翻譯需要先設定 LLM provider。',
+    items: [
+      {
+        id: 'meetings',
+        href: '/user-guide/live-record',
+        title: '會議記錄',
+        context:
+          '記錄專案常會、訪談或同步會時，希望邊說邊留下一份可回看的文字。',
+        workflow:
+          '用 Live Record 即時轉錄，保留時間戳記，再在結束後繼續潤飾成更適合傳閱的紀要。',
+        result:
+          '最後得到一份可分享的會議稿，同時還能回到原始音訊對應位置繼續核對。',
+        tags: ['即時錄音', '時間戳記', '會議紀要'],
+      },
+      {
+        id: 'lectures',
+        href: '/user-guide/edit-and-playback',
+        title: '課堂記錄',
+        context:
+          '上課、講座或討論課內容較長，需要先完整記下，再回看重點段落。',
+        workflow:
+          '先做本機轉錄，再根據時間戳記回看關鍵位置，把內容整理成複習筆記。',
+        result:
+          '轉錄、播放和編輯保持在同一個介面裡，後續複盤不會被拆散。',
+        tags: ['課堂錄製', '回看定位', '複習筆記'],
+      },
+      {
+        id: 'subtitle-export',
+        href: '/user-guide/batch-import',
+        title: '影片字幕匯出',
+        context:
+          '手頭已經有本機影片素材，需要儘快整理出可交付的字幕檔案。',
+        workflow:
+          '透過 Batch Import 批次匯入並轉錄，檢查文字後直接匯出 SRT 或 VTT。',
+        result:
+          '拿到可繼續校對、上傳或交付的字幕檔案，而不是停在一份原始文字上。',
+        tags: ['批次匯入', 'SRT / VTT', '字幕匯出'],
+      },
+      {
+        id: 'subtitle-translation',
+        href: '/user-guide/ai-polish-and-translate',
+        title: '字幕翻譯',
+        context:
+          '需要在保留原文的前提下生成譯文，方便雙語審閱或海外發布。',
+        workflow:
+          '在同一份轉錄上執行 Translate，讓譯文跟隨原文分段顯示，並按需匯出翻譯或雙語版本。',
+        result:
+          '譯文與源文字保持對照關係，做術語校對或版本確認會更快。',
+        tags: ['字幕翻譯', '雙語對照', '匯出'],
+      },
+    ],
+  },
+  demo: {
+    eyebrow: '產品預覽',
+    title: '從即時出字到成稿，都留在同一塊編輯器裡。',
+    desc: 'Sona 把轉錄、時間戳記、潤飾、翻譯和匯出路徑收進同一個工作介面。',
+    appName: 'Sona',
+    stageLabel: '階段',
+    workflowSteps: ['錄音', '整理', '潤飾 / 翻譯', '匯出'],
+    fileName: '展示會話.sona',
+    translationLabel: '譯文',
+    inputTitle: '即時錄音',
+    actions: {
+      rename: '重新命名',
+      summary: '摘要',
+      speakerReview: '說話者校正',
+      versions: '版本',
+      polish: '潤飾',
+      translate: '翻譯',
+      export: '匯出',
+      close: '關閉',
+    },
+    segmentActions: {
+      edit: '編輯分段',
+      merge: '合併下一段',
+      delete: '刪除分段',
+    },
+    player: {
+      play: '播放',
+      speed: '播放速度',
+      volume: '音量',
+    },
+    shell: {
+      modes: {
+        live: '即時錄音',
+        batch: '批次匯入',
+        projects: '工作區',
+      },
+      headerActions: {
+        notifications: '通知',
+        settings: '設定',
+      },
+      live: {
+        inputSource: '輸入來源',
+        microphone: '麥克風',
+        timer: '00:00:54',
+        pause: '暫停',
+        stop: '停止',
+        recordingActive: '錄音進行中',
+      },
+      editor: {
+        toolbarUndo: '復原',
+        toolbarRedo: '重做',
+        toolbarBold: '粗體',
+        toolbarItalic: '斜體',
+        toolbarUnderline: '底線',
+        toolbarSplit: '拆分分段',
+        autosaved: '已儲存',
+        wordCount: '89 字',
+        speaker: '說話者 1',
+      },
+    },
+    stages: [
+      {
+        id: 'live',
+        button: '即時出字',
+        eyebrow: '階段 01',
+        title: '先讓內容落進編輯器，再決定怎麼整理。',
+        desc: '最先出現的是帶時間的轉錄正文，介面本身儘量退後，不把注意力搶走。',
+        status: '本機轉錄進行中',
+      },
+      {
+        id: 'refined',
+        button: '整理後',
+        eyebrow: '階段 02',
+        title: '文字變順了，但仍然留在同一份稿子裡。',
+        desc: '錄音結束之後，再繼續潤飾和翻譯；原文、時間點與譯文仍然掛在同一條閱讀線上。',
+        status: '文字已整理',
+      },
+    ],
+    recording: {
+      liveDuration: '00:54',
+      finalDuration: '01:18',
+      liveCurrentTime: '00:37',
+      finalCurrentTime: '01:18',
+      liveProgress: 68,
+    },
+    segments: [
+      {
+        time: '00:03',
+        live: '下一版先保留本機錄音流程，等建構穩定之後再統一調整引導文案。',
+        refined:
+          '下一版本繼續保留本機錄音流程，待建構穩定後再統一優化引導文案。',
+      },
+      {
+        time: '00:18',
+        live: '轉錄裡的時間戳記也別去掉，審閱的人需要能直接回到音訊裡的對應位置。',
+        refined:
+          '轉錄文字應繼續保留時間戳記，方便審閱者在校對時快速定位回原始音訊。',
+      },
+      {
+        time: '00:34',
+        live: '初稿出來後先做一遍潤飾，把語氣和標點整理順一點，再發給團隊看。',
+        refined:
+          '初稿生成後，可先執行一次潤飾，統一語氣、斷句與標點，再發給團隊審閱。',
+      },
+      {
+        time: '00:49',
+        live: '如果要發給海外同事，再補一份英文翻譯，但原始中文要一直留在旁邊。',
+        refined:
+          '若需要面向海外同事共享，則補充英文譯文，同時保留原始中文內容。',
+        translation:
+          'If overseas colleagues need it, add an English translation too, while keeping the original Chinese visible.',
+      },
+      {
+        time: '01:06',
+        live: '這樣大家可以直接對照措辭，不用把同一段內容拆成兩份檔案來回切換。',
+        refined:
+          '這樣各方可以直接對照措辭，不必把同一段內容拆成兩份檔案來回切換。',
+      },
+    ],
+  },
+  features: [
+    {
+      title: '本機優先處理',
+      desc: '預設先在本機完成轉錄。Sona 使用 Sherpa-onnx 在您的裝置上處理音訊；模型下載、更新、同步和 provider 支援的 AI 動作只在您選擇時連網。',
+    },
+    {
+      title: '內建大模型智慧助手',
+      desc: '內建本機大語言模型支援。無需離開應用程式，即可自動優化語句、生成摘要，或是翻譯轉錄內容。',
+    },
+    {
+      title: '極高準確率',
+      desc: '提供商業級的語音識別體驗，透過智慧斷句技術，專為超長音訊的精確轉錄而調優。',
+    },
+    {
+      title: '精巧的富文本編輯器',
+      desc: '基於 React 的沉浸式富文本編輯器，允許您輕鬆調整生成的文字、校準時間戳記，讓校對變得順滑。',
+    },
+  ],
+  finalCta: {
+    eyebrow: '從這裡開始',
+    title: '下載 Sona，把整條轉錄工作流程留在同一塊編輯器裡。',
+    desc: '安裝後就能開始即時錄音或批次匯入，繼續整理時間戳記、潤飾、翻譯，並按需匯出。',
+    primaryLabel: '下載最新版本',
+    secondaryLabel: '閱讀使用者指南',
+    secondaryHref: '/user-guide',
+    note: 'Windows、macOS 和 Linux 建構均來自最新 GitHub Release。',
+  },
+  footer: {
+    license: '基於 MIT 協定開源。',
+    privacy: '隱私',
+    privacyHref: '/privacy',
+    repo: 'GitHub 儲存庫',
+    trust: '信任',
+    trustHref: '/trust',
+    issue: '回報問題',
+  },
+} as any;
 
 homePageContent.ja = {
   metadata: {

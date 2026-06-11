@@ -227,6 +227,91 @@ export const downloadContent = {
   },
 } as any as Record<HomeLocale, DownloadContent>;
 
+downloadContent['zh-TW'] = {
+  metadata: {
+    title: 'Sona | 桌面端下載',
+    description:
+      '在一個頁面中查看並下載 Sona 最新的 Windows、macOS 與 Linux 桌面建構。',
+  },
+  button: {
+    allBuildsHref: '/downloads',
+    allBuildsLabel: '全部建構',
+    currentPlatformLabel: '目前平台可選下載',
+    menuAriaLabel: '顯示更多下載選項',
+    viewAllLabel: '查看全部桌面建構',
+  },
+  page: {
+    alternateHref: '/downloads',
+    alternateLanguageLabel: 'English',
+    decisionDescription:
+      '先按作業系統和處理器選擇平台，再按您管理應用程式的方式選擇安裝格式。',
+    decisionTitle: '選擇合適的建構',
+    description:
+      '按系統、架構和安裝格式選擇最適合您的桌面端建構，不必在 Releases 列表裡自己翻找。',
+    desktopOnlyNote:
+      'Sona 是桌面端應用程式。如果您正在手機或平板上瀏覽，請在準備安裝的電腦上重新打開本頁。',
+    emptyBuildsDescription:
+      'release 已成功載入，但其中沒有本頁可識別的 Windows、macOS 或 Linux 桌面端資源。GitHub Releases 中可能仍有可手動查看的建構。',
+    emptyBuildsTitle: '沒有找到桌面端建構',
+    firstRunHref: '/user-guide/getting-started',
+    firstRunLabel: '繼續查看快速入門',
+    formatChoiceLabel: '格式',
+    githubLabel: '前往 GitHub Releases',
+    homeHref: '/',
+    homeLabel: '返回首頁',
+    installSafetyNote:
+      '如果遇到 Windows SmartScreen、macOS Gatekeeper 或 Linux 可執行權限提示，請先確認檔案來自 Sona 下載頁或 GitHub Releases，再按系統提示處理；不要全域關閉系統安全防護。',
+    loadingLabel: '正在檢查最新 release...',
+    platformChoiceLabel: '平台',
+    recommendedLabel: '推薦',
+    releaseLabel: '最新版本',
+    title: '桌面端下載',
+    unavailableDescription:
+      '目前無法讀取最新 release 詳情，但 GitHub Releases 裡仍然保留了完整建構列表。',
+    unavailableTitle: '暫時無法獲取 release 詳情',
+    updatedLabel: '內容來自最新 GitHub release',
+  },
+  platformGroups: {
+    windows: 'Windows',
+    macos: 'macOS',
+    linux: 'Linux',
+  },
+  formats: {
+    exe: '安裝器 (.exe)',
+    msi: 'MSI 安裝包 (.msi)',
+    dmg: '磁碟映像 (.dmg)',
+    'app-tar-gz': '應用程式包 (.app.tar.gz)',
+    appimage: 'AppImage',
+    deb: 'Deb 安裝包 (.deb)',
+    rpm: 'RPM 安裝包 (.rpm)',
+  },
+  formatDescriptions: {
+    exe: '適合大多數個人安裝的 Windows 圖形安裝器。',
+    msi: '適合集中管理或指令碼化部署的 Windows 安裝包。',
+    dmg: 'macOS 常用磁碟映像，適合拖曳安裝。',
+    'app-tar-gz': 'macOS 原始應用程式包，適合手動安裝或自動化處理。',
+    appimage: 'Linux 可攜式建構，不依賴系統包管理員。',
+    deb: '適用於 Debian 與 Ubuntu 的系統安裝包。',
+    rpm: '適用於 Fedora、RHEL 與 openSUSE 的系統安裝包。',
+  },
+  platforms: {
+    'windows-x64': 'Windows x64',
+    'windows-arm64': 'Windows ARM64',
+    'macos-arm64': 'macOS Apple 晶片',
+    'macos-x64': 'macOS Intel',
+    'macos-universal': 'macOS 通用版',
+    'linux-x64': 'Linux x64',
+  },
+  platformDescriptions: {
+    'windows-x64': '大多數 Intel 或 AMD 處理器的 Windows 電腦。',
+    'windows-arm64': 'Windows on ARM 裝置。',
+    'macos-arm64': 'Apple 晶片 Mac。',
+    'macos-x64': '較早的 Intel Mac。',
+    'macos-universal': '同時覆蓋 Apple 晶片與 Intel 的 macOS 建構。',
+    'linux-x64': '大多數 64 位 Linux 桌面系統。',
+  },
+} as any;
+
 downloadContent.ja = {
   metadata: {
     title: 'Sona | デスクトップダウンロード',

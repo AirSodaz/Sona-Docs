@@ -11,12 +11,14 @@ import { getUserGuidePageFromSlug, buildUserGuidePath } from '@/lib/user-guide-c
 const localePaths: Record<HomeLocale, string> = {
   en: '/en',
   'zh-CN': '/zh-CN',
+  'zh-TW': '/zh-TW',
   ja: '/ja',
 };
 
 const openGraphLocales: Record<HomeLocale, string> = {
   en: 'en_US',
   'zh-CN': 'zh_CN',
+  'zh-TW': 'zh_TW',
   ja: 'ja_JP',
 };
 
@@ -36,6 +38,7 @@ export function createHomePageMetadata(locale: HomeLocale): Metadata {
       languages: {
         en: localePaths.en,
         'zh-CN': localePaths['zh-CN'],
+        'zh-TW': localePaths['zh-TW'],
         ja: localePaths.ja,
         'x-default': localePaths.en,
       },
@@ -83,6 +86,7 @@ export function createGuidePageMetadata(
       languages: {
         en: buildUserGuidePath('en', page.id),
         'zh-CN': buildUserGuidePath('zh-CN', page.id),
+        'zh-TW': buildUserGuidePath('zh-TW', page.id),
         ja: buildUserGuidePath('ja', page.id),
         'x-default': buildUserGuidePath('en', page.id),
       },
@@ -122,6 +126,7 @@ export function createDownloadsPageMetadata(locale: HomeLocale): Metadata {
       languages: {
         en: `${localePaths.en}/downloads`,
         'zh-CN': `${localePaths['zh-CN']}/downloads`,
+        'zh-TW': `${localePaths['zh-TW']}/downloads`,
         ja: `${localePaths.ja}/downloads`,
         'x-default': `${localePaths.en}/downloads`,
       },
@@ -164,6 +169,7 @@ export function createTrustPrivacyPageMetadata(
       languages: {
         en: `${localePaths.en}/${pageId}`,
         'zh-CN': `${localePaths['zh-CN']}/${pageId}`,
+        'zh-TW': `${localePaths['zh-TW']}/${pageId}`,
         ja: `${localePaths.ja}/${pageId}`,
         'x-default': `${localePaths.en}/${pageId}`,
       },

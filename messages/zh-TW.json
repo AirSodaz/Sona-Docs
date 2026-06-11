@@ -1,0 +1,580 @@
+{
+  "HomePage": {
+    "metadata": {
+      "title": "Sona | 離線轉錄編輯器",
+      "description": "基於 Tauri 和 Sherpa-onnx 建構的離線轉錄編輯器，提供快速、準確、注重隱私的本機語音轉文字體驗。"
+    },
+    "nav": {
+      "github": "GitHub",
+      "languageToggleLabel": "English",
+      "languageToggleShortLabel": "EN"
+    },
+    "hero": {
+      "badge": "快速 · 準確 · 隱私",
+      "title1": "靜謐空間的",
+      "title2": "轉錄工具。",
+      "desc": "Sona 把語音轉文字留在本機電腦上完成，再把時間戳記整理、潤飾、翻譯和匯出接回同一塊編輯介面裡。",
+      "workflowLabel": "工作流程",
+      "workflowSteps": [
+        "即時錄音/批次匯入",
+        "整理時間戳記",
+        "潤飾/翻譯",
+        "匯出"
+      ],
+      "scrollHint": "向下查看編輯介面",
+      "btnDownload": "下載最新版本",
+      "btnDocs": "閱讀使用者指南"
+    },
+    "useCases": {
+      "eyebrow": "適合這些場景",
+      "title": "適合這些需要把聲音整理成稿的時刻",
+      "desc": "Sona 先把本機轉錄和整理做好，再把潤飾、翻譯、匯出接到同一條工作流程裡，不用在幾套工具之間來回切換。",
+      "labels": {
+        "context": "場景",
+        "workflow": "流程",
+        "result": "結果"
+      },
+      "note": "離線轉錄本身不依賴雲端服務；潤飾與翻譯需要先設定 LLM provider。",
+      "items": {
+        "meetings": {
+          "title": "會議記錄",
+          "context": "記錄專案常會、訪談或同步會時，希望邊說邊留下一份可回看的文字。",
+          "workflow": "用 Live Record 即時轉錄，保留時間戳記，再在結束後繼續潤飾成更適合傳閱的紀要。",
+          "result": "最後得到一份可分享的會議稿，同時還能回到原始音訊對應位置繼續核對。",
+          "tags": ["即時錄音", "時間戳記", "會議紀要"]
+        },
+        "lectures": {
+          "title": "課堂記錄",
+          "context": "上課、講座或討論課內容較長，需要先完整記下，再回看重點段落。",
+          "workflow": "先做本機轉錄，再根據時間戳記回看關鍵位置，把內容整理成複習筆記。",
+          "result": "轉錄、播放和編輯保持在同一個介面裡，後續複盤不會被拆散。",
+          "tags": ["課堂錄製", "回看定位", "複習筆記"]
+        },
+        "subtitle-export": {
+          "title": "影片字幕匯出",
+          "context": "手頭已經有本機影片素材，需要儘快整理出可交付的字幕檔案。",
+          "workflow": "透過 Batch Import 批次匯入並轉錄，檢查文字後直接匯出 SRT 或 VTT。",
+          "result": "拿到可繼續校對、上傳或交付的字幕檔案，而不是停在一份原始文字上。",
+          "tags": ["批次匯入", "SRT / VTT", "字幕匯出"]
+        },
+        "subtitle-translation": {
+          "title": "字幕翻譯",
+          "context": "需要在保留原文的前提下生成譯文，方便雙語審閱或海外發布。",
+          "workflow": "在同一份轉录上執行 Translate，讓譯文跟隨原文分段顯示，並按需匯出翻譯或雙語版本。",
+          "result": "譯文與源文字保持對照關係，做術語校對或版本確認會更快。",
+          "tags": ["字幕翻譯", "雙語對照", "匯出"]
+        }
+      }
+    },
+    "demo": {
+      "eyebrow": "產品預覽",
+      "title": "從即時出字到成稿，都留在同一塊編輯器裡。",
+      "desc": "Sona 把轉錄、時間戳記、潤飾、翻譯和匯出路徑收進同一個工作介面。",
+      "appName": "Sona",
+      "stageLabel": "階段",
+      "workflowSteps": ["錄音", "整理", "潤飾 / 翻譯", "匯出"],
+      "fileName": "展示會話.sona",
+      "translationLabel": "譯文",
+      "inputTitle": "即時錄音",
+      "actions": {
+        "rename": "重新命名",
+        "summary": "摘要",
+        "speakerReview": "說話者校正",
+        "versions": "版本",
+        "polish": "潤飾",
+        "translate": "翻譯",
+        "export": "匯出",
+        "close": "關閉"
+      },
+      "segmentActions": {
+        "edit": "編輯分段",
+        "merge": "合併下一段",
+        "delete": "刪除分段"
+      },
+      "player": {
+        "play": "播放",
+        "speed": "播放速度",
+        "volume": "音量"
+      },
+      "shell": {
+        "modes": {
+          "live": "即時錄音",
+          "batch": "批次匯入",
+          "projects": "工作區"
+        },
+        "headerActions": {
+          "notifications": "通知",
+          "settings": "設定"
+        },
+        "live": {
+          "inputSource": "輸入來源",
+          "microphone": "麥克風",
+          "timer": "00:00:54",
+          "pause": "暫停",
+          "stop": "停止",
+          "recordingActive": "錄音進行中"
+        },
+        "editor": {
+          "toolbarUndo": "復原",
+          "toolbarRedo": "重做",
+          "toolbarBold": "粗體",
+          "toolbarItalic": "斜體",
+          "toolbarUnderline": "底線",
+          "toolbarSplit": "拆分分段",
+          "autosaved": "已儲存",
+          "wordCount": "89 字",
+          "speaker": "說話者 1"
+        }
+      },
+      "stages": [
+        {
+          "id": "live",
+          "button": "即時出字",
+          "eyebrow": "階段 01",
+          "title": "先讓內容落進編輯器，再決定怎麼整理。",
+          "desc": "最先出現的是帶時間的轉錄正文，介面本身儘量退後，不把注意力搶走。",
+          "status": "本機轉錄進行中"
+        },
+        {
+          "id": "refined",
+          "button": "整理後",
+          "eyebrow": "階段 02",
+          "title": "文字變順了，但仍然留在同一份稿子裡。",
+          "desc": "錄音結束之後，再繼續潤飾和翻譯；原文、時間點與譯文仍然掛在同一條閱讀線上。",
+          "status": "文字已整理"
+        }
+      ],
+      "recording": {
+        "liveDuration": "00:54",
+        "finalDuration": "01:18",
+        "liveCurrentTime": "00:37",
+        "finalCurrentTime": "01:18"
+      },
+      "segments": [
+        {
+          "time": "00:03",
+          "live": "下一版先保留本機錄音流程，等建構穩定之後再統一調整引導文案。",
+          "refined": "下一版本繼續保留本機錄音流程，待建構穩定後再統一優化引導文案。"
+        },
+        {
+          "time": "00:18",
+          "live": "轉錄裡的時間戳記也別去掉，審閱的人需要能直接回到音訊裡的對應位置。",
+          "refined": "轉錄文字應繼續保留時間戳記，方便審閱者在校對時快速定位回原始音訊。"
+        },
+        {
+          "time": "00:34",
+          "live": "初稿出來後先做一遍潤飾，把語氣和標點整理順一點，再發給团队看。",
+          "refined": "初稿生成後，可先執行一次潤飾，統一語氣、斷句與標點，再發給團隊審閱。"
+        },
+        {
+          "time": "00:49",
+          "live": "如果要發給海外同事，再補一份英文翻譯，但原始中文要一直留在旁邊。",
+          "refined": "若需要面向海外同事共享，則補充英文譯文，同時保留原始中文內容。",
+          "translation": "If overseas colleagues need it, add an English translation too, while keeping the original Chinese visible."
+        },
+        {
+          "time": "01:06",
+          "live": "這樣大家可以直接對照措辭，不用把同一段內容拆成兩份檔案來回切換。",
+          "refined": "這樣各方可以直接對照措辭，不必把同一段內容拆成兩份檔案來回切換。"
+        }
+      ]
+    },
+    "features": [
+      {
+        "title": "本機優先處理",
+        "desc": "預設先在本機完成轉錄。Sona 使用 Sherpa-onnx 在您的裝置上處理音訊；模型下載、更新、同步和 provider 支援的 AI 動作只在您選擇時連網。"
+      },
+      {
+        "title": "內建大模型智慧助手",
+        "desc": "內建本機大語言模型支援。無需離開應用程式，即可自動優化語句、生成摘要，或是翻譯轉錄內容。"
+      },
+      {
+        "title": "極高準確率",
+        "desc": "提供商業級的語音識別體驗，透過智慧斷句技術，專為超長音訊的精確轉寫而調優。"
+      },
+      {
+        "title": "精巧的富文本編輯器",
+        "desc": "基於 React 的沉浸式富文本編輯器，允許您輕鬆調整生成的文字、校準時間戳記，讓校對變得順滑。"
+      }
+    ],
+    "finalCta": {
+      "eyebrow": "從這裡開始",
+      "title": "下載 Sona，把整條轉錄工作流程留在同一塊編輯器裡。",
+      "desc": "安裝後就能開始即時錄音或批次匯入，繼續整理時間戳記、潤飾、翻譯，並按需匯出。",
+      "primaryLabel": "下載最新版本",
+      "secondaryLabel": "閱讀使用者指南",
+      "note": "Windows、macOS 和 Linux 建構均來自最新 GitHub Release。"
+    },
+    "footer": {
+      "license": "基於 MIT 協定開源。",
+      "privacy": "隱私",
+      "trust": "信任",
+      "repo": "GitHub 儲存庫",
+      "issue": "回報問題"
+    }
+  },
+  "DownloadsPage": {
+    "metadata": {
+      "title": "Sona | 桌面端下載",
+      "description": "在一個頁面中查看並下載 Sona 最新的 Windows、macOS 與 Linux 桌面建構。"
+    },
+    "button": {
+      "allBuildsLabel": "全部建構",
+      "currentPlatformLabel": "目前平台可選下載",
+      "menuAriaLabel": "顯示更多下載选项",
+      "viewAllLabel": "查看全部桌面建構"
+    },
+    "page": {
+      "alternateLanguageLabel": "English",
+      "decisionDescription": "先按作業系統和處理器選擇平台，再按您管理應用程式的方式選擇安裝格式。",
+      "decisionTitle": "選擇合適的建構",
+      "description": "按系統、架構和安裝格式選擇最適合您的桌面端建構，不必在 Releases 列表裡自己翻找。",
+      "desktopOnlyNote": "Sona 是桌面端應用程式。如果您正在手機或平板上瀏覽，請在準備安裝的電腦上重新打開本頁。",
+      "emptyBuildsDescription": "release 已成功載入，但其中沒有本頁可識別的 Windows、macOS 或 Linux 桌面端資源。GitHub Releases 中可能仍有可手動查看的建構。",
+      "emptyBuildsTitle": "沒有找到桌面端建構",
+      "firstRunLabel": "繼續查看快速入門",
+      "formatChoiceLabel": "格式",
+      "githubLabel": "前往 GitHub Releases",
+      "homeLabel": "返回首頁",
+      "installSafetyNote": "如果遇到 Windows SmartScreen、macOS Gatekeeper 或 Linux 可執行權限提示，請先確認檔案來自 Sona 下載頁或 GitHub Releases，再按系統提示處理；不要全域關閉系統安全防護。",
+      "loadingLabel": "正在檢查最新 release...",
+      "platformChoiceLabel": "平台",
+      "recommendedLabel": "推薦",
+      "releaseLabel": "最新版本",
+      "title": "桌面端下載",
+      "unavailableDescription": "目前無法讀取最新 release 詳情，但 GitHub Releases 裡仍然保留了完整建構列表。",
+      "unavailableTitle": "暫時無法獲取 release 詳情",
+      "updatedLabel": "內容來自最新 GitHub release"
+    },
+    "platformGroups": {
+      "windows": "Windows",
+      "macos": "macOS",
+      "linux": "Linux"
+    },
+    "formats": {
+      "exe": "安裝器 (.exe)",
+      "msi": "MSI 安裝包 (.msi)",
+      "dmg": "磁碟映像 (.dmg)",
+      "app-tar-gz": "應用程式包 (.app.tar.gz)",
+      "appimage": "AppImage",
+      "deb": "Deb 安裝包 (.deb)",
+      "rpm": "RPM 安裝包 (.rpm)"
+    },
+    "formatDescriptions": {
+      "exe": "適合大多數個人安裝的 Windows 圖形安裝器。",
+      "msi": "適合集中管理或指令碼化部署的 Windows 安裝包。",
+      "dmg": "macOS 常用磁碟映像，適合拖曳安裝。",
+      "app-tar-gz": "macOS 原始應用程式包，適合手動安裝或自動化處理。",
+      "appimage": "Linux 可攜式建構，不依賴系統包管理員。",
+      "deb": "適用於 Debian 與 Ubuntu 的系統安裝包。",
+      "rpm": "適用於 Fedora、RHEL 與 openSUSE 的系統安裝包。"
+    },
+    "platforms": {
+      "windows-x64": "Windows x64",
+      "windows-arm64": "Windows ARM64",
+      "macos-arm64": "macOS Apple 晶片",
+      "macos-x64": "macOS Intel",
+      "macos-universal": "macOS 通用版",
+      "linux-x64": "Linux x64"
+    },
+    "platformDescriptions": {
+      "windows-x64": "大多數 Intel 或 AMD 處理器的 Windows 電腦。",
+      "windows-arm64": "Windows on ARM 裝置。",
+      "macos-arm64": "Apple 晶片 Mac。",
+      "macos-x64": "較早的 Intel Mac。",
+      "macos-universal": "同時覆蓋 Apple 晶片與 Intel 的 macOS 建構。",
+      "linux-x64": "大多數 64 位 Linux 桌面系統。"
+    }
+  },
+  "TrustPrivacyPage": {
+    "nav": {
+      "alternateLanguageLabel": "English",
+      "alternateLanguageShortLabel": "EN",
+      "githubLabel": "GitHub",
+      "homeLabel": "首頁"
+    },
+    "footer": {
+      "license": "基於 MIT 協定開源。",
+      "privacyLabel": "隱私",
+      "trustLabel": "信任"
+    },
+    "trust": {
+      "metadata": {
+        "title": "Sona | 信任",
+        "description": "了解 Sona 如何預設在本機完成轉錄、明確區分可選聯網能力，並保護公開文件站台。"
+      },
+      "hero": {
+        "eyebrow": "信任",
+        "title": "本機優先，\n聯網時說清楚。",
+        "description": "Sona 的邊界很明確：轉錄先在您自己的裝置上完成；需要聯網的能力應當可見、可選，並且對應到您主動觸發的動作。",
+        "updatedLabel": "產品信任原則"
+      },
+      "facts": [
+        {
+          "label": "預設",
+          "title": "轉錄在本機執行",
+          "description": "語音識別圍繞本機 Sherpa-onnx 模型設計，預設不把音訊發往代管式轉錄服務。"
+        },
+        {
+          "label": "選擇",
+          "title": "AI 輔助是可選能力",
+          "description": "潤飾、翻譯和摘要取決於您設定的 provider；即使不設定這些能力，本機轉錄流程仍可使用。"
+        },
+        {
+          "label": "站台",
+          "title": "目前儲存庫沒有廣告追蹤",
+          "description": "目前文件站台程式碼沒有接入分析或廣告追蹤器；伺服器 API 日誌僅用於安全、錯誤和慢請求診斷。"
+        }
+      ],
+      "sections": [
+        {
+          "eyebrow": "桌面應用程式",
+          "title": "核心工作流程儘量留在裝置附近",
+          "body": "Sona 是一款桌面端轉錄編輯器。主流程是錄音或匯入音訊，用本機模型轉錄，檢查時間戳記，編輯文字，再從應用程式裡匯出檔案。",
+          "items": [
+            "本機轉錄不需要依賴 Sona 代管的語音服務。",
+            "當您主動下載模型或檢查更新時，應用程式可能存取對應的 release 或模型代管地址。",
+            "備份、復原和 WebDAV 同步由應用程式內操作觸發，應視為使用者主動選擇的資料移動。"
+          ]
+        },
+        {
+          "eyebrow": "可選 AI",
+          "title": "依賴 provider 的能力跟隨您的設定",
+          "body": "Sona 可以調用您設定的 LLM 或翻譯 provider 來做潤飾、翻譯和摘要。這些能力與本機轉錄分開，取決於您在設定中填寫的 provider 資訊。",
+          "items": [
+            "當您執行 AI 動作時，轉錄文字可能會傳送到您選擇的提供者。",
+            "Provider 憑證和調用行為由桌面應用程式設定管理，不由公開文件站台代管。",
+            "如果您使用本機 provider，例如本機模型服務，資料邊界取決於您設定的 endpoint。"
+          ]
+        },
+        {
+          "eyebrow": "透明度",
+          "title": "開源讓這些說法可以被檢查",
+          "body": "Sona 和這個文件站台都在公開儲存庫中建構。產品流程、網站路由、release 處理和目前防濫用控制都可以從程式碼中查看。",
+          "items": [
+            "下載資訊來自 GitHub Releases，站台不會把來源藏在自訂安裝流程後面。",
+            "文件助手只有在 Gemini 和防濫用相關環境變數都設定好時才會啟用。",
+            "目前站台包含安全回應標頭和 Same-Site 檢查；更強的流量限制建議放在 CDN/邊緣層。"
+          ]
+        }
+      ],
+      "closing": {
+        "title": "想看資料流版本？",
+        "description": "隱私頁用更直接的方式說明桌面應用程式和這個網站分別會如何處理資料。",
+        "primaryLabel": "閱讀隱私說明",
+        "secondaryLabel": "打開使用者指南"
+      }
+    },
+    "privacy": {
+      "metadata": {
+        "title": "Sona | 隱私",
+        "description": "用實際產品和站台行為說明 Sona 哪些內容留在本機、哪些可選功能可能發送資料，以及文件站台如何處理請求。"
+      },
+      "hero": {
+        "eyebrow": "隱私",
+        "title": "實用隱私地圖，\n不是法律細則。",
+        "description": "這一頁用普通語言說明目前產品和網站的行為：哪些內容預設留在本機，哪些聯網能力會在您選擇後發生，以及公開文件站台會處理什麼。",
+        "updatedLabel": "隱私原則"
+      },
+      "facts": [
+        {
+          "label": "本機",
+          "title": "音訊和轉錄先在裝置上處理",
+          "description": "Sona 的常規流程圍繞本機轉錄、本機編輯和使用者主動匯出來設計。"
+        },
+        {
+          "label": "可選",
+          "title": "聯網能力跟隨具體動作",
+          "description": "AI provider 調用、模型下載、更新、備份和 WebDAV 同步都與使用者設定或觸發的功能相關。"
+        },
+        {
+          "label": "網站",
+          "title": "文件站台的動態面較少",
+          "description": "站台會為下載頁讀取 GitHub release 資料，並可在設定後提供受保護的文件助手。"
+        }
+      ],
+      "dataFlow": {
+        "eyebrow": "資料流",
+        "title": "資料會流向哪裡",
+        "description": "這張表把 Sona 桌面端動作和公開文件站台行為分開，方便在使用可選聯網能力之前先看清邊界。",
+        "columns": {
+          "feature": "功能",
+          "trigger": "觸發方式",
+          "data": "資料",
+          "destination": "去向",
+          "control": "控制方式"
+        },
+        "rows": [
+          {
+            "feature": "本機轉錄",
+            "trigger": "錄音或匯入音訊，並執行本機識別。",
+            "data": "音訊或影片輸入、本機轉錄分段和時間戳記。",
+            "destination": "您的裝置和本機模型執行期。",
+            "control": "識別保持在本機；只有您主動匯出或分享時檔案才離開應用程式邊界。"
+          },
+          {
+            "feature": "本機編輯/匯出",
+            "trigger": "編輯轉錄，或匯出 SRT、VTT、TXT 等檔案。",
+            "data": "轉錄文字、時間戳記，以及匯出中包含的摘要或元資料。",
+            "destination": "本機工作區和您選擇的儲存位置。",
+            "control": "您選擇匯出格式、儲存位置和後續分享方式。"
+          },
+          {
+            "feature": "模型下載",
+            "trigger": "下載或安裝語音模型。",
+            "data": "模型請求相關資訊和網路請求資訊。",
+            "destination": "設定的模型或 release 代管地址。",
+            "control": "由您手動觸發；下載模型不需要發送音訊。"
+          },
+          {
+            "feature": "應用程式 release 下載/更新檢查",
+            "trigger": "打開下載頁、下載安裝包或檢查更新。",
+            "data": "release 元資料請求，以及檢查更新時的應用程式、平台或版本資訊。",
+            "destination": "GitHub Releases 或設定的更新源。",
+            "control": "由下載或更新動作觸發；是否安裝由您決定。"
+          },
+          {
+            "feature": "LLM 潤飾",
+            "trigger": "使用已設定的 provider 執行潤飾。",
+            "data": "選中的轉錄文字和任務所需 prompt/context。",
+            "destination": "您設定的 LLM provider 或本機 endpoint。",
+            "control": "可選；只有設定並觸發 provider 動作後才會執行。"
+          },
+          {
+            "feature": "翻譯",
+            "trigger": "使用已設定的 provider 或服務執行翻譯。",
+            "data": "轉錄文字和語言設定。",
+            "destination": "設定的翻譯或 LLM provider，或本機 endpoint。",
+            "control": "可選；您選擇的 provider 決定資料邊界。"
+          },
+          {
+            "feature": "AI 摘要",
+            "trigger": "生成摘要。",
+            "data": "轉錄文字和摘要範本/上下文。",
+            "destination": "您設定的 LLM provider 或本機 endpoint。",
+            "control": "可選；生成後的摘要可在應用程式內編輯或清空。"
+          },
+          {
+            "feature": "自動化",
+            "trigger": "啟用資料夾監聽、預設或自動化任務。",
+            "data": "監聽或匯入的檔案、轉錄文字，以及工作流程需要的匯出結果。",
+            "destination": "本機工作區，以及工作流程中設定的 provider 或匯出位置。",
+            "control": "未設定時不執行；執行前可檢查預設動作和匯出模式。"
+          },
+          {
+            "feature": "備份/復原歸檔",
+            "trigger": "匯出備份歸檔，或把歸檔重新匯入 Sona。",
+            "data": "設定、工作區、輕量歷史轉錄與摘要、自動化狀態，以及儀表板 LLM 使用記錄。不包含音訊檔案、新手引導、目前專案和復原態資料。",
+            "destination": "您選擇的本機歸檔儲存位置。",
+            "control": "您決定何時匯出、儲存到哪裡，以及之後是否匯入歸檔。"
+          },
+          {
+            "feature": "WebDAV Cloud Sync",
+            "trigger": "設定同步，並執行備份、復原或同步動作。",
+            "data": "備份歸檔和同步元資料。",
+            "destination": "您設定的 WebDAV 伺服器。",
+            "control": "可選；由伺服器地址、憑證和應用程式內同步動作控制。"
+          },
+          {
+            "feature": "文件下載 API",
+            "trigger": "打開下載 UI 或請求最新 release 連結。",
+            "data": "公開請求資訊、請求 ID、有限診斷日誌和 GitHub release 查詢結果。",
+            "destination": "Sona 文件站台 API 和 GitHub Releases。",
+            "control": "僅用於下載選擇和執行診斷；不會記錄音訊、轉錄資料、cookie、token 或完整 IP 地址。"
+          },
+          {
+            "feature": "使用者指南助手",
+            "trigger": "啟用後向指南助手提問。",
+            "data": "您的問題、較短對話歷史、語言、目前指南頁上下文，以及防濫用 Cookie 或 Turnstile 狀態。",
+            "destination": "Sona 文件站台 API、Gemini，以及觸發驗證時的 Cloudflare Turnstile。",
+            "control": "可選站台功能；伺服器診斷日誌不會儲存問題正文、對話歷史、cookie、token 或完整 IP 地址。"
+          },
+          {
+            "feature": "外部 GitHub 連結",
+            "trigger": "點擊 GitHub、release 或原始碼連結。",
+            "data": "由瀏覽器和 GitHub 處理的 referrer、IP 等請求資訊。",
+            "destination": "GitHub。",
+            "control": "只有點擊時發生；GitHub 的政策適用。"
+          }
+        ]
+      },
+      "sections": [
+        {
+          "eyebrow": "桌面應用程式資料",
+          "title": "預設留在本機的內容",
+          "body": "Sona 面向希望把轉錄工作預設留在自己機器上的使用者。錄音、匯入、本機識別、時間戳記檢查、編輯和匯出都是桌面端工作流程。",
+          "items": [
+            "本機轉錄使用已安裝模型，不需要 Sona 雲端轉錄帳號。",
+            "工作區記錄、輕量歷史轉錄、摘要、設定和備份由桌面應用程式管理。",
+            "匯出的檔案會儲存到您選擇的位置，之後如何分享也由您決定。"
+          ]
+        },
+        {
+          "eyebrow": "使用者選擇的資料發送",
+          "title": "什麼時候資料可能離開裝置",
+          "body": "有些能力之所以有用，是因為它們會連接到另一個服務。此時資料去向取決於您選擇的功能和 provider。",
+          "items": [
+            "LLM 潤飾、翻譯和摘要動作可能會把轉錄文字發送給您設定的 provider。",
+            "模型下載、更新檢查和 release 下載會存取相應的代管服務。",
+            "WebDAV 雲同步會通過您設定的伺服器上傳或復原備份歸檔。"
+          ]
+        },
+        {
+          "eyebrow": "網站行為",
+          "title": "這個公開站台會處理什麼",
+          "body": "Sona 文件站台與桌面端轉錄工作流程是分開的。它負責提供頁面、為下載選項檢查 GitHub release 元資料，並可為文件問題啟用 AI 助手。",
+          "items": [
+            "下載 UI 會調用 `/api/github-release`，由它從 GitHub 讀取公開 release 元資料並返回結構化建構連結。",
+            "文件助手啟用後，會將您的問題、較短的對話歷史、語言和目前指南頁上下文發送給 Gemini。",
+            "助手路由使用簽名匿名防濫用 Cookie，並可能在達到使用閾值後顯示 Cloudflare Turnstile。",
+            "伺服器 API 日誌是用於安全事件、上遊錯誤和慢請求的結構化診斷，不是用戶端分析。"
+          ]
+        },
+        {
+          "eyebrow": "邊界",
+          "title": "這一頁沒有聲稱什麼",
+          "body": "這是一份實際產品說明，不是經過律師審閱的隱私政策或合規聲明。它反映目前儲存庫形態，產品行為變化時也應同步更新。",
+          "items": [
+            "它不聲稱所有第三方 provider 都採用同樣的隱私實踐。",
+            "它不能替代 GitHub、Gemini、Cloudflare、您的 LLM provider 或 WebDAV 服務商各自的政策。",
+            "它不會新增用戶端分析、持久化使用者追蹤或新的使用者資料收集流程。"
+          ]
+        }
+      ],
+      "closing": {
+        "title": "想看信任說明？",
+        "description": "信任頁用更高層的方式說明 Sona 的本機優先邊界和站台防護。",
+        "primaryLabel": "閱讀信任說明",
+        "secondaryLabel": "打開使用者指南"
+      }
+    }
+  },
+  "UserGuidePage": {
+    "guideLabel": "使用者指南",
+    "homeLabel": "返回首頁",
+    "alternateLanguageLabel": "English",
+    "sourceLabel": "原始文件",
+    "mobileNavLabel": "指南頁面",
+    "sidebarTitle": "瀏覽指南",
+    "previousLabel": "上一頁",
+    "nextLabel": "下一頁",
+    "groupLabels": {
+      "start": "開始使用",
+      "workflow": "核心流程",
+      "extended": "擴充能力",
+      "reference": "參考與幫助"
+    },
+    "overview": {
+      "cardsEyebrow": "從這裡開始",
+      "cardsTitle": "先選最接近您目前任務的那條路徑。",
+      "cardsDescription": "大多數使用者並不需要一次看完整份文件。先進入最短上手路徑，再按需要繼續查看後續頁面。",
+      "browseEyebrow": "完整內容",
+      "browseTitle": "整套指南按照 Sona 的真實使用流程組織。",
+      "browseDescription": "建議先看總覽，再按“首次設定 -> 建立轉錄 -> 編輯整理 -> 可選 AI 處理 -> 工作區整理 -> 匯出 -> 擴充能力 -> CLI 參考 -> 疑難排解”的順序繼續。"
+    },
+    "codeBlock": {
+      "copyLabel": "複製程式碼",
+      "copiedLabel": "已複製"
+    }
+  }
+}

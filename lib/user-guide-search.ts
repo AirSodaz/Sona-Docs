@@ -67,6 +67,18 @@ export function getUserGuideSearchCopy(locale: HomeLocale): UserGuideSearchCopy 
     };
   }
 
+  if (locale === 'zh-TW') {
+    return {
+      clearLabel: '清空搜尋',
+      currentPageLabel: '目前頁',
+      inputLabel: '搜尋使用者指南',
+      noResultsLabel: '沒有找到匹配的指南頁',
+      openResultLabel: '開啟結果',
+      placeholder: '搜尋本指南...',
+      resultsLabel: '搜尋結果',
+    };
+  }
+
   if (locale === 'en') {
     return {
       clearLabel: 'Clear search',

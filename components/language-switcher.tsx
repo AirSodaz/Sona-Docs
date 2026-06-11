@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 const LANGUAGES = [
   { code: 'en', label: 'English', short: 'EN' },
   { code: 'zh-CN', label: '简体中文', short: '中' },
+  { code: 'zh-TW', label: '繁體中文', short: '繁' },
   { code: 'ja', label: '日本語', short: '日' },
 ] as const;
 

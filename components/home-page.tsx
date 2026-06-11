@@ -19,7 +19,7 @@ import { motion } from 'motion/react';
 export function HomePage({
   locale,
 }: {
-  locale: 'en' | 'zh-CN' | 'ja';
+  locale: HomeLocale;
 }) {
   const t = useTranslations('HomePage');
   const pathname = usePathname();
