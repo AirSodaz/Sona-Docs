@@ -1085,15 +1085,17 @@ trustPrivacyContent.ja = {
   trust: {
     ...trustPrivacyContent.en.trust,
     metadata: {
-      title: 'Sona | 信頼性',
-      description: 'Sonaがデフォルトで文字起こしをローカルに維持し、オプションのネットワーク機能を明示し、公開ドキュメントサイトを保護する方法。',
+      title: 'Sona | 信頼',
+      description:
+        'Sona が文字起こしをローカル処理中心にし、任意のネットワーク機能を明確に分け、公開ドキュメントサイトを保護する考え方を説明します。',
     },
   },
   privacy: {
     ...trustPrivacyContent.en.privacy,
     metadata: {
       title: 'Sona | プライバシー',
-      description: 'Sonaがローカルに維持するもの、オプション機能がデータを送信するタイミング、およびドキュメントサイトがリクエストを処理する方法の実用的な説明。',
+      description:
+        'Sona がローカルに保持するもの、任意機能がデータを送信する場合、そしてドキュメントサイトがリクエストをどう扱うかを説明します。',
     },
   },
 } as any;

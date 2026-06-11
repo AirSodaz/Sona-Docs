@@ -1,59 +1,59 @@
 # エクスポートと設定
 
-このページでは、ワークフローの最終段階である、完成した文字起こしのエクスポート、話者やバージョン情報の最終確認、重要な設定領域の把握、および「Dashboard（ダッシュボード）」、「Diagnostics（診断）」、「Backup & Restore（バックアップと復元）」、「Automation（自動化）」、通知センターなどのサポート画面の役割について解説します。
+このページでは、完成した文字起こしの書き出し、話者やバージョンの最終確認、よく使う設定画面の場所をまとめます。Dashboard、Diagnostics、Backup & Restore、Automation、通知センターなど、作業後半で参照しやすい画面もここで確認できます。
 
-## 完成した文字起こしのエクスポート
+## 完成した文字起こしを書き出す
 
-エクスポートする前に、成果物の提供や確認プロセスにおいて話者ラベルが重要である場合は、文字起こし画面のヘッダーから「Speaker Review（話者確認）」を開いて確認してください。下書き以外の保存済み文字起こしについて、特定の行を復元したり、一括書き換えを元に戻したりする必要がある場合は、まず「Version Snapshots（バージョン履歴）」を開いてください。
+エクスポート前に話者ラベルが重要な場合は、文字起こし画面のヘッダーから `Speaker Review` を開いて確認してください。保存済みの文字起こしで、特定の行を戻したい、または一括変更を取り消したい場合は、先に `Version Snapshots` を確認します。
 
-1. ヘッダーにある「Export（エクスポート）」ボタンをクリックします。
-2. 「Export Transcript（文字起こしのエクスポート）」モーダルで、「Filename（ファイル名）」を入力します。
-3. 「Export Directory（エクスポート先ディレクトリ）」を選択します。
-4. 出力形式を選択します: `SubRip (.srt)`、`WebVTT (.vtt)`、`JSON (.json)`、または `Plain Text (.txt)`。
-5. エクスポートモードを選択します: `Original（原文）`、`Translation（翻訳）`、または `Bilingual（二言語併記）`。
-6. 「Export」をクリックします。
+1. ヘッダーの `Export` ボタンをクリックします。
+2. `Export Transcript` モーダルで `Filename` を入力します。
+3. `Export Directory` を選択します。
+4. 出力形式を選びます: `SubRip (.srt)`、`WebVTT (.vtt)`、`JSON (.json)`、`Plain Text (.txt)`。
+5. エクスポートモードを選びます: `Original`、`Translation`、`Bilingual`。
+6. `Export` をクリックします。
 
 ## エクスポート結果
 
-- Sonaは選択されたパスとフォーマットで文字起こしファイルを書き出します。
-- 翻訳テキストが存在する場合、翻訳のみ、または二言語併記のテキストを出力できます。
-- 「Translation（翻訳）」および「Bilingual（二言語併記）」は、少なくとも1つのセグメントに翻訳テキストが含まれている場合にのみ選択可能です。
+- Sona は、選択した保存先と形式で文字起こしファイルを書き出します。
+- 翻訳テキストがある場合は、翻訳のみ、または二言語併記で出力できます。
+- `Translation` と `Bilingual` は、少なくとも 1 つのセグメントに翻訳テキストがある場合にだけ選択できます。
 
-## 「ワークスペース（Workspace）」に戻るタイミング
+## Workspace に戻るタイミング
 
-- 保存済みの録音ファイルやインポートファイルを開き直す、名前変更する、移動する、並べ替えるといった操作を行う場合は、[ワークスペース、プロジェクト、インボックス](guide:workspace-projects-and-inbox)に戻ってください。
-- プロジェクトコンテキストの設定や「Inbox（インボックス）」の整理も、現在は「Workspace」内で行います。
+- 保存済みの録音やインポートを開き直す、名前を変更する、移動する、並べ替える場合は、[ワークスペース、プロジェクト、Inbox](guide:workspace-projects-and-inbox) に戻ってください。
+- プロジェクトのコンテキスト設定や Inbox の整理も、現在は Workspace 内で行います。
 
-## 最初に知っておくべき設定領域
+## まず把握しておきたい設定画面
 
-- `Settings > Dashboard` (設定 > ダッシュボード): グローバルなコンテンツ概要、話者カバー率、およびLLMの使用傾向を表示します。
-- `Settings > General` (設定 > 一般): テーマ、アプリの言語、フォント、システムトレイの挙動、アップデート確認に加え、「Diagnostics（診断）」および「Backup & Restore（バックアップと復元）」へのアクセスを提供します。
-- `Settings > Input Device` (設定 > 入力デバイス): マイクの選択、システムオーディオの選択、マイクブースト、録音中のミュート設定を行います。
-- `Settings > Subtitle Settings` (設定 > 字幕設定): フローティング字幕の動作を設定します。主に「Live Caption（ライブ字幕）」や「Voice Typing（音声入力）」がお探しの機能である場合は、[ライブ字幕と音声入力](guide:live-caption-and-voice-typing)に進んでください。
-- `Settings > Voice Typing` (設定 > 音声入力): 「音声入力」機能を有効にし、グローバルショートカットの割り当て、長押し（Push to Talk）または1回押して切り替え（Toggle）の選択、および機能の準備状況の確認を行います。
-- `Settings > Model Settings` (設定 > モデル設定): 「Live Record Model（ライブ録音モデル）」、「Batch Import Model（バッチインポートモデル）」、各種文字起こし設定、ITN（テキスト正規化）、VAD（発話区間検出）バッファサイズ、最大同時文字起こし数、デフォルト設定への復元、および音声認識、句読点、話者、VADなどのダウンロード可能なモデルを管理します。
-- `Settings > Vocabulary` (設定 > 語彙): 「Text Replacement（テキスト置換）」、「Hotwords（ホットワード）」、校正キーワードセット、校正コンテキストプリセット、要約テンプレート、および「Speaker Profiles（話者プロファイル）」を管理します。具体的な調整ユースケースについては[語彙と詳細設定](guide:vocabulary-and-advanced-settings)を参照してください。
-- `Settings > Automation` (設定 > 自動化): Sona의 稼働中に、新しいメディアを自動的に文字起こし、校正、翻訳、およびエクスポートする監視フォルダールールを設定します。
-- `Settings > LLM Service` (設定 > LLMサービス): 機能モデルの紐付け、推論オプション、およびプロバイダー認証情報を設定します。校正/翻訳には[AI校正と翻訳](guide:ai-polish-and-translate)を、要約には[AI要約](guide:ai-summary)を使用します。
-- `Settings > Shortcuts` (設定 > ショートカット): ライブ録音、再生、検索、ワークスペースナビゲーション、およびエディタのショートカットを設定します。
-- `Settings > About` (設定 > 情報): ソースコード、ログ、およびアップデート関連のアクションを提供します。
+- `Settings > Dashboard`: 全体のコンテンツ概要、話者カバー率、LLM の使用傾向を表示します。
+- `Settings > General`: テーマ、アプリの言語、フォント、システムトレイ、更新確認に加え、`Diagnostics` と `Backup & Restore` への入口があります。
+- `Settings > Input Device`: マイク、システム音声、マイクブースト、録音中のミュート設定を管理します。
+- `Settings > Subtitle Settings`: フローティング字幕の挙動を設定します。Live Caption や Voice Typing が目的の場合は、[Live Caption と Voice Typing](guide:live-caption-and-voice-typing) も参照してください。
+- `Settings > Voice Typing`: Voice Typing を有効にし、グローバルショートカット、Push to Talk / Toggle、準備状態を確認します。
+- `Settings > Model Settings`: `Live Record Model`、`Batch Import Model`、文字起こし設定、ITN、VAD バッファ、最大同時文字起こし数、既定値への復元、音声認識・句読点・話者・VAD などのダウンロード可能モデルを管理します。
+- `Settings > Vocabulary`: `Text Replacement`、`Hotwords`、整文用キーワードセット、整文コンテキストプリセット、要約テンプレート、`Speaker Profiles` を管理します。具体的な調整例は[語彙と詳細設定](guide:vocabulary-and-advanced-settings)を参照してください。
+- `Settings > Automation`: Sona の起動中に新しいメディアを監視し、文字起こし、AI Polish、翻訳、エクスポートを自動実行するフォルダールールを設定します。
+- `Settings > LLM Service`: 機能モデルの割り当て、推論オプション、プロバイダー認証情報を設定します。整文と翻訳は[AI Polish と翻訳](guide:ai-polish-and-translate)、要約は[AI Summary](guide:ai-summary)を参照してください。
+- `Settings > Shortcuts`: Live Record、再生、検索、ワークスペースナビゲーション、エディタ操作のショートカットを設定します。
+- `Settings > About`: ソースコード、ログ、更新関連の操作を確認できます。
 
-## 診断、バックアップ、および通知
+## 診断、バックアップ、通知
 
-- 「Settings > General」にある「Diagnostics（診断）」を使用して、ローカルの文字起こしチェーン、ランタイムの準備状況、およびパッケージング環境を検査します。
-- 同じページにある「Backup & Restore（バックアップと復元）」を使用して、設定、ワークスペース、テキスト履歴の文字起こしと要約、自動化状態、およびダッシュボードのLLM使用ログを含む軽量アーカイブをエクスポートまたはインポートします。
-- 軽量のバックアップアーカイブはテキスト履歴と要約を復元しますが、元の音声ファイルは含まれません。復元されたアイテムは閲覧や編集のために開くことができますが、音声の再生は行えません。
-- 「WebDAV Cloud Sync（WebDAVクラウド同期）」は「Backup & Restore」内にあります。このデバイスのローカルに認証情報を保存し、バックアップアーカイブの手動アップロードや復元を支援します。
-- Sonaがアップデートアクション、「Recovery Center（リカバリーセンター）」、または自動化の処理結果を表示した場合は、ヘッダーの通知センターを使用してください。
+- `Settings > General` の `Diagnostics` では、ローカル文字起こしの準備状態、ランタイム、パッケージング環境を確認できます。
+- 同じページの `Backup & Restore` では、設定、ワークスペース、軽量な履歴文字起こしと要約、自動化状態、Dashboard の LLM 使用ログを含むアーカイブをエクスポートまたはインポートできます。
+- 軽量バックアップにはテキスト履歴と要約が含まれますが、元の音声ファイルは含まれません。復元したアイテムは閲覧・編集できますが、音声再生には元のメディアファイルが必要です。
+- `WebDAV Cloud Sync` は `Backup & Restore` の中にあります。このデバイスに認証情報を保存し、バックアップアーカイブの手動アップロードや復元を支援します。
+- Sona が更新、`Recovery Center`、自動化の結果を知らせる場合は、ヘッダーの通知センターを確認してください。
 
-## 主に拡張機能がお探しの目的である場合
+## 主に拡張機能を探している場合
 
-- 文字起こしの要約を作成したい場合: [AI要約](guide:ai-summary)
-- フローティング字幕や、他のアプリへの音声入力を行いたい場合: [ライブ字幕と音声入力](guide:live-caption-and-voice-typing)
-- 監視フォルダー処理やエクスポートの自動化が必要な場合: この設定ページ内の「Settings > Automation」から開始してください。
-- 「ホットワード」、「テキスト置換」、「話者プロファイル」、「自動校正」、またはカスタムコンテキストの調整が必要な場合: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
+- 文字起こしの要約を作りたい: [AI Summary](guide:ai-summary)
+- フローティング字幕や他のアプリへの音声入力を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
+- 監視フォルダーやエクスポートを自動化したい: `Settings > Automation` から始めてください。
+- Hotwords、Text Replacement、Speaker Profiles、Auto-Polish、カスタムコンテキストを調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
 
 ## お役立ちメモ
 
-- このページは意図的に設定マニュアルの全容を載せているわけではありません。適切な関連ページを案内するために用意されています。
-- エクスポートではなく、トラブルシューティングを行いたい場合は、直接[FAQとトラブルシューティング](guide:faq)に進んでください。
+- このページは、すべての設定項目を細かく説明するためではなく、目的に合う入口を見つけやすくするためのガイドです。
+- エクスポートではなく問題の切り分けをしたい場合は、[FAQ とトラブルシューティング](guide:faq) に進んでください。

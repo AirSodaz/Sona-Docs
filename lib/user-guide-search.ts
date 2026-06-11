@@ -57,12 +57,12 @@ export const getUserGuideSearchEntries = cache(async (locale: HomeLocale) => {
 export function getUserGuideSearchCopy(locale: HomeLocale): UserGuideSearchCopy {
   if (locale === 'ja') {
     return {
-      clearLabel: '検索をクリア',
+      clearLabel: '検索を消去',
       currentPageLabel: '現在のページ',
       inputLabel: 'ユーザーガイドを検索',
-      noResultsLabel: '一致するページが見つかりませんでした',
+      noResultsLabel: '一致するページは見つかりませんでした',
       openResultLabel: '結果を開く',
-      placeholder: 'ガイドを検索...',
+      placeholder: 'ガイド内を検索...',
       resultsLabel: '検索結果',
     };
   }

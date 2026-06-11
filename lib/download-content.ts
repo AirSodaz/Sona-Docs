@@ -315,7 +315,8 @@ downloadContent['zh-TW'] = {
 downloadContent.ja = {
   metadata: {
     title: 'Sona | デスクトップダウンロード',
-    description: 'Windows、macOS、Linux用の最新Sonaデスクトップビルドを1箇所からダウンロード。',
+    description:
+      'Windows、macOS、Linux 向けの Sona デスクトップ版を、環境に合わせて選んでダウンロードできます。',
   },
 } as any;
 

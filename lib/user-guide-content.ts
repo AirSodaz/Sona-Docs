@@ -211,28 +211,28 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
   },
   ja: {
     guideLabel: 'ユーザーガイド',
-    homeLabel: 'ホームに戻る',
+    homeLabel: 'ホームへ戻る',
     alternateLanguageLabel: 'English',
-    sourceLabel: '源ドキュメント',
+    sourceLabel: '元のドキュメント',
     mobileNavLabel: 'ガイドページ',
-    sidebarTitle: 'ガイドを参照',
+    sidebarTitle: 'ガイドを見る',
     previousLabel: '前へ',
     nextLabel: '次へ',
     groupLabels: {
-      start: 'ここから開始',
-      workflow: 'コアワークフロー',
+      start: 'はじめに',
+      workflow: '基本ワークフロー',
       extended: '拡張機能',
-      reference: '参照とヘルプ',
+      reference: 'リファレンスとヘルプ',
     },
     overview: {
-      cardsEyebrow: 'ここから開始',
-      cardsTitle: '最初の有益な結果への最短ルートを選択してください。',
+      cardsEyebrow: 'はじめに',
+      cardsTitle: 'まずは、今やりたいことに一番近いページを選んでください。',
       cardsDescription:
-        '多くの人は1、2ページ読むだけで開始できます。今やりたいタスクに一致するパスから開始してください。',
-      browseEyebrow: 'すべてのコンテンツ',
-      browseTitle: 'Sonaの実際のワークフローごとに整理された完全なドキュメントセット。',
+        '多くの場合、最初に読むのは 1、2 ページで十分です。作業内容に合う短い導線から始められます。',
+      browseEyebrow: 'すべての内容',
+      browseTitle: 'Sona の実際のワークフローに沿って整理したガイドです。',
       browseDescription:
-        '最初は概要を使用し、その後セットアップ、文字起こし作成、編集、オプションのAI手順、ワークスペース整理、エクスポート、拡張機能、CLI参照、トラブルシューティングに進んでください。',
+        '初めて使う場合は概要から始め、その後はセットアップ、文字起こし作成、編集、任意の AI 機能、ワークスペース整理、エクスポート、拡張機能、CLI リファレンス、トラブルシューティングへ進んでください。',
     },
     codeBlock: {
       copyLabel: 'コピー',
@@ -295,7 +295,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Sona ユーザーガイド',
         navLabel: '概要',
         description:
-          'Sonaドキュメントの入り口。セットアップ、録音、ファイルインポート、編集、AI手順、エクスポート、ヘルプへの最短パスを案内します。',
+          'Sona のドキュメント入口です。今やりたい作業に合わせて、セットアップ、録音、ファイルインポート、編集、任意の AI 機能、エクスポート、ヘルプへ進めます。',
         contentFile: 'ja/overview.md',
       },
     
@@ -331,7 +331,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'はじめに',
         navLabel: 'はじめに',
         description:
-          'Sonaのインストール、初回セットアップ、推奨オフラインモデルのダウンロード、そして最初のローカル文字起こしの開始まで。',
+          'Sona のインストール、初回セットアップ、推奨オフラインモデルの準備、最初のローカル文字起こしまでを案内します。',
         contentFile: 'ja/getting-started.md',
       },
     
@@ -364,10 +364,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/live-record.md',
       },
       ja: {
-        title: 'ライブ録音',
-        navLabel: 'ライブ録音',
+        title: 'Live Record',
+        navLabel: 'Live Record',
         description:
-          'リアルタイム録音、タイムスタンプの保持、録音中のドラフト表示、入力ソースやショートカットの制御について。',
+          '録音しながら文字起こしを確認し、タイムスタンプ、Draft、入力ソース、ショートカットの基本を理解します。',
         contentFile: 'ja/live-record.md',
       },
     
@@ -400,10 +400,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/batch-import.md',
       },
       ja: {
-        title: 'バッチインポート',
-        navLabel: 'バッチインポート',
+        title: 'Batch Import',
+        navLabel: 'Batch Import',
         description:
-          '既存の音声・動画ファイルをキューに追加して進捗を監視し、完了した文字起こしをエディタで確認・エクスポートします。',
+          '既存の音声や動画ファイルをキューに追加し、完了した文字起こしを同じエディタで確認・書き出します。',
         contentFile: 'ja/batch-import.md',
       },
     
@@ -439,7 +439,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '編集と再生',
         navLabel: '編集と再生',
         description:
-          'セグメントの確認、再生と同期したタイムスタンプの追跡、文字起こしの検索、およびエディタツールの使用方法。',
+          '文字起こしセグメントを確認し、音声再生、タイムスタンプ、検索、話者確認、Version Snapshots とあわせて編集します。',
         contentFile: 'ja/edit-and-playback.md',
       },
     
@@ -472,10 +472,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/ai-polish-and-translate.md',
       },
       ja: {
-        title: 'AI推敲と翻訳',
-        navLabel: 'AI推敲と翻訳',
+        title: 'AI Polish と翻訳',
+        navLabel: 'AI Polish と翻訳',
         description:
-          'プロバイダ、モデル、推論オプションの設定（設定 > LLMサービス）と、推敲や翻訳の実行方法。',
+          'プロバイダー、機能モデル、推論オプションを設定し、必要なときだけ LLM Polish や Translate を実行します。',
         contentFile: 'ja/ai-polish-and-translate.md',
       },
     
@@ -511,7 +511,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'ワークスペース、プロジェクト、Inbox',
         navLabel: 'ワークスペース / プロジェクト / Inbox',
         description:
-          '録音やインポートの整理、Inboxやプロジェクトの切り替え、プロジェクトのデフォルト設定によるワークフローへの影響について。',
+          '保存済みの録音やインポートを整理し、All Items、Inbox、プロジェクトを切り替え、プロジェクト既定値の影響を確認します。',
         contentFile: 'ja/workspace-projects-and-inbox.md',
       },
     
@@ -547,7 +547,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'エクスポートと設定',
         navLabel: 'エクスポート / 設定',
         description:
-          '成果物のエクスポート、診断、バックアップと復元、自動化、LLMサービス、ショートカット、音声入力などの設定。',
+          '完成した文字起こしを書き出し、Dashboard、Diagnostics、Backup & Restore、Automation、LLM Service などの入口を確認します。',
         contentFile: 'ja/export-and-settings.md',
       },
     
@@ -580,10 +580,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/ai-summary.md',
       },
       ja: {
-        title: 'AI要約',
-        navLabel: 'AI要約',
+        title: 'AI Summary',
+        navLabel: 'AI Summary',
         description:
-          '要約モデルの割り当て、推論オプションの設定、要約の生成と編集、およびテンプレートとエクスポートについて。',
+          '文字起こし本文を書き換えずに、横に要約を生成、編集、コピーする流れを説明します。',
         contentFile: 'ja/ai-summary.md',
       },
     
@@ -616,10 +616,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/live-caption-and-voice-typing.md',
       },
       ja: {
-        title: 'ライブ字幕と音声入力',
-        navLabel: 'ライブ字幕 & 音声入力',
+        title: 'Live Caption と Voice Typing',
+        navLabel: 'Live Caption / Voice Typing',
         description:
-          'ライブ字幕の開始方法、音声入力のショートカットと準備設定、および共通のオフライン文字起こしスタックの利用について。',
+          'フローティング字幕と、他のアプリへ入力する音声入力の違い、準備、設定場所を確認します。',
         contentFile: 'ja/live-caption-and-voice-typing.md',
       },
     
@@ -652,10 +652,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/vocabulary-and-advanced-settings.md',
       },
       ja: {
-        title: '語彙と高度な設定',
-        navLabel: '語彙 & 高度な設定',
+        title: '語彙と詳細設定',
+        navLabel: '語彙 / 詳細設定',
         description:
-          'ホットワード、テキスト置換、およびより細かい制御が必要な場合の高度な推敲設定の使用方法。',
+          'Hotwords、Text Replacement、Speaker Profiles、Auto-Polish、カスタムコンテキストの調整方法を確認します。',
         contentFile: 'ja/vocabulary-and-advanced-settings.md',
       },
     
@@ -689,10 +689,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/cli-guide.md',
       },
       ja: {
-        title: 'CLIガイド',
-        navLabel: 'CLIガイド',
+        title: 'CLI ガイド',
+        navLabel: 'CLI ガイド',
         description:
-          'ターミナルからのオフラインバッチ文字起こしの実行、パッケージ版とソースビルド版の違い、およびコマンドリファレンス。',
+          'ターミナルからオフライン文字起こし、モデル管理、ヘッドレス API サーバー起動を行うための CLI リファレンスです。',
         contentFile: 'ja/cli-guide.md',
       },
     
@@ -726,10 +726,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/api-guide.md',
       },
       ja: {
-        title: 'HTTP APIガイド',
+        title: 'HTTP API ガイド',
         navLabel: 'HTTP API',
         description:
-          'ローカルHTTP APIサーバーの起動、認証、ジョブの送信、ステータスの確認、およびWebhookの検証について。',
+          'ローカル HTTP API サーバーの起動、認証、ジョブ送信、ステータス確認、Webhook 検証の基本を説明します。',
         contentFile: 'ja/api-guide.md',
       },
     
@@ -762,10 +762,10 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'zh-CN/faq.md',
       },
       ja: {
-        title: 'FAQとトラブルシューティング',
+        title: 'FAQ とトラブルシューティング',
         navLabel: 'FAQ',
         description:
-          'セットアップ時のリマインダー、モデル不足、録音、ドラフト、復元、再生、ビルドなどに関するよくある問題。',
+          'セットアップ、モデル不足、録音、Draft、復元、Live Caption、Voice Typing、再生、ソースビルドに関するよくある問題を確認します。',
         contentFile: 'ja/faq.md',
       },
     
@@ -1018,51 +1018,51 @@ export function getUserGuideAssistantCopy(
 ): UserGuideAssistantCopy {
   if (locale === 'ja') {
     return {
-      title: 'AIに質問',
-      summary: 'ガイドの内容のみを回答し、このページを優先します。',
+      title: 'AI に質問',
+      summary: 'このガイドの内容だけをもとに、現在のページを優先して回答します。',
       expandLabel: '開く',
       collapseLabel: '閉じる',
       examplesLabel: '質問例',
       examples: [
         `「${pageTitle}」ページは何のためのものですか？`,
         `「${pageTitle}」の後に何を読むべきですか？`,
-        'SonaでAIの校正や翻訳はどこで設定しますか？',
+        'Sona で AI の校正や翻訳はどこで設定しますか？',
       ],
       inputPlaceholder:
-        'このページ、次のステップ、または機能の場所について質問してください...',
+        'このページ、次に読む内容、機能の場所などを質問できます...',
       submitLabel: '質問',
-      submittingLabel: '思考中...',
+      submittingLabel: '考えています...',
       youLabel: 'あなた',
-      assistantLabel: 'ガイドAI',
-      detailsLabel: 'ソースと次のステップ',
-      sourcesLabel: 'ソース',
+      assistantLabel: 'ガイド AI',
+      detailsLabel: '参照元と次のステップ',
+      sourcesLabel: '参照元',
       nextPagesLabel: '次のページ',
       disabledInline:
-        'このデプロイメントでは、保護されたガイドQAが有効になっていません。',
+        'この環境では、保護付きのガイド質問機能が有効になっていません。',
       genericError:
-        '現在ガイドアシスタントが回答できません。しばらくしてからもう一度お試しください。',
+        '現在、ガイドアシスタントは回答できません。しばらくしてからもう一度お試しください。',
       networkError:
-        'サーバーが現在Geminiに接続できません。サーバーのネットワークまたはプロキシを確認して、もう一度お試しください。',
+        'サーバーから Gemini に接続できません。サーバーのネットワークまたはプロキシを確認して、もう一度お試しください。',
       upstreamError:
-        'Geminiがこの質問に対してアップストリームエラーを返しました。しばらくしてからもう一度お試しください。',
+        'Gemini からエラーが返されました。しばらくしてからもう一度お試しください。',
       emptyResponseError:
-        'Geminiが利用可能な回答テキストなしで返答しました。もう一度質問してみてください。',
+        'Gemini から回答本文が返りませんでした。質問を言い換えてもう一度お試しください。',
       unavailableError:
-        'このデプロイメントでは、現在AIの質問は利用できません。',
+        'この環境では現在、AI への質問を利用できません。',
       emptyQuestionError: '送信する前に質問を入力してください。',
       forbiddenOriginError:
-        'このホストは、保護されたガイドアシスタントの使用を許可されていません。',
+        'このホストでは、保護付きのガイドアシスタントを利用できません。',
       challengeError:
-        '質問を続けるには、確認チャレンジを完了してください。',
+        '質問を続けるには、確認を完了してください。',
       challengeExpiredError:
-        '確認の期限が切れました。もう一度チャレンジを完了してください。',
+        '確認の有効期限が切れました。もう一度やり直してください。',
       challengePrompt:
-        'ガイドQAを引き続き使用するには、確認チャレンジを完了してください。',
-      challengeVerifyingLabel: '検証中...',
+        'ガイドへの質問を続けるには、確認を完了してください。',
+      challengeVerifyingLabel: '確認中...',
       challengeLoadingError:
-        '検証ウィジェットを読み込めませんでした。リフレッシュしてもう一度お試しください。',
+        '確認ウィジェットを読み込めませんでした。ページを再読み込みしてもう一度お試しください。',
       throttledError:
-        '検証の失敗が多すぎます。しばらく待ってからもう一度お試しください。',
+        '確認に何度も失敗しました。しばらくしてからもう一度お試しください。',
       tooLongError: '質問は1200文字以内で入力してください。',
     };
   }

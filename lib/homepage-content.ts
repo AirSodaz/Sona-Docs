@@ -916,6 +916,6 @@ homePageContent.ja = {
   metadata: {
     title: 'Sona | オフライン文字起こしエディタ',
     description:
-      'TauriとSherpa-onnxで構築された強力なオフライン文字起こしエディタ。高速、正確、かつプライベートな音声テキスト変換。',
+      'Tauri と Sherpa-onnx で作られた、ローカル処理中心の文字起こしエディタです。音声を手元の環境で文字にし、確認、整文、翻訳、書き出しまで進められます。',
   },
 } as any;

@@ -1,45 +1,45 @@
 # 概要
 
-Sonaは、音声書き起こしワークフローをデフォルトで自分自身のマシン上に完結させたい人のための、プライバシー最優先の文字起こしエディタです。このガイドは実際のプロダクトのフローに沿って構成されているため、今すぐ必要なタスクに応じたページに直接ジャンプすることができます。
+Sona は、音声の文字起こしをできるだけ自分のマシン上で完結させたい人のための、ローカルファーストな文字起こしエディタです。このガイドは実際の製品フローに沿って整理しているため、今やりたい作業に近いページから読み始められます。
 
-## タスクに合わせたページの選択
+## 目的に合うページを選ぶ
 
-- 新規インストールまたは初回起動: [スタートガイド](guide:getting-started)
-- 今すぐリアルタイムに音声を録音する: [ライブ録音](guide:live-record)
-- 既存の音声または動画ファイルを使用する: [バッチインポート](guide:batch-import)
-- 表現、タイムスタンプ、話者ラベルの確認、再生、またはバージョン履歴（スナップショット）の管理: [編集と再生](guide:edit-and-playback)
-- LLMによる任意の校正（クリーンアップ）や多言語（二言語併記）出力の追加: [AI校正と翻訳](guide:ai-polish-and-translate)
-- 保存された録音、プロジェクト、または「インボックス（Inbox）」アイテムの整理: [ワークスペース、プロジェクト、インボックス](guide:workspace-projects-and-inbox)
-- 完成した成果物のエクスポート、「ダッシュボード」の確認、または「診断（Diagnostics）」、「バックアップと復元（Backup & Restore）」、通知センターへのアクセス: [エクスポートと設定](guide:export-and-settings)
-- 本文を書き換えることなく、文字起こしの要約を作成したい場合: [AI要約](guide:ai-summary)
-- 他のアプリでフローティング字幕や音声入力機能を使用したい場合: [ライブ字幕と音声入力](guide:live-caption-and-voice-typing)
-- ホットワード、テキスト置換、話者プロファイル、または「自動校正（Auto-Polish）」の調整を行いたい場合: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
-- 主にターミナルからオフラインでバッチ文字起こしを行いたい場合: [CLIガイド](guide:cli-guide)
-- 問題が発生した場合の解決方法: [FAQとトラブルシューティング](guide:faq)
+- 新しくインストールした、または初めて起動する: [はじめに](guide:getting-started)
+- 今すぐ音声を録音したい: [Live Record](guide:live-record)
+- 既存の音声または動画ファイルを使いたい: [Batch Import](guide:batch-import)
+- 文字起こし、タイムスタンプ、話者ラベル、再生、バージョン履歴を確認したい: [編集と再生](guide:edit-and-playback)
+- LLM を使って文章を整えたり、翻訳を追加したりしたい: [AI Polish と翻訳](guide:ai-polish-and-translate)
+- 保存済みの録音、プロジェクト、Inbox の内容を整理したい: [ワークスペース、プロジェクト、Inbox](guide:workspace-projects-and-inbox)
+- 完成した内容を書き出す、または設定画面の場所を確認したい: [エクスポートと設定](guide:export-and-settings)
+- 本文を書き換えずに要約だけ作りたい: [AI Summary](guide:ai-summary)
+- フローティング字幕や他のアプリへの音声入力を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
+- Hotwords、Text Replacement、Speaker Profiles、Auto-Polish を調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
+- ターミナルからオフラインのバッチ文字起こしを実行したい: [CLI ガイド](guide:cli-guide)
+- 問題の切り分けやよくある詰まりを確認したい: [FAQ とトラブルシューティング](guide:faq)
 
-## Sonaの基本ワークフロー
+## Sona の基本ワークフロー
 
-1. [スタートガイド](guide:getting-started)を完了し、オフラインモデルのセットアップを準備します。
-2. [ライブ録音](guide:live-record)または[バッチインポート](guide:batch-import)で文字起こしを作成します。
-3. 必要に応じて話者の確認やバージョン履歴からの復元を含め、[編集と再生](guide:edit-and-playback)で文字起こしテキストを洗練させます。
-4. LLMによる支援校正や翻訳を行いたい場合にのみ、[AI校正と翻訳](guide:ai-polish-and-translate)を使用します。
-5. 保存した作業の再開、プロジェクトコンテキストの切り替え、または現在のエディタ表示以外のアイテムの整理には、[ワークスペース、プロジェクト、インボックス](guide:workspace-projects-and-inbox)を使用します。
-6. [エクスポートと設定](guide:export-and-settings)で完了します。また、Sonaが復元、アップデート、自動化などの処理結果を提示した際は、ヘッダーの通知センターを確認してください。
+1. [はじめに](guide:getting-started)を完了し、オフラインモデルを使える状態にします。
+2. [Live Record](guide:live-record) または [Batch Import](guide:batch-import) で文字起こしを作成します。
+3. 必要に応じて話者やバージョン履歴も確認しながら、[編集と再生](guide:edit-and-playback)でテキストを整えます。
+4. LLM による整文や翻訳が必要な場合だけ、[AI Polish と翻訳](guide:ai-polish-and-translate)を使います。
+5. 保存済みの作業を開き直したり、プロジェクトを切り替えたり、現在のエディタ外のアイテムを整理したりする場合は、[ワークスペース、プロジェクト、Inbox](guide:workspace-projects-and-inbox)を使います。
+6. 仕上げとして[エクスポートと設定](guide:export-and-settings)を確認します。復元、更新、自動化などの通知が出た場合は、ヘッダーの通知センターも確認してください。
 
-「AI要約」、「ライブ字幕（Live Caption）」、「音声入力（Voice Typing）」、話者プロファイル、および語彙調整は、メインワークフローを取り囲む補完機能です。通常は、まずコアとなる文字起こしフローを実行できるようにし、その後、必要に応じて特定の拡張機能のページを開くのが最も簡単です。
+AI Summary、Live Caption、Voice Typing、Speaker Profiles、語彙調整は、基本ワークフローを補う機能です。まずは文字起こしの流れを一度通し、そのあと必要に応じて個別のページを開くのが一番わかりやすい進め方です。
 
-## 本ガイドで詳しく解説している内容
+## このガイドで扱うこと
 
-- ローカル文字起こしの推奨される初回実行手順
-- ライブ録音とキューに登録されたファイル文字起こしの違い
-- エディタ、ワークスペースの整理、翻訳、およびエクスポート手順の連携方法
-- 編集や引き継ぎ時における、話者確認、話者プロファイル、バージョン履歴の活用法
-- 日常的な使用において重要な「ダッシュボード」、「診断」、「バックアップと復元」、「自動化」、および通知センターの役割
+- ローカル文字起こしを始めるための推奨手順
+- Live Record と、キューに追加して処理する Batch Import の違い
+- エディタ、ワークスペース整理、翻訳、エクスポートのつながり
+- 編集や引き継ぎで役立つ Speaker Review、Speaker Profiles、Version Snapshots の使い方
+- Dashboard、Diagnostics、Backup & Restore、Automation、通知センターなど、日常的に参照する設定画面の役割
 
-## その他の関連ドキュメント
+## 関連ドキュメント
 
-- コマンドラインからのバッチ文字起こし: [CLIガイド](guide:cli-guide)
-- ローカルHTTP API連携: [HTTP APIガイド](guide:api-guide)
-- ソースコードビルドと開発コマンド: [プロジェクトのREADME](readme)
+- コマンドラインからのバッチ文字起こし: [CLI ガイド](guide:cli-guide)
+- ローカル HTTP API 連携: [HTTP API ガイド](guide:api-guide)
+- ソースからのビルドと開発コマンド: [プロジェクトの README](readme)
 
-> Sonaの基本的な流れはシンプルです。ローカル文字起こしをセットアップし、新規または既存の文字起こしを開き、エディタで確認し、必要に応じてワークスペースの整理、校正、翻訳、要約、またはエクスポートを行います。
+> Sona の基本は、ローカル文字起こしを設定し、新しい音声または既存ファイルを開き、エディタで確認し、必要に応じてワークスペース整理、AI Polish、翻訳、要約、エクスポートへ進むことです。
