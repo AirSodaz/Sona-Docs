@@ -15,12 +15,11 @@ import ReactMarkdown, {
   type UrlTransform,
 } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { UserGuideSearch } from '@/components/user-guide-search';
-import { SiteHeader } from '@/components/site-header';
+import { UserGuideLayout } from '@/components/user-guide-layout';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
   getUserGuideTurnstileSiteKey,
@@ -281,80 +280,7 @@ function HeaderActions({
   );
 }
 
-function SidebarNavigation({
-  groups,
-  title,
-}: {
-  groups: UserGuideNavGroup[];
-  title: string;
-}) {
-  return (
-    <aside className="hidden lg:block w-[280px] shrink-0">
-      <div className="sticky top-[108px] flex flex-col gap-8 pr-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-          {title}
-        </p>
-        <div className="space-y-8">
-          {groups.map((group) => (
-            <div key={group.id}>
-              <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-400/80 dark:text-stone-500/80">
-                {group.label}
-              </p>
-              <div className="space-y-1">
-                {group.items.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={item.path}
-                    className={`group block rounded-xl px-3 py-2 transition-all ${
-                      item.active
-                        ? 'bg-stone-200/50 text-[#2D2D2D] dark:bg-stone-800/50 dark:text-[#E0E0E0]'
-                        : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-900/50 dark:hover:text-stone-200'
-                    }`}
-                  >
-                    <p className={`text-sm ${item.active ? 'font-medium' : 'font-normal'}`}>{item.title}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </aside>
-  );
-}
 
-function MobileNavigation({
-  groups,
-  label,
-}: {
-  groups: UserGuideNavGroup[];
-  label: string;
-}) {
-  const items = groups.flatMap((group) => group.items);
-
-  return (
-    <section className="mb-8 lg:hidden">
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-        {label}
-      </p>
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 scrollbar-hide">
-        {items.map((item) => (
-          <Link
-            key={item.id}
-            href={item.path}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm transition-colors ${
-              item.active
-                ? 'bg-stone-800 text-white dark:bg-stone-200 dark:text-stone-900 font-medium'
-                : 'bg-white/50 text-stone-600 ring-1 ring-stone-200 hover:bg-stone-50 dark:bg-stone-900/30 dark:text-stone-300 dark:ring-stone-800 dark:hover:bg-stone-800/50'
-            }`}
-          >
-            {item.title}
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 function PaginationCard({
   item,
@@ -421,207 +347,175 @@ export async function UserGuidePage({
   const turnstileSiteKey = getUserGuideTurnstileSiteKey();
 
   return (
-    <main className="relative min-h-[100svh] bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
-      {/* Background Blobs Wrapper to prevent horizontal overflow without blocking sticky child elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[500px] sm:w-[500px] sm:blur-[100px]" />
-        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
-      </div>
-
-      <SiteHeader>
-        <div className="grid gap-4 lg:grid-cols-[auto_minmax(18rem,32rem)_auto] lg:items-center">
-          <div className="flex items-center justify-between gap-4">
-            <Link
-              href={page.homeHref}
-              className="group flex items-center transition-colors focus:outline-none"
-            >
-              <div className="flex origin-left items-center transition-transform duration-300 will-change-transform group-hover:scale-105">
-                <Logo className="h-7 w-7 rounded-lg sm:h-8 sm:w-8" />
-                <span
-                  className="-ml-1 mt-0.5 text-[1.55rem] font-serif italic tracking-tighter text-[#5c4d43] dark:text-[#E0E0E0] sm:text-[1.7rem]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  ona
-                </span>
-              </div>
+    <UserGuideLayout
+      page={page}
+      navigation={navigation}
+      searchBar={
+        <UserGuideSearch
+          copy={searchCopy}
+          currentPageId={page.id}
+          entries={searchEntries}
+        />
+      }
+      headerActionsMobile={<HeaderActions className="lg:hidden" page={page} />}
+      headerActionsDesktop={<HeaderActions className="hidden lg:flex" page={page} />}
+    >
+      <AnimatedContainer className="flex-1 min-w-0">
+        <AnimatedItem>
+          <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
+            <Link href={page.homeHref} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
+              Sona
             </Link>
-            <HeaderActions className="lg:hidden" page={page} />
-          </div>
-
-          <UserGuideSearch
-            copy={searchCopy}
-            currentPageId={page.id}
-            entries={searchEntries}
-          />
-
-          <HeaderActions className="hidden lg:flex" page={page} />
-        </div>
-      </SiteHeader>
-
-      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 md:px-16">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:gap-16 pb-20">
-          <SidebarNavigation groups={navigation} title={page.sidebarTitle} />
-
-          <AnimatedContainer className="flex-1 min-w-0 max-w-4xl">
-            <MobileNavigation groups={navigation} label={page.mobileNavLabel} />
-
-            <AnimatedItem>
-              <nav className="mb-8 flex flex-wrap items-center gap-2 text-sm text-stone-500 dark:text-stone-400">
-                <Link href={page.homeHref} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
-                  Sona
-                </Link>
+            <ChevronRight size={14} className="opacity-50" />
+            <Link href={page.locale === 'en' ? '/user-guide' : '/zh/user-guide'} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
+              {page.guideLabel}
+            </Link>
+            {page.id !== 'overview' ? (
+              <>
                 <ChevronRight size={14} className="opacity-50" />
-                <Link href={page.locale === 'en' ? '/user-guide' : '/zh/user-guide'} className="transition-colors hover:text-stone-800 dark:hover:text-stone-200">
-                  {page.guideLabel}
-                </Link>
-                {page.id !== 'overview' ? (
-                  <>
-                    <ChevronRight size={14} className="opacity-50" />
-                    <span className="text-stone-800 dark:text-stone-200">{page.navLabel}</span>
-                  </>
-                ) : null}
-              </nav>
-
-              <div className="mb-12 border-b border-stone-200/50 pb-8 dark:border-stone-800/50">
-                <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-                  {page.groupLabel}
-                </p>
-                <h1
-                  className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  {page.title}
-                </h1>
-                <p className="mt-6 text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
-                  {page.description}
-                </p>
-              </div>
-            </AnimatedItem>
-
-            <AnimatedItem>
-              <UserGuideAssistant
-                copy={assistantCopy}
-                enabled={aiEnabled}
-                locale={locale}
-                pageId={page.id}
-                turnstileSiteKey={turnstileSiteKey}
-              />
-            </AnimatedItem>
-
-            {page.id === 'overview' ? (
-              <AnimatedItem className="mb-16 space-y-16">
-                <section>
-                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-                    {ui.overview.cardsEyebrow}
-                  </p>
-                  <h2
-                    className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {ui.overview.cardsTitle}
-                  </h2>
-                  <p className="mb-8 text-[1rem] font-light leading-[1.75] text-stone-500 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
-                    {ui.overview.cardsDescription}
-                  </p>
-
-                  <div className="grid gap-4 md:grid-cols-3">
-                    {overviewCards.map((item) => (
-                      <Link
-                        key={item.id}
-                        href={item.path}
-                        className="group flex flex-col rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:bg-stone-900/30 dark:ring-stone-800/50 dark:hover:bg-stone-900"
-                      >
-                        <p className="text-lg font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
-                          {item.title}
-                        </p>
-                        <p className="mt-2 text-sm font-light leading-[1.6] text-stone-500 dark:text-stone-400">
-                          {item.description}
-                        </p>
-                        <div className="mt-4 flex items-center gap-1 text-sm font-medium text-stone-400 transition-colors group-hover:text-stone-800 dark:text-stone-500 dark:group-hover:text-stone-200">
-                          <span>Read more</span>
-                          <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </section>
-
-                <section>
-                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
-                    {ui.overview.browseEyebrow}
-                  </p>
-                  <h2
-                    className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {ui.overview.browseTitle}
-                  </h2>
-                  <p className="mb-8 text-[1rem] font-light leading-[1.75] text-stone-500 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
-                    {ui.overview.browseDescription}
-                  </p>
-
-                  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {navigation.map((group) => (
-                      <div
-                        key={group.id}
-                        className="flex flex-col gap-4 rounded-2xl bg-white/30 p-6 ring-1 ring-stone-200/40 dark:bg-stone-900/20 dark:ring-stone-800/40"
-                      >
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
-                          {group.label}
-                        </p>
-                        <div className="flex flex-col gap-2">
-                          {group.items.map((item) => (
-                            <Link
-                              key={item.id}
-                              href={item.path}
-                              className="group block rounded-xl px-3 py-2.5 transition-colors hover:bg-white dark:hover:bg-stone-900/80"
-                            >
-                              <p className="text-sm font-medium text-[#2D2D2D] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white">
-                                {item.title}
-                              </p>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              </AnimatedItem>
+                <span className="text-stone-800 dark:text-stone-200">{page.navLabel}</span>
+              </>
             ) : null}
+          </nav>
 
-            <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:text-inherit prose-pre:shadow-none">
-              <ReactMarkdown
-                components={markdownComponents}
-                remarkPlugins={[remarkGfm]}
-                urlTransform={preserveUserGuideInternalLinks}
+          <div className="mb-12 border-b border-stone-200/50 pb-8 dark:border-stone-800/50">
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+              {page.groupLabel}
+            </p>
+            <h1
+              className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              {page.title}
+            </h1>
+            <p className="mt-6 text-[1rem] font-light leading-[1.75] text-stone-500 transition-colors duration-300 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
+              {page.description}
+            </p>
+          </div>
+        </AnimatedItem>
+
+        <AnimatedItem>
+          <UserGuideAssistant
+            copy={assistantCopy}
+            enabled={aiEnabled}
+            locale={locale}
+            pageId={page.id}
+            turnstileSiteKey={turnstileSiteKey}
+          />
+        </AnimatedItem>
+
+        {page.id === 'overview' ? (
+          <AnimatedItem className="mb-16 space-y-16">
+            <section>
+              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+                {ui.overview.cardsEyebrow}
+              </p>
+              <h2
+                className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
+                style={{ fontFamily: 'Georgia, serif' }}
               >
-                {markdown}
-              </ReactMarkdown>
-            </AnimatedItem>
+                {ui.overview.cardsTitle}
+              </h2>
+              <p className="mb-8 text-[1rem] font-light leading-[1.75] text-stone-500 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
+                {ui.overview.cardsDescription}
+              </p>
 
-            {page.previousPage || page.nextPage ? (
-              <AnimatedItem as="section" className="mt-16 grid gap-4 border-t border-stone-200/50 pt-8 dark:border-stone-800/50 md:grid-cols-2">
-                {page.previousPage ? (
-                  <PaginationCard
-                    item={page.previousPage}
-                    label={page.previousLabel}
-                    direction="previous"
-                  />
-                ) : (
-                  <div className="hidden md:block" />
-                )}
-                {page.nextPage ? (
-                  <PaginationCard
-                    item={page.nextPage}
-                    label={page.nextLabel}
-                    direction="next"
-                  />
-                ) : null}
-              </AnimatedItem>
+              <div className="grid gap-4 md:grid-cols-3">
+                {overviewCards.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={item.path}
+                    className="group flex flex-col rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-sm dark:bg-stone-900/30 dark:ring-stone-800/50 dark:hover:bg-stone-900"
+                  >
+                    <p className="text-lg font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
+                      {item.title}
+                    </p>
+                    <p className="mt-2 text-sm font-light leading-[1.6] text-stone-500 dark:text-stone-400">
+                      {item.description}
+                    </p>
+                    <div className="mt-4 flex items-center gap-1 text-sm font-medium text-stone-400 transition-colors group-hover:text-stone-800 dark:text-stone-500 dark:group-hover:text-stone-200">
+                      <span>Read more</span>
+                      <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+                {ui.overview.browseEyebrow}
+              </p>
+              <h2
+                className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
+                style={{ fontFamily: 'Georgia, serif' }}
+              >
+                {ui.overview.browseTitle}
+              </h2>
+              <p className="mb-8 text-[1rem] font-light leading-[1.75] text-stone-500 dark:text-stone-400 sm:text-lg sm:leading-[1.8]">
+                {ui.overview.browseDescription}
+              </p>
+
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {navigation.map((group) => (
+                  <div
+                    key={group.id}
+                    className="flex flex-col gap-4 rounded-2xl bg-white/30 p-6 ring-1 ring-stone-200/40 dark:bg-stone-900/20 dark:ring-stone-800/40"
+                  >
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
+                      {group.label}
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={item.path}
+                          className="group block rounded-xl px-3 py-2.5 transition-colors hover:bg-white dark:hover:bg-stone-900/80"
+                        >
+                          <p className="text-sm font-medium text-[#2D2D2D] transition-colors group-hover:text-stone-900 dark:text-[#E0E0E0] dark:group-hover:text-white">
+                            {item.title}
+                          </p>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </AnimatedItem>
+        ) : null}
+
+        <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:text-inherit prose-pre:shadow-none">
+          <ReactMarkdown
+            components={markdownComponents}
+            remarkPlugins={[remarkGfm]}
+            urlTransform={preserveUserGuideInternalLinks}
+          >
+            {markdown}
+          </ReactMarkdown>
+        </AnimatedItem>
+
+        {page.previousPage || page.nextPage ? (
+          <AnimatedItem as="section" className="mt-16 grid gap-4 border-t border-stone-200/50 pt-8 dark:border-stone-800/50 md:grid-cols-2">
+            {page.previousPage ? (
+              <PaginationCard
+                item={page.previousPage}
+                label={page.previousLabel}
+                direction="previous"
+              />
+            ) : (
+              <div className="hidden md:block" />
+            )}
+            {page.nextPage ? (
+              <PaginationCard
+                item={page.nextPage}
+                label={page.nextLabel}
+                direction="next"
+              />
             ) : null}
-          </AnimatedContainer>
-        </div>
-      </div>
-    </main>
+          </AnimatedItem>
+        ) : null}
+      </AnimatedContainer>
+    </UserGuideLayout>
   );
 }
