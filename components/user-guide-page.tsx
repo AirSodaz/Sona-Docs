@@ -20,6 +20,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
 import { UserGuideAssistant } from '@/components/user-guide-assistant';
 import { UserGuideSearch } from '@/components/user-guide-search';
+import { UserGuideHeader } from '@/components/user-guide-header';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
   getUserGuideTurnstileSiteKey,
@@ -220,7 +221,7 @@ function HeaderLink({
   external?: boolean;
 }) {
   const className =
-    'inline-flex items-center justify-center transition-colors hover:text-stone-800 dark:hover:text-stone-200';
+    'inline-flex items-center justify-center shrink-0 transition-colors hover:text-stone-800 dark:hover:text-stone-200';
 
   if (external) {
     return (
@@ -251,7 +252,7 @@ function HeaderActions({
 }) {
   return (
     <div
-      className={`flex flex-wrap items-center justify-end gap-4 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-6 sm:text-sm md:gap-8 ${className}`}
+      className={`flex items-center justify-end gap-3 text-[13px] font-medium text-stone-500 dark:text-stone-400 sm:gap-4 sm:text-sm md:gap-6 whitespace-nowrap ${className}`}
     >
       <ThemeToggle />
       <HeaderLink href={page.homeHref}>
@@ -262,7 +263,7 @@ function HeaderActions({
       </HeaderLink>
       <Link
         href={page.alternatePath}
-        className="flex cursor-pointer items-center gap-1.5 transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
+        className="flex cursor-pointer items-center gap-1.5 shrink-0 transition-colors hover:text-stone-800 focus:outline-none dark:hover:text-stone-200"
       >
         <Globe size={16} />
         <span className="hidden sm:inline">{page.alternateLanguageLabel}</span>
@@ -289,7 +290,7 @@ function SidebarNavigation({
 }) {
   return (
     <aside className="hidden lg:block w-[280px] shrink-0">
-      <div className="sticky top-12 flex flex-col gap-8 pr-6">
+      <div className="sticky top-[108px] flex flex-col gap-8 pr-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
           {title}
         </p>
@@ -420,12 +421,15 @@ export async function UserGuidePage({
   const turnstileSiteKey = getUserGuideTurnstileSiteKey();
 
   return (
-    <main className="relative min-h-[100svh] overflow-hidden bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0] px-4 py-5 sm:px-6 sm:py-7 md:px-16 md:py-8">
-      <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[500px] sm:w-[500px] sm:blur-[100px]" />
-      <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 -z-10 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
+    <main className="relative min-h-[100svh] bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
+      {/* Background Blobs Wrapper to prevent horizontal overflow without blocking sticky child elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-0 right-0 h-[280px] w-[280px] translate-x-1/3 -translate-y-1/3 rounded-full bg-stone-200 opacity-30 blur-[90px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[500px] sm:w-[500px] sm:blur-[100px]" />
+        <div className="absolute bottom-0 left-0 h-[320px] w-[320px] -translate-x-1/4 translate-y-1/4 rounded-full bg-stone-200 opacity-30 blur-[100px] transition-colors duration-300 dark:bg-stone-800 dark:opacity-20 sm:h-[600px] sm:w-[600px] sm:blur-[120px]" />
+      </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col gap-12 sm:gap-16">
-        <header className="grid gap-4 lg:grid-cols-[auto_minmax(18rem,32rem)_auto] lg:items-center">
+      <UserGuideHeader>
+        <div className="grid gap-4 lg:grid-cols-[auto_minmax(18rem,32rem)_auto] lg:items-center">
           <div className="flex items-center justify-between gap-4">
             <Link
               href={page.homeHref}
@@ -451,8 +455,10 @@ export async function UserGuidePage({
           />
 
           <HeaderActions className="hidden lg:flex" page={page} />
-        </header>
+        </div>
+      </UserGuideHeader>
 
+      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 md:px-16">
         <div className="flex flex-col lg:flex-row lg:items-start lg:gap-16 pb-20">
           <SidebarNavigation groups={navigation} title={page.sidebarTitle} />
 
