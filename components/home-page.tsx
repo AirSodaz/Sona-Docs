@@ -242,7 +242,7 @@ export function HomePage({
       <main className="w-full pb-10 pt-6 sm:pb-12 sm:pt-10 md:pt-12">
         <section
           id={demoPreviewId}
-          className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 scroll-mt-6 sm:scroll-mt-8"
+          className="w-full scroll-mt-6 sm:scroll-mt-8"
         >
           <div className="relative overflow-hidden bg-[#ece8df] py-16 text-[#37352f] sm:py-20 lg:py-24 dark:bg-[#171717] dark:text-[#d4d4d4]">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(55,53,47,0.045)_1px,transparent_1px),linear-gradient(180deg,rgba(55,53,47,0.04)_1px,transparent_1px)] bg-[size:72px_72px] opacity-50 dark:bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.035)_1px,transparent_1px)]" />

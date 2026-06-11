@@ -54,7 +54,7 @@ export function UseCasesSection({
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[#F7F5F2] to-transparent dark:from-[#121212] md:hidden" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[#F7F5F2] to-transparent dark:from-[#121212] md:hidden" />
 
-        <div className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 md:mx-0 md:grid md:auto-rows-fr md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 xl:grid-cols-4 xl:gap-4">
+        <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 md:mx-0 md:grid md:auto-rows-fr md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 xl:grid-cols-4 xl:gap-4">
           {content.items.map((item, index) => (
             <UseCaseStory
               key={item.id}
