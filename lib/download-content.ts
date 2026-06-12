@@ -75,7 +75,7 @@ export const downloadContent = {
       alternateLanguageLabel: '简体中文',
       decisionDescription:
         'Start with your operating system and processor, then choose the installer format that fits how you manage apps.',
-      decisionTitle: 'Choose the right build',
+      decisionTitle: 'Choose platform and format',
       description:
         'Pick the desktop build that matches your system, architecture, and preferred installer format.',
       desktopOnlyNote:
@@ -159,7 +159,7 @@ export const downloadContent = {
       alternateLanguageLabel: 'English',
       decisionDescription:
         '先按操作系统和处理器选择平台，再按你管理应用的方式选择安装格式。',
-      decisionTitle: '选择合适的构建',
+      decisionTitle: '选择平台与格式',
       description:
         '按系统、架构和安装格式选择最适合你的桌面端构建，不必在 Releases 列表里自己翻找。',
       desktopOnlyNote:
@@ -245,7 +245,7 @@ downloadContent['zh-TW'] = {
     alternateLanguageLabel: 'English',
     decisionDescription:
       '先按作業系統和處理器選擇平台，再按您管理應用程式的方式選擇安裝格式。',
-    decisionTitle: '選擇合適的建構',
+    decisionTitle: '選擇平台與格式',
     description:
       '按系統、架構和安裝格式選擇最適合您的桌面端建構，不必在 Releases 列表裡自己翻找。',
     desktopOnlyNote:

@@ -100,7 +100,7 @@ export const trustPrivacyContent = {
         alternateLanguageShortLabel: '中',
         githubLabel: 'GitHub',
         homeHref: '/',
-        homeLabel: 'Home',
+        homeLabel: 'Back to home',
       },
       hero: {
         eyebrow: 'Trust',
@@ -197,7 +197,7 @@ export const trustPrivacyContent = {
         alternateLanguageShortLabel: '中',
         githubLabel: 'GitHub',
         homeHref: '/',
-        homeLabel: 'Home',
+        homeLabel: 'Back to home',
       },
       hero: {
         eyebrow: 'Privacy',
@@ -436,7 +436,7 @@ export const trustPrivacyContent = {
         alternateLanguageShortLabel: 'EN',
         githubLabel: 'GitHub',
         homeHref: '/',
-        homeLabel: '首页',
+        homeLabel: '返回首页',
       },
       hero: {
         eyebrow: '信任',
@@ -533,7 +533,7 @@ export const trustPrivacyContent = {
         alternateLanguageShortLabel: 'EN',
         githubLabel: 'GitHub',
         homeHref: '/',
-        homeLabel: '首页',
+        homeLabel: '返回首页',
       },
       hero: {
         eyebrow: '隐私',
@@ -759,7 +759,7 @@ trustPrivacyContent['zh-TW'] = {
       alternateLanguageShortLabel: 'EN',
       githubLabel: 'GitHub',
       homeHref: '/',
-      homeLabel: '首頁',
+      homeLabel: '返回首頁',
     },
     hero: {
       eyebrow: '信任',
@@ -856,7 +856,7 @@ trustPrivacyContent['zh-TW'] = {
       alternateLanguageShortLabel: 'EN',
       githubLabel: 'GitHub',
       homeHref: '/',
-      homeLabel: '首頁',
+      homeLabel: '返回首頁',
     },
     hero: {
       eyebrow: '隱私',

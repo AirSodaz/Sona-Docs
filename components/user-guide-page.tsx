@@ -6,7 +6,6 @@ import {
   ArrowRight,
   ChevronRight,
   Github,
-  Home,
 } from 'lucide-react';
 import ReactMarkdown, {
   defaultUrlTransform,
@@ -258,7 +257,7 @@ function HeaderActions({
       <ThemeToggle />
       <HeaderLink href={page.homeHref}>
         <span className="inline-flex items-center gap-1.5">
-          <Home size={16} />
+          <ArrowLeft size={16} />
           <span className="hidden sm:inline">{page.homeLabel}</span>
         </span>
       </HeaderLink>

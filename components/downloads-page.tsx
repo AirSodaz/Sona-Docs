@@ -20,7 +20,6 @@ import { downloadContent, type DownloadContent } from '@/lib/download-content';
 import type { HomeLocale } from '@/lib/homepage-content';
 import {
   FALLBACK_RELEASE_URL,
-  type DownloadFormat,
   formatAssetSize,
   getDownloadsForKey,
   getRecommendedForKey,
@@ -47,15 +46,7 @@ const PAGE_SECTIONS: Array<{
   },
 ];
 
-const FORMAT_DECISION_ORDER: DownloadFormat[] = [
-  'exe',
-  'msi',
-  'dmg',
-  'app-tar-gz',
-  'appimage',
-  'deb',
-  'rpm',
-];
+
 
 interface ReleaseState {
   data: ReleaseResponseBody | null;
@@ -231,14 +222,7 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
             ) : null}
           </motion.section>
 
-          <motion.section
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
-            }}
-          >
-            <DecisionHelper content={content} />
-          </motion.section>
+
 
           {release.status === 'loading' ? (
             <motion.div
@@ -366,83 +350,23 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
               </span>
             </HeaderLink>
           </motion.div>
+
+          <motion.section
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+            }}
+            className="border-t border-stone-200/50 pt-8 text-xs leading-[1.7] text-stone-500 dark:border-stone-800/50 dark:text-stone-400"
+          >
+            <p>{content.page.desktopOnlyNote}</p>
+            <p className="mt-3">{content.page.installSafetyNote}</p>
+          </motion.section>
         </motion.div>
       </div>
     </main>
   );
 }
 
-function DecisionHelper({ content }: { content: DownloadContent }) {
-  return (
-    <div className="rounded-2xl bg-white/40 p-5 ring-1 ring-stone-200/50 transition-colors dark:bg-stone-900/30 dark:ring-stone-800/50 sm:p-6">
-      <div className="max-w-2xl">
-        <h2 className="text-base font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
-          {content.page.decisionTitle}
-        </h2>
-        <p className="mt-2 text-sm font-light leading-[1.7] text-stone-500 dark:text-stone-400">
-          {content.page.decisionDescription}
-        </p>
-      </div>
-
-      <div className="mt-5 grid gap-5 lg:grid-cols-[1.35fr_1fr]">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
-            {content.page.platformChoiceLabel}
-          </p>
-          <div className="mt-3 grid gap-3 md:grid-cols-3">
-            {PAGE_SECTIONS.map((section) => (
-              <div key={section.id} className="space-y-2">
-                <h3 className="text-sm font-medium text-stone-700 dark:text-stone-200">
-                  {content.platformGroups[section.id]}
-                </h3>
-                <ul className="space-y-2">
-                  {section.keys.map((key) => (
-                    <li key={key} className="text-sm leading-[1.55]">
-                      <span className="block font-medium text-stone-600 dark:text-stone-300">
-                        {content.platforms[key]}
-                      </span>
-                      <span className="block text-xs text-stone-500 dark:text-stone-400">
-                        {content.platformDescriptions[key]}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-400 dark:text-stone-500">
-            {content.page.formatChoiceLabel}
-          </p>
-          <div className="mt-3 grid gap-2">
-            {FORMAT_DECISION_ORDER.map((format) => (
-              <div
-                key={format}
-                className="grid grid-cols-[6.5rem_1fr] gap-3 text-sm leading-[1.55] sm:grid-cols-[7.5rem_1fr]"
-              >
-                <span className="font-medium text-stone-600 dark:text-stone-300">
-                  {content.formats[format]}
-                </span>
-                <span className="text-xs text-stone-500 dark:text-stone-400">
-                  {content.formatDescriptions[format]}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <p className="mt-5 border-t border-stone-200/70 pt-4 text-xs leading-[1.7] text-stone-500 dark:border-stone-800/70 dark:text-stone-400">
-        {content.page.desktopOnlyNote}
-      </p>
-      <p className="mt-3 text-xs leading-[1.7] text-stone-500 dark:text-stone-400">
-        {content.page.installSafetyNote}
-      </p>
-    </div>
-  );
-}
 
 function DownloadRow({
   download,

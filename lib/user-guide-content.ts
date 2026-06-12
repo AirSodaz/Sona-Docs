@@ -151,7 +151,7 @@ const GUIDE_PREFIXES: Record<HomeLocale, string> = {
 const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
   en: {
     guideLabel: 'User Guide',
-    homeLabel: 'Back Home',
+    homeLabel: 'Back to home',
     alternateLanguageLabel: '简体中文',
     sourceLabel: 'Source Doc',
     mobileNavLabel: 'Guide pages',
@@ -678,21 +678,21 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'CLI Guide',
         navLabel: 'CLI Guide',
         description:
-          "Run Sona's offline batch transcription from the terminal, understand packaged versus source-build entry points, and verify the current command surface.",
+          "Run Sona's offline batch transcription from the terminal, manage preset models, generate shell completions, and start the headless API server.",
         contentFile: 'en/cli-guide.md',
       },
       'zh-CN': {
         title: 'CLI 指南',
         navLabel: 'CLI 指南',
         description:
-          '从终端运行 Sona 的离线批量转录，理解安装包与源码构建两种入口，并确认当前命令行能力边界。',
+          '从终端运行 Sona 的离线批量转录，管理预置模型，生成 shell 补全脚本，并启动无界面本地服务。',
         contentFile: 'zh-CN/cli-guide.md',
       },
       ja: {
         title: 'CLI ガイド',
         navLabel: 'CLI ガイド',
         description:
-          'ターミナルからオフライン文字起こし、モデル管理、ヘッドレス API サーバー起動を行うための CLI リファレンスです。',
+          'ターミナルからオフライン文字起こし、プリセットモデル管理、shell 補完生成、ヘッドレス API サーバー起動を行うための CLI リファレンスです。',
         contentFile: 'ja/cli-guide.md',
       },
     
@@ -700,7 +700,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'CLI 指南',
         navLabel: 'CLI 參考',
         description:
-          '從終端機執行 Sona 的離線批次轉錄，理解安裝包與原始碼建構兩種入口，並確認目前命令列能力邊界。',
+          '從終端機執行 Sona 的離線批次轉錄，管理預設模型，產生 shell 補全腳本，並啟動無外介面本機服務。',
         contentFile: 'zh-TW/cli-guide.md',
       },
     },

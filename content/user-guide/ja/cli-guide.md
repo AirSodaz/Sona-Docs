@@ -20,7 +20,7 @@ sona transcribe ./sample.mp4 \
   --output ./sample.srt
 ```
 
-`--output` を指定しない場合、文字起こし結果は JSON として標準出力（`stdout`）に出力されます。`--output` を指定した場合、`--format` を明示しない限り、出力形式はファイル拡張子から自動判定されます。
+`--output` を指定しない場合、文字起こし結果は JSON として標準出力（`stdout`）に出力されます。`--output` を指定した場合、`--format` を明示しない限り、出力形式はファイル拡張子から自動判定されます。既存の出力ファイルは既定で保護されます。上書きする場合だけ `--force` を指定してください。
 
 ### ディレクトリを文字起こしする
 
@@ -36,15 +36,23 @@ sona transcribe \
 
 ディレクトリモードでは、対応している各メディアファイルごとに `--output-dir` へ文字起こしファイルを書き出します。既定では直下のファイルだけを走査します。`--recursive` を追加するとサブディレクトリも対象になり、相対パスを保ったまま出力されます。文字起こし本文はファイルへ書き出され、`stdout` には JSON の成功 / 失敗サマリーが出力されます。
 
+複数の入力ファイルや glob パターンも指定できます。これらはディレクトリモードと同じバッチ出力計画を使うため、`--output-dir` が必要です。
+
+```bash
+sona transcribe ./media/*.wav ./media/interview.mp4 --output-dir ./transcripts --format srt
+```
+
 ### モデルを一覧表示、ダウンロード、削除する
 
 ```bash
 sona models list --mode offline --type whisper
 sona models list --language zh --installed
+sona models list --json
 sona models download sherpa-onnx-whisper-turbo
 sona models delete sherpa-onnx-whisper-turbo
 ```
 
+`models list` は既定で読みやすい表形式で出力します。`install_path` を含む完全な機械可読形式が必要なスクリプトでは `--json` を使ってください。
 `models download` を実行すると、選択したプリセットで必要な場合に、`silero-vad` や既定の句読点モデルなどの関連モデルも自動でダウンロードされます。
 `models delete` は指定したモデルだけを削除します。関連モデルは自動削除されません。
 
@@ -73,6 +81,8 @@ vad_buffer_size = 5.0
 gpu_acceleration = "auto"
 hotwords = "Sona,offline ASR"
 format = "srt"
+quiet = false
+jobs = 1
 ```
 
 ### `transcribe` の設定キー
@@ -87,6 +97,8 @@ format = "srt"
 | `threads` | 任意 | `0` より大きい整数 | `4` | 認識処理のスレッド数。 |
 | `enable_itn` | 任意 | `true` または `false` | `false` | 逆テキスト正規化（ITN）を有効にします。 |
 | `hotwords` | 任意 | カンマ区切りの単語 | なし | カスタム ASR ホットワード。現在、Transducer および Qwen3 モデルでサポートされています。 |
+| `quiet` | 任意 | `true` または `false` | `false` | `true` の場合、文字起こしの進捗表示を隠します。CLI の `--quiet` でも有効になります。 |
+| `jobs` | 任意 | `0` より大きい整数 | `1` | ディレクトリ、複数入力、glob モードでの最大同時ファイルジョブ数。CLI の `--jobs` が上書きします。 |
 | `vad_buffer_size` | 任意 | `0` より大きい数値 | `5.0` | VAD のバッファサイズ（秒単位）。 |
 | `gpu_acceleration` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | GPU アクセラレーションを無効にする場合は `cpu` を指定します。 |
 | `format` | 任意 | `json`, `txt`, `srt`, `vtt`, `md` | 標準出力またはディレクトリモードでは `json`、それ以外は `--output` から自動判定 | 出力ファイル拡張子からの自動判定を上書きします。 |
@@ -131,21 +143,23 @@ sona --verbose transcribe ./sample.mp4 --config ./sona-cli.toml
 sona transcribe --help
 ```
 
-詳細な診断情報は標準エラー出力（`stderr`）に出力されます。`models list` の結果や、`--output` を付けない `transcribe` の JSON 出力など、コマンド本体の結果は標準出力（`stdout`）に出るため、他のツールへパイプできます。
+詳細な診断情報は標準エラー出力（`stderr`）に出力されます。`models list` の表または JSON 出力や、`--output` を付けない `transcribe` の JSON 出力など、コマンド本体の結果は標準出力（`stdout`）に出るため、他のツールへパイプできます。
 
 高度なラッパーやテストでは、`SONA_FORCE_CLI=1` を設定すると、認識済みの CLI サブコマンドなしで実行ファイルが起動された場合でも CLI モードを強制できます。
+
+`shell` 補完スクリプトは `sona completions <shell>` で生成できます。対応シェルは `bash`、`zsh`、`fish`、`powershell`、`elvish` で、スクリプトは `stdout` に出力されます。
 
 ### `transcribe`
 
 | パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
 | --- | --- | --- | --- | --- |
-| `<input>` | `--input-dir` を指定しない限り必須 | ローカルの音声または動画ファイルのパス | なし | 文字起こし対象の単一ファイル。 |
+| `<input>...` | `--input-dir` を指定しない限り必須 | ローカルの音声 / 動画ファイルパス、または glob パターン | なし | 1 つの入力は単一ファイルモードです。複数入力や glob パターンはバッチモードになり、`--output-dir` が必要です。 |
 | `--input-dir <dir>` | ディレクトリモードでは必須 | ディレクトリパス | なし | ディレクトリ内の対応メディアファイルを文字起こしします。 |
 | `--config <path>` | 任意 | TOML ファイルパス | なし | 設定ファイルから既定値を読み込みます。 |
-| `--output <path>` | 任意 | ファイルシステムパス | `stdout` | 出力ファイルのパス。 |
-| `--output-dir <dir>` | `--input-dir` と併用する場合は必須 | ディレクトリパス | なし | 入力ファイルごとに文字起こしファイルを書き出します。 |
+| `--output <path>` | 任意 | ファイルシステムパス | `stdout` | 単一ファイルモード専用の出力ファイルパス。既存ファイルがある場合は、`--force` を指定しない限りエラーになります。 |
+| `--output-dir <dir>` | `--input-dir`、複数入力、または glob と併用する場合は必須 | ディレクトリパス | なし | 入力ファイルごとに文字起こしファイルを書き出します。計画された出力が既にある場合は、`--force` を指定しない限りエラーになります。 |
 | `--recursive` | 任意 | フラグ | オフ | サブディレクトリを走査し、相対出力パスを保ちます。 |
-| `--jobs <n>` | 任意 | `0` より大きい整数 | `1` | ディレクトリモードの最大同時ファイルジョブ数。 |
+| `--jobs <n>` | 任意 | `0` より大きい整数 | `jobs` 設定または `1` | バッチモードの最大同時ファイルジョブ数。 |
 | `--format <format>` | 任意 | `json`, `txt`, `srt`, `vtt`, `md` | 標準出力またはディレクトリモードでは `json`、それ以外は `--output` から自動判定 | 設定ファイルと出力ファイル拡張子による自動判定を上書きします。 |
 | `--language <code>` | 任意 | `auto` またはモデル言語コード | `auto` | 設定ファイルの指定を上書きします。 |
 | `--model-id <id>` | 設定ファイルで `model_id` が設定されていない限り必須 | オフラインのプリセットモデル ID | なし | メインの音声認識モデル。 |
@@ -159,7 +173,8 @@ sona transcribe --help
 | `--gpu-acceleration <provider>` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | 設定ファイルの指定を上書きします。 |
 | `--vad-buffer <seconds>` | 任意 | `0` より大きい数値 | `5.0` | `vad_buffer_size` の CLI 引数名。 |
 | `--save-wav <path>` | 任意 | ファイルシステムパス | なし | CLI 専用。リサンプリングされた中間 WAV ファイルを保存します。`--input-dir` とは併用できません。 |
-| `--quiet` | 任意 | フラグ | オフ | CLI 専用。文字起こしの進捗表示を隠します。 |
+| `--quiet` | 任意 | フラグ | オフ | 文字起こしの進捗表示を隠し、`quiet = false` を上書きします。 |
+| `--force` | 任意 | フラグ | オフ | 既存の出力ファイルの上書きを許可します。バッチモードで同じ出力に解決される入力は引き続き失敗します。 |
 
 ### `models list`
 
@@ -170,7 +185,8 @@ sona transcribe --help
 | `--type <type>` | 任意 | プリセットモデルの種類（`whisper`、`vad`、`punctuation` など） | すべての種類 | モデルタイプで絞り込みます。 |
 | `--language <code>` | 任意 | 言語トークン（`zh`、`en`、`ja`、`yue` など） | すべての言語 | 対応言語トークンで絞り込みます。 |
 | `--installed` | 任意 | フラグ | オフ | `models_dir` 内に存在するモデルだけを表示します。 |
-| 出力 | 常に | JSON | JSON | 標準出力に出力されます。 |
+| `--json` | 任意 | フラグ | オフ | 既定の表形式ではなく、機械可読 JSON を出力します。 |
+| 出力 | 常に | 表または JSON | 表 | 標準出力に出力されます。 |
 
 ### `models download`
 

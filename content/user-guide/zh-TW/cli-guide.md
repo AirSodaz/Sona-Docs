@@ -20,7 +20,7 @@ sona transcribe ./sample.mp4 \
   --output ./sample.srt
 ```
 
-不指定 `--output` 時，轉錄結果會以 JSON 寫入 `stdout`。指定 `--output` 時，格式會從副檔名推斷，除非同時傳入 `--format`。
+不指定 `--output` 時，轉錄結果會以 JSON 寫入 `stdout`。指定 `--output` 時，格式會從副檔名推斷，除非同時傳入 `--format`。已有輸出檔案預設受保護；只有明確傳入 `--force` 時才會覆寫。
 
 ### 轉錄目錄
 
@@ -36,15 +36,23 @@ sona transcribe \
 
 目錄模式會為每個受支援媒體檔案在 `--output-dir` 中寫出一個轉錄檔案。預設只掃描目錄直屬檔案；加入 `--recursive` 後會包含子目錄，並保留相對輸出路徑。轉錄正文寫入檔案，`stdout` 會輸出 JSON 成功/失敗彙總。
 
+也可以傳入多個輸入檔案或 glob 萬用模式。它們會使用與目錄模式相同的批次輸出規劃，並要求傳入 `--output-dir`：
+
+```bash
+sona transcribe ./media/*.wav ./media/interview.mp4 --output-dir ./transcripts --format srt
+```
+
 ### 列出、下載或刪除模型
 
 ```bash
 sona models list --mode offline --type whisper
 sona models list --language zh --installed
+sona models list --json
 sona models download sherpa-onnx-whisper-turbo
 sona models delete sherpa-onnx-whisper-turbo
 ```
 
+`models list` 預設輸出便於閱讀的表格。腳本需要完整機器可讀結構時使用 `--json`，其中仍包含 `install_path`。
 當所選預設模型需要伴生模型時，`models download` 會自動下載所需模型，例如 `silero-vad` 或預設標點模型。
 `models delete` 只會刪除指定模型，不會自動刪除伴生模型。
 
@@ -73,6 +81,8 @@ vad_buffer_size = 5.0
 gpu_acceleration = "auto"
 hotwords = "Sona,offline ASR"
 format = "srt"
+quiet = false
+jobs = 1
 ```
 
 ### `transcribe` 設定鍵
@@ -87,6 +97,8 @@ format = "srt"
 | `threads` | 可選 | 大於 `0` 的整數 | `4` | 辨識執行緒數。 |
 | `enable_itn` | 可選 | `true` 或 `false` | `false` | 啟用逆文字歸一化。 |
 | `hotwords` | 可選 | 逗號分隔片語 | 無 | 自訂 ASR 熱詞；目前支援 Transducer 和 Qwen3 模型。 |
+| `quiet` | 可選 | `true` 或 `false` | `false` | 設為 true 時隱藏轉錄進度；CLI `--quiet` 也會啟用。 |
+| `jobs` | 可選 | 大於 `0` 的整數 | `1` | 目錄、多輸入或 glob 模式下最大併發檔案任務數；CLI `--jobs` 會覆寫。 |
 | `vad_buffer_size` | 可選 | 大於 `0` 的數字 | `5.0` | VAD 緩衝秒數。 |
 | `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 使用 `cpu` 可明確關閉 GPU 加速。 |
 | `format` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 或目錄模式時為 `json`，否則從 `--output` 推斷 | 覆寫輸出副檔名推斷。 |
@@ -131,21 +143,23 @@ sona --verbose transcribe ./sample.mp4 --config ./sona-cli.toml
 sona transcribe --help
 ```
 
-詳細診斷日誌會寫入 `stderr`。指令結果仍寫入 `stdout`，包括 `models list` 的 JSON 輸出，以及 `transcribe` 未指定 `--output` 時的輸出，因此仍可安全透過管線傳給其他工具。
+詳細診斷日誌會寫入 `stderr`。指令結果仍寫入 `stdout`，包括 `models list` 的表格或 JSON 輸出，以及 `transcribe` 未指定 `--output` 時的輸出，因此仍可安全透過管線傳給其他工具。
 
 進階包裝腳本和測試可以設定 `SONA_FORCE_CLI=1`，即使可執行檔啟動時沒有識別到 CLI 子指令，也強制進入 CLI 模式。
+
+使用 `sona completions <shell>` 產生 shell 補全腳本。支援 `bash`、`zsh`、`fish`、`powershell` 和 `elvish`；腳本會寫入 `stdout`。
 
 ### `transcribe`
 
 | 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
 | --- | --- | --- | --- | --- |
-| `<input>` | 必選，除非傳入 `--input-dir` | 本機音訊或影片檔案路徑 | 無 | 要轉錄的單一檔案。 |
+| `<input>...` | 必選，除非傳入 `--input-dir` | 本機音訊/影片檔案路徑或 glob 萬用模式 | 無 | 單一輸入保持單檔模式；多個輸入或 glob 模式會進入批次模式並要求 `--output-dir`。 |
 | `--input-dir <dir>` | 目錄模式必選 | 目錄路徑 | 無 | 轉錄目錄中的受支援媒體檔案。 |
 | `--config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
-| `--output <path>` | 可選 | 檔案系統路徑 | `stdout` | 輸出檔案路徑。 |
-| `--output-dir <dir>` | 與 `--input-dir` 同用時必選 | 目錄路徑 | 無 | 為每個輸入檔案寫出一個轉錄檔案。 |
+| `--output <path>` | 可選 | 檔案系統路徑 | `stdout` | 僅用於單檔模式。檔案已存在時會報錯，除非傳入 `--force`。 |
+| `--output-dir <dir>` | 與 `--input-dir`、多個輸入或 glob 同用時必選 | 目錄路徑 | 無 | 為每個輸入檔案寫出一個轉錄檔案。計劃輸出已存在時會報錯，除非傳入 `--force`。 |
 | `--recursive` | 可選 | 旗標 | 關閉 | 掃描子目錄並保留相對輸出路徑。 |
-| `--jobs <n>` | 可選 | 大於 `0` 的整數 | `1` | 目錄模式下最大併發檔案任務數。 |
+| `--jobs <n>` | 可選 | 大於 `0` 的整數 | `jobs` 設定或 `1` | 批次模式下最大併發檔案任務數。 |
 | `--format <format>` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 或目錄模式時為 `json`，否則從 `--output` 推斷 | 覆寫設定和輸出副檔名推斷。 |
 | `--language <code>` | 可選 | `auto` 或模型語言代碼 | `auto` | 覆寫設定。 |
 | `--model-id <id>` | 必選，除非設定了 `model_id` | 離線預設模型 ID | 無 | 主轉錄模型。 |
@@ -159,7 +173,8 @@ sona transcribe --help
 | `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 覆寫設定。 |
 | `--vad-buffer <seconds>` | 可選 | 大於 `0` 的數字 | `5.0` | `vad_buffer_size` 的 CLI 參數名。 |
 | `--save-wav <path>` | 可選 | 檔案系統路徑 | 無 | 僅 CLI 參數；儲存中間重取樣 WAV。與 `--input-dir` 不相容。 |
-| `--quiet` | 可選 | 旗標 | 關閉 | 僅 CLI 參數；隱藏轉錄進度。 |
+| `--quiet` | 可選 | 旗標 | 關閉 | 隱藏轉錄進度，並覆寫 `quiet = false`。 |
+| `--force` | 可選 | 旗標 | 關閉 | 允許覆寫已有輸出檔案。批次模式中規劃出的重複輸出仍會失敗。 |
 
 ### `models list`
 
@@ -170,7 +185,8 @@ sona transcribe --help
 | `--type <type>` | 可選 | 預設模型類型，如 `whisper`、`vad`、`punctuation` | 所有類型 | 按模型類型過濾。 |
 | `--language <code>` | 可選 | 語言代碼，如 `zh`、`en`、`ja`、`yue` | 所有語言 | 依支援的語言代碼過濾。 |
 | `--installed` | 可選 | 旗標 | 關閉 | 只顯示 `models_dir` 中已存在的模型。 |
-| 輸出 | 總是 | JSON | JSON | 寫入 `stdout`。 |
+| `--json` | 可選 | 旗標 | 關閉 | 輸出機器可讀 JSON，而不是預設表格。 |
+| 輸出 | 總是 | 表格或 JSON | 表格 | 寫入 `stdout`。 |
 
 ### `models download`
 

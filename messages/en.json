@@ -227,7 +227,7 @@
     "page": {
       "alternateLanguageLabel": "简体中文",
       "decisionDescription": "Start with your operating system and processor, then choose the installer format that fits how you manage apps.",
-      "decisionTitle": "Choose the right build",
+      "decisionTitle": "Choose platform and format",
       "description": "Pick the desktop build that matches your system, architecture, and preferred installer format.",
       "desktopOnlyNote": "Sona runs as a desktop app. If you are on a phone or tablet, open this page again on the computer where you want to install it.",
       "emptyBuildsDescription": "The release loaded, but it does not include Windows, macOS, or Linux desktop assets that this page can recognize. GitHub Releases may still list manual artifacts.",
@@ -291,7 +291,7 @@
       "alternateLanguageLabel": "简体中文",
       "alternateLanguageShortLabel": "中",
       "githubLabel": "GitHub",
-      "homeLabel": "Home"
+      "homeLabel": "Back to home"
     },
     "footer": {
       "license": "Open sourced under MIT License.",
@@ -551,7 +551,7 @@
   },
   "UserGuidePage": {
     "guideLabel": "User Guide",
-    "homeLabel": "Back Home",
+    "homeLabel": "Back to home",
     "alternateLanguageLabel": "简体中文",
     "sourceLabel": "Source Doc",
     "mobileNavLabel": "Guide pages",

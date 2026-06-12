@@ -227,7 +227,7 @@
     "page": {
       "alternateLanguageLabel": "English",
       "decisionDescription": "まず OS とプロセッサを選び、次にアプリの管理方法に合うインストーラー形式を選んでください。",
-      "decisionTitle": "環境に合うビルドを選ぶ",
+      "decisionTitle": "プラットフォームと形式の選択",
       "description": "お使いのシステム、アーキテクチャ、インストール方法に合うデスクトップ版を選択できます。",
       "desktopOnlyNote": "Sona はデスクトップアプリです。スマートフォンやタブレットでこのページを見ている場合は、インストールするコンピューターで開き直してください。",
       "emptyBuildsDescription": "リリース情報は取得できましたが、このページで認識できる Windows、macOS、Linux 向けのデスクトップアセットが見つかりませんでした。GitHub Releases には手動で確認できるファイルがある場合があります。",
@@ -291,7 +291,7 @@
       "alternateLanguageLabel": "English",
       "alternateLanguageShortLabel": "EN",
       "githubLabel": "GitHub",
-      "homeLabel": "ホーム"
+      "homeLabel": "ホームへ戻る"
     },
     "footer": {
       "license": "MIT ライセンスで公開されています。",

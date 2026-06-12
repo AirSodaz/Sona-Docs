@@ -227,7 +227,7 @@
     "page": {
       "alternateLanguageLabel": "English",
       "decisionDescription": "先按作業系統和處理器選擇平台，再按您管理應用程式的方式選擇安裝格式。",
-      "decisionTitle": "選擇合適的建構",
+      "decisionTitle": "選擇平台與格式",
       "description": "按系統、架構和安裝格式選擇最適合您的桌面端建構，不必在 Releases 列表裡自己翻找。",
       "desktopOnlyNote": "Sona 是桌面端應用程式。如果您正在手機或平板上瀏覽，請在準備安裝的電腦上重新打開本頁。",
       "emptyBuildsDescription": "release 已成功載入，但其中沒有本頁可辨識的 Windows、macOS 或 Linux 桌面端資源。GitHub Releases 中可能仍有可手動查看的建構。",
@@ -291,7 +291,7 @@
       "alternateLanguageLabel": "English",
       "alternateLanguageShortLabel": "EN",
       "githubLabel": "GitHub",
-      "homeLabel": "首頁"
+      "homeLabel": "返回首頁"
     },
     "footer": {
       "license": "基於 MIT 協定開源。",
