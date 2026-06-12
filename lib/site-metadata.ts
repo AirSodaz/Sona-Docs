@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { type HomeLocale } from '@/lib/homepage-content';
 import { getSiteUrl } from '@/lib/site-url';
-import { getUserGuidePageFromSlug, buildUserGuidePath } from '@/lib/user-guide-content';
+import {
+  buildLocalizedUserGuidePath,
+  getUserGuidePageFromSlug,
+} from '@/lib/user-guide-content';
 
 const openGraphLocales: Record<HomeLocale, string> = {
   en: 'en_US',
@@ -31,20 +34,20 @@ export function createGuidePageMetadata(
       icon: '/icon.svg',
     },
     alternates: {
-      canonical: buildUserGuidePath(locale, page.id),
+      canonical: buildLocalizedUserGuidePath(locale, page.id),
       languages: {
-        en: buildUserGuidePath('en', page.id),
-        'zh-CN': buildUserGuidePath('zh-CN', page.id),
-        'zh-TW': buildUserGuidePath('zh-TW', page.id),
-        ja: buildUserGuidePath('ja', page.id),
-        ko: buildUserGuidePath('ko', page.id),
-        'x-default': buildUserGuidePath('en', page.id),
+        en: buildLocalizedUserGuidePath('en', page.id),
+        'zh-CN': buildLocalizedUserGuidePath('zh-CN', page.id),
+        'zh-TW': buildLocalizedUserGuidePath('zh-TW', page.id),
+        ja: buildLocalizedUserGuidePath('ja', page.id),
+        ko: buildLocalizedUserGuidePath('ko', page.id),
+        'x-default': buildLocalizedUserGuidePath('en', page.id),
       },
     },
     openGraph: {
       title: page.title,
       description: page.description,
-      url: page.path,
+      url: buildLocalizedUserGuidePath(locale, page.id),
       locale: openGraphLocales[locale],
       alternateLocale: Object.values(openGraphLocales).filter(
         (value) => value !== openGraphLocales[locale],

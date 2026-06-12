@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildLocalizedUserGuidePath,
   getAllUserGuidePaths,
   getUserGuidePageFromSlug,
   resolveUserGuideHref,
@@ -38,6 +39,24 @@ describe('user guide content', () => {
     expect(koreanPage?.id).toBe('api-guide');
     expect(koreanPage?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/api.md',
+    );
+  });
+
+  it('builds public guide paths with locale prefixes for SEO surfaces', () => {
+    expect(buildLocalizedUserGuidePath('en', 'api-guide')).toBe(
+      '/en/user-guide/api',
+    );
+    expect(buildLocalizedUserGuidePath('zh-CN', 'api-guide')).toBe(
+      '/zh-CN/user-guide/api',
+    );
+    expect(buildLocalizedUserGuidePath('zh-TW', 'api-guide')).toBe(
+      '/zh-TW/user-guide/api',
+    );
+    expect(buildLocalizedUserGuidePath('ja', 'api-guide')).toBe(
+      '/ja/user-guide/api',
+    );
+    expect(buildLocalizedUserGuidePath('ko', 'api-guide')).toBe(
+      '/ko/user-guide/api',
     );
   });
 

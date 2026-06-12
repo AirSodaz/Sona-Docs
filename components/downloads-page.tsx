@@ -16,7 +16,7 @@ import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { SiteHeader } from '@/components/site-header';
-import { downloadContent, type DownloadContent } from '@/lib/download-content';
+import { buildDownloadContentFromMessages } from '@/lib/download-content';
 import type { HomeLocale } from '@/lib/homepage-content';
 import {
   FALLBACK_RELEASE_URL,
@@ -57,29 +57,7 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
   const t = useTranslations('DownloadsPage');
   const pathname = usePathname();
 
-  const buttonRaw = t.raw('button') as any;
-  const pageRaw = t.raw('page') as any;
-
-  const content: DownloadContent = {
-    metadata: {
-      title: t('metadata.title'),
-      description: t('metadata.description'),
-    },
-    button: {
-      ...buttonRaw,
-      allBuildsHref: '/downloads',
-    },
-    page: {
-      ...pageRaw,
-      homeHref: '/',
-      firstRunHref: '/user-guide/getting-started',
-    },
-    platformGroups: t.raw('platformGroups') as any,
-    formats: t.raw('formats') as any,
-    formatDescriptions: t.raw('formatDescriptions') as any,
-    platforms: t.raw('platforms') as any,
-    platformDescriptions: t.raw('platformDescriptions') as any,
-  };
+  const content = buildDownloadContentFromMessages(t);
 
   const [release, setRelease] = useState<ReleaseState>({
     data: null,

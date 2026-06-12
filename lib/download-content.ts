@@ -56,6 +56,43 @@ export interface DownloadContent {
   platforms: Record<DownloadPlatformKey, string>;
 }
 
+interface DownloadMessagesReader {
+  (key: 'metadata.description' | 'metadata.title'): string;
+  raw(key: string): unknown;
+}
+
+export function buildDownloadContentFromMessages(
+  t: DownloadMessagesReader,
+): DownloadContent {
+  return {
+    metadata: {
+      title: t('metadata.title'),
+      description: t('metadata.description'),
+    },
+    button: {
+      ...(t.raw('button') as Omit<DownloadButtonCopy, 'allBuildsHref'>),
+      allBuildsHref: '/downloads',
+    },
+    page: {
+      ...(t.raw('page') as Omit<
+        DownloadPageCopy,
+        'firstRunHref' | 'homeHref'
+      >),
+      homeHref: '/',
+      firstRunHref: '/user-guide/getting-started',
+    },
+    platformGroups: t.raw('platformGroups') as DownloadContent['platformGroups'],
+    formats: t.raw('formats') as DownloadContent['formats'],
+    formatDescriptions: t.raw(
+      'formatDescriptions',
+    ) as DownloadContent['formatDescriptions'],
+    platforms: t.raw('platforms') as DownloadContent['platforms'],
+    platformDescriptions: t.raw(
+      'platformDescriptions',
+    ) as DownloadContent['platformDescriptions'],
+  };
+}
+
 export const downloadContent = {
   en: {
     metadata: {

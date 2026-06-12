@@ -146,6 +146,16 @@ const GUIDE_PREFIXES: Record<HomeLocale, string> = {
   ko: '/user-guide',
 };
 
+const LOCALE_ROUTE_PREFIXES: Record<HomeLocale, string> = {
+  en: '/en',
+  'zh-CN': '/zh-CN',
+  'zh-TW': '/zh-TW',
+  ja: '/ja',
+  ko: '/ko',
+};
+
+const GUIDE_LOCALES: HomeLocale[] = ['en', 'zh-CN', 'zh-TW', 'ja', 'ko'];
+
 const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
   en: {
     guideLabel: 'User Guide',
@@ -972,6 +982,13 @@ export function buildUserGuidePath(
   return slug.length > 0 ? `${prefix}/${slug.join('/')}` : prefix;
 }
 
+export function buildLocalizedUserGuidePath(
+  locale: HomeLocale,
+  pageId: UserGuidePageId,
+) {
+  return `${LOCALE_ROUTE_PREFIXES[locale]}${buildUserGuidePath(locale, pageId)}`;
+}
+
 function buildUserGuideNavItem(
   locale: HomeLocale,
   pageId: UserGuidePageId,
@@ -1086,15 +1103,10 @@ export function getUserGuideStaticParams() {
 }
 
 export function getAllUserGuidePaths() {
-  const localePrefixes: Record<HomeLocale, string> = {
-    en: '/en',
-    'zh-CN': '/zh-CN',
-    'zh-TW': '/zh-TW',
-    ja: '/ja',
-    ko: '/ko',
-  };
-  return (['en', 'zh-CN', 'zh-TW', 'ja', 'ko'] as HomeLocale[]).flatMap((locale) =>
-    USER_GUIDE_PAGE_ORDER.map((pageId) => `${localePrefixes[locale]}${buildUserGuidePath(locale, pageId)}`),
+  return GUIDE_LOCALES.flatMap((locale) =>
+    USER_GUIDE_PAGE_ORDER.map((pageId) =>
+      buildLocalizedUserGuidePath(locale, pageId),
+    ),
   );
 }
 

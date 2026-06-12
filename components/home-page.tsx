@@ -12,7 +12,7 @@ import { SiteHeader } from '@/components/site-header';
 import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
-import { downloadContent } from '@/lib/download-content';
+import { buildDownloadContentFromMessages } from '@/lib/download-content';
 import type { HomeLocale, HomePageContent, UseCaseId } from '@/lib/homepage-content';
 import { motion } from 'motion/react';
 
@@ -22,6 +22,7 @@ export function HomePage({
   locale: HomeLocale;
 }) {
   const t = useTranslations('HomePage');
+  const downloadT = useTranslations('DownloadsPage');
   const pathname = usePathname();
 
   const useCasesRaw = t.raw('useCases') as any;
@@ -78,7 +79,7 @@ export function HomePage({
   };
 
   const demoPreviewId = 'homepage-demo-preview';
-  const downloads = downloadContent[locale === 'ja' ? 'en' : locale]; // fallback downloads config to English for Japanese for now
+  const downloads = buildDownloadContentFromMessages(downloadT);
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
