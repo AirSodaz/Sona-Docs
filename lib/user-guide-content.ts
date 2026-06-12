@@ -48,7 +48,6 @@ interface UserGuidePageDefinition {
 interface UserGuideUiCopy {
   guideLabel: string;
   homeLabel: string;
-  alternateLanguageLabel: string;
   sourceLabel: string;
   mobileNavLabel: string;
   sidebarTitle: string;
@@ -91,10 +90,8 @@ export interface UserGuidePageModel {
   description: string;
   contentFile: string;
   path: string;
-  alternatePath: string;
   homeHref: string;
   homeLabel: string;
-  alternateLanguageLabel: string;
   sourceDocId: UserGuideSourceDocId;
   sourceHref: string;
   sourceLabel: string;
@@ -146,13 +143,13 @@ const GUIDE_PREFIXES: Record<HomeLocale, string> = {
   'zh-CN': '/user-guide',
   'zh-TW': '/user-guide',
   ja: '/user-guide',
+  ko: '/user-guide',
 };
 
 const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
   en: {
     guideLabel: 'User Guide',
     homeLabel: 'Back to home',
-    alternateLanguageLabel: '简体中文',
     sourceLabel: 'Source Doc',
     mobileNavLabel: 'Guide pages',
     sidebarTitle: 'Browse the guide',
@@ -182,7 +179,6 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
   'zh-CN': {
     guideLabel: '用户指南',
     homeLabel: '返回首页',
-    alternateLanguageLabel: 'English',
     sourceLabel: '源文档',
     mobileNavLabel: '指南页面',
     sidebarTitle: '浏览指南',
@@ -212,7 +208,6 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
   ja: {
     guideLabel: 'ユーザーガイド',
     homeLabel: 'ホームへ戻る',
-    alternateLanguageLabel: 'English',
     sourceLabel: '元のドキュメント',
     mobileNavLabel: 'ガイドページ',
     sidebarTitle: 'ガイドを見る',
@@ -239,10 +234,38 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       copiedLabel: 'コピーしました',
     },
   },
+  ko: {
+    guideLabel: '사용자 가이드',
+    homeLabel: '홈으로 돌아가기',
+    sourceLabel: '원본 문서',
+    mobileNavLabel: '가이드 페이지',
+    sidebarTitle: '가이드 둘러보기',
+    previousLabel: '이전',
+    nextLabel: '다음',
+    groupLabels: {
+      start: '시작하기',
+      workflow: '핵심 흐름',
+      extended: '확장 기능',
+      reference: '참고와 도움말',
+    },
+    overview: {
+      cardsEyebrow: '시작하기',
+      cardsTitle: '지금 하려는 일에 가장 가까운 경로부터 여세요.',
+      cardsDescription:
+        '대부분은 처음부터 문서 전체를 볼 필요가 없습니다. 현재 작업에 맞는 짧은 경로에서 시작한 뒤 필요한 페이지만 이어서 보면 됩니다.',
+      browseEyebrow: '전체 내용',
+      browseTitle: 'Sona의 실제 작업 흐름에 맞춰 정리한 가이드입니다.',
+      browseDescription:
+        '처음이라면 개요에서 시작한 뒤 설정, 전사 만들기, 편집, 선택형 AI 단계, 작업공간 정리, 내보내기, 확장 기능, CLI 참고, 문제 해결 순서로 이어가세요.',
+    },
+    codeBlock: {
+      copyLabel: '코드 복사',
+      copiedLabel: '복사됨',
+    },
+  },
   'zh-TW': {
     guideLabel: '使用者指南',
     homeLabel: '返回首頁',
-    alternateLanguageLabel: 'English',
     sourceLabel: '原始文件',
     mobileNavLabel: '指南頁面',
     sidebarTitle: '瀏覽指南',
@@ -299,6 +322,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/overview.md',
       },
     
+      ko: {
+        title: 'Sona 사용자 가이드',
+        navLabel: '개요',
+        description:
+          'Sona 문서의 입구입니다. 설정, Live Record, Batch Import, 편집, 선택형 AI 단계, Workspace 정리, 내보내기, 확장 기능, 도움말로 바로 이어집니다.',
+        contentFile: 'ko/overview.md',
+      },
       'zh-TW': {
         title: 'Sona 使用者指南',
         navLabel: '總覽',
@@ -335,6 +365,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/getting-started.md',
       },
     
+      ko: {
+        title: '시작하기',
+        navLabel: '시작하기',
+        description:
+          'Sona 설치, 첫 실행 설정, 권장 오프라인 모델 준비, 첫 로컬 전사 흐름까지 안내합니다.',
+        contentFile: 'ko/getting-started.md',
+      },
       'zh-TW': {
         title: '快速開始',
         navLabel: '快速開始',
@@ -371,6 +408,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/live-record.md',
       },
     
+      ko: {
+        title: 'Live Record',
+        navLabel: 'Live Record',
+        description:
+          '녹음 중에도 전사 초안을 확인하고, 타임스탬프, Draft, 입력 소스, 단축키의 기본 흐름을 이해합니다.',
+        contentFile: 'ko/live-record.md',
+      },
       'zh-TW': {
         title: '即時錄音',
         navLabel: '即時錄音',
@@ -407,6 +451,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/batch-import.md',
       },
     
+      ko: {
+        title: 'Batch Import',
+        navLabel: 'Batch Import',
+        description:
+          '이미 있는 오디오나 비디오 파일을 대기열에 넣고, 완료된 전사를 같은 편집기에서 검토하고 내보냅니다.',
+        contentFile: 'ko/batch-import.md',
+      },
       'zh-TW': {
         title: '批次轉錄',
         navLabel: '批次轉錄',
@@ -443,6 +494,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/edit-and-playback.md',
       },
     
+      ko: {
+        title: '편집과 재생',
+        navLabel: '편집과 재생',
+        description:
+          '전사 세그먼트를 검토하고, 재생, 타임스탬프, 검색, 화자 확인, Version Snapshots와 함께 편집합니다.',
+        contentFile: 'ko/edit-and-playback.md',
+      },
       'zh-TW': {
         title: '編輯與播放',
         navLabel: '編輯與播放',
@@ -479,6 +537,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/ai-polish-and-translate.md',
       },
     
+      ko: {
+        title: 'AI Polish와 번역',
+        navLabel: 'AI Polish와 번역',
+        description:
+          'Provider, 기능별 모델, 추론 옵션을 설정한 뒤 필요할 때만 LLM Polish나 Translate를 실행합니다.',
+        contentFile: 'ko/ai-polish-and-translate.md',
+      },
       'zh-TW': {
         title: 'AI 潤飾與翻譯',
         navLabel: 'AI 潤飾與翻譯',
@@ -515,6 +580,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/workspace-projects-and-inbox.md',
       },
     
+      ko: {
+        title: 'Workspace, 프로젝트, Inbox',
+        navLabel: 'Workspace / 프로젝트 / Inbox',
+        description:
+          '저장된 녹음과 가져온 파일을 정리하고, All Items, Inbox, 프로젝트를 전환하며 프로젝트 기본값의 영향을 확인합니다.',
+        contentFile: 'ko/workspace-projects-and-inbox.md',
+      },
       'zh-TW': {
         title: '工作區、專案與 Inbox',
         navLabel: '工作區與專案',
@@ -551,6 +623,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/export-and-settings.md',
       },
     
+      ko: {
+        title: '내보내기와 설정',
+        navLabel: '내보내기 / 설정',
+        description:
+          '완성된 작업을 자막, JSON, 일반 텍스트, Markdown으로 내보내고, Dashboard, Diagnostics, Backup & Restore, Automation, API Server, LLM Service, Shortcuts, Voice Typing, 알림 진입점을 빠르게 찾습니다.',
+        contentFile: 'ko/export-and-settings.md',
+      },
       'zh-TW': {
         title: '匯出與設定',
         navLabel: '匯出與設定',
@@ -587,6 +666,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/ai-summary.md',
       },
     
+      ko: {
+        title: 'AI Summary',
+        navLabel: 'AI Summary',
+        description:
+          '전사 원문은 유지한 채 옆에 요약을 만들고, 템플릿, 오래된 요약 경고, 수동 편집 흐름을 이해합니다.',
+        contentFile: 'ko/ai-summary.md',
+      },
       'zh-TW': {
         title: 'AI 摘要',
         navLabel: 'AI 摘要',
@@ -623,6 +709,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/live-caption-and-voice-typing.md',
       },
     
+      ko: {
+        title: 'Live Caption과 Voice Typing',
+        navLabel: 'Live Caption / Voice Typing',
+        description:
+          '시스템 오디오용 플로팅 실시간 자막과 다른 앱에 텍스트를 입력하는 Voice Typing 흐름을 구분합니다.',
+        contentFile: 'ko/live-caption-and-voice-typing.md',
+      },
       'zh-TW': {
         title: '即時字幕與語音輸入法',
         navLabel: '即時字幕/聽寫',
@@ -659,6 +752,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/vocabulary-and-advanced-settings.md',
       },
     
+      ko: {
+        title: 'Vocabulary와 고급 설정',
+        navLabel: 'Vocabulary / 고급 설정',
+        description:
+          'Hotwords, Text Replacement, Speaker Profiles, LLM Polish의 Advanced Settings로 인식, 화자 매칭, 정리 방식을 조정합니다.',
+        contentFile: 'ko/vocabulary-and-advanced-settings.md',
+      },
       'zh-TW': {
         title: '詞彙與進階設定',
         navLabel: '進階詞彙設定',
@@ -696,6 +796,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/cli-guide.md',
       },
     
+      ko: {
+        title: 'CLI 가이드',
+        navLabel: 'CLI 가이드',
+        description:
+          '터미널에서 오프라인 일괄 전사, 프리셋 모델 관리, shell completion 생성, headless API 서버 시작을 수행하는 CLI 참고 문서입니다.',
+        contentFile: 'ko/cli-guide.md',
+      },
       'zh-TW': {
         title: 'CLI 指南',
         navLabel: 'CLI 參考',
@@ -733,6 +840,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/api-guide.md',
       },
     
+      ko: {
+        title: 'HTTP API 서버 가이드',
+        navLabel: 'API 서버',
+        description:
+          '로컬 HTTP API 서버 시작, 인증, 작업 제출, 상태 확인, Webhook 검증의 기본 흐름을 설명합니다.',
+        contentFile: 'ko/api-guide.md',
+      },
       'zh-TW': {
         title: 'HTTP API 指南',
         navLabel: 'HTTP API 參考',
@@ -769,6 +883,13 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         contentFile: 'ja/faq.md',
       },
     
+      ko: {
+        title: 'FAQ와 문제 해결',
+        navLabel: 'FAQ',
+        description:
+          '설정, 모델 누락, 녹음, Draft, 복구, Live Caption, Voice Typing, 재생, 소스 빌드와 관련된 자주 막히는 지점을 확인합니다.',
+        contentFile: 'ko/faq.md',
+      },
       'zh-TW': {
         title: '常見問題與疑難排解',
         navLabel: 'FAQ & 排障',
@@ -797,12 +918,6 @@ function isExternalHref(href: string) {
   return href.startsWith('http://') || href.startsWith('https://');
 }
 
-function getOtherLocale(locale: HomeLocale): HomeLocale {
-  if (locale === 'zh-TW') {
-    return 'en';
-  }
-  return locale === 'en' ? 'zh-CN' : 'en';
-}
 
 function getLocaleHomeHref(locale: HomeLocale) {
   return '/';
@@ -879,8 +994,8 @@ export function getUserGuidePageById(
   pageId: UserGuidePageId,
 ): UserGuidePageModel {
   const definition = userGuidePageDefinitionById[pageId];
-  const localized = definition.localizations[locale];
-  const ui = userGuideUiContent[locale];
+  const localized = definition.localizations[locale] ?? definition.localizations['en'];
+  const ui = userGuideUiContent[locale] ?? userGuideUiContent['en'];
   const sourceDocId = definition.sourceDoc ?? 'user-guide';
   const currentIndex = USER_GUIDE_PAGE_ORDER.indexOf(pageId);
   const previousId =
@@ -898,10 +1013,8 @@ export function getUserGuidePageById(
     description: localized.description,
     contentFile: localized.contentFile,
     path: buildUserGuidePath(locale, pageId),
-    alternatePath: buildUserGuidePath(getOtherLocale(locale), pageId),
     homeHref: getLocaleHomeHref(locale),
     homeLabel: ui.homeLabel,
-    alternateLanguageLabel: ui.alternateLanguageLabel,
     sourceDocId,
     sourceHref: getSourceDocHref(sourceDocId, locale),
     sourceLabel: ui.sourceLabel,
@@ -978,8 +1091,9 @@ export function getAllUserGuidePaths() {
     'zh-CN': '/zh-CN',
     'zh-TW': '/zh-TW',
     ja: '/ja',
+    ko: '/ko',
   };
-  return (['en', 'zh-CN', 'zh-TW', 'ja'] as HomeLocale[]).flatMap((locale) =>
+  return (['en', 'zh-CN', 'zh-TW', 'ja', 'ko'] as HomeLocale[]).flatMap((locale) =>
     USER_GUIDE_PAGE_ORDER.map((pageId) => `${localePrefixes[locale]}${buildUserGuidePath(locale, pageId)}`),
   );
 }
@@ -1149,20 +1263,24 @@ const legacyRelativeLinkOverrides: Record<string, string> = {
   'user-guide.zh-CN.md': 'guide:overview',
   'user-guide.zh-TW.md': 'guide:overview',
   'user-guide.ja.md': 'guide:overview',
+  'user-guide.ko.md': 'guide:overview',
   cli: 'guide:cli-guide',
   'cli.md': 'guide:cli-guide',
   'cli.zh-CN.md': 'guide:cli-guide',
   'cli.zh-TW.md': 'guide:cli-guide',
   'cli.ja.md': 'guide:cli-guide',
+  'cli.ko.md': 'guide:cli-guide',
   api: 'guide:api-guide',
   'api.md': 'guide:api-guide',
   'api.zh-CN.md': 'guide:api-guide',
   'api.zh-TW.md': 'guide:api-guide',
   'api.ja.md': 'guide:api-guide',
+  'api.ko.md': 'guide:api-guide',
   '../README.md': 'readme',
   '../README.zh-CN.md': 'readme',
   '../README.zh-TW.md': 'readme',
   '../README.ja.md': 'readme',
+  '../README.ko.md': 'readme',
 };
 
 function normalizeUserGuideHrefToken(href: string) {

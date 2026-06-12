@@ -24,6 +24,8 @@ function getAnswerLanguage(locale: HomeLocale) {
       return 'Traditional Chinese using Taiwan terminology and style';
     case 'ja':
       return 'Japanese';
+    case 'ko':
+      return 'Korean';
   }
 }
 

@@ -11,21 +11,25 @@ describe('user guide search index', () => {
     const chineseEntries = await getUserGuideSearchEntries('zh-CN');
     const taiwaneseEntries = await getUserGuideSearchEntries('zh-TW');
     const japaneseEntries = await getUserGuideSearchEntries('ja');
+    const koreanEntries = await getUserGuideSearchEntries('ko');
 
     expect(englishEntries).not.toHaveLength(0);
     expect(chineseEntries).not.toHaveLength(0);
     expect(taiwaneseEntries).not.toHaveLength(0);
     expect(japaneseEntries).not.toHaveLength(0);
+    expect(koreanEntries).not.toHaveLength(0);
     expect(englishEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
     expect(chineseEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
     expect(taiwaneseEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
     expect(japaneseEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
+    expect(koreanEntries.every((entry) => entry.path.startsWith('/user-guide'))).toBe(true);
   });
 
-  it('finds expected English and Chinese guide pages', async () => {
+  it('finds expected English, Chinese, and Korean guide pages', async () => {
     const englishEntries = await getUserGuideSearchEntries('en');
     const chineseEntries = await getUserGuideSearchEntries('zh-CN');
     const taiwaneseEntries = await getUserGuideSearchEntries('zh-TW');
+    const koreanEntries = await getUserGuideSearchEntries('ko');
 
     expect(searchUserGuideEntries(englishEntries, 'AI Summary')[0]?.id).toBe(
       'ai-summary',
@@ -43,6 +47,12 @@ describe('user guide search index', () => {
       'live-caption-and-voice-typing',
     );
     expect(searchUserGuideEntries(taiwaneseEntries, 'API 服務')[0]?.id).toBe(
+      'api-guide',
+    );
+    expect(searchUserGuideEntries(koreanEntries, '실시간 자막')[0]?.id).toBe(
+      'live-caption-and-voice-typing',
+    );
+    expect(searchUserGuideEntries(koreanEntries, 'API 서버')[0]?.id).toBe(
       'api-guide',
     );
   });

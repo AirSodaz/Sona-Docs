@@ -320,3 +320,22 @@ downloadContent.ja = {
   },
 } as any;
 
+downloadContent.ko = {
+  ...downloadContent.en,
+  metadata: {
+    title: 'Sona | 데스크톱 다운로드',
+    description:
+      'Windows, macOS, Linux용 최신 Sona 데스크톱 빌드를 한곳에서 선택해 다운로드하세요.',
+  },
+  button: {
+    ...downloadContent.en.button,
+    allBuildsLabel: '전체 빌드',
+    currentPlatformLabel: '현재 플랫폼용 다운로드',
+    menuAriaLabel: '다운로드 옵션 더 보기',
+    viewAllLabel: '모든 데스크톱 빌드 보기',
+  },
+  platforms: {
+    ...downloadContent.en.platforms,
+  },
+} as any;
+

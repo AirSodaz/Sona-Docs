@@ -33,9 +33,6 @@ export default async function TrustPageRoute({ params }: Props) {
       description: t('trust.metadata.description'),
     },
     nav: {
-      alternateHref: '/trust',
-      alternateLanguageLabel: t('nav.alternateLanguageLabel'),
-      alternateLanguageShortLabel: t('nav.alternateLanguageShortLabel'),
       githubLabel: t('nav.githubLabel'),
       homeHref: '/',
       homeLabel: t('nav.homeLabel'),
@@ -64,7 +61,6 @@ export default async function TrustPageRoute({ params }: Props) {
       trustLabel: t('footer.trustLabel'),
     },
     path: `/trust`,
-    alternatePath: `/trust`,
   };
 
   return <TrustPrivacyPage content={content} />;

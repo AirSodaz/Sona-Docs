@@ -33,9 +33,6 @@ export default async function PrivacyPageRoute({ params }: Props) {
       description: t('privacy.metadata.description'),
     },
     nav: {
-      alternateHref: '/privacy', // NextIntl Link or custom switcher will use this
-      alternateLanguageLabel: t('nav.alternateLanguageLabel'),
-      alternateLanguageShortLabel: t('nav.alternateLanguageShortLabel'),
       githubLabel: t('nav.githubLabel'),
       homeHref: '/',
       homeLabel: t('nav.homeLabel'),
@@ -65,7 +62,6 @@ export default async function PrivacyPageRoute({ params }: Props) {
       trustLabel: t('footer.trustLabel'),
     },
     path: `/privacy`,
-    alternatePath: `/privacy`,
   };
 
   return <TrustPrivacyPage content={content} />;

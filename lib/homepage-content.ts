@@ -1,4 +1,4 @@
-export type HomeLocale = 'en' | 'zh-CN' | 'zh-TW' | 'ja';
+export type HomeLocale = 'en' | 'zh-CN' | 'zh-TW' | 'ja' | 'ko';
 export type DemoStageId = 'live' | 'refined';
 export type UseCaseId =
   | 'meetings'
@@ -917,5 +917,19 @@ homePageContent.ja = {
     title: 'Sona | オフライン文字起こしエディタ',
     description:
       'Tauri と Sherpa-onnx で作られた、ローカル処理中心の文字起こしエディタです。音声を手元の環境で文字にし、確認、整文、翻訳、書き出しまで進められます。',
+  },
+} as any;
+
+homePageContent.ko = {
+  ...homePageContent.en,
+  metadata: {
+    title: 'Sona | 오프라인 전사 편집기',
+    description:
+      'Tauri와 Sherpa-onnx로 만든 로컬 중심 전사 편집기입니다. 음성을 내 기기에서 텍스트로 만들고, 검토, 정리, 번역, 내보내기까지 한 흐름에서 진행합니다.',
+  },
+  nav: {
+    ...homePageContent.en.nav,
+    languageToggleLabel: 'English',
+    languageToggleShortLabel: 'EN',
   },
 } as any;

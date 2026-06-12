@@ -11,11 +11,13 @@ describe('user guide content', () => {
     expect(getAllUserGuidePaths()).toContain('/zh-CN/user-guide/api');
     expect(getAllUserGuidePaths()).toContain('/zh-TW/user-guide/api');
     expect(getAllUserGuidePaths()).toContain('/ja/user-guide/api');
+    expect(getAllUserGuidePaths()).toContain('/ko/user-guide/api');
 
     const englishPage = getUserGuidePageFromSlug('en', ['api']);
     const chinesePage = getUserGuidePageFromSlug('zh-CN', ['api']);
     const taiwanPage = getUserGuidePageFromSlug('zh-TW', ['api']);
     const japanesePage = getUserGuidePageFromSlug('ja', ['api']);
+    const koreanPage = getUserGuidePageFromSlug('ko', ['api']);
 
     expect(englishPage?.id).toBe('api-guide');
     expect(englishPage?.sourceHref).toBe(
@@ -31,6 +33,10 @@ describe('user guide content', () => {
     );
     expect(japanesePage?.id).toBe('api-guide');
     expect(japanesePage?.sourceHref).toBe(
+      'https://github.com/AirSodaz/sona/blob/master/docs/api.md',
+    );
+    expect(koreanPage?.id).toBe('api-guide');
+    expect(koreanPage?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/api.md',
     );
   });
@@ -60,17 +66,35 @@ describe('user guide content', () => {
       external: false,
       href: '/user-guide',
     });
+    expect(resolveUserGuideHref('ko', 'api.ko.md')).toEqual({
+      external: false,
+      href: '/user-guide/api',
+    });
+    expect(resolveUserGuideHref('ko', 'cli.ko.md')).toEqual({
+      external: false,
+      href: '/user-guide/cli',
+    });
+    expect(resolveUserGuideHref('ko', 'user-guide.ko.md')).toEqual({
+      external: false,
+      href: '/user-guide',
+    });
     expect(resolveUserGuideHref('ja', '../README.ja.md')).toEqual({
+      external: true,
+      href: 'https://github.com/AirSodaz/sona/blob/master/README.md',
+    });
+    expect(resolveUserGuideHref('ko', '../README.ko.md')).toEqual({
       external: true,
       href: 'https://github.com/AirSodaz/sona/blob/master/README.md',
     });
   });
 
-  it('falls back removed Traditional Chinese and Japanese source docs to English repo docs', () => {
+  it('falls back removed Traditional Chinese, Japanese, and Korean source docs to English repo docs', () => {
     const taiwanOverview = getUserGuidePageFromSlug('zh-TW', []);
     const japaneseOverview = getUserGuidePageFromSlug('ja', []);
+    const koreanOverview = getUserGuidePageFromSlug('ko', []);
     const taiwanCli = getUserGuidePageFromSlug('zh-TW', ['cli']);
     const japaneseCli = getUserGuidePageFromSlug('ja', ['cli']);
+    const koreanCli = getUserGuidePageFromSlug('ko', ['cli']);
 
     expect(taiwanOverview?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/user-guide.md',
@@ -78,10 +102,16 @@ describe('user guide content', () => {
     expect(japaneseOverview?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/user-guide.md',
     );
+    expect(koreanOverview?.sourceHref).toBe(
+      'https://github.com/AirSodaz/sona/blob/master/docs/user-guide.md',
+    );
     expect(taiwanCli?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/cli.md',
     );
     expect(japaneseCli?.sourceHref).toBe(
+      'https://github.com/AirSodaz/sona/blob/master/docs/cli.md',
+    );
+    expect(koreanCli?.sourceHref).toBe(
       'https://github.com/AirSodaz/sona/blob/master/docs/cli.md',
     );
   });

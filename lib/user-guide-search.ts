@@ -79,6 +79,18 @@ export function getUserGuideSearchCopy(locale: HomeLocale): UserGuideSearchCopy 
     };
   }
 
+  if (locale === 'ko') {
+    return {
+      clearLabel: '검색 지우기',
+      currentPageLabel: '현재 페이지',
+      inputLabel: '사용자 가이드 검색',
+      noResultsLabel: '일치하는 가이드 페이지가 없습니다',
+      openResultLabel: '결과 열기',
+      placeholder: '가이드 검색...',
+      resultsLabel: '검색 결과',
+    };
+  }
+
   if (locale === 'en') {
     return {
       clearLabel: 'Clear search',

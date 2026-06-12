@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildUserGuideSystemInstruction } from '../user-guide-ai';
 
 describe('user guide AI locale instructions', () => {
-  const buildInstruction = (locale: 'en' | 'zh-CN' | 'zh-TW' | 'ja') =>
+  const buildInstruction = (locale: 'en' | 'zh-CN' | 'zh-TW' | 'ja' | 'ko') =>
     buildUserGuideSystemInstruction({
       context: 'Guide locale context',
       currentPageTitle: 'Overview',
@@ -21,5 +21,9 @@ describe('user guide AI locale instructions', () => {
   it('keeps zh-CN and Japanese answer language instructions distinct', () => {
     expect(buildInstruction('zh-CN')).toContain('Answer in Simplified Chinese.');
     expect(buildInstruction('ja')).toContain('Answer in Japanese.');
+  });
+
+  it('asks Korean answers to use natural Korean', () => {
+    expect(buildInstruction('ko')).toContain('Answer in Korean.');
   });
 });
