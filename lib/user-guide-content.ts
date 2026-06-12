@@ -533,21 +533,21 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Export and Settings',
         navLabel: 'Export / Settings',
         description:
-          'Export finished work and quickly find Dashboard, Diagnostics, Backup & Restore, Automation, LLM Service, Shortcuts, Voice Typing, and notification entry points.',
+          'Export finished work as subtitles, JSON, plain text, or Markdown, copy text to the clipboard, and quickly find Dashboard, Diagnostics, Backup & Restore, Automation, API Server, LLM Service, Shortcuts, Voice Typing, and notification entry points.',
         contentFile: 'en/export-and-settings.md',
       },
       'zh-CN': {
         title: '导出与设置',
         navLabel: '导出 / 设置',
         description:
-          '完成导出，并快速理解仪表盘、诊断、备份与恢复、自动化、LLM 服务、快捷键、语音输入法和通知入口分别在哪里。',
+          '将成稿导出为字幕、JSON、纯文本或 Markdown，按需复制到剪贴板，并快速理解仪表盘、诊断、备份与恢复、自动化、本地 API、LLM 服务、快捷键、语音输入法和通知入口分别在哪里。',
         contentFile: 'zh-CN/export-and-settings.md',
       },
       ja: {
         title: 'エクスポートと設定',
         navLabel: 'エクスポート / 設定',
         description:
-          '完成した文字起こしを書き出し、Dashboard、Diagnostics、Backup & Restore、Automation、LLM Service などの入口を確認します。',
+          '完成した文字起こしを字幕、JSON、プレーンテキスト、Markdown として書き出し、クリップボードへコピーし、Dashboard、Diagnostics、Backup & Restore、Automation、API Server、LLM Service などの入口を確認します。',
         contentFile: 'ja/export-and-settings.md',
       },
     
@@ -555,7 +555,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '匯出與設定',
         navLabel: '匯出與設定',
         description:
-          '匯出 SRT、WebVTT、JSON 或純文字，並快速了解儀表板、輸入裝置、自動化監控資料夾、診斷與備份的正確入口。',
+          '匯出字幕、JSON、純文字或 Markdown，按需複製到剪貼簿，並快速了解儀表板、輸入裝置、自動化監控資料夾、本機 API、診斷與備份的正確入口。',
         contentFile: 'zh-TW/export-and-settings.md',
       },
     },
@@ -812,12 +812,6 @@ function getGuideSourceHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`;
   }
-  if (locale === 'zh-TW') {
-    return `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-TW.md`;
-  }
-  if (locale === 'ja') {
-    return `${GITHUB_BLOB_ROOT}/docs/user-guide.ja.md`;
-  }
   return `${GITHUB_BLOB_ROOT}/docs/user-guide.md`;
 }
 
@@ -825,24 +819,12 @@ function getCliSourceHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
   }
-  if (locale === 'zh-TW') {
-    return `${GITHUB_BLOB_ROOT}/docs/cli.zh-TW.md`;
-  }
-  if (locale === 'ja') {
-    return `${GITHUB_BLOB_ROOT}/docs/cli.ja.md`;
-  }
   return `${GITHUB_BLOB_ROOT}/docs/cli.md`;
 }
 
 function getApiSourceHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`;
-  }
-  if (locale === 'zh-TW') {
-    return `${GITHUB_BLOB_ROOT}/docs/api.zh-TW.md`;
-  }
-  if (locale === 'ja') {
-    return `${GITHUB_BLOB_ROOT}/docs/api.ja.md`;
   }
   return `${GITHUB_BLOB_ROOT}/docs/api.md`;
 }
@@ -861,12 +843,6 @@ function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale)
 function getReadmeHref(locale: HomeLocale) {
   if (locale === 'zh-CN') {
     return `${GITHUB_BLOB_ROOT}/README.zh-CN.md`;
-  }
-  if (locale === 'zh-TW') {
-    return `${GITHUB_BLOB_ROOT}/README.zh-TW.md`;
-  }
-  if (locale === 'ja') {
-    return `${GITHUB_BLOB_ROOT}/README.ja.md`;
   }
   return `${GITHUB_BLOB_ROOT}/README.md`;
 }

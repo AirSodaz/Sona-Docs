@@ -7,14 +7,17 @@ Before exporting, open `Speaker Review` from the transcript header if speaker la
 1. Click the `Export` button in the header.
 2. In the `Export Transcript` modal, enter a `Filename`.
 3. Choose an `Export Directory`.
-4. Pick an output format: `SubRip (.srt)`, `WebVTT (.vtt)`, `JSON (.json)`, or `Plain Text (.txt)`.
+4. Pick an output format: `SubRip (.srt)`, `WebVTT (.vtt)`, `JSON (.json)`, `Plain Text (.txt)`, or `Markdown (.md)`.
 5. Choose an export mode: `Original`, `Translation`, or `Bilingual`.
 6. Click `Export`.
+7. Use `Copy to Clipboard` when you want the same selected mode as plain text without writing a file.
 
 ## What export gives you
 
 - Sona writes the transcript to the selected path and format.
+- `Markdown (.md)` preserves speaker labels as bold labels and keeps the transcript readable in Markdown editors.
 - If translation text exists, you can export translated-only or bilingual output.
+- `Copy to Clipboard` uses the selected export mode and copies plain text from final segments.
 - `Translation` and `Bilingual` only appear when at least one segment already contains translation text.
 
 ## When to go back to `Workspace`
@@ -32,6 +35,7 @@ Before exporting, open `Speaker Review` from the transcript header if speaker la
 - `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, and downloadable recognition, punctuation, speaker, and VAD models
 - `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, and `Speaker Profiles`; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 - `Settings > Automation`: watched-folder rules that can transcribe, polish, translate, and export new media while Sona is running
+- `Settings > API Server`: local HTTP API host, port, optional API key, IP allowlist, server limits, and server-level transcription defaults
 - `Settings > LLM Service`: feature model bindings, reasoning options, and provider credentials; use [AI Polish and Translate](guide:ai-polish-and-translate) for polish/translation and [AI Summary](guide:ai-summary) for summaries
 - `Settings > Shortcuts`: live recording, playback, search, workspace navigation, and editor shortcuts
 - `Settings > About`: source code, logs, and update-related actions

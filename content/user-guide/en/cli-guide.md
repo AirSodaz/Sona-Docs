@@ -71,6 +71,7 @@ threads = 4
 enable_itn = false
 vad_buffer_size = 5.0
 gpu_acceleration = "auto"
+hotwords = "Sona,offline ASR"
 format = "srt"
 ```
 
@@ -80,11 +81,12 @@ format = "srt"
 | --- | --- | --- | --- | --- |
 | `models_dir` | Optional | Filesystem path | Desktop app models directory, when inferable | Pass explicitly if the CLI cannot find desktop models. |
 | `model_id` | Required unless `--model-id` is passed | Offline preset model id | None | Use `sona models list --mode offline` to find ids. |
-| `vad_model_id` | Conditional | Preset model id | None | Required when the selected model requires VAD. |
-| `punctuation_model_id` | Conditional | Preset model id | None | Required when the selected model requires punctuation. |
+| `vad_model_id` | Optional | Preset model id | `silero-vad` when required | Used when the selected model requires VAD; overrides the default. |
+| `punctuation_model_id` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` when required | Used when the selected model requires punctuation; overrides the default. |
 | `language` | Optional | `auto` or a model language code, such as `zh`, `en`, `ja` | `auto` | Overrides automatic language detection. |
 | `threads` | Optional | Integer greater than `0` | `4` | Recognizer thread count. |
 | `enable_itn` | Optional | `true` or `false` | `false` | Enables inverse text normalization. |
+| `hotwords` | Optional | Comma-separated words | None | Custom ASR hotwords; currently supported by Transducer and Qwen3 models. |
 | `vad_buffer_size` | Optional | Number greater than `0` | `5.0` | VAD buffer size in seconds. |
 | `gpu_acceleration` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Use `cpu` to disable GPU acceleration. |
 | `format` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout or in directory mode, otherwise inferred from `--output` | Overrides output extension inference. |
@@ -131,6 +133,8 @@ sona transcribe --help
 
 Verbose diagnostics are written to `stderr`. Command output, including JSON output from `models list` and `transcribe` without `--output`, remains on `stdout` so it can still be piped to other tools.
 
+Advanced wrappers and tests can set `SONA_FORCE_CLI=1` to force CLI mode even when the executable is launched without a recognized CLI subcommand.
+
 ### `transcribe`
 
 | Parameter / config key | Required | Range | Default | Notes |
@@ -146,12 +150,12 @@ Verbose diagnostics are written to `stderr`. Command output, including JSON outp
 | `--language <code>` | Optional | `auto` or a model language code | `auto` | Overrides config. |
 | `--model-id <id>` | Required unless `model_id` is configured | Offline preset model id | None | Main transcription model. |
 | `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Overrides config. |
-| `--vad-model-id <id>` | Conditional | Preset model id | None | Required if the selected model requires VAD. |
-| `--punctuation-model-id <id>` | Conditional | Preset model id | None | Required if the selected model requires punctuation. |
+| `--vad-model-id <id>` | Optional | Preset model id | `silero-vad` when required | Overrides the default VAD companion. |
+| `--punctuation-model-id <id>` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` when required | Overrides the default punctuation companion. |
 | `--threads <n>` | Optional | Integer greater than `0` | `4` | Overrides config. |
 | `--enable-itn` | Optional | Flag | `false` | Conflicts with `--disable-itn`. |
 | `--disable-itn` | Optional | Flag | `false` | Overrides `enable_itn = true`; conflicts with `--enable-itn`. |
-| `--hotwords <words>` | Optional | Comma-separated words | None | CLI-only; currently supported by Transducer and Qwen3 models. |
+| `--hotwords <words>` | Optional | Comma-separated words | None | Overrides `hotwords`; currently supported by Transducer and Qwen3 models. |
 | `--gpu-acceleration <provider>` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Overrides config. |
 | `--vad-buffer <seconds>` | Optional | Number greater than `0` | `5.0` | CLI name for `vad_buffer_size`. |
 | `--save-wav <path>` | Optional | Filesystem path | None | CLI-only; saves the intermediate resampled WAV. Not supported with `--input-dir`. |

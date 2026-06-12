@@ -1,5 +1,3 @@
-# エクスポートと設定
-
 このページでは、完成した文字起こしの書き出し、話者やバージョンの最終確認、よく使う設定画面の場所をまとめます。Dashboard、Diagnostics、Backup & Restore、Automation、通知センターなど、作業後半で参照しやすい画面もここで確認できます。
 
 ## 完成した文字起こしを書き出す
@@ -9,14 +7,17 @@
 1. ヘッダーの `Export` ボタンをクリックします。
 2. `Export Transcript` モーダルで `Filename` を入力します。
 3. `Export Directory` を選択します。
-4. 出力形式を選びます: `SubRip (.srt)`、`WebVTT (.vtt)`、`JSON (.json)`、`Plain Text (.txt)`。
+4. 出力形式を選びます: `SubRip (.srt)`、`WebVTT (.vtt)`、`JSON (.json)`、`Plain Text (.txt)`、`Markdown (.md)`。
 5. エクスポートモードを選びます: `Original`、`Translation`、`Bilingual`。
 6. `Export` をクリックします。
+7. ファイルを書き出さずに同じモードのプレーンテキストだけが必要な場合は、`Copy to Clipboard` を使います。
 
 ## エクスポート結果
 
 - Sona は、選択した保存先と形式で文字起こしファイルを書き出します。
+- `Markdown (.md)` では、話者ラベルが太字ラベルとして残り、Markdown エディタで読みやすい形式になります。
 - 翻訳テキストがある場合は、翻訳のみ、または二言語併記で出力できます。
+- `Copy to Clipboard` は、選択中のエクスポートモードに従って、確定済みセグメントのプレーンテキストをコピーします。
 - `Translation` と `Bilingual` は、少なくとも 1 つのセグメントに翻訳テキストがある場合にだけ選択できます。
 
 ## Workspace に戻るタイミング
@@ -34,6 +35,7 @@
 - `Settings > Model Settings`: `Live Record Model`、`Batch Import Model`、文字起こし設定、ITN、VAD バッファ、最大同時文字起こし数、既定値への復元、音声認識・句読点・話者・VAD などのダウンロード可能モデルを管理します。
 - `Settings > Vocabulary`: `Text Replacement`、`Hotwords`、整文用キーワードセット、整文コンテキストプリセット、要約テンプレート、`Speaker Profiles` を管理します。具体的な調整例は[語彙と詳細設定](guide:vocabulary-and-advanced-settings)を参照してください。
 - `Settings > Automation`: Sona の起動中に新しいメディアを監視し、文字起こし、AI Polish、翻訳、エクスポートを自動実行するフォルダールールを設定します。
+- `Settings > API Server`: ローカル HTTP API のホスト、ポート、任意の API Key、IP allowlist、サーバー制限、サーバーレベルの文字起こし既定値を設定します。
 - `Settings > LLM Service`: 機能モデルの割り当て、推論オプション、プロバイダー認証情報を設定します。整文と翻訳は[AI Polish と翻訳](guide:ai-polish-and-translate)、要約は[AI Summary](guide:ai-summary)を参照してください。
 - `Settings > Shortcuts`: Live Record、再生、検索、ワークスペースナビゲーション、エディタ操作のショートカットを設定します。
 - `Settings > About`: ソースコード、ログ、更新関連の操作を確認できます。

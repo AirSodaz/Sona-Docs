@@ -1,5 +1,3 @@
-# CLI ガイド
-
 Sona は、デスクトップアプリの実行ファイルを通じて、オフライン文字起こし用の CLI コマンドを提供しています。パッケージ版インストーラーでインストールした場合、`sona` がシェルの `PATH` に自動追加されないことがあるため、インストール済みアプリのバイナリを直接指定して CLI サブコマンドを実行してください。ソースからビルドする場合は、Cargo から同じコマンドを実行できます。
 
 CLI の範囲は意図的に絞られています。現在含まれるのは、単一ファイルとディレクトリのオフライン文字起こし、プリセットモデルの一覧表示 / ダウンロード / 削除、ヘッドレス HTTP API サーバー起動です。Live Record、LLM Polish、Translate は CLI には含まれません。
@@ -73,6 +71,7 @@ threads = 4
 enable_itn = false
 vad_buffer_size = 5.0
 gpu_acceleration = "auto"
+hotwords = "Sona,offline ASR"
 format = "srt"
 ```
 
@@ -82,11 +81,12 @@ format = "srt"
 | --- | --- | --- | --- | --- |
 | `models_dir` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | CLI がデスクトップアプリのモデルを検出できない場合に、明示的にパスを指定します。 |
 | `model_id` | 引数 `--model-id` を指定しない限り必須 | オフラインのプリセットモデル ID | なし | `sona models list --mode offline` で ID を確認してください。 |
-| `vad_model_id` | 条件付き | プリセットモデル ID | なし | 選択したモデルが VAD を必要とする場合に必須です。 |
-| `punctuation_model_id` | 条件付き | プリセットモデル ID | なし | 選択したモデルが句読点モデルを必要とする場合に必須です。 |
+| `vad_model_id` | 任意 | プリセットモデル ID | 必要な場合は `silero-vad` | 選択したモデルが VAD を必要とする場合に使います。既定の関連モデルを上書きできます。 |
+| `punctuation_model_id` | 任意 | プリセットモデル ID | 必要な場合は `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 選択したモデルが句読点モデルを必要とする場合に使います。既定の関連モデルを上書きできます。 |
 | `language` | 任意 | `auto` または `zh`、`en`、`ja` などのモデル言語コード | `auto` | 自動言語検出を上書きします。 |
 | `threads` | 任意 | `0` より大きい整数 | `4` | 認識処理のスレッド数。 |
 | `enable_itn` | 任意 | `true` または `false` | `false` | 逆テキスト正規化（ITN）を有効にします。 |
+| `hotwords` | 任意 | カンマ区切りの単語 | なし | カスタム ASR ホットワード。現在、Transducer および Qwen3 モデルでサポートされています。 |
 | `vad_buffer_size` | 任意 | `0` より大きい数値 | `5.0` | VAD のバッファサイズ（秒単位）。 |
 | `gpu_acceleration` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | GPU アクセラレーションを無効にする場合は `cpu` を指定します。 |
 | `format` | 任意 | `json`, `txt`, `srt`, `vtt`, `md` | 標準出力またはディレクトリモードでは `json`、それ以外は `--output` から自動判定 | 出力ファイル拡張子からの自動判定を上書きします。 |
@@ -133,6 +133,8 @@ sona transcribe --help
 
 詳細な診断情報は標準エラー出力（`stderr`）に出力されます。`models list` の結果や、`--output` を付けない `transcribe` の JSON 出力など、コマンド本体の結果は標準出力（`stdout`）に出るため、他のツールへパイプできます。
 
+高度なラッパーやテストでは、`SONA_FORCE_CLI=1` を設定すると、認識済みの CLI サブコマンドなしで実行ファイルが起動された場合でも CLI モードを強制できます。
+
 ### `transcribe`
 
 | パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
@@ -148,12 +150,12 @@ sona transcribe --help
 | `--language <code>` | 任意 | `auto` またはモデル言語コード | `auto` | 設定ファイルの指定を上書きします。 |
 | `--model-id <id>` | 設定ファイルで `model_id` が設定されていない限り必須 | オフラインのプリセットモデル ID | なし | メインの音声認識モデル。 |
 | `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | 設定ファイルの指定を上書きします。 |
-| `--vad-model-id <id>` | 条件付き | プリセットモデル ID | なし | 選択したモデルが VAD を必要とする場合に必須です。 |
-| `--punctuation-model-id <id>` | 条件付き | プリセットモデル ID | なし | 選択したモデルが句読点モデルを必要とする場合に必須です。 |
+| `--vad-model-id <id>` | 任意 | プリセットモデル ID | 必要な場合は `silero-vad` | 既定の VAD 関連モデルを上書きします。 |
+| `--punctuation-model-id <id>` | 任意 | プリセットモデル ID | 必要な場合は `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 既定の句読点関連モデルを上書きします。 |
 | `--threads <n>` | 任意 | `0` より大きい整数 | `4` | 設定ファイルの指定を上書きします。 |
 | `--enable-itn` | 任意 | フラグ | `false` | `--disable-itn` と同時には使えません。 |
 | `--disable-itn` | 任意 | フラグ | `false` | `enable_itn = true` を上書きします。`--enable-itn` と同時には使えません。 |
-| `--hotwords <words>` | 任意 | カンマ区切りの単語 | なし | CLI 専用。現在、Transducer および Qwen3 モデルでサポートされています。 |
+| `--hotwords <words>` | 任意 | カンマ区切りの単語 | なし | `hotwords` を上書きします。現在、Transducer および Qwen3 モデルでサポートされています。 |
 | `--gpu-acceleration <provider>` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | 設定ファイルの指定を上書きします。 |
 | `--vad-buffer <seconds>` | 任意 | `0` より大きい数値 | `5.0` | `vad_buffer_size` の CLI 引数名。 |
 | `--save-wav <path>` | 任意 | ファイルシステムパス | なし | CLI 専用。リサンプリングされた中間 WAV ファイルを保存します。`--input-dir` とは併用できません。 |

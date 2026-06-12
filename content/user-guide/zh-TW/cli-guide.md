@@ -71,6 +71,7 @@ threads = 4
 enable_itn = false
 vad_buffer_size = 5.0
 gpu_acceleration = "auto"
+hotwords = "Sona,offline ASR"
 format = "srt"
 ```
 
@@ -80,11 +81,12 @@ format = "srt"
 | --- | --- | --- | --- | --- |
 | `models_dir` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | CLI 找不到桌面模型目錄時請明確傳入。 |
 | `model_id` | 必選，除非傳入 `--model-id` | 離線預設模型 ID | 無 | 用 `sona models list --mode offline` 檢視可用 ID。 |
-| `vad_model_id` | 條件必選 | 預設模型 ID | 無 | 所選模型需要 VAD 時必選。 |
-| `punctuation_model_id` | 條件必選 | 預設模型 ID | 無 | 所選模型需要標點時必選。 |
+| `vad_model_id` | 可選 | 預設模型 ID | 需要時為 `silero-vad` | 所選模型需要 VAD 時使用；可覆寫預設伴生模型。 |
+| `punctuation_model_id` | 可選 | 預設模型 ID | 需要時為 `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 所選模型需要標點時使用；可覆寫預設伴生模型。 |
 | `language` | 可選 | `auto` 或模型語言代碼，如 `zh`、`en`、`ja` | `auto` | 覆寫自動語言偵測。 |
 | `threads` | 可選 | 大於 `0` 的整數 | `4` | 辨識執行緒數。 |
 | `enable_itn` | 可選 | `true` 或 `false` | `false` | 啟用逆文字歸一化。 |
+| `hotwords` | 可選 | 逗號分隔片語 | 無 | 自訂 ASR 熱詞；目前支援 Transducer 和 Qwen3 模型。 |
 | `vad_buffer_size` | 可選 | 大於 `0` 的數字 | `5.0` | VAD 緩衝秒數。 |
 | `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 使用 `cpu` 可明確關閉 GPU 加速。 |
 | `format` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 或目錄模式時為 `json`，否則從 `--output` 推斷 | 覆寫輸出副檔名推斷。 |
@@ -131,6 +133,8 @@ sona transcribe --help
 
 詳細診斷日誌會寫入 `stderr`。指令結果仍寫入 `stdout`，包括 `models list` 的 JSON 輸出，以及 `transcribe` 未指定 `--output` 時的輸出，因此仍可安全透過管線傳給其他工具。
 
+進階包裝腳本和測試可以設定 `SONA_FORCE_CLI=1`，即使可執行檔啟動時沒有識別到 CLI 子指令，也強制進入 CLI 模式。
+
 ### `transcribe`
 
 | 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
@@ -146,12 +150,12 @@ sona transcribe --help
 | `--language <code>` | 可選 | `auto` 或模型語言代碼 | `auto` | 覆寫設定。 |
 | `--model-id <id>` | 必選，除非設定了 `model_id` | 離線預設模型 ID | 無 | 主轉錄模型。 |
 | `--models-dir <path>` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 覆寫設定。 |
-| `--vad-model-id <id>` | 條件必選 | 預設模型 ID | 無 | 所選模型需要 VAD 時必選。 |
-| `--punctuation-model-id <id>` | 條件必選 | 預設模型 ID | 無 | 所選模型需要標點時必選。 |
+| `--vad-model-id <id>` | 可選 | 預設模型 ID | 需要時為 `silero-vad` | 覆寫預設 VAD 伴生模型。 |
+| `--punctuation-model-id <id>` | 可選 | 預設模型 ID | 需要時為 `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 覆寫預設標點伴生模型。 |
 | `--threads <n>` | 可選 | 大於 `0` 的整數 | `4` | 覆寫設定。 |
 | `--enable-itn` | 可選 | 旗標 | `false` | 與 `--disable-itn` 互斥。 |
 | `--disable-itn` | 可選 | 旗標 | `false` | 覆寫 `enable_itn = true`；與 `--enable-itn` 互斥。 |
-| `--hotwords <words>` | 可選 | 逗號分隔片語 | 無 | 僅 CLI 參數；目前支援 Transducer 和 Qwen3 模型。 |
+| `--hotwords <words>` | 可選 | 逗號分隔片語 | 無 | 覆寫 `hotwords`；目前支援 Transducer 和 Qwen3 模型。 |
 | `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 覆寫設定。 |
 | `--vad-buffer <seconds>` | 可選 | 大於 `0` 的數字 | `5.0` | `vad_buffer_size` 的 CLI 參數名。 |
 | `--save-wav <path>` | 可選 | 檔案系統路徑 | 無 | 僅 CLI 參數；儲存中間重取樣 WAV。與 `--input-dir` 不相容。 |
