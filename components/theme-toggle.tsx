@@ -1,11 +1,28 @@
 "use client"
 
-import * as React from "react"
 import { Moon, Sun } from "lucide-react"
-import { useTheme } from "@/components/theme-provider"
+import { useSyncExternalStore } from "react"
+import { useTheme } from "next-themes"
+
+const subscribe = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
 
 export function ThemeToggle() {
+  const mounted = useSyncExternalStore(
+    subscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  )
   const { resolvedTheme, setTheme } = useTheme()
+
+  if (!mounted) {
+    return (
+      <div className="inline-flex h-8 w-8 items-center justify-center p-2">
+        <div className="h-4 w-4" />
+      </div>
+    )
+  }
 
   return (
     <button

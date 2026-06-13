@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from 'next-themes';
 import { cormorantGaramond, inter } from '@/lib/fonts';
 
 export function SiteShell({
