@@ -13,6 +13,7 @@ import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { SiteHeader } from '@/components/site-header';
+import { getLocaleMetadata } from '@/lib/locales';
 import type { TrustPrivacyPageCopy } from '@/lib/trust-privacy-content';
 
 type DataFlowContent = NonNullable<TrustPrivacyPageCopy['dataFlow']>;
@@ -33,14 +34,14 @@ export function TrustPrivacyPage({
 }) {
   const pathname = usePathname();
   const HeroIcon = content.id === 'trust' ? ShieldCheck : LockKeyhole;
-  const isChinese = content.locale === 'zh-CN';
-  const heroGridClass = isChinese
+  const isCjk = getLocaleMetadata(content.locale).isCjk;
+  const heroGridClass = isCjk
     ? 'lg:grid-cols-[1fr_1fr]'
     : 'lg:grid-cols-[0.78fr_1.22fr]';
-  const heroTitleClass = isChinese
+  const heroTitleClass = isCjk
     ? 'mt-4 max-w-2xl whitespace-pre-line text-[clamp(2.4rem,9vw,3.65rem)] font-medium leading-[1.08] text-stone-900 dark:text-stone-100'
     : 'mt-4 max-w-2xl whitespace-pre-line text-[clamp(2.7rem,9vw,5.25rem)] leading-[0.95] text-stone-900 dark:text-stone-100';
-  const heroTitleFont = isChinese
+  const heroTitleFont = isCjk
     ? 'var(--font-sans)'
     : 'var(--font-serif)';
 

@@ -41,28 +41,44 @@
           "context": "Capture project syncs, interviews, or standups while the room is still talking.",
           "workflow": "Use Live Record to keep timestamps attached, then run polish for a cleaner internal recap.",
           "result": "You leave with a shareable draft that still points back to the original audio moments.",
-          "tags": ["Live Record", "Timestamps", "Polish"]
+          "tags": [
+            "Live Record",
+            "Timestamps",
+            "Polish"
+          ]
         },
         "lectures": {
           "title": "Lecture Capture",
           "context": "Record lectures, seminars, or office-hour explanations without losing the structure of the talk.",
           "workflow": "Transcribe locally, jump back through timestamps, and edit key segments into study-ready notes.",
           "result": "The transcript stays tied to playback, so review and revision happen in one place.",
-          "tags": ["Lecture capture", "Playback sync", "Study notes"]
+          "tags": [
+            "Lecture capture",
+            "Playback sync",
+            "Study notes"
+          ]
         },
         "subtitle-export": {
           "title": "Video Subtitle Export",
           "context": "Bring in local video or film files when you need subtitles instead of a blank timeline.",
           "workflow": "Queue them through Batch Import, review the text, then export SRT or VTT once the segments look right.",
           "result": "You get subtitle files that are ready for handoff, iteration, or platform upload.",
-          "tags": ["Batch Import", "SRT / VTT", "Export"]
+          "tags": [
+            "Batch Import",
+            "SRT / VTT",
+            "Export"
+          ]
         },
         "subtitle-translation": {
           "title": "Subtitle Translation",
           "context": "Prepare subtitles for bilingual review or international delivery without separating the source text.",
           "workflow": "Keep the original transcript visible, run Translate, and export translation-only or bilingual output when needed.",
           "result": "The translated version stays aligned with the source so subtitle comparison is quick and readable.",
-          "tags": ["Translate", "Bilingual", "Side-by-side"]
+          "tags": [
+            "Translate",
+            "Bilingual",
+            "Side-by-side"
+          ]
         }
       }
     },
@@ -72,7 +88,12 @@
       "desc": "Sona keeps the capture, timestamps, polish, translation, and export path inside one working surface.",
       "appName": "Sona",
       "stageLabel": "Stage",
-      "workflowSteps": ["Record", "Edit", "Polish / Translate", "Export"],
+      "workflowSteps": [
+        "Record",
+        "Edit",
+        "Polish / Translate",
+        "Export"
+      ],
       "fileName": "demo-session.sona",
       "translationLabel": "Translation",
       "inputTitle": "Live Record",
@@ -575,6 +596,50 @@
     "codeBlock": {
       "copyLabel": "Copy code",
       "copiedLabel": "Copied"
+    },
+    "search": {
+      "clearLabel": "Clear search",
+      "currentPageLabel": "Current page",
+      "inputLabel": "Search the user guide",
+      "noResultsLabel": "No guide pages found",
+      "openResultLabel": "Open result",
+      "placeholder": "Search the guide...",
+      "resultsLabel": "Search results"
+    },
+    "assistant": {
+      "title": "Ask AI",
+      "summary": "Guide-only answers, with this page prioritized.",
+      "expandLabel": "Open",
+      "collapseLabel": "Close",
+      "examplesLabel": "Try asking",
+      "examples": {
+        "pagePurpose": "What is the {pageTitle} page for?",
+        "nextStep": "What should I read after {pageTitle}?",
+        "featureSetup": "Where do I set up AI polish or translation in Sona?"
+      },
+      "inputPlaceholder": "Ask about this page, the next step, or where a feature lives in the guide...",
+      "submitLabel": "Ask",
+      "submittingLabel": "Thinking...",
+      "youLabel": "You",
+      "assistantLabel": "Guide AI",
+      "detailsLabel": "Sources and next step",
+      "sourcesLabel": "Sources",
+      "nextPagesLabel": "Next pages",
+      "disabledInline": "This deployment has not enabled protected guide Q&A.",
+      "genericError": "The guide assistant could not answer right now. Please try again in a moment.",
+      "networkError": "The server could not reach Gemini right now. Please check the server network or proxy and try again.",
+      "upstreamError": "Gemini returned an upstream error for this question. Please try again in a moment.",
+      "emptyResponseError": "Gemini replied without usable answer text. Please try asking again.",
+      "unavailableError": "AI questions are not available on this deployment right now.",
+      "emptyQuestionError": "Enter a question before sending it.",
+      "forbiddenOriginError": "This host is not allowed to use the protected guide assistant.",
+      "challengeError": "Please complete the verification challenge to continue asking questions.",
+      "challengeExpiredError": "Verification expired. Please complete the challenge again.",
+      "challengePrompt": "Complete the verification challenge to continue using guide Q&A.",
+      "challengeVerifyingLabel": "Verifying...",
+      "challengeLoadingError": "The verification widget could not load. Please refresh and try again.",
+      "throttledError": "Too many verification failures. Please wait and try again later.",
+      "tooLongError": "Keep the question under 1200 characters."
     }
   }
 }

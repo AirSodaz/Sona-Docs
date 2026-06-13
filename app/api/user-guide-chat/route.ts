@@ -31,6 +31,7 @@ import {
   isUserGuidePageId,
   type UserGuidePageId,
 } from '@/lib/user-guide-content';
+import { isHomeLocale } from '@/lib/locales';
 import { createRequestLogger } from '@/lib/server-logger';
 
 export const runtime = 'nodejs';
@@ -81,10 +82,6 @@ class EmptyGeminiResponseError extends Error {
     super('Gemini replied without usable answer text.');
     this.name = 'EmptyGeminiResponseError';
   }
-}
-
-function isHomeLocale(value: unknown): value is HomeLocale {
-  return value === 'en' || value === 'zh-CN' || value === 'zh-TW' || value === 'ja' || value === 'ko';
 }
 
 function withGeminiTimeout<T>(promise: Promise<T>) {

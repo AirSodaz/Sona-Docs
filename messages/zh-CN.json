@@ -41,28 +41,44 @@
           "context": "记录项目例会、访谈或同步会时，希望边说边留下一份可回看的文本。",
           "workflow": "用 Live Record 实时转录，保留时间戳，再在结束后继续润色成更适合流转的纪要。",
           "result": "最后得到一份可分享的会议稿，同时还能回到原始音频对应位置继续核对。",
-          "tags": ["实时录音", "时间戳", "会议纪要"]
+          "tags": [
+            "实时录音",
+            "时间戳",
+            "会议纪要"
+          ]
         },
         "lectures": {
           "title": "课堂记录",
           "context": "上课、讲座或讨论课内容较长，需要先完整记下，再回看重点段落。",
           "workflow": "先做本地转录，再根据时间戳回看关键位置，把内容整理成复习笔记。",
           "result": "转录、播放和编辑保持在同一个界面里，后续复盘不会被拆散。",
-          "tags": ["课堂录制", "回看定位", "复习笔记"]
+          "tags": [
+            "课堂录制",
+            "回看定位",
+            "复习笔记"
+          ]
         },
         "subtitle-export": {
           "title": "视频/影片字幕导出",
           "context": "手头已经有本地视频或影片素材，需要尽快整理出可交付的字幕文件。",
           "workflow": "通过 Batch Import 批量导入并转录，检查文本后直接导出 SRT 或 VTT。",
           "result": "拿到可继续校对、上传或交付的字幕文件，而不是停在一份原始文本上。",
-          "tags": ["批量导入", "SRT / VTT", "字幕导出"]
+          "tags": [
+            "批量导入",
+            "SRT / VTT",
+            "字幕导出"
+          ]
         },
         "subtitle-translation": {
           "title": "字幕翻译",
           "context": "需要在保留原文的前提下生成译文，方便双语审阅或海外发布。",
           "workflow": "在同一份转录上运行 Translate，让译文跟随原文分段显示，并按需导出翻译或双语版本。",
           "result": "译文与源文本保持对照关系，做术语校对或版本确认会更快。",
-          "tags": ["字幕翻译", "双语对照", "导出"]
+          "tags": [
+            "字幕翻译",
+            "双语对照",
+            "导出"
+          ]
         }
       }
     },
@@ -72,7 +88,12 @@
       "desc": "Sona 把转录、时间戳、润色、翻译和导出路径收进同一个工作界面。",
       "appName": "Sona",
       "stageLabel": "阶段",
-      "workflowSteps": ["录音", "整理", "润色 / 翻译", "导出"],
+      "workflowSteps": [
+        "录音",
+        "整理",
+        "润色 / 翻译",
+        "导出"
+      ],
       "fileName": "演示会话.sona",
       "translationLabel": "译文",
       "inputTitle": "实时录音",
@@ -575,6 +596,50 @@
     "codeBlock": {
       "copyLabel": "复制代码",
       "copiedLabel": "已复制"
+    },
+    "search": {
+      "clearLabel": "清空搜索",
+      "currentPageLabel": "当前页",
+      "inputLabel": "搜索用户指南",
+      "noResultsLabel": "没有找到匹配的指南页",
+      "openResultLabel": "打开结果",
+      "placeholder": "搜索本指南...",
+      "resultsLabel": "搜索结果"
+    },
+    "assistant": {
+      "title": "向 AI 提问",
+      "summary": "只回答本指南内容，并优先参考当前页。",
+      "expandLabel": "展开",
+      "collapseLabel": "收起",
+      "examplesLabel": "可以这样问",
+      "examples": {
+        "pagePurpose": "“{pageTitle}”这一页主要是做什么的？",
+        "nextStep": "看完“{pageTitle}”后，下一步应该看哪一页？",
+        "featureSetup": "Sona 里的 AI 润色或翻译应该去哪里设置？"
+      },
+      "inputPlaceholder": "可以问这页内容、下一步流程，或某项功能在指南里的位置……",
+      "submitLabel": "发送",
+      "submittingLabel": "正在思考...",
+      "youLabel": "你",
+      "assistantLabel": "指南 AI",
+      "detailsLabel": "来源与下一步",
+      "sourcesLabel": "来源页",
+      "nextPagesLabel": "下一步",
+      "disabledInline": "当前部署尚未启用受保护的文档问答。",
+      "genericError": "指南助手暂时无法回答，请稍后再试。",
+      "networkError": "服务器当前无法连到 Gemini。请检查服务端网络或代理后再试。",
+      "upstreamError": "Gemini 这次返回了上游错误，请稍后重试。",
+      "emptyResponseError": "Gemini 这次没有返回可用答案文本，可以再问一次。",
+      "unavailableError": "当前部署暂时不可用 AI 问答。",
+      "emptyQuestionError": "请先输入问题再发送。",
+      "forbiddenOriginError": "当前域名不允许使用受保护的指南问答。",
+      "challengeError": "请先完成验证挑战，再继续提问。",
+      "challengeExpiredError": "验证已过期，请重新完成一次挑战。",
+      "challengePrompt": "继续使用指南问答前，请先完成下面的验证。",
+      "challengeVerifyingLabel": "正在验证...",
+      "challengeLoadingError": "验证组件加载失败，请刷新后重试。",
+      "throttledError": "验证失败次数过多，请稍后再试。",
+      "tooLongError": "问题请控制在 1200 个字符以内。"
     }
   }
 }

@@ -1,18 +1,11 @@
 import type { Metadata } from 'next';
 import { type HomeLocale } from '@/lib/homepage-content';
+import { getLocaleMetadata, localeMetadata } from '@/lib/locales';
 import { getSiteUrl } from '@/lib/site-url';
 import {
   buildLocalizedUserGuidePath,
   getUserGuidePageFromSlug,
 } from '@/lib/user-guide-content';
-
-const openGraphLocales: Record<HomeLocale, string> = {
-  en: 'en_US',
-  'zh-CN': 'zh_CN',
-  'zh-TW': 'zh_TW',
-  ja: 'ja_JP',
-  ko: 'ko_KR',
-};
 
 export function createGuidePageMetadata(
   locale: HomeLocale,
@@ -48,9 +41,11 @@ export function createGuidePageMetadata(
       title: page.title,
       description: page.description,
       url: buildLocalizedUserGuidePath(locale, page.id),
-      locale: openGraphLocales[locale],
-      alternateLocale: Object.values(openGraphLocales).filter(
-        (value) => value !== openGraphLocales[locale],
+      locale: getLocaleMetadata(locale).openGraphLocale,
+      alternateLocale: Object.values(localeMetadata).map(
+        (metadata) => metadata.openGraphLocale,
+      ).filter(
+        (value) => value !== getLocaleMetadata(locale).openGraphLocale,
       ),
       siteName: 'Sona',
       type: 'article',

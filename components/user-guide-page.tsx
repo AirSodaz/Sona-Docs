@@ -1,5 +1,6 @@
 import { Children, isValidElement, type ReactNode } from 'react';
 import { Link } from '@/i18n/routing';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import {
   ArrowLeft,
@@ -16,7 +17,7 @@ import remarkGfm from 'remark-gfm';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { UserGuideCodeBlock } from '@/components/user-guide-code-block';
-import { UserGuideAssistant } from '@/components/user-guide-assistant';
+import { UserGuideAssistant, type AssistantCopy } from '@/components/user-guide-assistant';
 import { UserGuideSearch } from '@/components/user-guide-search';
 import { UserGuideLayout } from '@/components/user-guide-layout';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
@@ -25,7 +26,6 @@ import {
   isUserGuideAiEnabled,
 } from '@/lib/user-guide-ai';
 import {
-  getUserGuideAssistantCopy,
   getUserGuideMarkdown,
   getUserGuideNavigation,
   getUserGuideOverviewCards,
@@ -38,8 +38,8 @@ import {
   type UserGuidePageModel,
 } from '@/lib/user-guide-content';
 import {
-  getUserGuideSearchCopy,
   getUserGuideSearchEntries,
+  type UserGuideSearchCopy,
 } from '@/lib/user-guide-search';
 import type { HomeLocale } from '@/lib/homepage-content';
 
@@ -50,6 +50,53 @@ const preserveUserGuideInternalLinks: UrlTransform = (url) => {
 
   return defaultUrlTransform(url);
 };
+
+function getUserGuideSearchCopyFromMessages(
+  t: Awaited<ReturnType<typeof getTranslations>>,
+): UserGuideSearchCopy {
+  return t.raw('search') as UserGuideSearchCopy;
+}
+
+function getUserGuideAssistantCopyFromMessages(
+  t: Awaited<ReturnType<typeof getTranslations>>,
+  pageTitle: string,
+): AssistantCopy {
+  return {
+    title: t('assistant.title'),
+    summary: t('assistant.summary'),
+    expandLabel: t('assistant.expandLabel'),
+    collapseLabel: t('assistant.collapseLabel'),
+    examplesLabel: t('assistant.examplesLabel'),
+    examples: [
+      t('assistant.examples.pagePurpose', { pageTitle }),
+      t('assistant.examples.nextStep', { pageTitle }),
+      t('assistant.examples.featureSetup'),
+    ],
+    inputPlaceholder: t('assistant.inputPlaceholder'),
+    submitLabel: t('assistant.submitLabel'),
+    submittingLabel: t('assistant.submittingLabel'),
+    youLabel: t('assistant.youLabel'),
+    assistantLabel: t('assistant.assistantLabel'),
+    detailsLabel: t('assistant.detailsLabel'),
+    sourcesLabel: t('assistant.sourcesLabel'),
+    nextPagesLabel: t('assistant.nextPagesLabel'),
+    disabledInline: t('assistant.disabledInline'),
+    genericError: t('assistant.genericError'),
+    networkError: t('assistant.networkError'),
+    upstreamError: t('assistant.upstreamError'),
+    emptyResponseError: t('assistant.emptyResponseError'),
+    unavailableError: t('assistant.unavailableError'),
+    emptyQuestionError: t('assistant.emptyQuestionError'),
+    forbiddenOriginError: t('assistant.forbiddenOriginError'),
+    challengeError: t('assistant.challengeError'),
+    challengeExpiredError: t('assistant.challengeExpiredError'),
+    challengePrompt: t('assistant.challengePrompt'),
+    challengeVerifyingLabel: t('assistant.challengeVerifyingLabel'),
+    challengeLoadingError: t('assistant.challengeLoadingError'),
+    throttledError: t('assistant.throttledError'),
+    tooLongError: t('assistant.tooLongError'),
+  };
+}
 
 function extractTextContent(children: ReactNode): string {
   return Children.toArray(children)
@@ -325,16 +372,17 @@ export async function UserGuidePage({
     notFound();
   }
 
+  const t = await getTranslations({ locale, namespace: 'UserGuidePage' });
   const ui = getUserGuideUiCopy(locale);
   const navigation = getUserGuideNavigation(locale, page.id);
   const overviewCards = getUserGuideOverviewCards(locale);
-  const searchCopy = getUserGuideSearchCopy(locale);
+  const searchCopy = getUserGuideSearchCopyFromMessages(t);
   const [markdown, searchEntries] = await Promise.all([
     getUserGuideMarkdown(locale, page.id),
     getUserGuideSearchEntries(locale),
   ]);
   const markdownComponents = createMarkdownComponents(locale, ui);
-  const assistantCopy = getUserGuideAssistantCopy(locale, page.navLabel);
+  const assistantCopy = getUserGuideAssistantCopyFromMessages(t, page.navLabel);
   const aiEnabled = isUserGuideAiEnabled();
   const turnstileSiteKey = getUserGuideTurnstileSiteKey();
 

@@ -106,38 +106,6 @@ export interface UserGuidePageModel {
   nextPage: UserGuideNavItem | null;
 }
 
-interface UserGuideAssistantCopy {
-  title: string;
-  summary: string;
-  expandLabel: string;
-  collapseLabel: string;
-  examplesLabel: string;
-  examples: string[];
-  inputPlaceholder: string;
-  submitLabel: string;
-  submittingLabel: string;
-  youLabel: string;
-  assistantLabel: string;
-  detailsLabel: string;
-  sourcesLabel: string;
-  nextPagesLabel: string;
-  disabledInline: string;
-  genericError: string;
-  networkError: string;
-  upstreamError: string;
-  emptyResponseError: string;
-  unavailableError: string;
-  emptyQuestionError: string;
-  forbiddenOriginError: string;
-  challengeError: string;
-  challengeExpiredError: string;
-  challengePrompt: string;
-  challengeVerifyingLabel: string;
-  challengeLoadingError: string;
-  throttledError: string;
-  tooLongError: string;
-}
-
 const GUIDE_PREFIXES: Record<HomeLocale, string> = {
   en: '/user-guide',
   'zh-CN': '/user-guide',
@@ -924,34 +892,39 @@ const userGuidePageDefinitionBySlug = Object.fromEntries(
 
 const userGuidePageIdSet = new Set<string>(USER_GUIDE_PAGE_ORDER);
 
+const sourceDocLocaleMap = {
+  en: 'en',
+  'zh-CN': 'zh-CN',
+  'zh-TW': 'en',
+  ja: 'en',
+  ko: 'en',
+} satisfies Record<HomeLocale, 'en' | 'zh-CN'>;
+
 function isExternalHref(href: string) {
   return href.startsWith('http://') || href.startsWith('https://');
 }
 
 
-function getLocaleHomeHref(locale: HomeLocale) {
+function getLocaleHomeHref() {
   return '/';
 }
 
 function getGuideSourceHref(locale: HomeLocale) {
-  if (locale === 'zh-CN') {
-    return `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`;
-  }
-  return `${GITHUB_BLOB_ROOT}/docs/user-guide.md`;
+  return sourceDocLocaleMap[locale] === 'zh-CN'
+    ? `${GITHUB_BLOB_ROOT}/docs/user-guide.zh-CN.md`
+    : `${GITHUB_BLOB_ROOT}/docs/user-guide.md`;
 }
 
 function getCliSourceHref(locale: HomeLocale) {
-  if (locale === 'zh-CN') {
-    return `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`;
-  }
-  return `${GITHUB_BLOB_ROOT}/docs/cli.md`;
+  return sourceDocLocaleMap[locale] === 'zh-CN'
+    ? `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`
+    : `${GITHUB_BLOB_ROOT}/docs/cli.md`;
 }
 
 function getApiSourceHref(locale: HomeLocale) {
-  if (locale === 'zh-CN') {
-    return `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`;
-  }
-  return `${GITHUB_BLOB_ROOT}/docs/api.md`;
+  return sourceDocLocaleMap[locale] === 'zh-CN'
+    ? `${GITHUB_BLOB_ROOT}/docs/api.zh-CN.md`
+    : `${GITHUB_BLOB_ROOT}/docs/api.md`;
 }
 
 function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale) {
@@ -966,10 +939,9 @@ function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale)
 }
 
 function getReadmeHref(locale: HomeLocale) {
-  if (locale === 'zh-CN') {
-    return `${GITHUB_BLOB_ROOT}/README.zh-CN.md`;
-  }
-  return `${GITHUB_BLOB_ROOT}/README.md`;
+  return sourceDocLocaleMap[locale] === 'zh-CN'
+    ? `${GITHUB_BLOB_ROOT}/README.zh-CN.md`
+    : `${GITHUB_BLOB_ROOT}/README.md`;
 }
 
 export function buildUserGuidePath(
@@ -1030,7 +1002,7 @@ export function getUserGuidePageById(
     description: localized.description,
     contentFile: localized.contentFile,
     path: buildUserGuidePath(locale, pageId),
-    homeHref: getLocaleHomeHref(locale),
+    homeHref: getLocaleHomeHref(),
     homeLabel: ui.homeLabel,
     sourceDocId,
     sourceHref: getSourceDocHref(sourceDocId, locale),
@@ -1112,153 +1084,6 @@ export function getAllUserGuidePaths() {
 
 export function getUserGuideUiCopy(locale: HomeLocale) {
   return userGuideUiContent[locale];
-}
-
-export function getUserGuideAssistantCopy(
-  locale: HomeLocale,
-  pageTitle: string,
-): UserGuideAssistantCopy {
-  if (locale === 'ja') {
-    return {
-      title: 'AI に質問',
-      summary: 'このガイドの内容だけをもとに、現在のページを優先して回答します。',
-      expandLabel: '開く',
-      collapseLabel: '閉じる',
-      examplesLabel: '質問例',
-      examples: [
-        `「${pageTitle}」ページは何のためのものですか？`,
-        `「${pageTitle}」の後に何を読むべきですか？`,
-        'Sona で AI の校正や翻訳はどこで設定しますか？',
-      ],
-      inputPlaceholder:
-        'このページ、次に読む内容、機能の場所などを質問できます...',
-      submitLabel: '質問',
-      submittingLabel: '考えています...',
-      youLabel: 'あなた',
-      assistantLabel: 'ガイド AI',
-      detailsLabel: '参照元と次のステップ',
-      sourcesLabel: '参照元',
-      nextPagesLabel: '次のページ',
-      disabledInline:
-        'この環境では、保護付きのガイド質問機能が有効になっていません。',
-      genericError:
-        '現在、ガイドアシスタントは回答できません。しばらくしてからもう一度お試しください。',
-      networkError:
-        'サーバーから Gemini に接続できません。サーバーのネットワークまたはプロキシを確認して、もう一度お試しください。',
-      upstreamError:
-        'Gemini からエラーが返されました。しばらくしてからもう一度お試しください。',
-      emptyResponseError:
-        'Gemini から回答本文が返りませんでした。質問を言い換えてもう一度お試しください。',
-      unavailableError:
-        'この環境では現在、AI への質問を利用できません。',
-      emptyQuestionError: '送信する前に質問を入力してください。',
-      forbiddenOriginError:
-        'このホストでは、保護付きのガイドアシスタントを利用できません。',
-      challengeError:
-        '質問を続けるには、確認を完了してください。',
-      challengeExpiredError:
-        '確認の有効期限が切れました。もう一度やり直してください。',
-      challengePrompt:
-        'ガイドへの質問を続けるには、確認を完了してください。',
-      challengeVerifyingLabel: '確認中...',
-      challengeLoadingError:
-        '確認ウィジェットを読み込めませんでした。ページを再読み込みしてもう一度お試しください。',
-      throttledError:
-        '確認に何度も失敗しました。しばらくしてからもう一度お試しください。',
-      tooLongError: '質問は1200文字以内で入力してください。',
-    };
-  }
-
-  if (locale === 'en') {
-    return {
-      title: 'Ask AI',
-      summary: 'Guide-only answers, with this page prioritized.',
-      expandLabel: 'Open',
-      collapseLabel: 'Close',
-      examplesLabel: 'Try asking',
-      examples: [
-        `What is the ${pageTitle} page for?`,
-        `What should I read after ${pageTitle}?`,
-        'Where do I set up AI polish or translation in Sona?',
-      ],
-      inputPlaceholder:
-        'Ask about this page, the next step, or where a feature lives in the guide...',
-      submitLabel: 'Ask',
-      submittingLabel: 'Thinking...',
-      youLabel: 'You',
-      assistantLabel: 'Guide AI',
-      detailsLabel: 'Sources and next step',
-      sourcesLabel: 'Sources',
-      nextPagesLabel: 'Next pages',
-      disabledInline:
-        'This deployment has not enabled protected guide Q&A.',
-      genericError:
-        'The guide assistant could not answer right now. Please try again in a moment.',
-      networkError:
-        'The server could not reach Gemini right now. Please check the server network or proxy and try again.',
-      upstreamError:
-        'Gemini returned an upstream error for this question. Please try again in a moment.',
-      emptyResponseError:
-        'Gemini replied without usable answer text. Please try asking again.',
-      unavailableError:
-        'AI questions are not available on this deployment right now.',
-      emptyQuestionError: 'Enter a question before sending it.',
-      forbiddenOriginError:
-        'This host is not allowed to use the protected guide assistant.',
-      challengeError:
-        'Please complete the verification challenge to continue asking questions.',
-      challengeExpiredError:
-        'Verification expired. Please complete the challenge again.',
-      challengePrompt:
-        'Complete the verification challenge to continue using guide Q&A.',
-      challengeVerifyingLabel: 'Verifying...',
-      challengeLoadingError:
-        'The verification widget could not load. Please refresh and try again.',
-      throttledError:
-        'Too many verification failures. Please wait and try again later.',
-      tooLongError: 'Keep the question under 1200 characters.',
-    };
-  }
-
-  return {
-    title: '向 AI 提问',
-    summary: '只回答本指南内容，并优先参考当前页。',
-    expandLabel: '展开',
-    collapseLabel: '收起',
-    examplesLabel: '可以这样问',
-    examples: [
-      `“${pageTitle}”这一页主要是做什么的？`,
-      `看完“${pageTitle}”后，下一步应该看哪一页？`,
-      'Sona 里的 AI 润色或翻译应该去哪里设置？',
-    ],
-    inputPlaceholder:
-      '可以问这页内容、下一步流程，或某项功能在指南里的位置……',
-    submitLabel: '发送',
-    submittingLabel: '正在思考...',
-    youLabel: '你',
-    assistantLabel: '指南 AI',
-    detailsLabel: '来源与下一步',
-    sourcesLabel: '来源页',
-    nextPagesLabel: '下一步',
-    disabledInline: '当前部署尚未启用受保护的文档问答。',
-    genericError: '指南助手暂时无法回答，请稍后再试。',
-    networkError:
-      '服务器当前无法连到 Gemini。请检查服务端网络或代理后再试。',
-    upstreamError:
-      'Gemini 这次返回了上游错误，请稍后重试。',
-    emptyResponseError:
-      'Gemini 这次没有返回可用答案文本，可以再问一次。',
-    unavailableError: '当前部署暂时不可用 AI 问答。',
-    emptyQuestionError: '请先输入问题再发送。',
-    forbiddenOriginError: '当前域名不允许使用受保护的指南问答。',
-    challengeError: '请先完成验证挑战，再继续提问。',
-    challengeExpiredError: '验证已过期，请重新完成一次挑战。',
-    challengePrompt: '继续使用指南问答前，请先完成下面的验证。',
-    challengeVerifyingLabel: '正在验证...',
-    challengeLoadingError: '验证组件加载失败，请刷新后重试。',
-    throttledError: '验证失败次数过多，请稍后再试。',
-    tooLongError: '问题请控制在 1200 个字符以内。',
-  };
 }
 
 export const getUserGuideMarkdown = cache(

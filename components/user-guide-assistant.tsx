@@ -9,7 +9,7 @@ import type { HomeLocale } from '@/lib/homepage-content';
 const MAX_QUESTION_LENGTH = 1200;
 const USER_GUIDE_TURNSTILE_ACTION = 'user_guide_chat';
 
-type AssistantCopy = {
+export type AssistantCopy = {
   title: string;
   summary: string;
   expandLabel: string;
