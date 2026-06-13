@@ -1,4 +1,4 @@
-import type { GenerateContentResponse } from '@google/genai';
+import type { GenerateContentParameters } from '@google/genai';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import type { HomeLocale } from '@/lib/homepage-content';
@@ -33,6 +33,12 @@ import {
 } from '@/lib/user-guide-content';
 import { isHomeLocale } from '@/lib/locales';
 import { createRequestLogger } from '@/lib/server-logger';
+import {
+  buildGuideAssistantSuccessBody,
+  buildGuideAssistantSuccessBodyFromText,
+  EmptyGeminiResponseError,
+  extractStreamingAnswerDelta,
+} from '@/lib/user-guide-chat-response';
 
 export const runtime = 'nodejs';
 
@@ -41,9 +47,6 @@ const MAX_HISTORY_MESSAGES = 6;
 const MAX_HISTORY_MESSAGE_LENGTH = 1200;
 const MAX_HISTORY_TOTAL_LENGTH = 4000;
 const MAX_TURNSTILE_TOKEN_LENGTH = 2048;
-const MAX_ANSWER_LENGTH = 4000;
-const MAX_SOURCE_LINKS = 3;
-const MAX_NEXT_LINKS = 2;
 const GEMINI_TIMEOUT_MS = 12000;
 const VERIFIED_WINDOW_MS = 30 * 60 * 1000;
 
@@ -64,25 +67,6 @@ type ChatHistoryItem = {
   content: string;
   role: ChatRole;
 };
-
-type GuideAssistantPageLink = {
-  id: UserGuidePageId;
-  path: string;
-  title: string;
-};
-
-type StructuredGuideAssistantAnswer = {
-  answer: string;
-  nextPageIds: UserGuidePageId[];
-  sourcePageIds: UserGuidePageId[];
-};
-
-class EmptyGeminiResponseError extends Error {
-  constructor() {
-    super('Gemini replied without usable answer text.');
-    this.name = 'EmptyGeminiResponseError';
-  }
-}
 
 function withGeminiTimeout<T>(promise: Promise<T>) {
   return new Promise<T>((resolve, reject) => {
@@ -191,161 +175,6 @@ function buildHistoryContents(history: ChatHistoryItem[]) {
     parts: [{ text: item.content }],
     role: item.role === 'assistant' ? 'model' : 'user',
   }));
-}
-
-function extractResponseText(response: GenerateContentResponse) {
-  const directText = response.text?.trim();
-
-  if (directText) {
-    return directText;
-  }
-
-  const candidateText = response.candidates
-    ?.flatMap((candidate) => candidate.content?.parts ?? [])
-    .flatMap((part) =>
-      typeof part.text === 'string' ? [part.text.trim()] : [],
-    )
-    .filter(Boolean)
-    .join('\n\n');
-
-  if (candidateText) {
-    return candidateText;
-  }
-
-  throw new EmptyGeminiResponseError();
-}
-
-function stripJsonCodeFence(text: string) {
-  const trimmed = text.trim();
-  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
-
-  return fenceMatch ? fenceMatch[1].trim() : trimmed;
-}
-
-function normalizePageIds({
-  exclude,
-  max,
-  value,
-}: {
-  exclude?: Set<UserGuidePageId>;
-  max: number;
-  value: unknown;
-}) {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  const seen = new Set<UserGuidePageId>();
-  const ids: UserGuidePageId[] = [];
-
-  for (const item of value) {
-    if (typeof item !== 'string' || !isUserGuidePageId(item)) {
-      continue;
-    }
-
-    if (exclude?.has(item) || seen.has(item)) {
-      continue;
-    }
-
-    seen.add(item);
-    ids.push(item);
-
-    if (ids.length >= max) {
-      break;
-    }
-  }
-
-  return ids;
-}
-
-function parseStructuredGuideAssistantAnswer(
-  response: GenerateContentResponse,
-): StructuredGuideAssistantAnswer {
-  const responseText = extractResponseText(response);
-  const jsonText = stripJsonCodeFence(responseText);
-
-  try {
-    const parsed = JSON.parse(jsonText) as Record<string, unknown>;
-    const answer = sanitizeText(parsed.answer, MAX_ANSWER_LENGTH);
-
-    if (!answer) {
-      throw new EmptyGeminiResponseError();
-    }
-
-    return {
-      answer,
-      nextPageIds: normalizePageIds({
-        max: MAX_NEXT_LINKS,
-        value: parsed.nextPageIds,
-      }),
-      sourcePageIds: normalizePageIds({
-        max: MAX_SOURCE_LINKS,
-        value: parsed.sourcePageIds,
-      }),
-    };
-  } catch (error) {
-    if (error instanceof EmptyGeminiResponseError) {
-      throw error;
-    }
-
-    return {
-      answer: responseText,
-      nextPageIds: [],
-      sourcePageIds: [],
-    };
-  }
-}
-
-function getAssistantPageLink(
-  locale: HomeLocale,
-  pageId: UserGuidePageId,
-): GuideAssistantPageLink {
-  const page = getUserGuidePageById(locale, pageId);
-
-  return {
-    id: page.id,
-    path: page.path,
-    title: page.title,
-  };
-}
-
-function getFallbackNextPageIds(locale: HomeLocale, pageId: UserGuidePageId) {
-  const page = getUserGuidePageById(locale, pageId);
-
-  return page.nextPage ? [page.nextPage.id] : [];
-}
-
-function buildGuideAssistantSuccessBody({
-  locale,
-  pageId,
-  response,
-}: {
-  locale: HomeLocale;
-  pageId: UserGuidePageId;
-  response: GenerateContentResponse;
-}) {
-  const parsed = parseStructuredGuideAssistantAnswer(response);
-  const sourcePageIds =
-    parsed.sourcePageIds.length > 0 ? parsed.sourcePageIds : [pageId];
-  const parsedNextPageIds = normalizePageIds({
-    exclude: new Set([pageId]),
-    max: MAX_NEXT_LINKS,
-    value: parsed.nextPageIds,
-  });
-  const nextPageIds =
-    parsedNextPageIds.length > 0
-      ? parsedNextPageIds
-      : getFallbackNextPageIds(locale, pageId);
-
-  return {
-    answer: parsed.answer,
-    nextPages: nextPageIds.map((nextPageId) =>
-      getAssistantPageLink(locale, nextPageId),
-    ),
-    sources: sourcePageIds.map((sourcePageId) =>
-      getAssistantPageLink(locale, sourcePageId),
-    ),
-  };
 }
 
 function collectErrorDiagnostics(error: unknown) {
@@ -589,6 +418,179 @@ function logGuideChatError({
   });
 }
 
+type GeminiClient = NonNullable<ReturnType<typeof getGeminiClient>>;
+
+function buildGeminiGuideRequest({
+  context,
+  history,
+  locale,
+  model,
+  page,
+  question,
+}: {
+  context: string;
+  history: ChatHistoryItem[];
+  locale: HomeLocale;
+  model: string;
+  page: {
+    description: string;
+    title: string;
+  };
+  question: string;
+}): GenerateContentParameters {
+  return {
+    config: {
+      maxOutputTokens: 700,
+      responseMimeType: 'application/json',
+      systemInstruction: buildUserGuideSystemInstruction({
+        context,
+        currentPageTitle: page.title,
+        locale,
+      }),
+      temperature: 0.2,
+      thinkingConfig: {
+        thinkingBudget: 0,
+      },
+      topP: 0.8,
+    },
+    contents: [
+      ...buildHistoryContents(history),
+      {
+        parts: [
+          {
+            text: buildUserGuideUserPrompt({
+              pageDescription: page.description,
+              pageTitle: page.title,
+              question,
+            }),
+          },
+        ],
+        role: 'user',
+      },
+    ],
+    model,
+  };
+}
+
+const streamEncoder = new TextEncoder();
+
+function encodeStreamEvent(event: 'delta' | 'done' | 'error', data: unknown) {
+  return streamEncoder.encode(
+    `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`,
+  );
+}
+
+function wantsStreamingResponse(request: NextRequest) {
+  return request.headers
+    .get('accept')
+    ?.toLowerCase()
+    .includes('text/event-stream') ?? false;
+}
+
+function createGuideAssistantStreamResponse({
+  ai,
+  geminiRequest,
+  host,
+  locale,
+  logger,
+  model,
+  pageId,
+  sessionFingerprint,
+  turnstileValidated,
+  verifiedSession,
+}: {
+  ai: GeminiClient;
+  geminiRequest: ReturnType<typeof buildGeminiGuideRequest>;
+  host: string;
+  locale: HomeLocale;
+  logger: RequestLogger;
+  model: string;
+  pageId: UserGuidePageId;
+  sessionFingerprint: string;
+  turnstileValidated: boolean;
+  verifiedSession: boolean;
+}) {
+  const stream = new ReadableStream({
+    async start(controller) {
+      let responseText = '';
+      let streamedAnswer = '';
+
+      try {
+        const responseStream = await withGeminiTimeout(
+          ai.models.generateContentStream(geminiRequest),
+        );
+
+        for await (const chunk of responseStream) {
+          const chunkText = chunk.text ?? '';
+
+          if (!chunkText) {
+            continue;
+          }
+
+          responseText += chunkText;
+          const delta = extractStreamingAnswerDelta({
+            previousAnswer: streamedAnswer,
+            text: responseText,
+          });
+
+          if (delta) {
+            streamedAnswer += delta;
+            controller.enqueue(encodeStreamEvent('delta', { text: delta }));
+          }
+        }
+
+        const successBody = buildGuideAssistantSuccessBodyFromText({
+          locale,
+          pageId,
+          text: responseText,
+        });
+        const finalDelta = successBody.answer.startsWith(streamedAnswer)
+          ? successBody.answer.slice(streamedAnswer.length)
+          : '';
+
+        if (finalDelta) {
+          controller.enqueue(encodeStreamEvent('delta', { text: finalDelta }));
+        }
+
+        controller.enqueue(encodeStreamEvent('done', successBody));
+      } catch (error) {
+        const errorResponse = getErrorResponse(error);
+
+        logGuideChatError({
+          code: errorResponse.code,
+          error,
+          host,
+          logger,
+          model,
+          sessionFingerprint,
+          status: errorResponse.status,
+          turnstileValidated,
+          verifiedSession,
+        });
+
+        controller.enqueue(
+          encodeStreamEvent('error', {
+            code: errorResponse.code,
+            error: errorResponse.message,
+          }),
+        );
+      } finally {
+        controller.close();
+      }
+    },
+  });
+
+  return new NextResponse(stream, {
+    headers: {
+      'Cache-Control': 'no-store, no-transform',
+      Connection: 'keep-alive',
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'X-Accel-Buffering': 'no',
+    },
+    status: 200,
+  });
+}
+
 export async function POST(request: NextRequest) {
   const requestPath = request.nextUrl.pathname;
   const contentType = request.headers.get('content-type');
@@ -807,39 +809,41 @@ export async function POST(request: NextRequest) {
 
   try {
     const context = await getUserGuideAiContext(locale, pageId, question);
-    const response = await withGeminiTimeout(
-      ai.models.generateContent({
-        config: {
-          maxOutputTokens: 700,
-          responseMimeType: 'application/json',
-          systemInstruction: buildUserGuideSystemInstruction({
-            context,
-            currentPageTitle: page.title,
-            locale,
-          }),
-          temperature: 0.2,
-          thinkingConfig: {
-            thinkingBudget: 0,
-          },
-          topP: 0.8,
-        },
-        contents: [
-          ...buildHistoryContents(history),
-          {
-            parts: [
-              {
-                text: buildUserGuideUserPrompt({
-                  pageDescription: page.description,
-                  pageTitle: page.title,
-                  question,
-                }),
-              },
-            ],
-            role: 'user',
-          },
-        ],
+    const geminiRequest = buildGeminiGuideRequest({
+      context,
+      history,
+      locale,
+      model,
+      page,
+      question,
+    });
+
+    if (wantsStreamingResponse(request)) {
+      const streamResponse = createGuideAssistantStreamResponse({
+        ai,
+        geminiRequest,
+        host: requestGuard.host,
+        locale,
+        logger,
         model,
-      }),
+        pageId,
+        sessionFingerprint,
+        turnstileValidated,
+        verifiedSession,
+      });
+
+      return finalizeResponse(
+        applyUserGuideSessionCookies({
+          clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+          response: streamResponse,
+          session: abuseState.session,
+          verifiedUntil,
+        }),
+      );
+    }
+
+    const response = await withGeminiTimeout(
+      ai.models.generateContent(geminiRequest),
     );
 
     const successResponse = jsonResponse({

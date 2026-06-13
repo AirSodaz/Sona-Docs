@@ -4,6 +4,7 @@ import { startTransition, useEffect, useRef, useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { ChevronDown, ChevronUp, Send, ShieldCheck, Sparkles } from 'lucide-react';
 import { TurnstileWidget } from '@/components/turnstile-widget';
+import { parseUserGuideChatStreamEvents } from '@/lib/user-guide-chat-stream';
 import type { HomeLocale } from '@/lib/homepage-content';
 
 const MAX_QUESTION_LENGTH = 1200;
@@ -51,6 +52,14 @@ type ApiErrorCode =
   | 'throttled'
   | 'upstream_error';
 
+type ApiPayload = {
+  answer?: string;
+  code?: ApiErrorCode;
+  error?: string;
+  nextPages?: unknown;
+  sources?: unknown;
+};
+
 type Message = {
   id: string;
   role: 'assistant' | 'user';
@@ -64,6 +73,17 @@ type AssistantPageLink = {
   path: string;
   title: string;
 };
+
+const API_ERROR_CODES: ApiErrorCode[] = [
+  'challenge_required',
+  'disabled',
+  'empty_response',
+  'forbidden_origin',
+  'invalid_request',
+  'network_unreachable',
+  'throttled',
+  'upstream_error',
+];
 
 type ChallengeState =
   | {
@@ -190,6 +210,28 @@ function sanitizeAssistantPageLinks(value: unknown): AssistantPageLink[] {
       },
     ];
   });
+}
+
+function isApiErrorCode(value: unknown): value is ApiErrorCode {
+  return (
+    typeof value === 'string' &&
+    API_ERROR_CODES.includes(value as ApiErrorCode)
+  );
+}
+
+function getRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object'
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function isStreamingResponse(response: Response) {
+  return (
+    response.headers
+      .get('content-type')
+      ?.toLowerCase()
+      .includes('text/event-stream') ?? false
+  );
 }
 
 function MessageBubble({
@@ -327,13 +369,15 @@ export function UserGuideAssistant({
   const [error, setError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
+    null,
+  );
   const [serviceAvailable, setServiceAvailable] = useState(enabled);
   const [challenge, setChallenge] = useState<ChallengeState>(() =>
     createIdleChallengeState(),
   );
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const hasConversation = messages.length > 0 || pendingQuestion !== null;
+  const hasConversation = messages.length > 0;
   const panelId = `user-guide-assistant-${pageId}`;
   const showChallenge =
     serviceAvailable &&
@@ -381,35 +425,186 @@ export function UserGuideAssistant({
       }));
     }
 
+    const history = messages.map(({ content, role }) => ({ content, role }));
+    const userMessage = createMessage('user', trimmedQuestion);
+    const assistantMessage = createMessage('assistant', '');
+    const rollbackOptimisticMessages = () => {
+      setMessages((currentMessages) =>
+        currentMessages.filter(
+          (message) =>
+            message.id !== userMessage.id && message.id !== assistantMessage.id,
+        ),
+      );
+      setStreamingMessageId((currentId) =>
+        currentId === assistantMessage.id ? null : currentId,
+      );
+    };
+
     setError(null);
     setIsSubmitting(true);
-    setPendingQuestion(trimmedQuestion);
+    setStreamingMessageId(assistantMessage.id);
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      userMessage,
+      assistantMessage,
+    ]);
+
+    const readStreamingResponse = async (response: Response) => {
+      const reader = response.body?.getReader();
+
+      if (!reader) {
+        return {
+          code: 'empty_response' as const,
+          hasContent: false,
+          ok: false as const,
+        };
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let didComplete = false;
+      let didReceiveDelta = false;
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          buffer += decoder.decode(value, { stream: true });
+          const parsed = parseUserGuideChatStreamEvents(buffer);
+          buffer = parsed.remaining;
+
+          for (const event of parsed.events) {
+            const payload = getRecord(event.data);
+
+            if (event.event === 'delta') {
+              const text = payload?.text;
+
+              if (typeof text === 'string' && text) {
+                didReceiveDelta = true;
+                setMessages((currentMessages) =>
+                  currentMessages.map((message) =>
+                    message.id === assistantMessage.id
+                      ? {
+                          ...message,
+                          content: `${message.content}${text}`,
+                        }
+                      : message,
+                  ),
+                );
+              }
+
+              continue;
+            }
+
+            if (event.event === 'done') {
+              const answer = payload?.answer;
+
+              if (typeof answer !== 'string' || !answer) {
+                return {
+                  code: 'empty_response' as const,
+                  hasContent: didReceiveDelta,
+                  ok: false as const,
+                };
+              }
+
+              const nextPages = sanitizeAssistantPageLinks(payload.nextPages);
+              const sources = sanitizeAssistantPageLinks(payload.sources);
+
+              setMessages((currentMessages) =>
+                currentMessages.map((message) =>
+                  message.id === assistantMessage.id
+                    ? {
+                        ...message,
+                        content: answer,
+                        nextPages,
+                        sources,
+                      }
+                    : message,
+                ),
+              );
+              didComplete = true;
+              continue;
+            }
+
+            if (event.event === 'error') {
+              return {
+                code: isApiErrorCode(payload?.code)
+                  ? payload.code
+                  : 'upstream_error',
+                error:
+                  typeof payload?.error === 'string'
+                    ? payload.error
+                    : undefined,
+                hasContent: didReceiveDelta,
+                ok: false as const,
+              };
+            }
+          }
+        }
+      } finally {
+        decoder.decode();
+      }
+
+      return didComplete
+        ? {
+            ok: true as const,
+          }
+        : {
+            code: 'empty_response' as const,
+            hasContent: didReceiveDelta,
+            ok: false as const,
+          };
+    };
 
     try {
       const response = await fetch('/api/user-guide-chat', {
         body: JSON.stringify({
-          history: messages.map(({ content, role }) => ({ content, role })),
+          history,
           locale,
           pageId,
           question: trimmedQuestion,
           turnstileToken: options?.turnstileToken,
         }),
         headers: {
+          Accept: 'text/event-stream',
           'Content-Type': 'application/json',
         },
         method: 'POST',
       });
-      const payload = (await response.json().catch(() => null)) as
-        | {
-            answer?: string;
-            code?: ApiErrorCode;
-            error?: string;
-            nextPages?: unknown;
-            sources?: unknown;
+
+      if (response.ok && isStreamingResponse(response)) {
+        setQuestion('');
+        const streamResult = await readStreamingResponse(response);
+
+        if (!streamResult.ok) {
+          if (!streamResult.hasContent) {
+            rollbackOptimisticMessages();
           }
+
+          setError(
+            getApiErrorMessage({
+              code: streamResult.code,
+              copy,
+              fallback: streamResult.error,
+            }),
+          );
+          return;
+        }
+
+        setChallenge((current) => createIdleChallengeState(current.nonce));
+        return;
+      }
+
+      const payload = (await response.json().catch(() => null)) as
+        | ApiPayload
         | null;
 
       if (!response.ok && payload?.code === 'disabled') {
+        rollbackOptimisticMessages();
         setServiceAvailable(false);
         setIsExpanded(false);
         setQuestion('');
@@ -419,6 +614,7 @@ export function UserGuideAssistant({
       }
 
       if (!response.ok && payload?.code === 'challenge_required') {
+        rollbackOptimisticMessages();
         if (!turnstileSiteKey) {
           setError(copy.challengeLoadingError);
           setChallenge((current) => createIdleChallengeState(current.nonce + 1));
@@ -439,6 +635,7 @@ export function UserGuideAssistant({
       }
 
       if (!response.ok || !payload || typeof payload.answer !== 'string') {
+        rollbackOptimisticMessages();
         setChallenge((current) => createIdleChallengeState(current.nonce + 1));
         setError(
           getApiErrorMessage({
@@ -455,24 +652,31 @@ export function UserGuideAssistant({
       const sources = sanitizeAssistantPageLinks(payload.sources);
 
       startTransition(() => {
-        setMessages((currentMessages) => [
-          ...currentMessages,
-          createMessage('user', trimmedQuestion),
-          createMessage('assistant', answer, {
-            nextPages,
-            sources,
-          }),
-        ]);
+        setMessages((currentMessages) =>
+          currentMessages.map((message) =>
+            message.id === assistantMessage.id
+              ? {
+                  ...message,
+                  content: answer,
+                  nextPages,
+                  sources,
+                }
+              : message,
+          ),
+        );
         setQuestion('');
         setChallenge((current) => createIdleChallengeState(current.nonce));
       });
     } catch (requestError) {
       console.error('Failed to ask guide assistant:', requestError);
+      rollbackOptimisticMessages();
       setChallenge((current) => createIdleChallengeState(current.nonce + 1));
       setError(copy.genericError);
     } finally {
       setIsSubmitting(false);
-      setPendingQuestion(null);
+      setStreamingMessageId((currentId) =>
+        currentId === assistantMessage.id ? null : currentId,
+      );
     }
   }
 
@@ -664,8 +868,13 @@ export function UserGuideAssistant({
                 {messages.map((message) => (
                   <MessageBubble
                     key={message.id}
-                    content={message.content}
+                    content={
+                      message.id === streamingMessageId && !message.content
+                        ? copy.submittingLabel
+                        : message.content
+                    }
                     detailsLabel={copy.detailsLabel}
+                    isPending={message.id === streamingMessageId}
                     label={
                       message.role === 'user'
                         ? copy.youLabel
@@ -678,22 +887,6 @@ export function UserGuideAssistant({
                     sourcesLabel={copy.sourcesLabel}
                   />
                 ))}
-
-                {pendingQuestion ? (
-                  <>
-                    <MessageBubble
-                      content={pendingQuestion}
-                      label={copy.youLabel}
-                      role="user"
-                    />
-                    <MessageBubble
-                      content={copy.submittingLabel}
-                      isPending
-                      label={copy.assistantLabel}
-                      role="assistant"
-                    />
-                  </>
-                ) : null}
               </div>
             </div>
           ) : null}
