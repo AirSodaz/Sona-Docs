@@ -37,10 +37,7 @@ import {
   type UserGuideNavItem,
   type UserGuidePageModel,
 } from '@/lib/user-guide-content';
-import {
-  getUserGuideSearchEntries,
-  type UserGuideSearchCopy,
-} from '@/lib/user-guide-search';
+import type { UserGuideSearchCopy } from '@/lib/user-guide-search';
 import type { HomeLocale } from '@/lib/homepage-content';
 
 const preserveUserGuideInternalLinks: UrlTransform = (url) => {
@@ -377,10 +374,7 @@ export async function UserGuidePage({
   const navigation = getUserGuideNavigation(locale, page.id);
   const overviewCards = getUserGuideOverviewCards(locale);
   const searchCopy = getUserGuideSearchCopyFromMessages(t);
-  const [markdown, searchEntries] = await Promise.all([
-    getUserGuideMarkdown(locale, page.id),
-    getUserGuideSearchEntries(locale),
-  ]);
+  const markdown = await getUserGuideMarkdown(locale, page.id);
   const markdownComponents = createMarkdownComponents(locale, ui);
   const assistantCopy = getUserGuideAssistantCopyFromMessages(t, page.navLabel);
   const aiEnabled = isUserGuideAiEnabled();
@@ -395,7 +389,7 @@ export async function UserGuidePage({
           key="user-guide-search"
           copy={searchCopy}
           currentPageId={page.id}
-          entries={searchEntries}
+          locale={locale}
         />
       }
       headerActionsMobile={<HeaderActions key="header-actions-mobile" className="lg:hidden" page={page} slug={slug} />}

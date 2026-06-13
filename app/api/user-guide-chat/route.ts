@@ -806,7 +806,7 @@ export async function POST(request: NextRequest) {
   });
 
   try {
-    const context = await getUserGuideAiContext(locale, pageId);
+    const context = await getUserGuideAiContext(locale, pageId, question);
     const response = await withGeminiTimeout(
       ai.models.generateContent({
         config: {

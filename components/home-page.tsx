@@ -13,8 +13,17 @@ import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
 import { buildDownloadContentFromMessages } from '@/lib/download-content';
-import type { HomeLocale, HomePageContent, UseCaseId } from '@/lib/homepage-content';
+import type {
+  HomeLocale,
+  HomePageContent,
+  UseCaseId,
+  UseCaseItem,
+} from '@/lib/homepage-content';
 import { motion } from 'motion/react';
+
+type HomeUseCaseMessages = Omit<HomePageContent['useCases'], 'items'> & {
+  items: Record<UseCaseId, Omit<UseCaseItem, 'href' | 'id'>>;
+};
 
 export function HomePage({
   locale,
@@ -25,7 +34,7 @@ export function HomePage({
   const downloadT = useTranslations('DownloadsPage');
   const pathname = usePathname();
 
-  const useCasesRaw = t.raw('useCases') as any;
+  const useCasesRaw = t.raw('useCases') as HomeUseCaseMessages;
   const hrefMap: Record<UseCaseId, string> = {
     meetings: '/user-guide/live-record',
     lectures: '/user-guide/edit-and-playback',
@@ -33,26 +42,33 @@ export function HomePage({
     'subtitle-translation': '/user-guide/ai-polish-and-translate',
   };
 
-  const useCasesItemsArray = Object.entries(useCasesRaw.items || {}).map(([key, value]: [string, any]) => ({
-    id: key as UseCaseId,
-    href: hrefMap[key as UseCaseId] || '/user-guide',
+  const useCasesItemsArray = (
+    Object.entries(useCasesRaw.items) as Array<
+      [UseCaseId, Omit<UseCaseItem, 'href' | 'id'>]
+    >
+  ).map(([key, value]) => ({
+    id: key,
+    href: hrefMap[key],
     title: value.title,
     context: value.context,
     workflow: value.workflow,
     result: value.result,
-    tags: value.tags || [],
+    tags: value.tags,
   }));
 
-  const heroRaw = t.raw('hero') as any;
-  const finalCtaRaw = t.raw('finalCta') as any;
-  const footerRaw = t.raw('footer') as any;
+  const heroRaw = t.raw('hero') as Omit<HomePageContent['hero'], 'docsHref'>;
+  const finalCtaRaw = t.raw('finalCta') as Omit<HomePageContent['finalCta'], 'secondaryHref'>;
+  const footerRaw = t.raw('footer') as Omit<
+    HomePageContent['footer'],
+    'privacyHref' | 'trustHref'
+  >;
 
   const content: HomePageContent = {
     metadata: {
       title: t('metadata.title'),
       description: t('metadata.description'),
     },
-    nav: t.raw('nav') as any,
+    nav: t.raw('nav') as HomePageContent['nav'],
     hero: {
       ...heroRaw,
       docsHref: '/user-guide',
@@ -65,8 +81,8 @@ export function HomePage({
       note: useCasesRaw.note,
       items: useCasesItemsArray,
     },
-    demo: t.raw('demo') as any,
-    features: t.raw('features') as any,
+    demo: t.raw('demo') as HomePageContent['demo'],
+    features: t.raw('features') as HomePageContent['features'],
     finalCta: {
       ...finalCtaRaw,
       secondaryHref: '/user-guide',

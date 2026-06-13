@@ -1,6 +1,8 @@
 import { TrustPrivacyPage } from '@/components/trust-privacy-page';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import type { TrustPrivacyPageCopy } from '@/lib/trust-privacy-content';
+import { isHomeLocale } from '@/lib/locales';
+import { notFound } from 'next/navigation';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -19,6 +21,10 @@ export async function generateMetadata({ params }: Props) {
 export default async function TrustPageRoute({ params }: Props) {
   const { locale } = await params;
 
+  if (!isHomeLocale(locale)) {
+    notFound();
+  }
+
   // Enable static rendering
   setRequestLocale(locale);
 
@@ -27,7 +33,7 @@ export default async function TrustPageRoute({ params }: Props) {
   // Dynamically build content prop using next-intl
   const content: TrustPrivacyPageCopy = {
     id: 'trust',
-    locale: locale as any,
+    locale,
     metadata: {
       title: t('trust.metadata.title'),
       description: t('trust.metadata.description'),
@@ -43,8 +49,8 @@ export default async function TrustPageRoute({ params }: Props) {
       description: t('trust.hero.description'),
       updatedLabel: t('trust.hero.updatedLabel'),
     },
-    facts: t.raw('trust.facts') as any,
-    sections: t.raw('trust.sections') as any,
+    facts: t.raw('trust.facts') as TrustPrivacyPageCopy['facts'],
+    sections: t.raw('trust.sections') as TrustPrivacyPageCopy['sections'],
     closing: {
       title: t('trust.closing.title'),
       description: t('trust.closing.description'),

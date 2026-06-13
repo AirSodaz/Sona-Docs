@@ -1,6 +1,6 @@
 'use client';
 
-import { useDeferredValue, useMemo, useState } from 'react';
+import { useDeferredValue, useMemo, useRef, useState } from 'react';
 import { Link } from '@/i18n/routing';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Search, X } from 'lucide-react';
@@ -11,6 +11,7 @@ import {
   type UserGuideSearchResult,
 } from '@/lib/user-guide-search-core';
 import type { UserGuideSearchCopy } from '@/lib/user-guide-search';
+import type { HomeLocale } from '@/lib/homepage-content';
 
 function HighlightedExcerpt({
   excerpt,
@@ -103,16 +104,19 @@ function SearchResultLink({
 export function UserGuideSearch({
   copy,
   currentPageId,
-  entries,
+  locale,
 }: {
   copy: UserGuideSearchCopy;
   currentPageId: string;
-  entries: UserGuideSearchEntry[];
+  locale: HomeLocale;
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [entries, setEntries] = useState<UserGuideSearchEntry[]>([]);
+  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const loadPromiseRef = useRef<Promise<void> | null>(null);
   const deferredQuery = useDeferredValue(query);
   const results = useMemo(
     () =>
@@ -127,6 +131,53 @@ export function UserGuideSearch({
   const activeResultId = activeResult
     ? `user-guide-search-result-${activeResult.id}`
     : undefined;
+
+  function loadEntries() {
+    if (loadState === 'ready' || loadPromiseRef.current) {
+      return;
+    }
+
+    setLoadState('loading');
+    loadPromiseRef.current = fetch(
+      `/api/user-guide-search?locale=${encodeURIComponent(locale)}`,
+    )
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error('Failed to load guide search index');
+        }
+
+        const payload = (await response.json()) as {
+          entries?: unknown;
+        };
+
+        if (!Array.isArray(payload.entries)) {
+          throw new Error('Invalid guide search index payload');
+        }
+
+        setEntries(
+          payload.entries.filter(
+            (entry): entry is UserGuideSearchEntry =>
+              Boolean(entry) &&
+              typeof entry === 'object' &&
+              typeof (entry as UserGuideSearchEntry).content === 'string' &&
+              typeof (entry as UserGuideSearchEntry).description === 'string' &&
+              typeof (entry as UserGuideSearchEntry).groupLabel === 'string' &&
+              typeof (entry as UserGuideSearchEntry).id === 'string' &&
+              typeof (entry as UserGuideSearchEntry).navLabel === 'string' &&
+              typeof (entry as UserGuideSearchEntry).path === 'string' &&
+              typeof (entry as UserGuideSearchEntry).title === 'string',
+          ),
+        );
+        setLoadState('ready');
+      })
+      .catch(() => {
+        setEntries([]);
+        setLoadState('error');
+      })
+      .finally(() => {
+        loadPromiseRef.current = null;
+      });
+  }
 
   function closeResults() {
     setOpen(false);
@@ -169,8 +220,10 @@ export function UserGuideSearch({
             setQuery(event.target.value);
             setOpen(true);
             setActiveIndex(0);
+            loadEntries();
           }}
           onFocus={() => {
+            loadEntries();
             if (trimmedQuery) {
               setOpen(true);
             }

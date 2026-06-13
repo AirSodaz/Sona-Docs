@@ -6,6 +6,7 @@ import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import '../globals.css';
 import { SiteShell } from '@/components/site-shell';
+import { isHomeLocale } from '@/lib/locales';
 import { getSiteUrl } from '@/lib/site-url';
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   // Ensure that the incoming locale is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!isHomeLocale(locale)) {
     notFound();
   }
 

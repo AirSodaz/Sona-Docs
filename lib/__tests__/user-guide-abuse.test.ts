@@ -22,7 +22,7 @@ describe('user guide abuse protection', () => {
   });
 
   it('does not forward caller-provided or spoofable header-derived IPs to Turnstile', async () => {
-    const fetchMock = vi.fn(async () => {
+    const fetchMock = vi.fn(async (_url: string | URL, _init?: RequestInit) => {
       return new Response(
         JSON.stringify({
           action: USER_GUIDE_TURNSTILE_ACTION,

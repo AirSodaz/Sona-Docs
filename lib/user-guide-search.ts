@@ -5,8 +5,12 @@ import type { HomeLocale } from '@/lib/homepage-content';
 import {
   getAllUserGuidePages,
   getUserGuideMarkdown,
+  type UserGuidePageId,
 } from '@/lib/user-guide-content';
-import type { UserGuideSearchEntry } from '@/lib/user-guide-search-core';
+import {
+  searchUserGuideEntries,
+  type UserGuideSearchEntry,
+} from '@/lib/user-guide-search-core';
 
 export interface UserGuideSearchCopy {
   clearLabel: string;
@@ -53,3 +57,60 @@ export const getUserGuideSearchEntries = cache(async (locale: HomeLocale) => {
     }),
   );
 });
+
+export interface UserGuideSearchSnippet {
+  content: string;
+  description: string;
+  id: UserGuidePageId;
+  path: string;
+  title: string;
+}
+
+const REFERENCE_SNIPPET_RADIUS = 700;
+
+function createReferenceSnippet(content: string, excerpt: string) {
+  const excerptToken = excerpt.replace(/^\.\.\./, '').replace(/\.\.\.$/, '').trim();
+  const normalizedContent = content.toLocaleLowerCase();
+  const normalizedToken = excerptToken.toLocaleLowerCase();
+  const index = normalizedToken
+    ? normalizedContent.indexOf(normalizedToken)
+    : -1;
+
+  if (index < 0) {
+    return content.slice(0, REFERENCE_SNIPPET_RADIUS * 2).trim();
+  }
+
+  const start = Math.max(0, index - REFERENCE_SNIPPET_RADIUS);
+  const end = Math.min(
+    content.length,
+    index + excerptToken.length + REFERENCE_SNIPPET_RADIUS,
+  );
+
+  return content.slice(start, end).trim();
+}
+
+export async function getUserGuideReferenceSnippets({
+  currentPageId,
+  limit = 3,
+  locale,
+  query,
+}: {
+  currentPageId: UserGuidePageId;
+  limit?: number;
+  locale: HomeLocale;
+  query: string;
+}): Promise<UserGuideSearchSnippet[]> {
+  const entries = await getUserGuideSearchEntries(locale);
+  const results = searchUserGuideEntries(entries, query, {
+    currentPageId,
+    limit: limit + 1,
+  }).filter((result) => result.id !== currentPageId);
+
+  return results.slice(0, limit).map((result) => ({
+    content: createReferenceSnippet(result.content, result.excerpt),
+    description: result.description,
+    id: result.id as UserGuidePageId,
+    path: result.path,
+    title: result.title,
+  }));
+}

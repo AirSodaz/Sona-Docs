@@ -3,7 +3,7 @@ import 'server-only';
 import { cache } from 'react';
 import type { HomeLocale } from '@/lib/homepage-content';
 import {
-  getAllUserGuidePages,
+  getUserGuidePageById,
   getUserGuideMarkdown,
   type UserGuidePageId,
 } from '@/lib/user-guide-content';
@@ -11,6 +11,7 @@ import {
   getUserGuideTurnstileSiteKey,
   isUserGuideAbuseProtectionConfigured,
 } from '@/lib/user-guide-abuse';
+import { getUserGuideReferenceSnippets } from '@/lib/user-guide-search';
 
 export const DEFAULT_USER_GUIDE_CHAT_MODEL = 'gemini-2.5-flash';
 
@@ -52,55 +53,57 @@ function formatGuideSection({
   ].join('\n');
 }
 
-const getLocaleGuideDocuments = cache(async (locale: HomeLocale) => {
-  const pages = getAllUserGuidePages(locale);
+const getCurrentGuideDocument = cache(
+  async (locale: HomeLocale, pageId: UserGuidePageId) => {
+    const page = getUserGuidePageById(locale, pageId);
 
-  return Promise.all(
-    pages.map(async (page) => ({
+    return {
       description: page.description,
       id: page.id,
       markdown: await getUserGuideMarkdown(locale, page.id),
       path: page.path,
       title: page.title,
-    })),
-  );
-});
-
-export const getUserGuideAiContext = cache(
-  async (locale: HomeLocale, currentPageId: UserGuidePageId) => {
-    const documents = await getLocaleGuideDocuments(locale);
-    const currentPage = documents.find((page) => page.id === currentPageId);
-
-    if (!currentPage) {
-      throw new Error(`Unknown user guide page id: ${currentPageId}`);
-    }
-
-    const referencePages = documents.filter((page) => page.id !== currentPageId);
-
-    return [
-      `Guide locale: ${locale}`,
-      '',
-      formatGuideSection({
-        heading: `Current page - ${currentPage.title}`,
-        id: currentPage.id,
-        path: currentPage.path,
-        description: currentPage.description,
-        markdown: currentPage.markdown,
-      }),
-      '',
-      '## Reference pages',
-      ...referencePages.map((page) =>
-        formatGuideSection({
-          heading: page.title,
-          id: page.id,
-          path: page.path,
-          description: page.description,
-          markdown: page.markdown,
-        }),
-      ),
-    ].join('\n\n');
+    };
   },
 );
+
+export async function getUserGuideAiContext(
+  locale: HomeLocale,
+  currentPageId: UserGuidePageId,
+  question: string,
+) {
+  const currentPage = await getCurrentGuideDocument(locale, currentPageId);
+  const referencePages = question.trim()
+    ? await getUserGuideReferenceSnippets({
+        currentPageId,
+        locale,
+        query: question,
+      })
+    : [];
+
+  return [
+    `Guide locale: ${locale}`,
+    '',
+    formatGuideSection({
+      heading: `Current page - ${currentPage.title}`,
+      id: currentPage.id,
+      path: currentPage.path,
+      description: currentPage.description,
+      markdown: currentPage.markdown,
+    }),
+    '',
+    '## Relevant reference snippets',
+    ...referencePages.map((page) =>
+      formatGuideSection({
+        heading: page.title,
+        id: page.id,
+        path: page.path,
+        description: page.description,
+        markdown: page.content,
+      }),
+    ),
+  ].join('\n\n');
+}
 
 export function isUserGuideAiEnabled() {
   return Boolean(
