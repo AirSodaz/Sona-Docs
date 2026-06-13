@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
-    "clean": "next clean"
+    "audit": "pnpm audit --audit-level moderate",
+    "ci:pr": "pnpm lint && pnpm test && pnpm build && pnpm audit --audit-level moderate",
+    "clean": "node -e \"require('node:fs').rmSync('.next', { recursive: true, force: true })\""
   },
   "dependencies": {
     "@google/genai": "^2.8.0",
