@@ -22,6 +22,10 @@ import { UserGuideSearch } from '@/components/user-guide-search';
 import { UserGuideLayout } from '@/components/user-guide-layout';
 import { AnimatedContainer, AnimatedItem } from '@/components/animated-wrapper';
 import {
+  getDisplayTypography,
+  getEyebrowTypography,
+} from '@/lib/locale-typography';
+import {
   getUserGuideTurnstileSiteKey,
   isUserGuideAiEnabled,
 } from '@/lib/user-guide-ai';
@@ -115,25 +119,31 @@ function createMarkdownComponents(
   locale: HomeLocale,
   ui: ReturnType<typeof getUserGuideUiCopy>,
 ): Components {
+  const pageTitleTypography = getDisplayTypography(locale, 'page');
+  const guideSectionTypography = getDisplayTypography(locale, 'guideSection');
+  const h3ClassName = guideSectionTypography.isCjk
+    ? 'mt-12 text-xl font-medium tracking-normal text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-2xl'
+    : 'mt-12 text-xl font-medium tracking-tight text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-2xl';
+
   return {
     h1: ({ children }) => (
       <h1
-        className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
-        style={{ fontFamily: 'Georgia, serif' }}
+        className={`text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] ${pageTitleTypography.className}`}
+        style={pageTitleTypography.style}
       >
         {children}
       </h1>
     ),
     h2: ({ children }) => (
       <h2
-        className="mt-16 scroll-mt-24 border-t border-stone-200/50 pt-10 text-[1.8rem] leading-tight font-serif italic text-[#2D2D2D] dark:border-stone-800/50 dark:text-[#E0E0E0] sm:text-[2.2rem]"
-        style={{ fontFamily: 'Georgia, serif' }}
+        className={`mt-16 scroll-mt-24 border-t border-stone-200/50 pt-10 text-[#2D2D2D] dark:border-stone-800/50 dark:text-[#E0E0E0] ${guideSectionTypography.className}`}
+        style={guideSectionTypography.style}
       >
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mt-12 text-xl font-medium tracking-tight text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-2xl">
+      <h3 className={h3ClassName}>
         {children}
       </h3>
     ),
@@ -379,6 +389,18 @@ export async function UserGuidePage({
   const assistantCopy = getUserGuideAssistantCopyFromMessages(t, page.navLabel);
   const aiEnabled = isUserGuideAiEnabled();
   const turnstileSiteKey = getUserGuideTurnstileSiteKey();
+  const pageTitleTypography = getDisplayTypography(locale, 'page');
+  const overviewTitleTypography = getDisplayTypography(locale, 'guideSection');
+  const pageEyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.24em]',
+  );
+  const articleClassName = [
+    'prose prose-stone dark:prose-invert max-w-none prose-a:font-medium prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:text-inherit prose-pre:shadow-none',
+    pageTitleTypography.isCjk
+      ? 'prose-headings:font-medium'
+      : 'prose-headings:font-serif prose-headings:font-medium',
+  ].join(' ');
 
   return (
     <UserGuideLayout
@@ -414,12 +436,12 @@ export async function UserGuidePage({
           </nav>
 
           <div className="mb-12 border-b border-stone-200/50 pb-8 dark:border-stone-800/50">
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+            <p className={`mb-4 text-[11px] font-semibold uppercase text-stone-400 dark:text-stone-500 ${pageEyebrowTypography.className}`}>
               {page.groupLabel}
             </p>
             <h1
-              className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
-              style={{ fontFamily: 'Georgia, serif' }}
+              className={`text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] ${pageTitleTypography.className}`}
+              style={pageTitleTypography.style}
             >
               {page.title}
             </h1>
@@ -442,12 +464,20 @@ export async function UserGuidePage({
         {page.id === 'overview' ? (
           <AnimatedItem className="mb-16 space-y-16">
             <section>
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+              <p className={`mb-4 text-[11px] font-semibold uppercase text-stone-400 dark:text-stone-500 ${pageEyebrowTypography.className}`}>
                 {ui.overview.cardsEyebrow}
               </p>
               <h2
-                className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
-                style={{ fontFamily: 'Georgia, serif' }}
+                className={`mb-6 text-[#2D2D2D] dark:text-[#E0E0E0] ${
+                  overviewTitleTypography.isCjk
+                    ? overviewTitleTypography.className
+                    : 'text-[2rem] leading-tight font-serif italic sm:text-[2.5rem]'
+                }`}
+                style={
+                  overviewTitleTypography.isCjk
+                    ? overviewTitleTypography.style
+                    : { fontFamily: 'Georgia, serif' }
+                }
               >
                 {ui.overview.cardsTitle}
               </h2>
@@ -478,12 +508,20 @@ export async function UserGuidePage({
             </section>
 
             <section>
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+              <p className={`mb-4 text-[11px] font-semibold uppercase text-stone-400 dark:text-stone-500 ${pageEyebrowTypography.className}`}>
                 {ui.overview.browseEyebrow}
               </p>
               <h2
-                className="mb-6 text-[2rem] leading-tight font-serif italic text-[#2D2D2D] dark:text-[#E0E0E0] sm:text-[2.5rem]"
-                style={{ fontFamily: 'Georgia, serif' }}
+                className={`mb-6 text-[#2D2D2D] dark:text-[#E0E0E0] ${
+                  overviewTitleTypography.isCjk
+                    ? overviewTitleTypography.className
+                    : 'text-[2rem] leading-tight font-serif italic sm:text-[2.5rem]'
+                }`}
+                style={
+                  overviewTitleTypography.isCjk
+                    ? overviewTitleTypography.style
+                    : { fontFamily: 'Georgia, serif' }
+                }
               >
                 {ui.overview.browseTitle}
               </h2>
@@ -520,7 +558,7 @@ export async function UserGuidePage({
           </AnimatedItem>
         ) : null}
 
-        <AnimatedItem as="article" className="prose prose-stone dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-medium prose-a:font-medium prose-code:before:content-none prose-code:after:content-none prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 prose-pre:text-inherit prose-pre:shadow-none">
+        <AnimatedItem as="article" className={articleClassName}>
           <ReactMarkdown
             components={markdownComponents}
             remarkPlugins={[remarkGfm]}

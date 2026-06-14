@@ -36,7 +36,16 @@ import {
   Volume2,
   X,
 } from 'lucide-react';
-import type { DemoContent, DemoSegment, DemoStageId } from '@/lib/homepage-content';
+import type {
+  DemoContent,
+  DemoSegment,
+  DemoStageId,
+  HomeLocale,
+} from '@/lib/homepage-content';
+import {
+  getDisplayTypography,
+  getEyebrowTypography,
+} from '@/lib/locale-typography';
 import { Logo } from '@/components/Logo';
 
 const stageTransition = {
@@ -51,7 +60,13 @@ function getLivePreview(text: string) {
   return `${text.slice(0, previewLength).trimEnd()}...`;
 }
 
-export function TranscriptDemo({ demo }: { demo: DemoContent }) {
+export function TranscriptDemo({
+  demo,
+  locale,
+}: {
+  demo: DemoContent;
+  locale: HomeLocale;
+}) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -75,6 +90,12 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
   const progressWidth =
     displayedStage === 'live' ? `${demo.recording?.liveProgress ?? 0}%` : '100%';
   const isRefined = displayedStage === 'refined';
+  const titleTypography = getDisplayTypography(locale, 'section');
+  const eyebrowTypography = getEyebrowTypography(locale);
+  const stageEyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.32em]',
+  );
 
   useEffect(() => {
     if (prefersReducedMotion || hasManualSelection || !hasEnteredViewport) {
@@ -111,12 +132,12 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
           viewport={{ once: true, amount: 0.45 }}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#787774] dark:text-[#9b9a97] sm:text-xs">
+          <p className={`text-[11px] font-semibold uppercase text-[#787774] dark:text-[#9b9a97] sm:text-xs ${eyebrowTypography.className}`}>
             {demo.eyebrow}
           </p>
           <h2
-            className="mt-4 text-[clamp(2.45rem,7vw,4.45rem)] leading-[0.96] text-[#37352f] dark:text-[#f1f1ef]"
-            style={{ fontFamily: 'var(--font-serif)' }}
+            className={`mt-4 text-[#37352f] dark:text-[#f1f1ef] ${titleTypography.className}`}
+            style={titleTypography.style}
           >
             {demo.title}
           </h2>
@@ -149,6 +170,7 @@ export function TranscriptDemo({ demo }: { demo: DemoContent }) {
           <StageTabs
             demo={demo}
             currentStage={currentStage}
+            eyebrowClassName={stageEyebrowTypography.className}
             activeStage={displayedStage}
             setActiveStage={(stage) => {
               setHasManualSelection(true);
@@ -333,11 +355,13 @@ function SpeakerBadge({ demo }: { demo: DemoContent }) {
 function StageTabs({
   demo,
   currentStage,
+  eyebrowClassName,
   activeStage,
   setActiveStage,
 }: {
   demo: DemoContent;
   currentStage: DemoContent['stages'][number];
+  eyebrowClassName: string;
   activeStage: DemoStageId;
   setActiveStage: (stage: DemoStageId) => void;
 }) {
@@ -362,7 +386,7 @@ function StageTabs({
 
   return (
     <div className="w-full max-w-xl lg:max-w-[420px]">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[#787774] dark:text-[#9b9a97]">
+      <p className={`text-[10px] font-semibold uppercase text-[#787774] dark:text-[#9b9a97] ${eyebrowClassName}`}>
         {demo.stageLabel}
       </p>
       <div

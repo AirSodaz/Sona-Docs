@@ -17,6 +17,10 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { SiteHeader } from '@/components/site-header';
 import { buildDownloadContentFromMessages } from '@/lib/download-content';
+import {
+  getDisplayTypography,
+  getEyebrowTypography,
+} from '@/lib/locale-typography';
 import type { HomeLocale } from '@/lib/homepage-content';
 import {
   FALLBACK_RELEASE_URL,
@@ -58,6 +62,11 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
   const pathname = usePathname();
 
   const content = buildDownloadContentFromMessages(t);
+  const pageTitleTypography = getDisplayTypography(locale, 'page');
+  const pageEyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.22em] sm:tracking-[0.28em]',
+  );
 
   const [release, setRelease] = useState<ReleaseState>({
     data: null,
@@ -175,12 +184,12 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
             className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between border-b border-stone-200/50 pb-8 dark:border-stone-800/50"
           >
             <div className="max-w-2xl">
-              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs sm:tracking-[0.28em]">
+              <p className={`mb-4 text-[11px] font-semibold uppercase text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs ${pageEyebrowTypography.className}`}>
                 {content.page.updatedLabel}
               </p>
               <h1
-                className="text-[clamp(2.5rem,8vw,3.5rem)] leading-[1] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0]"
-                style={{ fontFamily: 'Georgia, serif' }}
+                className={`text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] ${pageTitleTypography.className}`}
+                style={pageTitleTypography.style}
               >
                 {content.page.title}
               </h1>

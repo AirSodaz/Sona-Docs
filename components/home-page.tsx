@@ -13,6 +13,10 @@ import { ScrollHint } from '@/components/scroll-hint';
 import { UseCasesSection } from '@/components/use-cases-section';
 import { TranscriptDemo } from '@/components/transcript-demo';
 import { buildDownloadContentFromMessages } from '@/lib/download-content';
+import {
+  getDisplayTypography,
+  getEyebrowTypography,
+} from '@/lib/locale-typography';
 import type {
   HomeLocale,
   HomePageContent,
@@ -96,6 +100,15 @@ export function HomePage({
 
   const demoPreviewId = 'homepage-demo-preview';
   const downloads = buildDownloadContentFromMessages(downloadT);
+  const heroTitleTypography = getDisplayTypography(locale, 'hero');
+  const heroEyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.22em] sm:tracking-[0.28em]',
+  );
+  const workflowEyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.3em]',
+  );
 
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
@@ -171,7 +184,7 @@ export function HomePage({
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
                 }}
-                className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs sm:tracking-[0.28em]"
+                className={`mb-4 text-[11px] font-semibold uppercase text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:mb-6 sm:text-xs ${heroEyebrowTypography.className}`}
               >
                 {content.hero.badge}
               </motion.p>
@@ -181,11 +194,15 @@ export function HomePage({
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
                 }}
-                className="mb-3 text-[clamp(2.7rem,12vw,4.5rem)] leading-[0.94] font-serif italic text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] sm:mb-4 sm:text-6xl md:text-7xl"
-                style={{ fontFamily: 'Georgia, serif' }}
+                className={`mb-3 text-[#2D2D2D] transition-colors duration-300 dark:text-[#E0E0E0] sm:mb-4 ${heroTitleTypography.className}`}
+                style={heroTitleTypography.style}
               >
                 {content.hero.title1} <br />
-                <span className="font-light text-stone-500 transition-colors duration-300 dark:text-stone-400">
+                <span
+                  className={`text-stone-500 transition-colors duration-300 dark:text-stone-400 ${
+                    heroTitleTypography.isCjk ? 'font-normal' : 'font-light'
+                  }`}
+                >
                   {content.hero.title2}
                 </span>
               </motion.h1>
@@ -226,7 +243,7 @@ export function HomePage({
                 }}
                 className="mt-8 w-full max-w-3xl border-t border-stone-200/80 pt-5 text-left transition-colors duration-300 dark:border-stone-800/80 sm:mt-9 sm:pt-6"
               >
-                <p className="text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-[11px]">
+                <p className={`text-center text-[10px] font-semibold uppercase text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-[11px] ${workflowEyebrowTypography.className}`}>
                   {content.hero.workflowLabel}
                 </p>
 
@@ -266,34 +283,38 @@ export function HomePage({
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.62),rgba(255,255,255,0)_42%),linear-gradient(225deg,rgba(230,226,218,0.6),rgba(230,226,218,0)_44%)] dark:bg-[linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0)_42%)]" />
 
             <div className="relative mx-auto w-full max-w-[1520px] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-16">
-              <TranscriptDemo demo={content.demo} />
+              <TranscriptDemo demo={content.demo} locale={locale} />
             </div>
           </div>
         </section>
 
         <div className="px-4 sm:px-6 md:px-16">
           <div className="mt-8 w-full sm:mt-10">
-            <UseCasesSection content={content.useCases} />
+            <UseCasesSection content={content.useCases} locale={locale} />
           </div>
 
           <div className="mx-auto mt-16 grid w-full max-w-4xl gap-10 text-left sm:mt-20 sm:grid-cols-2 sm:gap-12">
             <FeatureCard
               icon={<Shield size={20} className="text-stone-600 dark:text-stone-400" />}
+              locale={locale}
               title={content.features[0].title}
               description={content.features[0].desc}
             />
             <FeatureCard
               icon={<Bot size={20} className="text-stone-600 dark:text-stone-400" />}
+              locale={locale}
               title={content.features[1].title}
               description={content.features[1].desc}
             />
             <FeatureCard
               icon={<Mic size={20} className="text-stone-600 dark:text-stone-400" />}
+              locale={locale}
               title={content.features[2].title}
               description={content.features[2].desc}
             />
             <FeatureCard
               icon={<Scissors size={20} className="text-stone-600 dark:text-stone-400" />}
+              locale={locale}
               title={content.features[3].title}
               description={content.features[3].desc}
             />
@@ -301,6 +322,7 @@ export function HomePage({
 
           <ClosingCtaSection
             content={content.finalCta}
+            locale={locale}
             primaryHref={downloads.button.allBuildsHref}
           />
         </div>
@@ -349,11 +371,19 @@ export function HomePage({
 
 function ClosingCtaSection({
   content,
+  locale,
   primaryHref,
 }: {
   content: HomePageContent['finalCta'];
+  locale: HomeLocale;
   primaryHref: string;
 }) {
+  const titleTypography = getDisplayTypography(locale, 'guideSection');
+  const eyebrowTypography = getEyebrowTypography(locale);
+  const titleClassName = titleTypography.isCjk
+    ? titleTypography.className
+    : 'text-[2rem] leading-tight sm:text-[2.35rem] md:text-[2.65rem]';
+
   return (
     <motion.section
       className="mx-auto mt-20 w-full max-w-5xl sm:mt-24"
@@ -367,12 +397,16 @@ function ClosingCtaSection({
         <div className="pointer-events-none absolute left-1/2 top-full h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-stone-200/60 blur-3xl dark:bg-stone-700/25" />
 
         <div className="relative mx-auto max-w-3xl">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-xs">
+          <p className={`text-[11px] font-semibold uppercase text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:text-xs ${eyebrowTypography.className}`}>
             {content.eyebrow}
           </p>
           <h2
-            className="mt-4 text-[2rem] leading-tight text-stone-800 transition-colors duration-300 dark:text-stone-100 sm:text-[2.35rem] md:text-[2.65rem]"
-            style={{ fontFamily: 'var(--font-serif)' }}
+            className={`mt-4 text-stone-800 transition-colors duration-300 dark:text-stone-100 ${titleClassName}`}
+            style={
+              titleTypography.isCjk
+                ? titleTypography.style
+                : { fontFamily: 'var(--font-serif)' }
+            }
           >
             {content.title}
           </h2>
@@ -406,13 +440,20 @@ function ClosingCtaSection({
 
 function FeatureCard({
   icon,
+  locale,
   title,
   description,
 }: {
   icon: ReactNode;
+  locale: HomeLocale;
   title: string;
   description: string;
 }) {
+  const eyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.22em] sm:tracking-widest',
+  );
+
   return (
     <motion.div
       className="flex flex-col"
@@ -424,7 +465,7 @@ function FeatureCard({
       <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-stone-100 transition-colors duration-300 dark:bg-stone-800/50">
         {icon}
       </div>
-      <h3 className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-stone-400 transition-colors duration-300 dark:text-stone-500 sm:tracking-widest">
+      <h3 className={`mb-3 text-xs font-bold uppercase text-stone-400 transition-colors duration-300 dark:text-stone-500 ${eyebrowTypography.className}`}>
         {title}
       </h3>
       <p className="text-sm font-light leading-7 text-stone-600 transition-colors duration-300 dark:text-stone-400">

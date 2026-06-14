@@ -10,10 +10,15 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type {
+  HomeLocale,
   UseCaseId,
   UseCaseItem,
   UseCasesContent,
 } from '@/lib/homepage-content';
+import {
+  getDisplayTypography,
+  getEyebrowTypography,
+} from '@/lib/locale-typography';
 
 const useCaseIcons: Record<UseCaseId, LucideIcon> = {
   meetings: Briefcase,
@@ -24,9 +29,20 @@ const useCaseIcons: Record<UseCaseId, LucideIcon> = {
 
 export function UseCasesSection({
   content,
+  locale,
 }: {
   content: UseCasesContent;
+  locale: HomeLocale;
 }) {
+  const titleTypography = getDisplayTypography(locale, 'guideSection');
+  const eyebrowTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.32em]',
+  );
+  const titleClassName = titleTypography.isCjk
+    ? titleTypography.className
+    : 'text-3xl sm:text-4xl md:text-[2.8rem] leading-tight';
+
   return (
     <section className="w-full max-w-6xl mx-auto">
       <motion.div
@@ -36,12 +52,16 @@ export function UseCasesSection({
         viewport={{ once: true, amount: 0.45 }}
         className="max-w-3xl mx-auto text-center"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.32em] text-stone-400 dark:text-stone-500">
+        <p className={`text-xs font-semibold uppercase text-stone-400 dark:text-stone-500 ${eyebrowTypography.className}`}>
           {content.eyebrow}
         </p>
         <h2
-          className="mt-4 text-3xl sm:text-4xl md:text-[2.8rem] leading-tight text-[#2D2D2D] dark:text-[#E0E0E0]"
-          style={{ fontFamily: 'var(--font-serif)' }}
+          className={`mt-4 text-[#2D2D2D] dark:text-[#E0E0E0] ${titleClassName}`}
+          style={
+            titleTypography.isCjk
+              ? titleTypography.style
+              : { fontFamily: 'var(--font-serif)' }
+          }
         >
           {content.title}
         </h2>
@@ -61,6 +81,7 @@ export function UseCasesSection({
               item={item}
               index={index}
               labels={content.labels}
+              locale={locale}
             />
           ))}
         </div>
@@ -83,12 +104,26 @@ function UseCaseStory({
   item,
   index,
   labels,
+  locale,
 }: {
   item: UseCaseItem;
   index: number;
   labels: UseCasesContent['labels'];
+  locale: HomeLocale;
 }) {
   const Icon = useCaseIcons[item.id];
+  const titleTypography = getDisplayTypography(locale, 'guideSection');
+  const labelTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.24em]',
+  );
+  const indexTypography = getEyebrowTypography(
+    locale,
+    'tracking-[0.28em]',
+  );
+  const titleClassName = titleTypography.isCjk
+    ? 'text-[1.5rem] leading-[1.18] font-normal tracking-[0.01em]'
+    : 'text-[1.65rem] leading-tight';
 
   return (
     <Link
@@ -115,14 +150,18 @@ function UseCaseStory({
               <Icon size={18} />
             </div>
             <h3
-              className="mt-5 text-[1.65rem] leading-tight text-stone-800 transition-colors duration-300 group-hover:text-stone-950 group-focus-visible:text-stone-950 dark:text-stone-100 dark:group-hover:text-white dark:group-focus-visible:text-white"
-              style={{ fontFamily: 'var(--font-serif)' }}
+              className={`mt-5 text-stone-800 transition-colors duration-300 group-hover:text-stone-950 group-focus-visible:text-stone-950 dark:text-stone-100 dark:group-hover:text-white dark:group-focus-visible:text-white ${titleClassName}`}
+              style={
+                titleTypography.isCjk
+                  ? titleTypography.style
+                  : { fontFamily: 'var(--font-serif)' }
+              }
             >
               {item.title}
             </h3>
           </div>
 
-          <span className="pt-1 font-mono text-[11px] tracking-[0.28em] text-stone-300 transition-colors duration-300 group-hover:text-stone-400 group-focus-visible:text-stone-500 dark:text-stone-600 dark:group-hover:text-stone-500 dark:group-focus-visible:text-stone-400">
+          <span className={`pt-1 font-mono text-[11px] text-stone-300 transition-colors duration-300 group-hover:text-stone-400 group-focus-visible:text-stone-500 dark:text-stone-600 dark:group-hover:text-stone-500 dark:group-focus-visible:text-stone-400 ${indexTypography.className}`}>
             0{index + 1}
           </span>
         </div>
@@ -139,19 +178,27 @@ function UseCaseStory({
         </div>
 
         <div className="relative mt-6 flex flex-1 flex-col">
-          <StoryRow label={labels.context} value={item.context} />
-          <StoryRow label={labels.workflow} value={item.workflow} />
-          <StoryRow label={labels.result} value={item.result} />
+          <StoryRow label={labels.context} labelClassName={labelTypography.className} value={item.context} />
+          <StoryRow label={labels.workflow} labelClassName={labelTypography.className} value={item.workflow} />
+          <StoryRow label={labels.result} labelClassName={labelTypography.className} value={item.result} />
         </div>
       </motion.article>
     </Link>
   );
 }
 
-function StoryRow({ label, value }: { label: string; value: string }) {
+function StoryRow({
+  label,
+  labelClassName,
+  value,
+}: {
+  label: string;
+  labelClassName: string;
+  value: string;
+}) {
   return (
     <div className="border-t border-stone-200/80 py-4 first:border-t-0 first:pt-0 dark:border-stone-800/80">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-stone-400 dark:text-stone-500">
+      <p className={`text-[11px] font-semibold uppercase text-stone-400 dark:text-stone-500 ${labelClassName}`}>
         {label}
       </p>
       <p className="mt-2 text-sm leading-7 text-stone-600 dark:text-stone-300">
