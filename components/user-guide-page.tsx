@@ -94,6 +94,8 @@ function getUserGuideAssistantCopyFromMessages(
     challengePrompt: t('assistant.challengePrompt'),
     challengeVerifyingLabel: t('assistant.challengeVerifyingLabel'),
     challengeLoadingError: t('assistant.challengeLoadingError'),
+    rateLimitUnavailableError: t('assistant.rateLimitUnavailableError'),
+    rateLimitedError: t('assistant.rateLimitedError'),
     throttledError: t('assistant.throttledError'),
     tooLongError: t('assistant.tooLongError'),
   };

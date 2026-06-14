@@ -21,8 +21,10 @@ const ORIGINAL_ENV = { ...process.env };
 
 function createGuideChatRequest({
   accept = 'application/json',
+  trustedIp = '203.0.113.10',
 }: {
   accept?: string;
+  trustedIp?: string;
 } = {}) {
   return new NextRequest('https://sona.example.com/api/user-guide-chat', {
     body: JSON.stringify({
@@ -36,9 +38,40 @@ function createGuideChatRequest({
       'content-type': 'application/json',
       host: 'sona.example.com',
       origin: 'https://sona.example.com',
+      ...(trustedIp ? { 'x-vercel-forwarded-for': trustedIp } : {}),
     },
     method: 'POST',
   });
+}
+
+function mockSharedRateLimit({
+  counts = [1, 1],
+  status = 200,
+}: {
+  counts?: [number, number];
+  status?: number;
+} = {}) {
+  const [minuteCount, tenMinuteCount] = counts;
+
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => {
+      return new Response(
+        JSON.stringify([
+          { result: minuteCount },
+          { result: 1 },
+          { result: tenMinuteCount },
+          { result: 1 },
+        ]),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          status,
+        },
+      );
+    }),
+  );
 }
 
 async function* createGeminiStream(chunks: string[]) {
@@ -61,15 +94,19 @@ describe('/api/user-guide-chat streaming contract', () => {
       GEMINI_API_KEY: 'test-gemini-key',
       TURNSTILE_SECRET_KEY: 'test-turnstile-secret',
       TURNSTILE_SITE_KEY: 'test-turnstile-site-key',
+      UPSTASH_REDIS_REST_TOKEN: 'test-upstash-token',
+      UPSTASH_REDIS_REST_URL: 'https://upstash.example.com',
     };
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.restoreAllMocks();
     process.env = { ...ORIGINAL_ENV };
   });
 
   it('keeps the JSON response path when streaming is not requested', async () => {
+    mockSharedRateLimit();
     geminiMocks.generateContent.mockResolvedValue({
       text: JSON.stringify({
         answer: 'Start with the overview.',
@@ -100,6 +137,7 @@ describe('/api/user-guide-chat streaming contract', () => {
   });
 
   it('streams answer deltas and final guide links when requested', async () => {
+    mockSharedRateLimit();
     geminiMocks.generateContentStream.mockResolvedValue(
       createGeminiStream([
         '{"answer":"Start',
@@ -123,5 +161,53 @@ describe('/api/user-guide-chat streaming contract', () => {
     expect(text).toContain('"id":"live-record"');
     expect(geminiMocks.generateContent).not.toHaveBeenCalled();
     expect(geminiMocks.generateContentStream).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns 429 before Gemini when the shared rate limit is exceeded', async () => {
+    mockSharedRateLimit({
+      counts: [11, 1],
+    });
+
+    const response = await POST(createGuideChatRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get('retry-after')).toBeTruthy();
+    expect(payload).toMatchObject({
+      code: 'rate_limited',
+      retryAfterSeconds: expect.any(Number),
+    });
+    expect(geminiMocks.generateContent).not.toHaveBeenCalled();
+    expect(geminiMocks.generateContentStream).not.toHaveBeenCalled();
+  });
+
+  it('fails closed before Gemini when shared rate limiting cannot run', async () => {
+    process.env.UPSTASH_REDIS_REST_URL = '';
+
+    const response = await POST(createGuideChatRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(payload).toMatchObject({
+      code: 'rate_limit_unavailable',
+    });
+    expect(geminiMocks.generateContent).not.toHaveBeenCalled();
+    expect(geminiMocks.generateContentStream).not.toHaveBeenCalled();
+  });
+
+  it('fails closed before Gemini when the trusted IP header is missing', async () => {
+    const response = await POST(
+      createGuideChatRequest({
+        trustedIp: '',
+      }),
+    );
+    const payload = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(payload).toMatchObject({
+      code: 'rate_limit_unavailable',
+    });
+    expect(geminiMocks.generateContent).not.toHaveBeenCalled();
+    expect(geminiMocks.generateContentStream).not.toHaveBeenCalled();
   });
 });

@@ -639,7 +639,9 @@
       "challengeVerifyingLabel": "正在驗證...",
       "challengeLoadingError": "驗證元件載入失敗，請重新整理後再試。",
       "throttledError": "驗證失敗次數過多，請稍後再試。",
-      "tooLongError": "問題請控制在 1200 個字元以內。"
+      "tooLongError": "問題請控制在 1200 個字元以內。",
+      "rateLimitedError": "目前網路的指南 AI 提問過多，請稍後再試。",
+      "rateLimitUnavailableError": "指南 AI 的共享限流暫時無法使用，請稍後再試。"
     }
   }
 }

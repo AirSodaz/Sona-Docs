@@ -45,6 +45,9 @@ API_ABUSE_SECRET=replace_with_a_long_random_secret
 ALLOWED_PUBLIC_HOSTS=localhost
 TURNSTILE_SITE_KEY=your_turnstile_site_key
 TURNSTILE_SECRET_KEY=your_turnstile_secret_key
+UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_rest_token
+USER_GUIDE_TRUSTED_IP_HEADER=x-vercel-forwarded-for
 SERVER_LOG_LEVEL=info
 SERVER_LOG_SLOW_MS=3000
 ```
@@ -92,6 +95,13 @@ pnpm start
   - Required for rendering the Turnstile challenge in the guide UI.
 - `TURNSTILE_SECRET_KEY`
   - Required for server-side Turnstile verification.
+- `UPSTASH_REDIS_REST_URL`
+  - Required for shared `/api/user-guide-chat` rate limiting.
+- `UPSTASH_REDIS_REST_TOKEN`
+  - Required for the Upstash Redis REST pipeline used by shared guide AI rate limiting.
+- `USER_GUIDE_TRUSTED_IP_HEADER`
+  - Optional; defaults to `x-vercel-forwarded-for`.
+  - Only set this to a header provided by a trusted platform or reverse proxy. It is used for shared IP-based rate limiting and never forwarded to Turnstile.
 - `SERVER_LOG_LEVEL`
   - Optional; defaults to `info`.
   - Supported values are `info`, `warn`, `error`, and `silent`.
@@ -103,7 +113,9 @@ pnpm start
 
 - `/` and `/zh` are statically generated.
 - `/api/github-release` stays dynamic, but its upstream GitHub response is cached and protected with a timeout.
-- `/api/user-guide-chat` is protected with same-site origin checks, signed anonymous session cookies, and an inline Turnstile challenge after the anonymous threshold is exceeded.
+- `/api/user-guide-chat` is protected with same-site origin checks, signed anonymous session cookies, shared Upstash-backed IP rate limiting, and an inline Turnstile challenge after the anonymous session threshold is exceeded.
+- The signed cookies are session-scoped. They prevent users from tampering with local usage counters, but they do not by themselves stop a new browser session, cleared cookies, or another client from starting over.
+- The shared Upstash limiter is the app-level cost gate for guide AI calls: it allows `10` model-eligible questions per minute and `30` per 10 minutes per trusted client IP. If the limiter cannot run, the route fails closed before calling Gemini.
 - API routes write structured server logs for security events, upstream errors, and slow requests. These logs include request IDs and diagnostic metadata, but not user question text, chat history, cookies, authorization headers, API keys, Turnstile tokens, proxy URLs, or full IP addresses.
 - `robots.txt`, `sitemap.xml`, a stable Open Graph image, and a branded global 404 page are generated from the app itself.
 - Deployed builds should provide a public `SITE_URL`; otherwise metadata generation will fail in CI/Vercel/Pages environments instead of silently emitting `localhost` URLs.
@@ -111,11 +123,11 @@ pnpm start
 ### Recommended Edge Rules
 
 - Put coarse rate limiting in the reverse proxy / CDN in front of the app.
-- The app does not trust forwarded client-IP headers; keep IP-based throttling at the proxy/CDN layer where the real peer/proxy chain is known.
+- Keep outer IP-based throttling at the proxy/CDN layer where the real peer/proxy chain is known. The app-level limiter only uses the configured trusted IP header for `/api/user-guide-chat`.
 - Suggested defaults:
-  - `/api/user-guide-chat`: `10 req/min/IP`, `30 req/10min/IP`, then challenge or short block.
+  - `/api/user-guide-chat`: mirror or tighten the app limit, such as `10 req/min/IP`, `30 req/10min/IP`, then challenge or short block.
   - `/api/github-release`: `120 req/min/IP`, `1000 req/hour/IP`.
-- Apply bot / datacenter / abnormal user-agent screening at the proxy layer, because the app-level protection is session-based and not a substitute for shared IP throttling.
+- Apply bot / datacenter / abnormal user-agent screening at the proxy layer. Edge rules are still useful as an outer layer even though guide AI now has an app-level shared limiter.
 
 ## License
 

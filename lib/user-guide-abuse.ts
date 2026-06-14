@@ -6,6 +6,7 @@ import {
   randomUUID,
   timingSafeEqual,
 } from 'node:crypto';
+import { isIP } from 'node:net';
 import type { NextRequest, NextResponse } from 'next/server';
 import { getPublicSiteUrl } from '@/lib/site-url';
 
@@ -19,6 +20,20 @@ const VERIFIED_LIMIT = 10;
 const VERIFIED_WINDOW_MS = 30 * 60 * 1000;
 const CHALLENGE_FAILURE_LIMIT = 3;
 const CHALLENGE_FAILURE_WINDOW_MS = 10 * 60 * 1000;
+const SHARED_RATE_LIMIT_WINDOWS = [
+  {
+    limit: 10,
+    name: '1m',
+    windowMs: 60 * 1000,
+  },
+  {
+    limit: 30,
+    name: '10m',
+    windowMs: 10 * 60 * 1000,
+  },
+] as const;
+const DEFAULT_TRUSTED_IP_HEADER = 'x-vercel-forwarded-for';
+const UPSTASH_RATE_LIMIT_TIMEOUT_MS = 2000;
 const TURNSTILE_VERIFY_URL =
   'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const TURNSTILE_VERIFY_TIMEOUT_MS = 5000;
@@ -88,6 +103,58 @@ type TurnstileValidationResult =
         | 'verification_failed';
     };
 
+type SharedRateLimitWindowName =
+  (typeof SHARED_RATE_LIMIT_WINDOWS)[number]['name'];
+
+export type UserGuideSharedRateLimitResult =
+  | {
+      ok: true;
+      subject: string;
+      windows: Array<{
+        count: number;
+        limit: number;
+        name: SharedRateLimitWindowName;
+        resetAt: number;
+        retryAfterSeconds: number;
+      }>;
+    }
+  | {
+      ok: false;
+      reason:
+        | 'invalid_response'
+        | 'missing_config'
+        | 'missing_trusted_ip'
+        | 'upstash_error';
+      status: 'unavailable';
+      subject?: string;
+    }
+  | {
+      ok: false;
+      reason: 'rate_limited';
+      retryAfterSeconds: number;
+      status: 'limited';
+      subject: string;
+      window: {
+        count: number;
+        limit: number;
+        name: SharedRateLimitWindowName;
+        resetAt: number;
+        retryAfterSeconds: number;
+      };
+      windows: Array<{
+        count: number;
+        limit: number;
+        name: SharedRateLimitWindowName;
+        resetAt: number;
+        retryAfterSeconds: number;
+      }>;
+    };
+
+type UpstashPipelineResult = Array<{
+  error?: string;
+  result?: unknown;
+}>;
+
 function getApiAbuseSecret() {
   const configuredSecret = process.env.API_ABUSE_SECRET?.trim();
 
@@ -100,6 +167,26 @@ function getApiAbuseSecret() {
   }
 
   return null;
+}
+
+function getSharedRateLimitConfig() {
+  const restUrl = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const restToken = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+  const secret = getApiAbuseSecret();
+  const trustedHeader =
+    process.env.USER_GUIDE_TRUSTED_IP_HEADER?.trim().toLowerCase() ||
+    DEFAULT_TRUSTED_IP_HEADER;
+
+  if (!restUrl || !restToken || !secret) {
+    return null;
+  }
+
+  return {
+    restToken,
+    restUrl: restUrl.replace(/\/+$/, ''),
+    secret,
+    trustedHeader,
+  };
 }
 
 function normalizeWindow(start: number, now: number, windowMs: number) {
@@ -116,6 +203,15 @@ function base64UrlDecode(value: string) {
 
 function signValue(payload: string, secret: string) {
   return createHmac('sha256', secret).update(payload).digest('base64url');
+}
+
+function hashSharedRateLimitSubject(value: string, secret: string) {
+  return createHash('sha256')
+    .update(secret)
+    .update(':guide-chat-shared-limit:')
+    .update(value)
+    .digest('hex')
+    .slice(0, 32);
 }
 
 function encodeSignedCookie(payload: object, secret: string) {
@@ -162,6 +258,20 @@ function isLocalHostname(hostname: string) {
     hostname === '0.0.0.0' ||
     hostname === '::1'
   );
+}
+
+function getTrustedClientIp(request: NextRequest, headerName: string) {
+  const trustedHeaderValue = request.headers.get(headerName);
+  const candidate = trustedHeaderValue
+    ?.split(',')
+    .map((value) => value.trim())
+    .find(Boolean);
+
+  if (!candidate || candidate.length > 64 || !isIP(candidate)) {
+    return null;
+  }
+
+  return candidate.toLowerCase();
 }
 
 function normalizeHost(value: null | string | undefined) {
@@ -350,6 +460,180 @@ export function getUserGuideSessionFingerprint(sessionId: string) {
   hash.update(sessionId);
 
   return hash.digest('hex').slice(0, 16);
+}
+
+function getSharedRateLimitWindowState({
+  count,
+  name,
+  limit,
+  now,
+  windowMs,
+}: {
+  count: number;
+  limit: number;
+  name: SharedRateLimitWindowName;
+  now: number;
+  windowMs: number;
+}) {
+  const resetAt = (Math.floor(now / windowMs) + 1) * windowMs;
+  const retryAfterSeconds = Math.max(1, Math.ceil((resetAt - now) / 1000));
+
+  return {
+    count,
+    limit,
+    name,
+    resetAt,
+    retryAfterSeconds,
+  };
+}
+
+function parseUpstashCount(value: unknown) {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string' && value.trim()) {
+    const parsed = Number(value);
+
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+}
+
+export async function checkUserGuideSharedRateLimit({
+  now = Date.now(),
+  request,
+}: {
+  now?: number;
+  request: NextRequest;
+}): Promise<UserGuideSharedRateLimitResult> {
+  const config = getSharedRateLimitConfig();
+
+  if (!config) {
+    return {
+      ok: false,
+      reason: 'missing_config',
+      status: 'unavailable',
+    };
+  }
+
+  const trustedClientIp = getTrustedClientIp(request, config.trustedHeader);
+
+  if (!trustedClientIp) {
+    return {
+      ok: false,
+      reason: 'missing_trusted_ip',
+      status: 'unavailable',
+    };
+  }
+
+  const subject = hashSharedRateLimitSubject(trustedClientIp, config.secret);
+  const commands = SHARED_RATE_LIMIT_WINDOWS.flatMap((window) => {
+    const bucket = Math.floor(now / window.windowMs);
+    const key = `sona:guide:rate:v1:${window.name}:${bucket}:${subject}`;
+    const ttlSeconds = Math.ceil(window.windowMs / 1000) + 5;
+
+    return [
+      ['INCR', key],
+      ['EXPIRE', key, ttlSeconds],
+    ];
+  });
+
+  let payload: UpstashPipelineResult;
+
+  try {
+    const response = await fetch(`${config.restUrl}/pipeline`, {
+      body: JSON.stringify(commands),
+      headers: {
+        Authorization: `Bearer ${config.restToken}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      signal: AbortSignal.timeout(UPSTASH_RATE_LIMIT_TIMEOUT_MS),
+    });
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        reason: 'upstash_error',
+        status: 'unavailable',
+        subject,
+      };
+    }
+
+    payload = (await response.json()) as UpstashPipelineResult;
+  } catch {
+    return {
+      ok: false,
+      reason: 'upstash_error',
+      status: 'unavailable',
+      subject,
+    };
+  }
+
+  if (
+    !Array.isArray(payload) ||
+    payload.length !== SHARED_RATE_LIMIT_WINDOWS.length * 2 ||
+    payload.some((entry) => !entry || typeof entry !== 'object' || entry.error)
+  ) {
+    return {
+      ok: false,
+      reason: 'invalid_response',
+      status: 'unavailable',
+      subject,
+    };
+  }
+
+  const windows = SHARED_RATE_LIMIT_WINDOWS.map((window, index) => {
+    const count = parseUpstashCount(payload[index * 2]?.result);
+
+    if (count === null) {
+      return null;
+    }
+
+    return getSharedRateLimitWindowState({
+      count,
+      limit: window.limit,
+      name: window.name,
+      now,
+      windowMs: window.windowMs,
+    });
+  });
+
+  if (windows.some((window) => !window)) {
+    return {
+      ok: false,
+      reason: 'invalid_response',
+      status: 'unavailable',
+      subject,
+    };
+  }
+
+  const normalizedWindows = windows as Array<NonNullable<(typeof windows)[number]>>;
+  const exceeded = normalizedWindows
+    .filter((window) => window.count > window.limit)
+    .sort((a, b) => b.retryAfterSeconds - a.retryAfterSeconds);
+
+  if (exceeded.length > 0) {
+    const window = exceeded[0];
+
+    return {
+      ok: false,
+      reason: 'rate_limited',
+      retryAfterSeconds: window.retryAfterSeconds,
+      status: 'limited',
+      subject,
+      window,
+      windows: normalizedWindows,
+    };
+  }
+
+  return {
+    ok: true,
+    subject,
+    windows: normalizedWindows,
+  };
 }
 
 export function registerUserGuideAttempt({

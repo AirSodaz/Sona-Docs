@@ -639,7 +639,9 @@
       "challengeVerifyingLabel": "Verifying...",
       "challengeLoadingError": "The verification widget could not load. Please refresh and try again.",
       "throttledError": "Too many verification failures. Please wait and try again later.",
-      "tooLongError": "Keep the question under 1200 characters."
+      "tooLongError": "Keep the question under 1200 characters.",
+      "rateLimitedError": "Guide AI is receiving too many questions from this network. Please wait and try again later.",
+      "rateLimitUnavailableError": "Guide AI shared rate limiting is unavailable right now. Please try again later."
     }
   }
 }

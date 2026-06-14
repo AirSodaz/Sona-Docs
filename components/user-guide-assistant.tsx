@@ -38,6 +38,8 @@ export type AssistantCopy = {
   challengePrompt: string;
   challengeVerifyingLabel: string;
   challengeLoadingError: string;
+  rateLimitUnavailableError: string;
+  rateLimitedError: string;
   throttledError: string;
   tooLongError: string;
 };
@@ -49,6 +51,8 @@ type ApiErrorCode =
   | 'forbidden_origin'
   | 'invalid_request'
   | 'network_unreachable'
+  | 'rate_limit_unavailable'
+  | 'rate_limited'
   | 'throttled'
   | 'upstream_error';
 
@@ -81,6 +85,8 @@ const API_ERROR_CODES: ApiErrorCode[] = [
   'forbidden_origin',
   'invalid_request',
   'network_unreachable',
+  'rate_limit_unavailable',
+  'rate_limited',
   'throttled',
   'upstream_error',
 ];
@@ -130,6 +136,14 @@ function getApiErrorMessage({
 
   if (code === 'throttled') {
     return fallback || copy.throttledError;
+  }
+
+  if (code === 'rate_limited') {
+    return copy.rateLimitedError;
+  }
+
+  if (code === 'rate_limit_unavailable') {
+    return copy.rateLimitUnavailableError;
   }
 
   if (code === 'forbidden_origin') {

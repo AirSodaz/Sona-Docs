@@ -639,7 +639,9 @@
       "challengeVerifyingLabel": "確認中...",
       "challengeLoadingError": "確認ウィジェットを読み込めませんでした。ページを再読み込みしてもう一度お試しください。",
       "throttledError": "確認に何度も失敗しました。しばらくしてからもう一度お試しください。",
-      "tooLongError": "質問は1200文字以内で入力してください。"
+      "tooLongError": "質問は1200文字以内で入力してください。",
+      "rateLimitedError": "このネットワークからのガイド AI への質問が多すぎます。しばらくしてからもう一度お試しください。",
+      "rateLimitUnavailableError": "ガイド AI の共有レート制限を現在利用できません。しばらくしてからもう一度お試しください。"
     }
   }
 }

@@ -639,7 +639,9 @@
       "challengeVerifyingLabel": "正在验证...",
       "challengeLoadingError": "验证组件加载失败，请刷新后重试。",
       "throttledError": "验证失败次数过多，请稍后再试。",
-      "tooLongError": "问题请控制在 1200 个字符以内。"
+      "tooLongError": "问题请控制在 1200 个字符以内。",
+      "rateLimitedError": "当前网络的指南 AI 提问过多，请稍后再试。",
+      "rateLimitUnavailableError": "指南 AI 的共享限流暂时不可用，请稍后再试。"
     }
   }
 }

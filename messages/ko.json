@@ -639,7 +639,9 @@
       "challengeVerifyingLabel": "확인 중...",
       "challengeLoadingError": "인증 위젯을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.",
       "throttledError": "인증 실패가 너무 많습니다. 잠시 후 다시 시도해 주세요.",
-      "tooLongError": "질문은 1200자 이내로 입력해 주세요."
+      "tooLongError": "질문은 1200자 이내로 입력해 주세요.",
+      "rateLimitedError": "이 네트워크에서 가이드 AI 질문이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+      "rateLimitUnavailableError": "가이드 AI 공유 속도 제한을 지금 사용할 수 없습니다. 잠시 후 다시 시도해 주세요."
     }
   }
 }
