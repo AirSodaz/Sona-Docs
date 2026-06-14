@@ -10,6 +10,8 @@ jobs:
   quality:
     name: Quality Gate
     runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://sona-docs.vercel.app
 
     steps:
       - name: Checkout
