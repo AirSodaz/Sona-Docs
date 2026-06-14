@@ -4,14 +4,17 @@ import {
   createContext,
   useCallback,
   useContext,
-  useState,
   useEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react';
-
-type Theme = 'dark' | 'light' | 'system';
-type ResolvedTheme = 'dark' | 'light';
+import {
+  isTheme,
+  THEME_STORAGE_KEY,
+  type ResolvedTheme,
+  type Theme,
+} from '@/lib/theme';
 
 interface ThemeContextValue {
   resolvedTheme: ResolvedTheme;
@@ -19,7 +22,6 @@ interface ThemeContextValue {
   theme: Theme;
 }
 
-const STORAGE_KEY = 'theme';
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 function getSystemTheme(): ResolvedTheme {
@@ -38,16 +40,19 @@ function getStoredTheme(): Theme {
     return 'system';
   }
 
-  const value = window.localStorage.getItem(STORAGE_KEY);
+  try {
+    const value = window.localStorage.getItem(THEME_STORAGE_KEY);
 
-  return value === 'dark' || value === 'light' || value === 'system'
-    ? value
-    : 'system';
+    return isTheme(value) ? value : 'system';
+  } catch {
+    return 'system';
+  }
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system');
-  const [systemTheme, setSystemTheme] = useState<ResolvedTheme>('light');
+  const [theme, setThemeState] = useState<Theme>(getStoredTheme);
+  const [systemTheme, setSystemTheme] =
+    useState<ResolvedTheme>(getSystemTheme);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -59,7 +64,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setSystemTheme(getSystemTheme());
     };
     const handleStorage = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY) {
+      if (event.key === THEME_STORAGE_KEY) {
         syncStoredTheme();
       }
     };
@@ -85,7 +90,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [resolvedTheme]);
 
   const setTheme = useCallback((nextTheme: Theme) => {
-    window.localStorage.setItem(STORAGE_KEY, nextTheme);
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // Keep in-memory theme changes working when storage is unavailable.
+    }
+
     setThemeState(nextTheme);
     setSystemTheme(getSystemTheme());
   }, []);
