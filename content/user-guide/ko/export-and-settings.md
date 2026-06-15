@@ -29,10 +29,10 @@
 
 - `Settings > Dashboard`: 전체 콘텐츠 개요, 화자 coverage, LLM 사용 추세
 - `Settings > General`: 테마, 앱 언어, 글꼴, tray 동작, 업데이트 확인, `Diagnostics`, `Backup & Restore`
-- `Settings > Input Device`: 마이크 선택, 시스템 오디오 선택, microphone boost, 녹음 중 음소거
+- `Settings > Input Device`: 마이크 선택, 시스템 오디오 선택, microphone boost, `Keep Microphone Active`, 녹음 중 음소거
 - `Settings > Subtitle Settings`: 플로팅 자막 동작. `Live Caption` 또는 `Voice Typing`이 주목적이면 [Live Caption과 Voice Typing](guide:live-caption-and-voice-typing)으로 이어가세요.
 - `Settings > Voice Typing`: `Voice Typing` 켜기, global shortcut 지정, `Push to Talk (Hold)` 또는 `Toggle (Press once)` 선택, 준비 상태 확인
-- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, 다운로드 가능한 recognition, punctuation, speaker, VAD models
+- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, 다운로드 가능한 recognition, punctuation, speaker, VAD models
 - `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, `Speaker Profiles`. 실제 조정 사례는 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)에 있습니다.
 - `Settings > Automation`: Sona가 실행 중일 때 새 미디어를 전사, 정리, 번역, 내보내기할 수 있는 watched-folder rules
 - `Settings > API Server`: 로컬 HTTP API host, port, 선택형 API key, IP allowlist, server limits, server-level transcription defaults

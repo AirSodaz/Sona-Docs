@@ -29,10 +29,10 @@
 
 - `Settings > Dashboard`: 全体のコンテンツ概要、話者カバー率、LLM の使用傾向を表示します。
 - `Settings > General`: テーマ、アプリの言語、フォント、システムトレイ、更新確認に加え、`Diagnostics` と `Backup & Restore` への入口があります。
-- `Settings > Input Device`: マイク、システム音声、マイクブースト、録音中のミュート設定を管理します。
+- `Settings > Input Device`: マイク、システム音声、マイクブースト、`Keep Microphone Active`、録音中のミュート設定を管理します。
 - `Settings > Subtitle Settings`: フローティング字幕の挙動を設定します。Live Caption や Voice Typing が目的の場合は、[Live Caption と Voice Typing](guide:live-caption-and-voice-typing) も参照してください。
 - `Settings > Voice Typing`: Voice Typing を有効にし、グローバルショートカット、Push to Talk / Toggle、準備状態を確認します。
-- `Settings > Model Settings`: `Live Record Model`、`Batch Import Model`、文字起こし設定、ITN、VAD バッファ、最大同時文字起こし数、既定値への復元、音声認識・句読点・話者・VAD などのダウンロード可能モデルを管理します。
+- `Settings > Model Settings`: `Live Record Model`、`Batch Import Model`、文字起こし設定、ITN、`Batch VAD Segmentation`、VAD バッファ、最大同時文字起こし数、既定値への復元、音声認識・句読点・話者・VAD などのダウンロード可能モデルを管理します。
 - `Settings > Vocabulary`: `Text Replacement`、`Hotwords`、整文用キーワードセット、整文コンテキストプリセット、要約テンプレート、`Speaker Profiles` を管理します。具体的な調整例は[語彙と詳細設定](guide:vocabulary-and-advanced-settings)を参照してください。
 - `Settings > Automation`: Sona の起動中に新しいメディアを監視し、文字起こし、AI Polish、翻訳、エクスポートを自動実行するフォルダールールを設定します。
 - `Settings > API Server`: ローカル HTTP API のホスト、ポート、任意の API Key、IP allowlist、サーバー制限、サーバーレベルの文字起こし既定値を設定します。

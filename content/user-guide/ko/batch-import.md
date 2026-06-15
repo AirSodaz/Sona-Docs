@@ -32,5 +32,5 @@
 ## 팁
 
 - 오프라인 batch 모델이 설정되어 있지 않으면 Sona는 가져오기를 시작하는 대신 온보딩을 다시 엽니다.
-- `Settings > Model Settings`의 `VAD Buffer Size`와 `Max Concurrent Transcriptions`는 batch 동작에 영향을 줍니다.
+- `Settings > Model Settings`의 `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`는 batch 동작에 영향을 줍니다. Batch VAD를 끄면 local batch transcription은 전체 파일을 한 번에 인식합니다.
 - 기존 미디어에서 자막 파일을 만들 때 기본 경로는 `Batch Import`와 내보내기입니다.

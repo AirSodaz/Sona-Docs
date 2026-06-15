@@ -23,7 +23,7 @@ API サーバーは、次の 2 つの方法で起動できます。
 sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
 ```
 
-GPU アクセラレーションは、GUI のモデル設定または `sona serve --gpu-acceleration` オプションで、サーバーレベルの既定値として指定します。バッチ API やストリーミング API の各リクエストで、GPU プロバイダーを個別に上書きすることはできません。
+GPU アクセラレーションは、GUI のモデル設定または `sona serve --gpu-acceleration` オプションで、サーバーレベルの既定値として指定します。Windows では、`auto` は最初に CUDA を試し、同梱ランタイムが DirectML をサポートしている場合は次に DirectML、最後に CPU へフォールバックします。バッチ API やストリーミング API の各リクエストで、GPU プロバイダーを個別に上書きすることはできません。
 
 利用できる `serve` オプションの一覧は、[CLI ガイド](guide:cli-guide)を参照してください。
 

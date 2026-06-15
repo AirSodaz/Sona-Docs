@@ -8,7 +8,7 @@ CLI 範圍刻意保持精簡：單檔和目錄離線轉錄、預設模型清單/
 - macOS：執行 `/Applications/Sona.app/Contents/MacOS/Sona transcribe ...`
 - Linux 安裝包：從安裝位置執行 `Sona` 主程式並附帶 CLI 子指令
 - AppImage：執行掛載後的 AppImage 可執行檔並附帶 CLI 子指令
-- 原始碼：`cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 --config ./sona-cli.toml`
+- 原始碼：`cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 -c ./sona-cli.toml`
 
 ## 常用指令
 
@@ -16,7 +16,7 @@ CLI 範圍刻意保持精簡：單檔和目錄離線轉錄、預設模型清單/
 
 ```bash
 sona transcribe ./sample.mp4 \
-  --config ./sona-cli.toml \
+  -c ./sona-cli.toml \
   --output ./sample.srt
 ```
 
@@ -31,7 +31,7 @@ sona transcribe \
   --format srt \
   --recursive \
   --jobs 1 \
-  --config ./sona-cli.toml
+  -c ./sona-cli.toml
 ```
 
 目錄模式會為每個受支援媒體檔案在 `--output-dir` 中寫出一個轉錄檔案。預設只掃描目錄直屬檔案；加入 `--recursive` 後會包含子目錄，並保留相對輸出路徑。轉錄正文寫入檔案，`stdout` 會輸出 JSON 成功/失敗彙總。
@@ -64,16 +64,26 @@ sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
 
 HTTP API 端點和請求範例請參閱 [HTTP API 指南](guide:api-guide)。
 
+### 建立設定範本
+
+```bash
+sona init-config
+sona init-config ./sona-cli.toml --force
+```
+
+`init-config` 預設會把帶英文註解的 TOML 範本寫入 `sona-cli.toml`。也可以傳入路徑寫到其他位置。已有檔案預設受保護；只有傳入 `--force` 才會覆寫。範本是平鋪 TOML，可同時給 `transcribe` 和 `serve` 使用；每個指令只讀取自己支援的鍵，並忽略無關鍵。
+
 ## 設定檔
 
-透過 `--config` 傳入 TOML 檔案。命令列參數會覆寫設定檔中的值。
+透過 `-c` 或 `--config` 傳入 TOML 檔案。命令列參數會覆寫設定檔中的值。使用 `sona init-config` 可建立帶註解的起始範本。
 
-最小 `transcribe` 範例：
+產生範本的最小摘錄：
 
 ```toml
 models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
 model_id = "sherpa-onnx-whisper-turbo"
 vad_model_id = "silero-vad"
+punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
 language = "auto"
 threads = 4
 enable_itn = false
@@ -83,6 +93,16 @@ hotwords = "Sona,offline ASR"
 format = "srt"
 quiet = false
 jobs = 1
+
+host = "127.0.0.1"
+port = 14200
+api_key = ""
+ip_whitelist = "localhost"
+max_streaming = 2
+max_concurrent = 2
+max_queue_size = 100
+max_upload_size_mb = 50
+job_ttl_minutes = 60
 ```
 
 ### `transcribe` 設定鍵
@@ -100,7 +120,7 @@ jobs = 1
 | `quiet` | 可選 | `true` 或 `false` | `false` | 設為 true 時隱藏轉錄進度；CLI `--quiet` 也會啟用。 |
 | `jobs` | 可選 | 大於 `0` 的整數 | `1` | 目錄、多輸入或 glob 模式下最大併發檔案任務數；CLI `--jobs` 會覆寫。 |
 | `vad_buffer_size` | 可選 | 大於 `0` 的數字 | `5.0` | VAD 緩衝秒數。 |
-| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 使用 `cpu` 可明確關閉 GPU 加速。 |
+| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | Windows 上 `auto` 會先嘗試 CUDA；目前打包執行期支援 DirectML 時再嘗試 DirectML，最後回退 CPU。使用 `cpu` 可明確關閉 GPU 加速。 |
 | `format` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 或目錄模式時為 `json`，否則從 `--output` 推斷 | 覆寫輸出副檔名推斷。 |
 
 ### `serve` 設定鍵
@@ -117,7 +137,7 @@ jobs = 1
 | `max_queue_size` | 可選 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
 | `max_upload_size_mb` | 可選 | 非負整數 | `50` | `0` 表示關閉上傳大小限制。 |
 | `job_ttl_minutes` | 可選 | 非負整數 | `60` | `0` 表示關閉完成/失敗任務清理。 |
-| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 本機批次和流式任務的服務級預設值。 |
+| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 本機批次和流式任務的服務級預設值；Windows `auto` 會依序使用 CUDA、可用時 DirectML、CPU。 |
 | `vad_model_id` | 可選 | 預設模型 ID | `silero-vad` | API 服務任務的預設 VAD 伴生模型。 |
 | `punctuation_model_id` | 可選 | 預設模型 ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API 服務任務的預設標點伴生模型。 |
 
@@ -139,7 +159,7 @@ sona
 sona --version
 sona -V
 sona -v models list
-sona --verbose transcribe ./sample.mp4 --config ./sona-cli.toml
+sona --verbose transcribe ./sample.mp4 -c ./sona-cli.toml
 sona transcribe --help
 ```
 
@@ -155,7 +175,7 @@ sona transcribe --help
 | --- | --- | --- | --- | --- |
 | `<input>...` | 必選，除非傳入 `--input-dir` | 本機音訊/影片檔案路徑或 glob 萬用模式 | 無 | 單一輸入保持單檔模式；多個輸入或 glob 模式會進入批次模式並要求 `--output-dir`。 |
 | `--input-dir <dir>` | 目錄模式必選 | 目錄路徑 | 無 | 轉錄目錄中的受支援媒體檔案。 |
-| `--config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
+| `-c, --config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
 | `--output <path>` | 可選 | 檔案系統路徑 | `stdout` | 僅用於單檔模式。檔案已存在時會報錯，除非傳入 `--force`。 |
 | `--output-dir <dir>` | 與 `--input-dir`、多個輸入或 glob 同用時必選 | 目錄路徑 | 無 | 為每個輸入檔案寫出一個轉錄檔案。計劃輸出已存在時會報錯，除非傳入 `--force`。 |
 | `--recursive` | 可選 | 旗標 | 關閉 | 掃描子目錄並保留相對輸出路徑。 |
@@ -170,7 +190,7 @@ sona transcribe --help
 | `--enable-itn` | 可選 | 旗標 | `false` | 與 `--disable-itn` 互斥。 |
 | `--disable-itn` | 可選 | 旗標 | `false` | 覆寫 `enable_itn = true`；與 `--enable-itn` 互斥。 |
 | `--hotwords <words>` | 可選 | 逗號分隔片語 | 無 | 覆寫 `hotwords`；目前支援 Transducer 和 Qwen3 模型。 |
-| `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 覆寫設定。 |
+| `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 覆寫設定。Windows 上 `auto` 會先嘗試 CUDA；目前打包執行期支援 DirectML 時再嘗試 DirectML，最後回退 CPU。明確指定 `directml` 會保留為手動 DirectML 請求。 |
 | `--vad-buffer <seconds>` | 可選 | 大於 `0` 的數字 | `5.0` | `vad_buffer_size` 的 CLI 參數名。 |
 | `--save-wav <path>` | 可選 | 檔案系統路徑 | 無 | 僅 CLI 參數；儲存中間重取樣 WAV。與 `--input-dir` 不相容。 |
 | `--quiet` | 可選 | 旗標 | 關閉 | 隱藏轉錄進度，並覆寫 `quiet = false`。 |
@@ -207,11 +227,19 @@ sona transcribe --help
 | 安裝路徑缺失 | 否 | 已知但未安裝的預設模型 | 成功 no-op | 向 `stderr` 輸出提示並以狀態碼 0 退出。 |
 | 伴生模型刪除 | 否 | 所需 VAD 和標點預設模型 | 不刪除 | 如果不再需要伴生模型，請明確刪除對應模型。 |
 
+### `init-config`
+
+| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
+| --- | --- | --- | --- | --- |
+| `[PATH]` | 可選 | TOML 檔案路徑 | 目前目錄下的 `sona-cli.toml` | 目標範本路徑。需要時會建立父目錄。 |
+| `--force` | 可選 | 旗標 | 關閉 | 允許覆寫已有設定檔。 |
+| 輸出 | 總是 | 狀態文字 | `stderr` | 產生的 TOML 會寫入目標檔案，而不是 `stdout`。 |
+
 ### `serve`
 
 | 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
 | --- | --- | --- | --- | --- |
-| `--config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
+| `-c, --config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
 | `--host <ip>` | 可選 | 監聽地址 | `0.0.0.0` | 覆寫設定。 |
 | `--port <port>` | 可選 | TCP 連接埠 `0` 到 `65535` | `14200` | 覆寫設定。 |
 | `--api-key <key>` | 可選 | 字串 | 空 | 為空時不啟用 Bearer 認證。 |
@@ -222,7 +250,7 @@ sona transcribe --help
 | `--max-queue-size <n>` | 可選 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
 | `--max-upload-size-mb <n>` | 可選 | 非負整數 | `50` | `0` 表示關閉上傳大小限制。 |
 | `--job-ttl-minutes <n>` | 可選 | 非負整數 | `60` | `0` 表示關閉完成/失敗任務清理。 |
-| `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | HTTP API 請求不支援依個別請求覆寫 GPU 設定。 |
+| `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 服務級預設值；HTTP API 請求不支援依個別請求覆寫 GPU 設定。Windows `auto` 會依序使用 CUDA、可用時 DirectML、CPU。 |
 | `--vad-model-id <id>` | 可選 | 預設模型 ID | `silero-vad` | API 服務任務的預設 VAD 伴生模型。 |
 | `--punctuation-model-id <id>` | 可選 | 預設模型 ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API 服務任務的預設標點伴生模型。 |
 

@@ -21,7 +21,7 @@ Sona를 headless CLI server mode로 실행할 수도 있습니다.
 sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
 ```
 
-GPU acceleration은 GUI model settings 또는 `sona serve --gpu-acceleration`을 통해 server-level default로 설정합니다. Batch와 streaming API request는 request별 GPU override를 받지 않습니다.
+GPU acceleration은 GUI model settings 또는 `sona serve --gpu-acceleration`을 통해 server-level default로 설정합니다. Windows에서 `auto`는 CUDA를 먼저 시도하고, bundled runtime이 DirectML을 지원하면 DirectML을 시도한 뒤 CPU로 fallback합니다. Batch와 streaming API request는 request별 GPU override를 받지 않습니다.
 
 전체 `serve` option table은 [CLI 가이드](guide:cli-guide)를 참고하세요.
 

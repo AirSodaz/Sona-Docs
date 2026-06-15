@@ -21,7 +21,7 @@ API 服務可以透過兩種方式啟動。
 sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
 ```
 
-GPU 硬體加速透過 GUI 模型設定或 `sona serve --gpu-acceleration` 作為服務級預設值設定。批次和串流 API 請求不支援依個別請求覆寫 GPU 設定。
+GPU 硬體加速透過 GUI 模型設定或 `sona serve --gpu-acceleration` 作為服務級預設值設定。Windows 上 `auto` 會先嘗試 CUDA；目前打包執行期支援 DirectML 時再嘗試 DirectML，最後回退 CPU。批次和串流 API 請求不支援依個別請求覆寫 GPU 設定。
 
 完整 `serve` 參數表請參閱 [CLI 指南](guide:cli-guide)。
 

@@ -29,10 +29,10 @@ Before exporting, open `Speaker Review` from the transcript header if speaker la
 
 - `Settings > Dashboard`: global content overview, speaker coverage, and LLM usage trends
 - `Settings > General`: theme, app language, font, tray behavior, update checks, plus `Diagnostics` and `Backup & Restore`
-- `Settings > Input Device`: microphone selection, system audio selection, microphone boost, mute during recording
+- `Settings > Input Device`: microphone selection, system audio selection, microphone boost, `Keep Microphone Active`, mute during recording
 - `Settings > Subtitle Settings`: floating caption behavior; if you mainly came for `Live Caption` or `Voice Typing`, continue to [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - `Settings > Voice Typing`: turn on `Voice Typing`, assign its global shortcut, choose `Push to Talk (Hold)` or `Toggle (Press once)`, and check readiness
-- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, and downloadable recognition, punctuation, speaker, and VAD models
+- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, and downloadable recognition, punctuation, speaker, and VAD models
 - `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, and `Speaker Profiles`; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 - `Settings > Automation`: watched-folder rules that can transcribe, polish, translate, and export new media while Sona is running
 - `Settings > API Server`: local HTTP API host, port, optional API key, IP allowlist, server limits, and server-level transcription defaults

@@ -29,6 +29,6 @@
 
 ## お役立ちメモ
 
-- `Settings > Model Settings` には、Batch Import の挙動に関わる `VAD Buffer Size` や `Max Concurrent Transcriptions` などの設定があります。
+- `Settings > Model Settings` には、Batch Import の挙動に関わる `Batch VAD Segmentation`、`VAD Buffer Size`、`Max Concurrent Transcriptions` などの設定があります。Batch VAD をオフにすると、ローカルのバッチ文字起こしはファイル全体を一度に認識します。
 - 途中で失敗したファイルは、ファイル形式、モデル設定、ディスク容量を確認してから再試行してください。
 - 中断されたバッチ処理を復元できる場合、Sona はヘッダーの通知センターから `Recovery Center` へ案内します。

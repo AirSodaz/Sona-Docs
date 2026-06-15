@@ -38,6 +38,7 @@
 - `Toggle (Press once)`는 긴 받아쓰기에 더 좋습니다. 한 번 누르면 시작하고 다음 한 번으로 멈춥니다.
 - 두 모드 모두 작동하는 `Live Record Model`, 필요한 `VAD` model, 사용 가능한 input device, background warm-up에 의존합니다.
 - `Voice Typing`이 아직 준비되지 않았다면 같은 settings page가 blocker가 shortcut, model, VAD, input device, runtime warm-up 중 무엇인지 알려 줍니다.
+- `Settings > Input Device > Keep Microphone Active`는 기본적으로 꺼져 있습니다. Idle 상태에서도 마이크를 warm 상태로 유지해 voice typing latency를 낮추고 싶으면 켜세요. 녹음, dictation, input preview를 하지 않을 때 Sona가 마이크를 release하길 원하면 꺼 둡니다.
 
 ## 어느 쪽을 선택할까요
 

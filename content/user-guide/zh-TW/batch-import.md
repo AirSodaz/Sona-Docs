@@ -32,5 +32,5 @@
 ## 補充說明
 
 - 如果沒有設定離線批次模型，Sona 會重新打開引導，而不是直接開始轉錄。
-- `設定 > 模型設定` 中的 `VAD Buffer Size` 與 `Max Concurrent Transcriptions` 會影響批次處理體驗。
+- `設定 > 模型設定` 中的 `批次 VAD 分割`、`VAD Buffer Size` 與 `Max Concurrent Transcriptions` 會影響批次處理體驗。關閉批次 VAD 後，本機批次轉錄會整段辨識檔案。
 - 如果目標是從現成媒體檔案匯出字幕，`批次轉錄` 加匯出就是最直接的路徑。

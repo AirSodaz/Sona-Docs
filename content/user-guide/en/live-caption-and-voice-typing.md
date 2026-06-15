@@ -38,6 +38,7 @@
 - `Toggle (Press once)` works better for longer dictation because one press starts and the next press stops.
 - In both modes, `Voice Typing` still depends on a working `Live Record Model`, any required `VAD` model, an available input device, and background warm-up.
 - If `Voice Typing` is not ready yet, the same settings page tells you whether the blocker is the shortcut, model, VAD, input device, or runtime warm-up.
+- `Settings > Input Device > Keep Microphone Active` is off by default. Turn it on if you want lower voice typing latency by leaving the microphone warm while idle; leave it off if you prefer Sona to release the microphone whenever you are not recording, dictating, or previewing input.
 
 ## When to choose which one
 

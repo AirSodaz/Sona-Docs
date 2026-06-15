@@ -32,5 +32,5 @@
 ## 补充说明
 
 - 如果没有配置离线批量模型，Sona 会重新打开引导，而不是直接开始转录。
-- `设置 > 模型设置` 中的 `VAD Buffer Size` 与 `Max Concurrent Transcriptions` 会影响批处理体验。
+- `设置 > 模型设置` 中的 `批量 VAD 分割`、`VAD Buffer Size` 与 `Max Concurrent Transcriptions` 会影响批处理体验。关闭批量 VAD 后，本地批量转录会整段识别文件。
 - 如果目标是从现成媒体文件导出字幕，`批量转录` 加导出就是最直接的路径。

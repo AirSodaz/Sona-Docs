@@ -752,21 +752,21 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'CLI Guide',
         navLabel: 'CLI Guide',
         description:
-          "Run Sona's offline batch transcription from the terminal, manage preset models, generate shell completions, and start the headless API server.",
+          "Run Sona's offline batch transcription from the terminal, manage preset models, create config templates, generate shell completions, and start the headless API server.",
         contentFile: 'en/cli-guide.md',
       },
       'zh-CN': {
         title: 'CLI 指南',
         navLabel: 'CLI 指南',
         description:
-          '从终端运行 Sona 的离线批量转录，管理预置模型，生成 shell 补全脚本，并启动无界面本地服务。',
+          '从终端运行 Sona 的离线批量转录，管理预置模型，创建配置模板，生成 shell 补全脚本，并启动无界面本地服务。',
         contentFile: 'zh-CN/cli-guide.md',
       },
       ja: {
         title: 'CLI ガイド',
         navLabel: 'CLI ガイド',
         description:
-          'ターミナルからオフライン文字起こし、プリセットモデル管理、shell 補完生成、ヘッドレス API サーバー起動を行うための CLI リファレンスです。',
+          'ターミナルからオフライン文字起こし、プリセットモデル管理、設定テンプレート作成、shell 補完生成、ヘッドレス API サーバー起動を行うための CLI リファレンスです。',
         contentFile: 'ja/cli-guide.md',
       },
     
@@ -774,14 +774,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'CLI 가이드',
         navLabel: 'CLI 가이드',
         description:
-          '터미널에서 오프라인 일괄 전사, 프리셋 모델 관리, shell completion 생성, headless API 서버 시작을 수행하는 CLI 참고 문서입니다.',
+          '터미널에서 오프라인 일괄 전사, 프리셋 모델 관리, config template 생성, shell completion 생성, headless API 서버 시작을 수행하는 CLI 참고 문서입니다.',
         contentFile: 'ko/cli-guide.md',
       },
       'zh-TW': {
         title: 'CLI 指南',
         navLabel: 'CLI 參考',
         description:
-          '從終端機執行 Sona 的離線批次轉錄，管理預設模型，產生 shell 補全腳本，並啟動無外介面本機服務。',
+          '從終端機執行 Sona 的離線批次轉錄，管理預設模型，建立設定範本，產生 shell 補全腳本，並啟動無外介面本機服務。',
         contentFile: 'zh-TW/cli-guide.md',
       },
     },
