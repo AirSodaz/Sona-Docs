@@ -71,38 +71,52 @@ sona init-config
 sona init-config ./sona-cli.toml --force
 ```
 
-`init-config`는 English-commented TOML template을 기본적으로 `sona-cli.toml`에 씁니다. 다른 위치에 쓰려면 path를 전달하세요. Existing file은 기본적으로 보호되며, overwrite하려면 `--force`가 필요합니다. Template은 flat TOML이며 `transcribe`와 `serve`에서 함께 재사용할 수 있습니다. 각 command는 자신이 지원하는 key만 읽고 unrelated key는 무시합니다.
+`init-config`는 기본적으로 현재 디렉터리에 영어 주석이 달린 TOML 시작 템플릿인 `sona-cli.toml`을 생성합니다. 다른 위치에 작성하려면 경로를 전달하십시오. 기존 파일은 기본적으로 보호되며, 덮어쓰려면 `--force`를 전달해야 합니다. `transcribe` 또는 `serve` 명령어에서 이 파일을 사용하기 전에 필요한 키의 주석을 해제하십시오. `transcribe`를 실행하려면 `model_id`가 활성화되어 있어야 합니다. 이 템플릿은 `[transcribe]` 및 `[serve]` 섹션을 사용하여 설정을 네임스페이스로 구분하며, 최상위 키는 두 명령어의 전역 기본값 역할을 합니다.
 
 ## Config file
 
-`-c` 또는 `--config`로 TOML file을 전달합니다. Command-line flag는 config file 값을 override합니다. Commented starter template은 `sona init-config`로 만들 수 있습니다.
+`-c` 또는 `--config`로 TOML file을 전달합니다. Command-line flag는 config file 값을 override합니다. `sona init-config`를 사용하여 주석이 달린 시작 템플릿을 생성한 다음, 사용하기 전에 필요한 키의 주석을 해제하여 사용하십시오.
 
 Generated template의 minimal excerpt:
 
 ```toml
-models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
-model_id = "sherpa-onnx-whisper-turbo"
-vad_model_id = "silero-vad"
-punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-language = "auto"
-threads = 4
-enable_itn = false
-vad_buffer_size = 5.0
-gpu_acceleration = "auto"
-hotwords = "Sona,offline ASR"
-format = "srt"
-quiet = false
-jobs = 1
+# Top-level keys are shared defaults for both commands.
+# Uncomment the same key inside [transcribe] or [serve] to override it per command.
 
-host = "127.0.0.1"
-port = 14200
-api_key = ""
-ip_whitelist = "localhost"
-max_streaming = 2
-max_concurrent = 2
-max_queue_size = 100
-max_upload_size_mb = 50
-job_ttl_minutes = 60
+# models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+
+[transcribe]
+# models_dir = "..."
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+# model_id = "sherpa-onnx-whisper-turbo"
+# language = "auto"
+# threads = 4
+# enable_itn = false
+# vad_buffer_size = 5.0
+# hotwords = "Sona,offline ASR"
+# format = "srt"
+# quiet = false
+# jobs = 1
+
+[serve]
+# models_dir = "..."
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+# host = "127.0.0.1"
+# port = 14200
+# api_key = ""
+# ip_whitelist = "localhost"
+# max_streaming = 2
+# max_concurrent = 2
+# max_queue_size = 100
+# max_upload_size_mb = 50
+# job_ttl_minutes = 60
 ```
 
 ### `transcribe` config keys
@@ -127,7 +141,7 @@ job_ttl_minutes = 60
 
 | Parameter / config key | Required | Range | Default | Notes |
 | --- | --- | --- | --- | --- |
-| `host` | Optional | Bind address | `0.0.0.0` | Local-only access에는 `127.0.0.1`을 사용하세요. |
+| `host` | Optional | Bind address | `127.0.0.1` | 네트워크에 노출하려면 0.0.0.0을 사용하십시오. |
 | `port` | Optional | TCP port `0` to `65535` | `14200` | API server port입니다. |
 | `api_key` | Optional | String | Empty | Empty면 request가 Bearer auth로 보호되지 않습니다. |
 | `models_dir` | Optional | Filesystem path | Desktop app models directory, when inferable | Installed models를 resolve할 때 사용합니다. |
@@ -191,36 +205,6 @@ Shell completion script는 `sona completions <shell>`로 생성합니다. 지원
 | `--disable-itn` | Optional | Flag | `false` | `enable_itn = true`를 override하며 `--enable-itn`과 함께 쓸 수 없습니다. |
 | `--hotwords <words>` | Optional | Comma-separated words | None | `hotwords`를 override합니다. 현재 Transducer와 Qwen3 model에서 지원됩니다. |
 | `--gpu-acceleration <provider>` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Config를 override합니다. Windows에서 `auto`는 CUDA를 먼저 시도하고, bundled runtime이 DirectML을 지원하면 DirectML을 시도한 뒤 CPU로 fallback합니다. Explicit `directml`은 manual DirectML request로 유지됩니다. |
-| `--vad-buffer <seconds>` | Optional | Number greater than `0` | `5.0` | `vad_buffer_size`의 CLI name입니다. |
-| `--save-wav <path>` | Optional | Filesystem path | None | CLI-only입니다. Intermediate resampled WAV를 저장합니다. `--input-dir`와 함께 쓸 수 없습니다. |
-| `--quiet` | Optional | Flag | Off | Transcription progress를 숨기고 `quiet = false`를 override합니다. |
-| `--force` | Optional | Flag | Off | Existing output files overwrite를 허용합니다. Duplicate planned batch outputs는 여전히 실패합니다. |
-
-### `models list`
-
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Installed presets 감지에 사용합니다. |
-| `--mode <mode>` | Optional | `streaming`, `offline` | All modes | Supported mode로 filter합니다. |
-| `--type <type>` | Optional | Preset model type, such as `whisper`, `vad`, `punctuation` | All types | Model type으로 filter합니다. |
-| `--language <code>` | Optional | Language token, such as `zh`, `en`, `ja`, `yue` | All languages | Supported language token으로 filter합니다. |
-| `--installed` | Optional | Flag | Off | `models_dir`에 있는 model만 표시합니다. |
-| `--json` | Optional | Flag | Off | 기본 table 대신 machine-readable JSON을 출력합니다. |
-| Output | Always | Table or JSON | Table | `stdout`에 출력됩니다. |
-
-### `models download`
-
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `<model_id>` | Required | Known preset model id | None | 다운로드할 main model입니다. |
-| `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Target models directory입니다. |
-| `--quiet` | Optional | Flag | Off | Per-download progress를 숨깁니다. |
-| Companion downloads | Automatic | Required VAD and punctuation presets | Automatic | Main model 다운로드는 필요한 companion을 함께 다운로드합니다. |
-
-### `models delete`
-
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
 | `<model_id>` | Required | Known preset model id | None | 삭제할 model입니다. |
 | `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Target models directory입니다. |
 | `--yes` | Optional | Flag | Off | Interactive confirmation prompt를 건너뜁니다. |

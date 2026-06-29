@@ -71,38 +71,52 @@ sona init-config
 sona init-config ./sona-cli.toml --force
 ```
 
-`init-config` は、英語コメント付きの TOML テンプレートを既定で `sona-cli.toml` に書き込みます。別の場所に書きたい場合はパスを渡します。既存ファイルは既定で保護され、上書きするには `--force` が必要です。テンプレートはフラットな TOML で、`transcribe` と `serve` の両方から再利用できます。各コマンドは対応するキーだけを読み取り、無関係なキーは無視します。
+`init-config` は、英語コメント付きの TOML 初期テンプレートを既定で `sona-cli.toml` に書き込みます。別の場所に書きたい場合はパスを渡します。既存ファイルは既定で保護され、上書きするには `--force` を必要とします。
 
 ## 設定ファイル
 
-`-c` または `--config` オプションで TOML ファイルを渡します。コマンドライン引数で指定した値は、設定ファイルの値を上書きします。コメント付きの初期テンプレートを作るには `sona init-config` を使います。
+`-c` または `--config` オプションで TOML ファイルを渡します。コマンドライン引数で指定した値は、設定ファイルの値を上書きします。コメント付きの初期テンプレートを作成するには `sona init-config` を使用し、使用する前に必要なキーのコメントアウトを解除してください。
 
 生成されるテンプレートの最小抜粋:
 
 ```toml
-models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
-model_id = "sherpa-onnx-whisper-turbo"
-vad_model_id = "silero-vad"
-punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-language = "auto"
-threads = 4
-enable_itn = false
-vad_buffer_size = 5.0
-gpu_acceleration = "auto"
-hotwords = "Sona,offline ASR"
-format = "srt"
-quiet = false
-jobs = 1
+# Top-level keys are shared defaults for both commands.
+# Uncomment the same key inside [transcribe] or [serve] to override it per command.
 
-host = "127.0.0.1"
-port = 14200
-api_key = ""
-ip_whitelist = "localhost"
-max_streaming = 2
-max_concurrent = 2
-max_queue_size = 100
-max_upload_size_mb = 50
-job_ttl_minutes = 60
+# models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+
+[transcribe]
+# models_dir = "..."
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+# model_id = "sherpa-onnx-whisper-turbo"
+# language = "auto"
+# threads = 4
+# enable_itn = false
+# vad_buffer_size = 5.0
+# hotwords = "Sona,offline ASR"
+# format = "srt"
+# quiet = false
+# jobs = 1
+
+[serve]
+# models_dir = "..."
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+# host = "127.0.0.1"
+# port = 14200
+# api_key = ""
+# ip_whitelist = "localhost"
+# max_streaming = 2
+# max_concurrent = 2
+# max_queue_size = 100
+# max_upload_size_mb = 50
+# job_ttl_minutes = 60
 ```
 
 ### `transcribe` の設定キー
@@ -127,7 +141,7 @@ job_ttl_minutes = 60
 
 | パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
 | --- | --- | --- | --- | --- |
-| `host` | 任意 | バインド IP アドレス | `0.0.0.0` | ローカルマシンからのアクセスに限定する場合は `127.0.0.1` を使います。 |
+| `host` | 任意 | バインド アドレス | `127.0.0.1` | ネットワークに公開する場合は `0.0.0.0` を使用します。 |
 | `port` | 任意 | TCP ポート `0`〜`65535` | `14200` | API サーバーの TCP ポート番号。 |
 | `api_key` | 任意 | 文字列 | 空文字 | 空の場合、リクエストは Bearer 認証で保護されません。 |
 | `models_dir` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | インストール済みモデルの解決に使います。 |
@@ -179,7 +193,7 @@ sona transcribe --help
 | `--output <path>` | 任意 | ファイルシステムパス | `stdout` | 単一ファイルモード専用の出力ファイルパス。既存ファイルがある場合は、`--force` を指定しない限りエラーになります。 |
 | `--output-dir <dir>` | `--input-dir`、複数入力、または glob と併用する場合は必須 | ディレクトリパス | なし | 入力ファイルごとに文字起こしファイルを書き出します。計画された出力が既にある場合は、`--force` を指定しない限りエラーになります。 |
 | `--recursive` | 任意 | フラグ | オフ | サブディレクトリを走査し、相対出力パスを保ちます。 |
-| `--jobs <n>` | 任意 | `0` より大きい整数 | `jobs` 設定または `1` | バッチモードの最大同時ファイルジョブ数。 |
+| `--jobs <n>` | 任意 | `0` より大きい整数 | `jobs` 設定または `1` | バッチモードの最大同時ファイルジョブ数。CLI の `--jobs` が上書きします。 |
 | `--format <format>` | 任意 | `json`, `txt`, `srt`, `vtt`, `md` | 標準出力またはディレクトリモードでは `json`、それ以外は `--output` から自動判定 | 設定ファイルと出力ファイル拡張子による自動判定を上書きします。 |
 | `--language <code>` | 任意 | `auto` またはモデル言語コード | `auto` | 設定ファイルの指定を上書きします。 |
 | `--model-id <id>` | 設定ファイルで `model_id` が設定されていない限り必須 | オフラインのプリセットモデル ID | なし | メインの音声認識モデル。 |
@@ -191,36 +205,6 @@ sona transcribe --help
 | `--disable-itn` | 任意 | フラグ | `false` | `enable_itn = true` を上書きします。`--enable-itn` と同時には使えません。 |
 | `--hotwords <words>` | 任意 | カンマ区切りの単語 | なし | `hotwords` を上書きします。現在、Transducer および Qwen3 モデルでサポートされています。 |
 | `--gpu-acceleration <provider>` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | 設定ファイルの指定を上書きします。Windows では、`auto` は最初に CUDA を試し、同梱ランタイムが DirectML をサポートしている場合は次に DirectML、最後に CPU へフォールバックします。明示的な `directml` は手動 DirectML 指定として扱われます。 |
-| `--vad-buffer <seconds>` | 任意 | `0` より大きい数値 | `5.0` | `vad_buffer_size` の CLI 引数名。 |
-| `--save-wav <path>` | 任意 | ファイルシステムパス | なし | CLI 専用。リサンプリングされた中間 WAV ファイルを保存します。`--input-dir` とは併用できません。 |
-| `--quiet` | 任意 | フラグ | オフ | 文字起こしの進捗表示を隠し、`quiet = false` を上書きします。 |
-| `--force` | 任意 | フラグ | オフ | 既存の出力ファイルの上書きを許可します。バッチモードで同じ出力に解決される入力は引き続き失敗します。 |
-
-### `models list`
-
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | インストール済みプリセットの検出に使います。 |
-| `--mode <mode>` | 任意 | `streaming`, `offline` | すべてのモード | 対応モードで絞り込みます。 |
-| `--type <type>` | 任意 | プリセットモデルの種類（`whisper`、`vad`、`punctuation` など） | すべての種類 | モデルタイプで絞り込みます。 |
-| `--language <code>` | 任意 | 言語トークン（`zh`、`en`、`ja`、`yue` など） | すべての言語 | 対応言語トークンで絞り込みます。 |
-| `--installed` | 任意 | フラグ | オフ | `models_dir` 内に存在するモデルだけを表示します。 |
-| `--json` | 任意 | フラグ | オフ | 既定の表形式ではなく、機械可読 JSON を出力します。 |
-| 出力 | 常に | 表または JSON | 表 | 標準出力に出力されます。 |
-
-### `models download`
-
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `<model_id>` | 必須 | 既知のプリセットモデル ID | なし | ダウンロードするメインモデル。 |
-| `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | 保存先のモデルディレクトリ。 |
-| `--quiet` | 任意 | フラグ | オフ | ダウンロードごとの進捗表示を隠します。 |
-| 関連ダウンロード | 自動 | 必須の VAD および句読点プリセット | 自動 | メインモデルをダウンロードすると、必要な関連モデルも自動的にダウンロードされます。 |
-
-### `models delete`
-
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
 | `<model_id>` | 必須 | 既知のプリセットモデル ID | なし | 削除するモデル。 |
 | `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | 対象モデルディレクトリ。 |
 | `--yes` | 任意 | フラグ | オフ | 対話確認を省略します。 |

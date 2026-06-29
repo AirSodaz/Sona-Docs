@@ -71,38 +71,52 @@ sona init-config
 sona init-config ./sona-cli.toml --force
 ```
 
-`init-config` writes an English-commented TOML template to `sona-cli.toml` by default. Pass a path to write somewhere else. Existing files are protected unless `--force` is passed. The template is flat and can be reused by both `transcribe` and `serve`; each command reads the keys it supports and ignores unrelated keys.
+`init-config` writes an English-commented TOML starter template to `sona-cli.toml` by default. Pass a path to write somewhere else. Existing files are protected unless `--force` is passed. Uncomment the keys you want before using the file with `transcribe` or `serve`. `transcribe` requires `model_id` to be enabled. The template uses `[transcribe]` and `[serve]` sections to namespace settings, while top-level keys act as global defaults for both commands.
 
 ## Config File
 
-Pass a TOML file with `-c` or `--config`. Command-line flags override config file values. Use `sona init-config` to create a commented starter template.
+Pass a TOML file with `-c` or `--config`. Command-line flags override config file values. Use `sona init-config` to create a commented starter template, then uncomment the keys you need before using it.
 
 Minimal generated template excerpt:
 
 ```toml
-models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
-model_id = "sherpa-onnx-whisper-turbo"
-vad_model_id = "silero-vad"
-punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-language = "auto"
-threads = 4
-enable_itn = false
-vad_buffer_size = 5.0
-gpu_acceleration = "auto"
-hotwords = "Sona,offline ASR"
-format = "srt"
-quiet = false
-jobs = 1
+# Top-level keys are shared defaults for both commands.
+# Uncomment the same key inside [transcribe] or [serve] to override it per command.
 
-host = "127.0.0.1"
-port = 14200
-api_key = ""
-ip_whitelist = "localhost"
-max_streaming = 2
-max_concurrent = 2
-max_queue_size = 100
-max_upload_size_mb = 50
-job_ttl_minutes = 60
+# models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+
+[transcribe]
+# models_dir = "..."
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+# model_id = "sherpa-onnx-whisper-turbo"
+# language = "auto"
+# threads = 4
+# enable_itn = false
+# vad_buffer_size = 5.0
+# hotwords = "Sona,offline ASR"
+# format = "srt"
+# quiet = false
+# jobs = 1
+
+[serve]
+# models_dir = "..."
+# gpu_acceleration = "auto"
+# vad_model_id = "silero-vad"
+# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
+# host = "127.0.0.1"
+# port = 14200
+# api_key = ""
+# ip_whitelist = "localhost"
+# max_streaming = 2
+# max_concurrent = 2
+# max_queue_size = 100
+# max_upload_size_mb = 50
+# job_ttl_minutes = 60
 ```
 
 ### `transcribe` config keys
@@ -127,7 +141,7 @@ job_ttl_minutes = 60
 
 | Parameter / config key | Required | Range | Default | Notes |
 | --- | --- | --- | --- | --- |
-| `host` | Optional | Bind address | `0.0.0.0` | Use `127.0.0.1` for local-only access. |
+| `host` | Optional | Bind address | `127.0.0.1` | Use `0.0.0.0` to expose to the network. |
 | `port` | Optional | TCP port `0` to `65535` | `14200` | API server port. |
 | `api_key` | Optional | String | Empty | Empty means requests are not protected by Bearer auth. |
 | `models_dir` | Optional | Filesystem path | Desktop app models directory, when inferable | Used to resolve installed models. |
@@ -215,6 +229,7 @@ Generate shell completion scripts with `sona completions <shell>`. Supported she
 | `<model_id>` | Required | Known preset model id | None | Main model to download. |
 | `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Target models directory. |
 | `--quiet` | Optional | Flag | Off | Hides per-download progress. |
+| `--yes` | Optional | Flag | Off | Overwrite invalid files without prompting for confirmation. |
 | Companion downloads | Automatic | Required VAD and punctuation presets | Automatic | Downloading a main model also downloads required companions. |
 
 ### `models delete`
@@ -240,7 +255,7 @@ Generate shell completion scripts with `sona completions <shell>`. Supported she
 | Parameter / config key | Required | Range | Default | Notes |
 | --- | --- | --- | --- | --- |
 | `-c, --config <path>` | Optional | TOML file path | None | Loads defaults from config. |
-| `--host <ip>` | Optional | Bind address | `0.0.0.0` | Overrides config. |
+| `--host <ip>` | Optional | Bind address | `127.0.0.1` | Overrides config. |
 | `--port <port>` | Optional | TCP port `0` to `65535` | `14200` | Overrides config. |
 | `--api-key <key>` | Optional | String | Empty | Empty means no Bearer auth. |
 | `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Overrides config. |
