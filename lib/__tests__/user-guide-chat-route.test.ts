@@ -21,18 +21,20 @@ const ORIGINAL_ENV = { ...process.env };
 
 function createGuideChatRequest({
   accept = 'application/json',
+  body = JSON.stringify({
+    history: [],
+    locale: 'en',
+    pageId: 'overview',
+    question: 'Where should I start?',
+  }),
   trustedIp = '203.0.113.10',
 }: {
   accept?: string;
+  body?: string;
   trustedIp?: string;
 } = {}) {
   return new NextRequest('https://sona.example.com/api/user-guide-chat', {
-    body: JSON.stringify({
-      history: [],
-      locale: 'en',
-      pageId: 'overview',
-      question: 'Where should I start?',
-    }),
+    body,
     headers: {
       accept,
       'content-type': 'application/json',
@@ -176,6 +178,46 @@ describe('/api/user-guide-chat streaming contract', () => {
     expect(payload).toMatchObject({
       code: 'rate_limited',
       retryAfterSeconds: expect.any(Number),
+    });
+    expect(geminiMocks.generateContent).not.toHaveBeenCalled();
+    expect(geminiMocks.generateContentStream).not.toHaveBeenCalled();
+  });
+
+  it('returns 429 before parsing malformed JSON when the shared rate limit is exceeded', async () => {
+    mockSharedRateLimit({
+      counts: [11, 1],
+    });
+
+    const response = await POST(
+      createGuideChatRequest({
+        body: '{"locale":',
+      }),
+    );
+    const payload = await response.json();
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get('retry-after')).toBeTruthy();
+    expect(payload).toMatchObject({
+      code: 'rate_limited',
+      retryAfterSeconds: expect.any(Number),
+    });
+    expect(geminiMocks.generateContent).not.toHaveBeenCalled();
+    expect(geminiMocks.generateContentStream).not.toHaveBeenCalled();
+  });
+
+  it('still returns 400 for malformed JSON after the shared rate limit allows the request', async () => {
+    mockSharedRateLimit();
+
+    const response = await POST(
+      createGuideChatRequest({
+        body: '{"locale":',
+      }),
+    );
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload).toMatchObject({
+      code: 'invalid_request',
     });
     expect(geminiMocks.generateContent).not.toHaveBeenCalled();
     expect(geminiMocks.generateContentStream).not.toHaveBeenCalled();

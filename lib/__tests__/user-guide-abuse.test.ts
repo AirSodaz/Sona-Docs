@@ -71,6 +71,70 @@ describe('user guide abuse protection', () => {
     expect(body).not.toHaveProperty('remoteip');
   });
 
+  it('rejects successful Turnstile responses that omit the expected action', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        return new Response(
+          JSON.stringify({
+            hostname: 'sona.example.com',
+            success: true,
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            status: 200,
+          },
+        );
+      }),
+    );
+
+    await expect(
+      verifyUserGuideTurnstileToken({
+        requestHost: 'sona.example.com',
+        token: 'test-turnstile-token',
+      }),
+    ).resolves.toEqual({
+      errorCodes: ['action-mismatch'],
+      hostname: 'sona.example.com',
+      ok: false,
+      reason: 'action_mismatch',
+    });
+  });
+
+  it('rejects successful Turnstile responses that omit the expected hostname', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        return new Response(
+          JSON.stringify({
+            action: USER_GUIDE_TURNSTILE_ACTION,
+            success: true,
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            status: 200,
+          },
+        );
+      }),
+    );
+
+    await expect(
+      verifyUserGuideTurnstileToken({
+        requestHost: 'sona.example.com',
+        token: 'test-turnstile-token',
+      }),
+    ).resolves.toEqual({
+      errorCodes: ['hostname-mismatch'],
+      hostname: null,
+      ok: false,
+      reason: 'hostname_mismatch',
+    });
+  });
+
   it('uses the trusted proxy IP to create raw-IP-free Upstash rate-limit keys', async () => {
     const fetchMock = vi.fn(async (_url: string | URL, _init?: RequestInit) => {
       return new Response(

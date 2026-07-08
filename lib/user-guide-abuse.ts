@@ -934,7 +934,7 @@ export async function verifyUserGuideTurnstileToken({
       };
     }
 
-    if (payload.action && payload.action !== USER_GUIDE_TURNSTILE_ACTION) {
+    if (payload.action !== USER_GUIDE_TURNSTILE_ACTION) {
       return {
         errorCodes: errorCodes.length > 0 ? errorCodes : ['action-mismatch'],
         hostname,
@@ -943,7 +943,7 @@ export async function verifyUserGuideTurnstileToken({
       };
     }
 
-    if (hostname && hostname !== requestHost) {
+    if (hostname !== requestHost) {
       return {
         errorCodes: errorCodes.length > 0 ? errorCodes : ['hostname-mismatch'],
         hostname,

@@ -660,6 +660,108 @@ export async function POST(request: NextRequest) {
     return finalizeResponse(response);
   }
 
+  if (!isUserGuideAiEnabled()) {
+    return finalizeResponse(
+      jsonError(503, 'disabled', 'AI questions are not enabled.'),
+    );
+  }
+
+  const abuseState = readUserGuideSession(request);
+
+  if (!abuseState) {
+    return finalizeResponse(
+      jsonError(503, 'disabled', 'AI questions are not enabled.'),
+    );
+  }
+
+  const sessionFingerprint = getUserGuideSessionFingerprint(abuseState.session.id);
+  const hadExpiredVerifiedCookie =
+    Boolean(abuseState.verifiedRecord) && !abuseState.verified;
+  let verifiedSession = abuseState.verified;
+  let turnstileValidated = false;
+  let verifiedUntil: number | undefined;
+
+  const sharedRateLimit = await checkUserGuideSharedRateLimit({
+    now: abuseState.now,
+    request,
+  });
+
+  if (!sharedRateLimit.ok) {
+    if (sharedRateLimit.status === 'limited') {
+      const response = jsonError(
+        429,
+        'rate_limited',
+        'Too many guide AI questions from this network. Please wait and try again later.',
+        {
+          retryAfterSeconds: sharedRateLimit.retryAfterSeconds,
+        },
+        {
+          'Retry-After': String(sharedRateLimit.retryAfterSeconds),
+        },
+      );
+
+      logGuideChatSecurityEvent({
+        code: 'rate_limited',
+        error: 'Shared guide AI rate limit exceeded.',
+        host: requestGuard.host,
+        logger,
+        originHost: requestGuard.originHost,
+        path: requestPath,
+        reason: sharedRateLimit.reason,
+        referrerHost: requestGuard.referrerHost,
+        retryAfterSeconds: sharedRateLimit.retryAfterSeconds,
+        secFetchSite: requestGuard.secFetchSite,
+        sessionFingerprint,
+        sharedRateLimitSubject: sharedRateLimit.subject,
+        sharedRateLimitWindow: sharedRateLimit.window.name,
+        status: 429,
+        turnstileValidated,
+        verifiedSession,
+      });
+
+      return finalizeResponse(
+        applyUserGuideSessionCookies({
+          clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+          response,
+          session: abuseState.session,
+          verifiedUntil,
+        }),
+      );
+    }
+
+    const response = jsonError(
+      503,
+      'rate_limit_unavailable',
+      'Guide AI shared rate limiting is unavailable.',
+    );
+
+    logGuideChatSecurityEvent({
+      code: 'rate_limit_unavailable',
+      error: 'Shared guide AI rate limit could not run.',
+      host: requestGuard.host,
+      logger,
+      originHost: requestGuard.originHost,
+      path: requestPath,
+      reason: sharedRateLimit.reason,
+      referrerHost: requestGuard.referrerHost,
+      secFetchSite: requestGuard.secFetchSite,
+      sessionFingerprint,
+      sharedRateLimitSubject: sharedRateLimit.subject,
+      status: 503,
+      turnstileValidated,
+      verifiedSession,
+    });
+
+    return finalizeResponse(
+      applyUserGuideSessionCookies({
+        clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
+        response,
+        session: abuseState.session,
+        verifiedUntil,
+      }),
+    );
+  }
+
   let body: Record<string, unknown>;
 
   try {
@@ -697,27 +799,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!isUserGuideAiEnabled()) {
-    return finalizeResponse(
-      jsonError(503, 'disabled', 'AI questions are not enabled.'),
-    );
-  }
-
-  const abuseState = readUserGuideSession(request);
-
-  if (!abuseState) {
-    return finalizeResponse(
-      jsonError(503, 'disabled', 'AI questions are not enabled.'),
-    );
-  }
-
-  const sessionFingerprint = getUserGuideSessionFingerprint(abuseState.session.id);
   const history = sanitizeHistory(body.history);
   const page = getUserGuidePageById(locale, pageId);
   const model = getUserGuideChatModel();
   const ai = getGeminiClient();
-  const hadExpiredVerifiedCookie =
-    Boolean(abuseState.verifiedRecord) && !abuseState.verified;
 
   if (!ai) {
     const response = jsonError(503, 'disabled', 'AI questions are not enabled.');
@@ -729,10 +814,6 @@ export async function POST(request: NextRequest) {
       }),
     );
   }
-
-  let verifiedSession = abuseState.verified;
-  let turnstileValidated = false;
-  let verifiedUntil: number | undefined;
 
   if (
     shouldUserGuideChallenge({
@@ -820,87 +901,6 @@ export async function POST(request: NextRequest) {
     promoteUserGuideSessionVerification(abuseState.session, abuseState.now);
   } else {
     clearUserGuideChallengeFailures(abuseState.session, abuseState.now);
-  }
-
-  const sharedRateLimit = await checkUserGuideSharedRateLimit({
-    now: abuseState.now,
-    request,
-  });
-
-  if (!sharedRateLimit.ok) {
-    if (sharedRateLimit.status === 'limited') {
-      const response = jsonError(
-        429,
-        'rate_limited',
-        'Too many guide AI questions from this network. Please wait and try again later.',
-        {
-          retryAfterSeconds: sharedRateLimit.retryAfterSeconds,
-        },
-        {
-          'Retry-After': String(sharedRateLimit.retryAfterSeconds),
-        },
-      );
-
-      logGuideChatSecurityEvent({
-        code: 'rate_limited',
-        error: 'Shared guide AI rate limit exceeded.',
-        host: requestGuard.host,
-        logger,
-        originHost: requestGuard.originHost,
-        path: requestPath,
-        reason: sharedRateLimit.reason,
-        referrerHost: requestGuard.referrerHost,
-        retryAfterSeconds: sharedRateLimit.retryAfterSeconds,
-        secFetchSite: requestGuard.secFetchSite,
-        sessionFingerprint,
-        sharedRateLimitSubject: sharedRateLimit.subject,
-        sharedRateLimitWindow: sharedRateLimit.window.name,
-        status: 429,
-        turnstileValidated,
-        verifiedSession,
-      });
-
-      return finalizeResponse(
-        applyUserGuideSessionCookies({
-          clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
-          response,
-          session: abuseState.session,
-          verifiedUntil,
-        }),
-      );
-    }
-
-    const response = jsonError(
-      503,
-      'rate_limit_unavailable',
-      'Guide AI shared rate limiting is unavailable.',
-    );
-
-    logGuideChatSecurityEvent({
-      code: 'rate_limit_unavailable',
-      error: 'Shared guide AI rate limit could not run.',
-      host: requestGuard.host,
-      logger,
-      originHost: requestGuard.originHost,
-      path: requestPath,
-      reason: sharedRateLimit.reason,
-      referrerHost: requestGuard.referrerHost,
-      secFetchSite: requestGuard.secFetchSite,
-      sessionFingerprint,
-      sharedRateLimitSubject: sharedRateLimit.subject,
-      status: 503,
-      turnstileValidated,
-      verifiedSession,
-    });
-
-    return finalizeResponse(
-      applyUserGuideSessionCookies({
-        clearVerifiedCookie: hadExpiredVerifiedCookie && !verifiedUntil,
-        response,
-        session: abuseState.session,
-        verifiedUntil,
-      }),
-    );
   }
 
   registerUserGuideAttempt({
