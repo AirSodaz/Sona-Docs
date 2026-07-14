@@ -1,10 +1,22 @@
 import { describe, expect, it } from 'vitest';
+import enMessages from '@/messages/en.json';
+import jaMessages from '@/messages/ja.json';
 import koMessages from '@/messages/ko.json';
+import zhCnMessages from '@/messages/zh-CN.json';
+import zhTwMessages from '@/messages/zh-TW.json';
 import { buildDownloadContentFromMessages } from '../download-content';
+
+const downloadMessages = {
+  en: enMessages.DownloadsPage,
+  ja: jaMessages.DownloadsPage,
+  ko: koMessages.DownloadsPage,
+  'zh-CN': zhCnMessages.DownloadsPage,
+  'zh-TW': zhTwMessages.DownloadsPage,
+};
 
 function createReader(namespace: unknown) {
   return Object.assign(
-    (key: 'metadata.description' | 'metadata.title') =>
+    (key: string) =>
       key.split('.').reduce<unknown>((value, part) => {
         if (!value || typeof value !== 'object') {
           return undefined;
@@ -32,5 +44,20 @@ describe('download content', () => {
     expect(content.platformDescriptions['windows-x64']).toContain(
       '대부분의 Windows PC',
     );
+  });
+
+  it('provides Nightly and Android copy in every locale', () => {
+    for (const namespace of Object.values(downloadMessages)) {
+      const content = buildDownloadContentFromMessages(
+        createReader(namespace),
+      );
+
+      expect(content.metadata.nightlyTitle).toBeTruthy();
+      expect(content.channels.nightlyLabel).toBeTruthy();
+      expect(content.channels.nightlyWarningDescription).toBeTruthy();
+      expect(content.android.title).toBe('Android');
+      expect(content.android.statusLabel).toBeTruthy();
+      expect(content.page.nightlyReleaseLabel).toBeTruthy();
+    }
   });
 });

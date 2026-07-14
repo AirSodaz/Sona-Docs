@@ -3,7 +3,15 @@
 import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
-import { Github, Mic, Shield, Bot, Scissors } from 'lucide-react';
+import {
+  Bot,
+  Github,
+  Mic,
+  MoonStar,
+  Scissors,
+  Shield,
+  Smartphone,
+} from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
@@ -233,6 +241,35 @@ export function HomePage({
                   className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-stone-300 px-6 py-3 text-center text-sm font-medium text-[#2D2D2D] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:bg-white dark:border-stone-700 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:shadow-white/5 sm:w-auto sm:px-8"
                 >
                   {content.hero.btnDocs}
+                </Link>
+              </motion.div>
+
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+                className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs text-stone-500 dark:text-stone-400"
+              >
+                <Link
+                  href={downloads.channels.nightlyHref}
+                  className="inline-flex min-h-8 items-center gap-1.5 transition-colors hover:text-stone-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500/60 dark:hover:text-stone-100"
+                >
+                  <MoonStar aria-hidden="true" size={14} />
+                  {downloads.channels.nightlyLinkLabel}
+                </Link>
+                <Link
+                  href={downloads.android.href}
+                  className="inline-flex min-h-8 items-center gap-1.5 transition-colors hover:text-stone-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500/60 dark:hover:text-stone-100"
+                >
+                  <Smartphone aria-hidden="true" size={14} />
+                  <span>{downloads.android.title}</span>
+                  <span aria-hidden="true">/</span>
+                  <span>{downloads.android.statusLabel}</span>
                 </Link>
               </motion.div>
 

@@ -1,6 +1,7 @@
 export type DownloadOs = 'windows' | 'macos' | 'linux';
 export type ClientPlatformOs = DownloadOs | 'android' | 'ios' | 'unknown';
 export type DownloadArch = 'arm64' | 'universal' | 'x64';
+export type ReleaseChannel = 'nightly' | 'stable';
 export type DownloadFormat =
   | 'app-tar-gz'
   | 'appimage'
@@ -61,8 +62,10 @@ export interface RecommendedDownloads {
 
 export interface ReleaseResponseBody {
   assets: PublicAsset[];
+  channel: ReleaseChannel;
   downloads: StructuredDownloads;
   recommended: RecommendedDownloads;
+  releaseName: string;
   url: string;
   version: string;
 }
@@ -79,6 +82,8 @@ export interface PlatformGroup {
 }
 
 export const FALLBACK_RELEASE_URL = 'https://github.com/AirSodaz/sona/releases';
+export const NIGHTLY_RELEASE_URL =
+  'https://github.com/AirSodaz/sona/releases/tag/nightly';
 
 export const PLATFORM_ORDER: DownloadPlatformKey[] = [
   'windows-x64',

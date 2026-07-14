@@ -224,7 +224,7 @@
       "desc": "最新版をインストールすれば、録音またはインポート、タイムスタンプ確認、整文、翻訳、エクスポートまで続けて進められます。",
       "primaryLabel": "最新版をダウンロード",
       "secondaryLabel": "ユーザーガイドを読む",
-      "note": "Windows、macOS、Linux 向けのビルドは、最新の GitHub Release から取得されます。"
+      "note": "Windows、macOS、Linux では安定版と Nightly を利用できます。Android は近日公開予定です。"
     },
     "footer": {
       "license": "MIT ライセンスで公開されています。",
@@ -236,8 +236,15 @@
   },
   "DownloadsPage": {
     "metadata": {
-      "title": "Sona | デスクトップ版ダウンロード",
-      "description": "Windows、macOS、Linux 向けの Sona デスクトップ版を、環境に合わせて選んでダウンロードできます。"
+      "title": "Sona | ダウンロード",
+      "description": "Windows、macOS、Linux 向けの Sona 安定版または Nightly をダウンロードできます。Android クライアントは近日公開予定です。",
+      "nightlyTitle": "Sona | Nightly ダウンロード",
+      "nightlyDescription": "Windows、macOS、Linux 向けの最新 Sona Nightly デスクトップ版をダウンロードできます。"
+    },
+    "android": {
+      "title": "Android",
+      "statusLabel": "近日公開",
+      "description": "Android クライアントは開発中です。公開準備が整い次第、ここにダウンロードを追加します。"
     },
     "button": {
       "allBuildsLabel": "すべてのビルド",
@@ -245,12 +252,20 @@
       "menuAriaLabel": "ほかのダウンロードオプションを表示",
       "viewAllLabel": "すべてのデスクトップ版を見る"
     },
+    "channels": {
+      "navigationAriaLabel": "リリースチャンネルを選択",
+      "stableLabel": "安定版",
+      "nightlyLabel": "Nightly",
+      "nightlyLinkLabel": "Nightly ビルド",
+      "nightlyWarningTitle": "Nightly ビルドはテスト用です",
+      "nightlyWarningDescription": "Nightly は頻繁に更新され、安定性が低い場合があります。日常利用や重要な作業には安定版を使用してください。"
+    },
     "page": {
       "alternateLanguageLabel": "English",
       "decisionDescription": "まず OS とプロセッサを選び、次にアプリの管理方法に合うインストーラー形式を選んでください。",
       "decisionTitle": "プラットフォームと形式の選択",
-      "description": "お使いのシステム、アーキテクチャ、インストール方法に合うデスクトップ版を選択できます。",
-      "desktopOnlyNote": "Sona はデスクトップアプリです。スマートフォンやタブレットでこのページを見ている場合は、インストールするコンピューターで開き直してください。",
+      "description": "お使いのシステム、アーキテクチャ、インストール方法に合う安定版または Nightly デスクトップ版を選択できます。",
+      "desktopOnlyNote": "デスクトップ版は Windows、macOS、Linux で利用できます。Android クライアントはまだ一般公開されていません。",
       "emptyBuildsDescription": "リリース情報は取得できましたが、このページで認識できる Windows、macOS、Linux 向けのデスクトップアセットが見つかりませんでした。GitHub Releases には手動で確認できるファイルがある場合があります。",
       "emptyBuildsTitle": "デスクトップ版のビルドが見つかりません",
       "firstRunLabel": "はじめに進む",
@@ -258,14 +273,15 @@
       "githubLabel": "GitHub Releases で見る",
       "homeLabel": "ホームへ戻る",
       "installSafetyNote": "Windows SmartScreen、macOS Gatekeeper、Linux の実行権限に関する確認が表示された場合は、ファイルの入手元が Sona Downloads または GitHub Releases であることを確認してから、OS の案内に従ってください。システム保護を全体で無効にする必要はありません。",
-      "loadingLabel": "最新リリースを確認しています...",
+      "loadingLabel": "選択したリリースを確認しています...",
       "platformChoiceLabel": "プラットフォーム",
       "recommendedLabel": "推奨",
-      "releaseLabel": "最新リリース",
-      "title": "デスクトップ版ダウンロード",
-      "unavailableDescription": "現在、最新リリースの詳細を読み込めません。ビルドの一覧は GitHub Releases から確認できます。",
+      "releaseLabel": "最新の安定版",
+      "nightlyReleaseLabel": "現在の Nightly",
+      "title": "ダウンロード",
+      "unavailableDescription": "現在、選択したリリースの詳細を読み込めません。ビルドの一覧は GitHub Releases から確認できます。",
       "unavailableTitle": "リリース情報を一時的に取得できません",
-      "updatedLabel": "最新の GitHub Release から更新"
+      "updatedLabel": "安定版と Nightly は GitHub Releases から取得"
     },
     "platformGroups": {
       "windows": "Windows",
@@ -498,7 +514,7 @@
           },
           {
             "feature": "ドキュメントのダウンロード API",
-            "trigger": "ダウンロード UI を開く、または最新リリースリンクを要求します。",
+            "trigger": "ダウンロード UI を開く、または安定版や Nightly のリリースリンクを要求します。",
             "data": "公開リクエストのメタデータ、リクエスト ID、限定的な診断ログ、GitHub リリースの検索結果。",
             "destination": "Sona ドキュメント API と GitHub Releases。",
             "control": "ダウンロード選択と運用診断のみに使われます。音声、文字起こしデータ、Cookie、トークン、完全な IP アドレスはログに記録されません。"
@@ -545,7 +561,7 @@
           "title": "この公開サイトが処理するもの",
           "body": "Sona のドキュメントサイトは、デスクトップの文字起こしワークフローとは分かれています。ページを配信し、ダウンロード用に GitHub リリース情報を確認し、設定されている場合は AI ガイドアシスタントを提供します。",
           "items": [
-            "ダウンロード UI は `/api/github-release` を呼び出し、GitHub から公開リリース情報を取得してビルドリンクを返します。",
+            "ダウンロード UI は安定版または Nightly チャンネル用に `/api/github-release` を呼び出し、GitHub の公開リリース情報から構造化されたデスクトップ版リンクを返します。",
             "ガイドアシスタントは、設定されている場合、質問、短い会話履歴、ロケール、現在のページ情報を Gemini に送信します。",
             "アシスタントルートは署名付きの匿名不正利用防止 Cookie を使い、Turnstile を表示する場合があります。",
             "診断ログはセキュリティイベント、上流エラー、遅いリクエストなどの構造化情報であり、分析目的ではありません。"

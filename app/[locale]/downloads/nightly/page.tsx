@@ -1,6 +1,6 @@
 import { DownloadsPage } from '@/components/downloads-page';
 import { isHomeLocale } from '@/lib/locales';
-import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type Props = {
@@ -12,20 +12,19 @@ export async function generateMetadata({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'DownloadsPage.metadata' });
 
   return {
-    title: t('title'),
-    description: t('description'),
+    title: t('nightlyTitle'),
+    description: t('nightlyDescription'),
   };
 }
 
-export default async function DownloadsPageRoute({ params }: Props) {
+export default async function NightlyDownloadsPageRoute({ params }: Props) {
   const { locale } = await params;
 
   if (!isHomeLocale(locale)) {
     notFound();
   }
 
-  // Enable static rendering
   setRequestLocale(locale);
 
-  return <DownloadsPage channel="stable" locale={locale} />;
+  return <DownloadsPage channel="nightly" locale={locale} />;
 }

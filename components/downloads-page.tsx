@@ -10,6 +10,8 @@ import {
   CheckCircle2,
   ExternalLink,
   Github,
+  Smartphone,
+  TriangleAlert,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Logo } from '@/components/Logo';
@@ -27,7 +29,9 @@ import {
   formatAssetSize,
   getDownloadsForKey,
   getRecommendedForKey,
+  NIGHTLY_RELEASE_URL,
   type DownloadPlatformKey,
+  type ReleaseChannel,
   type ReleaseResponseBody,
   type StructuredDownload,
 } from '@/lib/release-downloads';
@@ -53,11 +57,18 @@ const PAGE_SECTIONS: Array<{
 
 
 interface ReleaseState {
+  channel: ReleaseChannel;
   data: ReleaseResponseBody | null;
   status: 'error' | 'loading' | 'ready';
 }
 
-export function DownloadsPage({ locale }: { locale: HomeLocale }) {
+export function DownloadsPage({
+  channel,
+  locale,
+}: {
+  channel: ReleaseChannel;
+  locale: HomeLocale;
+}) {
   const t = useTranslations('DownloadsPage');
   const pathname = usePathname();
 
@@ -69,15 +80,22 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
   );
 
   const [release, setRelease] = useState<ReleaseState>({
+    channel,
     data: null,
     status: 'loading',
   });
 
   useEffect(() => {
-    fetch('/api/github-release')
+    const controller = new AbortController();
+    const releaseUrl =
+      channel === 'nightly'
+        ? '/api/github-release?channel=nightly'
+        : '/api/github-release';
+
+    fetch(releaseUrl, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to load latest release');
+          throw new Error(`Failed to load ${channel} release`);
         }
 
         return response.json() as Promise<ReleaseResponseBody>;
@@ -88,20 +106,36 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
         }
 
         setRelease({
+          channel,
           data,
           status: 'ready',
         });
       })
-      .catch(() => {
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return;
+        }
+
         setRelease({
+          channel,
           data: null,
           status: 'error',
         });
       });
-  }, []);
 
-  const githubHref = release.data?.url ?? FALLBACK_RELEASE_URL;
-  const readyRelease = release.status === 'ready' ? release.data : null;
+    return () => controller.abort();
+  }, [channel]);
+
+  const activeRelease: ReleaseState =
+    release.channel === channel
+      ? release
+      : { channel, data: null, status: 'loading' };
+
+  const githubHref =
+    activeRelease.data?.url ??
+    (channel === 'nightly' ? NIGHTLY_RELEASE_URL : FALLBACK_RELEASE_URL);
+  const readyRelease =
+    activeRelease.status === 'ready' ? activeRelease.data : null;
   const downloadSections = readyRelease
     ? PAGE_SECTIONS.map((section) => ({
         ...section,
@@ -200,18 +234,78 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
 
             {readyRelease ? (
               <div className="mt-6 inline-flex w-fit items-center rounded-full border border-stone-200 bg-white/50 px-4 py-2 text-sm text-stone-600 transition-colors dark:border-stone-800 dark:bg-stone-900/50 dark:text-stone-300 lg:mt-0">
-                <span className="font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
-                  {content.page.releaseLabel}
+                <span className="whitespace-nowrap font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
+                  {channel === 'nightly'
+                    ? content.page.nightlyReleaseLabel
+                    : content.page.releaseLabel}
                 </span>
                 <span className="mx-2 text-stone-300 dark:text-stone-600">/</span>
-                <span>{readyRelease.version}</span>
+                <span className="whitespace-nowrap">
+                  {channel === 'nightly'
+                    ? readyRelease.releaseName.replace(/^Nightly\s+/u, '')
+                    : readyRelease.version}
+                </span>
               </div>
             ) : null}
           </motion.section>
 
+          <motion.nav
+            aria-label={content.channels.navigationAriaLabel}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="grid min-h-11 w-full max-w-sm grid-cols-2 gap-1 rounded-lg bg-stone-200/70 p-1 dark:bg-stone-800/70"
+          >
+            <ChannelLink
+              active={channel === 'stable'}
+              href={content.channels.stableHref}
+            >
+              {content.channels.stableLabel}
+            </ChannelLink>
+            <ChannelLink
+              active={channel === 'nightly'}
+              href={content.channels.nightlyHref}
+            >
+              {content.channels.nightlyLabel}
+            </ChannelLink>
+          </motion.nav>
+
+          {channel === 'nightly' ? (
+            <motion.section
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="flex gap-4 border-l-2 border-amber-500/70 py-1 pl-4"
+            >
+              <TriangleAlert
+                aria-hidden="true"
+                className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400"
+                size={19}
+              />
+              <div>
+                <h2 className="text-sm font-medium text-stone-800 dark:text-stone-100">
+                  {content.channels.nightlyWarningTitle}
+                </h2>
+                <p className="mt-1 text-sm font-light leading-7 text-stone-500 dark:text-stone-400">
+                  {content.channels.nightlyWarningDescription}
+                </p>
+              </div>
+            </motion.section>
+          ) : null}
 
 
-          {release.status === 'loading' ? (
+
+          {activeRelease.status === 'loading' ? (
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -222,7 +316,7 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
             </motion.div>
           ) : null}
 
-          {release.status === 'error' ? (
+          {activeRelease.status === 'error' ? (
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -316,6 +410,38 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
               ))
             : null}
 
+          <motion.section
+            id="android"
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
+            className="scroll-mt-24 border-y border-stone-200/70 py-8 dark:border-stone-800/70"
+          >
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-stone-200/70 text-stone-600 dark:bg-stone-800 dark:text-stone-300">
+                  <Smartphone aria-hidden="true" size={21} />
+                </span>
+                <div>
+                  <h2 className="text-base font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
+                    {content.android.title}
+                  </h2>
+                  <p className="mt-1 max-w-2xl text-sm font-light leading-7 text-stone-500 dark:text-stone-400">
+                    {content.android.description}
+                  </p>
+                </div>
+              </div>
+              <span className="inline-flex w-fit shrink-0 items-center rounded-full bg-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 dark:bg-stone-800 dark:text-stone-300">
+                {content.android.statusLabel}
+              </span>
+            </div>
+          </motion.section>
+
           <motion.div
             variants={{
               hidden: { opacity: 0, y: 20 },
@@ -351,6 +477,30 @@ export function DownloadsPage({ locale }: { locale: HomeLocale }) {
         </motion.div>
       </div>
     </main>
+  );
+}
+
+function ChannelLink({
+  active,
+  children,
+  href,
+}: {
+  active: boolean;
+  children: ReactNode;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? 'page' : undefined}
+      className={`inline-flex min-h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500/60 ${
+        active
+          ? 'bg-white text-stone-900 shadow-sm dark:bg-stone-950 dark:text-stone-100'
+          : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100'
+      }`}
+    >
+      {children}
+    </Link>
   );
 }
 

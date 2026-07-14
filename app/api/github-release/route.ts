@@ -4,6 +4,7 @@ import type {
   DownloadFormat,
   DownloadOs,
   PublicAsset,
+  ReleaseChannel,
   RecommendedDownloads,
   ReleaseResponseBody,
   StructuredDownload,
@@ -11,8 +12,10 @@ import type {
 } from '@/lib/release-downloads';
 import { createRequestLogger } from '@/lib/server-logger';
 
-const GITHUB_RELEASE_URL =
-  'https://api.github.com/repos/AirSodaz/sona/releases/latest';
+const GITHUB_RELEASE_URLS: Record<ReleaseChannel, string> = {
+  nightly: 'https://api.github.com/repos/AirSodaz/sona/releases/tags/nightly',
+  stable: 'https://api.github.com/repos/AirSodaz/sona/releases/latest',
+};
 const SUCCESS_CACHE_SECONDS = 60 * 60;
 const FAILURE_CACHE_SECONDS = 60 * 5;
 const STALE_WHILE_REVALIDATE_SECONDS = 60 * 60 * 24;
@@ -29,6 +32,7 @@ interface GitHubReleaseAsset {
 interface GitHubRelease {
   tag_name?: string;
   html_url?: string;
+  name?: string;
   assets?: GitHubReleaseAsset[];
 }
 
@@ -59,14 +63,31 @@ function finalizeResponse(
   return response;
 }
 
+function invalidChannelResponse(logger: RequestLogger) {
+  const response = logger.withRequestId(
+    NextResponse.json(
+      { error: 'Unsupported release channel.' },
+      {
+        headers: { 'Cache-Control': 'no-store' },
+        status: 400,
+      },
+    ),
+  );
+  logger.logSlowRequest(response.status);
+
+  return response;
+}
+
 function logGitHubReleaseEvent({
   code,
+  channel,
   error,
   host,
   logger,
   status,
 }: {
   code: 'invalid_payload' | 'upstream_error' | 'upstream_status';
+  channel: ReleaseChannel;
   error?: string;
   host: null | string;
   logger: RequestLogger;
@@ -74,18 +95,22 @@ function logGitHubReleaseEvent({
 }) {
   logger.warn('github_release_route_event', {
     code,
+    channel,
     error,
     host,
     status,
   });
 }
 
-async function fetchGitHubRelease(headers: Record<string, string>) {
+async function fetchGitHubRelease(
+  headers: Record<string, string>,
+  channel: ReleaseChannel,
+) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
-    return await fetch(GITHUB_RELEASE_URL, {
+    return await fetch(GITHUB_RELEASE_URLS[channel], {
       headers,
       next: { revalidate: SUCCESS_CACHE_SECONDS },
       signal: controller.signal,
@@ -93,6 +118,16 @@ async function fetchGitHubRelease(headers: Record<string, string>) {
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+function getReleaseChannel(request: Request): ReleaseChannel | null {
+  const value = new URL(request.url).searchParams.get('channel');
+
+  if (value === null || value === 'stable') {
+    return 'stable';
+  }
+
+  return value === 'nightly' ? value : null;
 }
 
 function normalizeAssets(assets: GitHubReleaseAsset[]): PublicAsset[] {
@@ -330,6 +365,11 @@ export async function GET(request: Request) {
     method: 'GET',
     route: '/api/github-release',
   });
+  const channel = getReleaseChannel(request);
+
+  if (!channel) {
+    return invalidChannelResponse(logger);
+  }
 
   try {
     const headers: Record<string, string> = {
@@ -341,11 +381,12 @@ export async function GET(request: Request) {
       headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
 
-    const response = await fetchGitHubRelease(headers);
+    const response = await fetchGitHubRelease(headers, channel);
 
     if (!response.ok) {
       logGitHubReleaseEvent({
         code: 'upstream_status',
+        channel,
         error: `GitHub returned ${response.status}.`,
         host: requestHost,
         logger,
@@ -359,6 +400,7 @@ export async function GET(request: Request) {
     if (!data.tag_name || !data.html_url) {
       logGitHubReleaseEvent({
         code: 'invalid_payload',
+        channel,
         error: 'Missing tag_name or html_url in GitHub release payload.',
         host: requestHost,
         logger,
@@ -379,8 +421,10 @@ export async function GET(request: Request) {
       logger,
       {
         assets,
+        channel,
         downloads,
         recommended,
+        releaseName: data.name?.trim() || data.tag_name,
         url: data.html_url,
         version: data.tag_name,
       },
@@ -389,6 +433,7 @@ export async function GET(request: Request) {
   } catch (error) {
     logGitHubReleaseEvent({
       code: 'upstream_error',
+      channel,
       error: error instanceof Error ? error.message : 'Unknown error',
       host: requestHost,
       logger,

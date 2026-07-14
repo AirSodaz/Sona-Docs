@@ -224,7 +224,7 @@
       "desc": "최신 버전을 설치한 뒤 녹음 또는 가져오기, 타임스탬프 검토, 정리, 번역, 내보내기를 끊김 없이 이어갈 수 있습니다.",
       "primaryLabel": "최신 버전 다운로드",
       "secondaryLabel": "사용자 가이드 읽기",
-      "note": "Windows, macOS, Linux 빌드는 최신 GitHub Release에서 가져옵니다."
+      "note": "Windows, macOS, Linux용 안정 버전과 Nightly 빌드를 제공합니다. Android는 곧 출시됩니다."
     },
     "footer": {
       "license": "MIT 라이선스로 오픈소스 공개됩니다.",
@@ -236,8 +236,15 @@
   },
   "DownloadsPage": {
     "metadata": {
-      "title": "Sona | 데스크톱 다운로드",
-      "description": "Windows, macOS, Linux용 최신 Sona 데스크톱 빌드를 한곳에서 선택해 다운로드하세요."
+      "title": "Sona | 다운로드",
+      "description": "Windows, macOS, Linux용 Sona 안정 버전 또는 Nightly 빌드를 다운로드하세요. Android 클라이언트는 곧 출시됩니다.",
+      "nightlyTitle": "Sona | Nightly 다운로드",
+      "nightlyDescription": "Windows, macOS, Linux용 최신 Sona Nightly 데스크톱 빌드를 다운로드하세요."
+    },
+    "android": {
+      "title": "Android",
+      "statusLabel": "출시 예정",
+      "description": "Android 클라이언트를 개발 중입니다. 공개 준비가 완료되면 이곳에 다운로드가 표시됩니다."
     },
     "button": {
       "allBuildsLabel": "전체 빌드",
@@ -245,12 +252,20 @@
       "menuAriaLabel": "다운로드 옵션 더 보기",
       "viewAllLabel": "모든 데스크톱 빌드 보기"
     },
+    "channels": {
+      "navigationAriaLabel": "릴리스 채널 선택",
+      "stableLabel": "안정 버전",
+      "nightlyLabel": "Nightly",
+      "nightlyLinkLabel": "Nightly 빌드",
+      "nightlyWarningTitle": "Nightly 빌드는 테스트용입니다",
+      "nightlyWarningDescription": "Nightly는 자주 업데이트되며 안정성이 낮을 수 있습니다. 일상적인 사용이나 중요한 작업에는 안정 버전을 사용하세요."
+    },
     "page": {
       "alternateLanguageLabel": "English",
       "decisionDescription": "운영체제와 프로세서를 먼저 고른 뒤, 앱을 관리하는 방식에 맞는 설치 형식을 선택하세요.",
       "decisionTitle": "플랫폼과 형식 선택",
-      "description": "시스템, 아키텍처, 선호 설치 형식에 맞는 데스크톱 빌드를 선택하세요.",
-      "desktopOnlyNote": "Sona는 데스크톱 앱입니다. 휴대폰이나 태블릿에서 이 페이지를 보고 있다면, 설치할 컴퓨터에서 다시 열어 주세요.",
+      "description": "시스템, 아키텍처, 선호 설치 형식에 맞는 안정 버전 또는 Nightly 데스크톱 빌드를 선택하세요.",
+      "desktopOnlyNote": "데스크톱 빌드는 Windows, macOS, Linux에서 사용할 수 있습니다. Android 클라이언트는 아직 공개되지 않았습니다.",
       "emptyBuildsDescription": "릴리스 정보는 불러왔지만 이 페이지가 인식할 수 있는 Windows, macOS, Linux 데스크톱 파일이 없습니다. GitHub Releases에는 수동으로 확인할 수 있는 파일이 있을 수 있습니다.",
       "emptyBuildsTitle": "데스크톱 빌드를 찾지 못했습니다",
       "firstRunLabel": "시작하기 계속 보기",
@@ -258,14 +273,15 @@
       "githubLabel": "GitHub Releases에서 보기",
       "homeLabel": "홈으로 돌아가기",
       "installSafetyNote": "Windows SmartScreen, macOS Gatekeeper, Linux 실행 권한 안내가 나타나면 먼저 파일이 Sona Downloads 또는 GitHub Releases에서 온 것인지 확인한 뒤 운영체제 안내를 따르세요. 시스템 보호를 전역으로 끄지 마세요.",
-      "loadingLabel": "최신 릴리스를 확인하는 중...",
+      "loadingLabel": "선택한 릴리스를 확인하는 중...",
       "platformChoiceLabel": "플랫폼",
       "recommendedLabel": "권장",
-      "releaseLabel": "최신 릴리스",
-      "title": "데스크톱 다운로드",
-      "unavailableDescription": "지금은 최신 릴리스 세부 정보를 불러올 수 없습니다. 전체 빌드 목록은 GitHub Releases에서 계속 확인할 수 있습니다.",
+      "releaseLabel": "최신 안정 버전",
+      "nightlyReleaseLabel": "현재 Nightly",
+      "title": "다운로드",
+      "unavailableDescription": "지금은 선택한 릴리스 세부 정보를 불러올 수 없습니다. 전체 빌드 목록은 GitHub Releases에서 계속 확인할 수 있습니다.",
       "unavailableTitle": "릴리스 정보를 잠시 사용할 수 없습니다",
-      "updatedLabel": "최신 GitHub Release에서 업데이트됨"
+      "updatedLabel": "안정 버전과 Nightly는 GitHub Releases에서 제공"
     },
     "platformGroups": {
       "windows": "Windows",
@@ -498,7 +514,7 @@
           },
           {
             "feature": "문서 다운로드 API",
-            "trigger": "다운로드 UI를 열거나 최신 릴리스 링크를 요청합니다.",
+            "trigger": "다운로드 UI를 열거나 안정 버전 또는 Nightly 릴리스 링크를 요청합니다.",
             "data": "공개 요청 메타데이터, 요청 ID, 제한된 진단 로그, GitHub 릴리스 조회 결과.",
             "destination": "Sona 문서 API와 GitHub Releases.",
             "control": "다운로드 선택과 운영 진단에만 사용됩니다. 오디오, 전사 데이터, 쿠키, 토큰, 전체 IP 주소는 기록하지 않습니다."
@@ -545,7 +561,7 @@
           "title": "이 공개 사이트가 처리하는 것",
           "body": "Sona 문서 사이트는 데스크톱 전사 워크플로와 분리되어 있습니다. 페이지를 제공하고, 다운로드 옵션을 위해 GitHub 릴리스 메타데이터를 확인하며, 설정된 경우 문서 질문용 AI 가이드 어시스턴트를 제공할 수 있습니다.",
           "items": [
-            "다운로드 UI는 `/api/github-release`를 호출해 GitHub에서 공개 릴리스 메타데이터를 가져오고 구조화된 빌드 링크를 반환합니다.",
+            "다운로드 UI는 안정 버전 또는 Nightly 채널로 `/api/github-release`를 호출하며, 이 경로는 GitHub의 공개 릴리스 메타데이터에서 구조화된 데스크톱 빌드 링크를 반환합니다.",
             "가이드 어시스턴트는 설정된 경우 질문, 짧은 대화 기록, locale, 현재 페이지 context를 Gemini로 보냅니다.",
             "어시스턴트 라우트는 서명된 익명 남용 방지 쿠키를 사용하며, 사용량 임계값 뒤에는 Cloudflare Turnstile을 표시할 수 있습니다.",
             "서버 API 로그는 보안 이벤트, upstream 오류, 느린 요청을 위한 구조화된 진단이며 클라이언트 analytics가 아닙니다."

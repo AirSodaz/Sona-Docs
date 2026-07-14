@@ -1,15 +1,16 @@
 import type { MetadataRoute } from 'next';
 import { getAbsoluteUrl } from '@/lib/site-url';
 import { getAllUserGuidePaths } from '@/lib/user-guide-content';
-import { routing } from '@/i18n/routing';
+import { supportedLocales } from '@/lib/locales';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const locales = routing.locales;
+  const locales = supportedLocales;
 
   // Base pages for each locale
   const basePaths = locales.flatMap((locale) => [
     `/${locale}`,
     `/${locale}/downloads`,
+    `/${locale}/downloads/nightly`,
     `/${locale}/trust`,
     `/${locale}/privacy`,
   ]);
@@ -27,7 +28,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority = 1;
     } 
     // High value pages
-    else if (route.endsWith('/downloads')) {
+    else if (route.endsWith('/downloads/nightly')) {
+      priority = 0.84;
+    } else if (route.endsWith('/downloads')) {
       priority = 0.92;
     } else if (route.includes('/user-guide')) {
       priority = 0.95;
@@ -39,7 +42,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     return {
       url: getAbsoluteUrl(route),
-      changeFrequency: 'weekly',
+      changeFrequency: route.endsWith('/downloads/nightly')
+        ? 'daily'
+        : 'weekly',
       priority,
     };
   });

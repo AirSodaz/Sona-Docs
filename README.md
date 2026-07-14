@@ -4,7 +4,7 @@ A lightweight landing page for **Sona**, the offline transcript editor built wit
 
 ## Overview
 
-Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact bilingual landing page, a release-aware download button, a branded global 404 page, and metadata tuned for production deployment.
+Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact bilingual landing page, a stable release-aware download button, a Stable/Nightly downloads view, an Android coming-soon placeholder, a branded global 404 page, and metadata tuned for production deployment.
 
 ### Highlighted Product Capabilities
 - **Local processing:** Speech recognition runs on-device with Sherpa-onnx.
@@ -112,7 +112,7 @@ pnpm start
 ### Notes
 
 - `/` and `/zh` are statically generated.
-- `/api/github-release` stays dynamic, but its upstream GitHub response is cached and protected with a timeout.
+- `/api/github-release` stays dynamic, defaults to the latest stable release, and accepts `?channel=nightly` for the moving Nightly tag. Each upstream GitHub response is cached and protected with a timeout.
 - `/api/user-guide-chat` is protected with same-site origin checks, signed anonymous session cookies, shared Upstash-backed IP rate limiting, and an inline Turnstile challenge after the anonymous session threshold is exceeded.
 - The signed cookies are session-scoped. They prevent users from tampering with local usage counters, but they do not by themselves stop a new browser session, cleared cookies, or another client from starting over.
 - The shared Upstash limiter is the app-level cost gate for guide AI calls: it allows `10` model-eligible questions per minute and `30` per 10 minutes per trusted client IP. If the limiter cannot run, the route fails closed before calling Gemini.

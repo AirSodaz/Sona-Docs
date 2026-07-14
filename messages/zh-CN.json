@@ -224,7 +224,7 @@
       "desc": "安装后就能开始实时录音或批量导入，继续整理时间戳、润色、翻译，并按需导出。",
       "primaryLabel": "下载最新版本",
       "secondaryLabel": "阅读用户指南",
-      "note": "Windows、macOS 和 Linux 构建均来自最新 GitHub Release。"
+      "note": "Windows、macOS 和 Linux 提供稳定版与 Nightly 桌面构建；Android 客户端即将推出。"
     },
     "footer": {
       "license": "基于 MIT 协议开源。",
@@ -236,8 +236,15 @@
   },
   "DownloadsPage": {
     "metadata": {
-      "title": "Sona | 桌面端下载",
-      "description": "在一个页面中查看并下载 Sona 最新的 Windows、macOS 与 Linux 桌面构建。"
+      "title": "Sona | 下载",
+      "description": "下载 Sona 的稳定版或 Nightly Windows、macOS 与 Linux 桌面构建；Android 客户端即将推出。",
+      "nightlyTitle": "Sona | Nightly 下载",
+      "nightlyDescription": "下载最新的 Sona Nightly Windows、macOS 与 Linux 桌面构建。"
+    },
+    "android": {
+      "title": "Android",
+      "statusLabel": "即将推出",
+      "description": "Android 客户端正在开发中，公开下载准备就绪后会显示在这里。"
     },
     "button": {
       "allBuildsLabel": "全部构建",
@@ -245,12 +252,20 @@
       "menuAriaLabel": "显示更多下载选项",
       "viewAllLabel": "查看全部桌面构建"
     },
+    "channels": {
+      "navigationAriaLabel": "选择发布通道",
+      "stableLabel": "稳定版",
+      "nightlyLabel": "Nightly",
+      "nightlyLinkLabel": "Nightly 构建",
+      "nightlyWarningTitle": "Nightly 仅供测试",
+      "nightlyWarningDescription": "Nightly 更新频繁，稳定性可能低于正式版本。日常使用或重要工作请优先选择稳定版。"
+    },
     "page": {
       "alternateLanguageLabel": "English",
       "decisionDescription": "先按操作系统和处理器选择平台，再按你管理应用的方式选择安装格式。",
       "decisionTitle": "选择平台与格式",
-      "description": "按系统、架构和安装格式选择最适合你的桌面端构建，不必在 Releases 列表里自己翻找。",
-      "desktopOnlyNote": "Sona 是桌面端应用。如果你正在手机或平板上浏览，请在准备安装的电脑上重新打开本页。",
+      "description": "按系统、架构和安装格式选择稳定版或 Nightly 桌面构建，不必在 Releases 列表里自己翻找。",
+      "desktopOnlyNote": "桌面构建适用于 Windows、macOS 和 Linux；Android 客户端目前尚未开放公开下载。",
       "emptyBuildsDescription": "release 已成功载入，但其中没有本页可识别的 Windows、macOS 或 Linux 桌面端资源。GitHub Releases 中可能仍有可手动查看的构建。",
       "emptyBuildsTitle": "没有找到桌面端构建",
       "firstRunLabel": "继续查看快速开始",
@@ -258,14 +273,15 @@
       "githubLabel": "前往 GitHub Releases",
       "homeLabel": "返回首页",
       "installSafetyNote": "如果遇到 Windows SmartScreen、macOS Gatekeeper 或 Linux 可执行权限提示，请先确认文件来自 Sona 下载页或 GitHub Releases，再按系统提示处理；不要全局关闭系统安全防护。",
-      "loadingLabel": "正在检查最新 release...",
+      "loadingLabel": "正在检查所选 release...",
       "platformChoiceLabel": "平台",
       "recommendedLabel": "推荐",
-      "releaseLabel": "最新版本",
-      "title": "桌面端下载",
-      "unavailableDescription": "当前无法读取最新 release 详情，但 GitHub Releases 里仍然保留了完整构建列表。",
+      "releaseLabel": "最新稳定版",
+      "nightlyReleaseLabel": "当前 Nightly",
+      "title": "下载",
+      "unavailableDescription": "当前无法读取所选 release 详情，但 GitHub Releases 里仍然保留了完整构建列表。",
       "unavailableTitle": "暂时无法获取 release 详情",
-      "updatedLabel": "内容来自最新 GitHub release"
+      "updatedLabel": "稳定版与 Nightly 均来自 GitHub Releases"
     },
     "platformGroups": {
       "windows": "Windows",
@@ -498,7 +514,7 @@
           },
           {
             "feature": "文档下载 API",
-            "trigger": "打开下载 UI 或请求最新 release 链接。",
+            "trigger": "打开下载 UI 或请求稳定版或 Nightly release 链接。",
             "data": "公开请求信息、请求 ID、有限诊断日志和 GitHub release 查询结果。",
             "destination": "Sona 文档站 API 和 GitHub Releases。",
             "control": "仅用于下载选择和运行诊断；不会记录音频、转录数据、cookie、token 或完整 IP 地址。"
@@ -545,7 +561,7 @@
           "title": "这个公开站点会处理什么",
           "body": "Sona 文档站点与桌面端转录工作流是分开的。它负责提供页面、为下载选项检查 GitHub release 元数据，并可为文档问题启用 AI 助手。",
           "items": [
-            "下载 UI 会调用 `/api/github-release`，由它从 GitHub 读取公开 release 元数据并返回结构化构建链接。",
+            "下载 UI 会按稳定版或 Nightly 通道调用 `/api/github-release`；该路由从 GitHub 读取公开 release 元数据并返回结构化桌面构建链接。",
             "文档助手启用后，会把你的问题、较短的对话历史、语言和当前指南页上下文发送给 Gemini。",
             "助手路由使用签名匿名防滥用 cookie，并可能在达到使用阈值后显示 Cloudflare Turnstile。",
             "服务端 API 日志是用于安全事件、上游错误和慢请求的结构化诊断，不是客户端 analytics。"

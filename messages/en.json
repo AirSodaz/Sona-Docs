@@ -224,7 +224,7 @@
       "desc": "Install the latest release, then record or import audio, review timestamps, polish, translate, and export without breaking the thread.",
       "primaryLabel": "Download Latest Release",
       "secondaryLabel": "Read User Guide",
-      "note": "Windows, macOS, and Linux builds are pulled from the latest GitHub release."
+      "note": "Stable and Nightly desktop builds are available for Windows, macOS, and Linux. Android is coming soon."
     },
     "footer": {
       "license": "Open sourced under MIT License.",
@@ -236,8 +236,15 @@
   },
   "DownloadsPage": {
     "metadata": {
-      "title": "Sona | Desktop Downloads",
-      "description": "Download the latest Sona desktop builds for Windows, macOS, and Linux from one place."
+      "title": "Sona | Downloads",
+      "description": "Download stable and Nightly Sona desktop builds for Windows, macOS, and Linux. The Android client is coming soon.",
+      "nightlyTitle": "Sona | Nightly Downloads",
+      "nightlyDescription": "Download the latest Sona Nightly desktop builds for Windows, macOS, and Linux."
+    },
+    "android": {
+      "title": "Android",
+      "statusLabel": "Coming soon",
+      "description": "The Android client is in development. Public downloads will appear here when it is ready."
     },
     "button": {
       "allBuildsLabel": "All builds",
@@ -245,12 +252,20 @@
       "menuAriaLabel": "Show more download options",
       "viewAllLabel": "View all desktop builds"
     },
+    "channels": {
+      "navigationAriaLabel": "Choose a release channel",
+      "stableLabel": "Stable",
+      "nightlyLabel": "Nightly",
+      "nightlyLinkLabel": "Nightly builds",
+      "nightlyWarningTitle": "Nightly builds are for testing",
+      "nightlyWarningDescription": "These builds update frequently and may be less reliable. Use the stable release for everyday or important work."
+    },
     "page": {
       "alternateLanguageLabel": "简体中文",
       "decisionDescription": "Start with your operating system and processor, then choose the installer format that fits how you manage apps.",
       "decisionTitle": "Choose platform and format",
-      "description": "Pick the desktop build that matches your system, architecture, and preferred installer format.",
-      "desktopOnlyNote": "Sona runs as a desktop app. If you are on a phone or tablet, open this page again on the computer where you want to install it.",
+      "description": "Choose a stable or Nightly desktop build that matches your system, architecture, and preferred installer format.",
+      "desktopOnlyNote": "Desktop builds are available for Windows, macOS, and Linux. The Android client is not publicly available yet.",
       "emptyBuildsDescription": "The release loaded, but it does not include Windows, macOS, or Linux desktop assets that this page can recognize. GitHub Releases may still list manual artifacts.",
       "emptyBuildsTitle": "No desktop builds found",
       "firstRunLabel": "Continue with Getting Started",
@@ -258,14 +273,15 @@
       "githubLabel": "View on GitHub Releases",
       "homeLabel": "Back to home",
       "installSafetyNote": "If Windows SmartScreen, macOS Gatekeeper, or Linux executable-permission prompts appear, first confirm the file came from Sona Downloads or GitHub Releases, then follow the operating-system prompt. Do not turn off system protection globally.",
-      "loadingLabel": "Checking the latest release...",
+      "loadingLabel": "Checking the selected release...",
       "platformChoiceLabel": "Platform",
       "recommendedLabel": "Recommended",
-      "releaseLabel": "Latest release",
-      "title": "Desktop downloads",
-      "unavailableDescription": "The latest release details could not be loaded right now. GitHub Releases still has the complete list of builds.",
+      "releaseLabel": "Latest stable",
+      "nightlyReleaseLabel": "Current Nightly",
+      "title": "Downloads",
+      "unavailableDescription": "The selected release details could not be loaded right now. GitHub Releases still has the complete list of builds.",
       "unavailableTitle": "Release details are temporarily unavailable",
-      "updatedLabel": "Updated from the latest GitHub release"
+      "updatedLabel": "Stable and Nightly builds from GitHub Releases"
     },
     "platformGroups": {
       "windows": "Windows",
@@ -498,7 +514,7 @@
           },
           {
             "feature": "Docs download API",
-            "trigger": "Open the downloads UI or request latest release links.",
+            "trigger": "Open the downloads UI or request stable or Nightly release links.",
             "data": "Public request metadata, request IDs, limited diagnostic logs, and GitHub release lookup results.",
             "destination": "The Sona docs API and GitHub Releases.",
             "control": "Used only for download choices and operational diagnostics; no audio, transcript data, cookies, tokens, or full IP addresses are logged."
@@ -545,7 +561,7 @@
           "title": "What this public site handles",
           "body": "The Sona docs site is separate from the desktop transcript workflow. It serves pages, checks GitHub release metadata for download options, and may enable an AI guide assistant for documentation questions.",
           "items": [
-            "The download UI calls `/api/github-release`, which fetches public release metadata from GitHub and returns structured build links.",
+            "The download UI calls `/api/github-release` for the stable or Nightly channel; the route fetches public GitHub release metadata and returns structured desktop build links.",
             "The guide assistant sends your question, short conversation history, locale, and current guide page context to Gemini when the feature is configured.",
             "The assistant route uses signed anonymous anti-abuse cookies and may show Cloudflare Turnstile after usage thresholds.",
             "Server API logs are structured diagnostics for security events, upstream errors, and slow requests, not client analytics."

@@ -12,6 +12,24 @@ interface DownloadButtonCopy {
   viewAllLabel: string;
 }
 
+interface DownloadChannelCopy {
+  navigationAriaLabel: string;
+  nightlyHref: string;
+  nightlyLabel: string;
+  nightlyLinkLabel: string;
+  nightlyWarningDescription: string;
+  nightlyWarningTitle: string;
+  stableHref: string;
+  stableLabel: string;
+}
+
+interface AndroidDownloadCopy {
+  description: string;
+  href: string;
+  statusLabel: string;
+  title: string;
+}
+
 interface DownloadPageCopy {
   alternateHref: string;
   alternateLanguageLabel: string;
@@ -32,6 +50,7 @@ interface DownloadPageCopy {
   platformChoiceLabel: string;
   recommendedLabel: string;
   releaseLabel: string;
+  nightlyReleaseLabel: string;
   title: string;
   unavailableDescription: string;
   unavailableTitle: string;
@@ -39,11 +58,15 @@ interface DownloadPageCopy {
 }
 
 export interface DownloadContent {
+  android: AndroidDownloadCopy;
   button: DownloadButtonCopy;
+  channels: DownloadChannelCopy;
   formats: Record<DownloadFormat, string>;
   formatDescriptions: Record<DownloadFormat, string>;
   metadata: {
     description: string;
+    nightlyDescription: string;
+    nightlyTitle: string;
     title: string;
   };
   page: DownloadPageCopy;
@@ -57,7 +80,13 @@ export interface DownloadContent {
 }
 
 interface DownloadMessagesReader {
-  (key: 'metadata.description' | 'metadata.title'): string;
+  (
+    key:
+      | 'metadata.description'
+      | 'metadata.nightlyDescription'
+      | 'metadata.nightlyTitle'
+      | 'metadata.title',
+  ): string;
   raw(key: string): unknown;
 }
 
@@ -68,10 +97,24 @@ export function buildDownloadContentFromMessages(
     metadata: {
       title: t('metadata.title'),
       description: t('metadata.description'),
+      nightlyTitle: t('metadata.nightlyTitle'),
+      nightlyDescription: t('metadata.nightlyDescription'),
+    },
+    android: {
+      ...(t.raw('android') as Omit<AndroidDownloadCopy, 'href'>),
+      href: '/downloads#android',
     },
     button: {
       ...(t.raw('button') as Omit<DownloadButtonCopy, 'allBuildsHref'>),
       allBuildsHref: '/downloads',
+    },
+    channels: {
+      ...(t.raw('channels') as Omit<
+        DownloadChannelCopy,
+        'nightlyHref' | 'stableHref'
+      >),
+      nightlyHref: '/downloads/nightly',
+      stableHref: '/downloads',
     },
     page: {
       ...(t.raw('page') as Omit<
