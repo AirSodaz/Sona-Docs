@@ -1,241 +1,228 @@
-`sona`는 기본 데스크톱 실행 파일을 통해 오프라인 전사 command를 제공합니다. Packaged install은 `sona`를 shell `PATH`에 추가하지 않으므로, 설치된 앱 binary에 CLI subcommand를 붙여 실행하세요. Source build는 Cargo로 같은 command를 실행할 수 있습니다.
+`sona-cli`는 Sona의 독립 실행형 명령줄 인터페이스입니다. 데스크톱 Tauri 앱에는 더 이상 CLI 하위 명령이 포함되지 않으므로, 패키지된 데스크톱 빌드에서 명령줄 작업을 수행할 때는 `sona-cli`를 실행하세요.
 
-CLI 범위는 의도적으로 좁습니다. 단일 파일과 directory 오프라인 전사, preset model listing/download/deletion, headless HTTP API server startup을 제공합니다. Live recording, LLM polish, LLM translation은 포함하지 않습니다.
+현재 독립 실행형 CLI에는 다음 명령이 포함되어 있습니다.
+
+- `path-status`
+- `init-config`
+- `models list`
+- `models download`
+- `models delete`
+- `history list|query|transcript|snapshots|snapshot|<mutation>`
+- `export transcript`
+- `backup export|inspect|import`
+- `serve`
+- `transcribe`
+- `transcribe-live`
+
+헤드리스 HTTP API 서버는 공유 `sona-api-server` 어댑터를 사용하며, 데스크톱 앱이나 `sona-cli serve`에서 시작할 수 있습니다.
 
 ## 실행 방법
 
-- Windows: 설치 directory에서 `Sona.exe transcribe ...` 실행
-- macOS: `/Applications/Sona.app/Contents/MacOS/Sona transcribe ...` 실행
-- Linux packages: 설치 위치의 packaged `Sona` binary에 CLI subcommand를 붙여 실행
-- AppImage: mounted AppImage executable에 CLI subcommand를 붙여 실행
-- Source: `cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 -c ./sona-cli.toml`
+- 패키지 빌드: 같은 플랫폼용 설치 프로그램 출력에 포함된 `sona-cli` 바이너리 사용
+- 소스 빌드: `cargo run -p sona-cli -- <command> ...`
 
-## 자주 쓰는 command
-
-### 파일 전사
+예:
 
 ```bash
-sona transcribe ./sample.mp4 \
-  -c ./sona-cli.toml \
-  --output ./sample.srt
+cargo run -p sona-cli -- path-status .
+cargo run -p sona-cli -- init-config
+cargo run -p sona-cli -- models list --json
+cargo run -p sona-cli -- history list --app-data-dir ./sona-data --json
+cargo run -p sona-cli -- export transcript --input ./segments.json --output ./transcript.vtt
+cargo run -p sona-cli -- serve --host 127.0.0.1 --port 14200
+cargo run -p sona-cli -- transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
+cargo run -p sona-cli -- transcribe-live --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17
 ```
 
-`--output`이 없으면 transcription은 JSON을 `stdout`에 씁니다. `--output`이 있으면 `--format`이 제공되지 않는 한 파일 확장자에서 format을 추론합니다. 기존 output file은 기본적으로 보호됩니다. 덮어쓸 의도가 있을 때만 `--force`를 전달하세요.
+## 명령
 
-### Directory 전사
+### `path-status`
+
+공유 런타임 상태 계약으로 파일 시스템 경로 하나를 확인하고 JSON을 `stdout`에 출력합니다.
 
 ```bash
-sona transcribe \
-  --input-dir ./media \
-  --output-dir ./transcripts \
-  --format srt \
-  --recursive \
-  --jobs 1 \
-  -c ./sona-cli.toml
+sona-cli path-status ./models
 ```
 
-Directory mode는 지원되는 media file마다 transcript 하나를 `--output-dir`에 씁니다. 기본적으로 direct children만 scan하며, subdirectories까지 포함하려면 `--recursive`를 추가합니다. Transcript content는 파일에 쓰이고, JSON success/failure summary는 `stdout`에 출력됩니다.
+출력 예:
 
-여러 input file이나 glob pattern을 전달할 수도 있습니다. 이 경우 directory mode와 같은 batch output planning을 사용하며 `--output-dir`가 필요합니다.
-
-```bash
-sona transcribe ./media/*.wav ./media/interview.mp4 --output-dir ./transcripts --format srt
+```json
+{
+  "kind": "directory",
+  "path": "C:/work/models",
+  "error": null
+}
 ```
-
-### Model list, download, delete
-
-```bash
-sona models list --mode offline --type whisper
-sona models list --language zh --installed
-sona models list --json
-sona models download sherpa-onnx-whisper-turbo
-sona models delete sherpa-onnx-whisper-turbo
-```
-
-`models list`는 기본적으로 읽기 쉬운 table을 출력합니다. Script가 `install_path`를 포함한 전체 machine-readable shape를 필요로 하면 `--json`을 사용하세요.
-`models download`는 선택한 preset이 필요로 하는 `silero-vad`나 default punctuation model 같은 companion model을 자동으로 다운로드합니다.
-`models delete`는 지정한 model만 제거합니다. Companion model은 자동 삭제하지 않습니다.
-
-### API server 시작
-
-```bash
-sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
-```
-
-HTTP API endpoint와 request example은 [HTTP API 가이드](guide:api-guide)를 계속 읽으세요.
-
-### Config template 만들기
-
-```bash
-sona init-config
-sona init-config ./sona-cli.toml --force
-```
-
-`init-config`는 기본적으로 현재 디렉터리에 영어 주석이 달린 TOML 시작 템플릿인 `sona-cli.toml`을 생성합니다. 다른 위치에 작성하려면 경로를 전달하십시오. 기존 파일은 기본적으로 보호되며, 덮어쓰려면 `--force`를 전달해야 합니다. `transcribe` 또는 `serve` 명령어에서 이 파일을 사용하기 전에 필요한 키의 주석을 해제하십시오. `transcribe`를 실행하려면 `model_id`가 활성화되어 있어야 합니다. 이 템플릿은 `[transcribe]` 및 `[serve]` 섹션을 사용하여 설정을 네임스페이스로 구분하며, 최상위 키는 두 명령어의 전역 기본값 역할을 합니다.
-
-## Config file
-
-`-c` 또는 `--config`로 TOML file을 전달합니다. Command-line flag는 config file 값을 override합니다. `sona init-config`를 사용하여 주석이 달린 시작 템플릿을 생성한 다음, 사용하기 전에 필요한 키의 주석을 해제하여 사용하십시오.
-
-Generated template의 minimal excerpt:
-
-```toml
-# Top-level keys are shared defaults for both commands.
-# Uncomment the same key inside [transcribe] or [serve] to override it per command.
-
-# models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
-# gpu_acceleration = "auto"
-# vad_model_id = "silero-vad"
-# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-
-[transcribe]
-# models_dir = "..."
-# gpu_acceleration = "auto"
-# vad_model_id = "silero-vad"
-# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-# model_id = "sherpa-onnx-whisper-turbo"
-# language = "auto"
-# threads = 4
-# enable_itn = false
-# vad_buffer_size = 5.0
-# hotwords = "Sona,offline ASR"
-# format = "srt"
-# quiet = false
-# jobs = 1
-
-[serve]
-# models_dir = "..."
-# gpu_acceleration = "auto"
-# vad_model_id = "silero-vad"
-# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-# host = "127.0.0.1"
-# port = 14200
-# api_key = ""
-# ip_whitelist = "localhost"
-# max_streaming = 2
-# max_concurrent = 2
-# max_queue_size = 100
-# max_upload_size_mb = 50
-# job_ttl_minutes = 60
-```
-
-### `transcribe` config keys
-
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `models_dir` | Optional | Filesystem path | Desktop app models directory, when inferable | CLI가 desktop model을 찾지 못할 때 명시적으로 전달하세요. |
-| `model_id` | Required unless `--model-id` is passed | Offline preset model id | None | Id를 찾으려면 `sona models list --mode offline`을 사용하세요. |
-| `vad_model_id` | Optional | Preset model id | `silero-vad` when required | 선택한 model이 VAD를 필요로 할 때 사용하며 default를 override합니다. |
-| `punctuation_model_id` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` when required | 선택한 model이 punctuation을 필요로 할 때 사용하며 default를 override합니다. |
-| `language` | Optional | `auto` or a model language code, such as `zh`, `en`, `ja` | `auto` | Automatic language detection을 override합니다. |
-| `threads` | Optional | Integer greater than `0` | `4` | Recognizer thread count입니다. |
-| `enable_itn` | Optional | `true` or `false` | `false` | Inverse text normalization을 활성화합니다. |
-| `hotwords` | Optional | Comma-separated words | None | Custom ASR hotwords입니다. 현재 Transducer와 Qwen3 model에서 지원됩니다. |
-| `quiet` | Optional | `true` or `false` | `false` | 설정하면 transcription progress를 숨깁니다. CLI `--quiet`도 이를 활성화합니다. |
-| `jobs` | Optional | Integer greater than `0` | `1` | Directory, multiple-input, glob mode에서 최대 concurrent file jobs입니다. CLI `--jobs`가 override합니다. |
-| `vad_buffer_size` | Optional | Number greater than `0` | `5.0` | VAD buffer size in seconds입니다. |
-| `gpu_acceleration` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Windows에서 `auto`는 CUDA를 먼저 시도하고, bundled runtime이 DirectML을 지원하면 DirectML을 시도한 뒤 CPU로 fallback합니다. GPU acceleration을 끄려면 `cpu`를 사용하세요. |
-| `format` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout or in directory mode, otherwise inferred from `--output` | Output extension inference를 override합니다. |
-
-### `serve` config keys
-
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `host` | Optional | Bind address | `127.0.0.1` | 네트워크에 노출하려면 0.0.0.0을 사용하십시오. |
-| `port` | Optional | TCP port `0` to `65535` | `14200` | API server port입니다. |
-| `api_key` | Optional | String | Empty | Empty면 request가 Bearer auth로 보호되지 않습니다. |
-| `models_dir` | Optional | Filesystem path | Desktop app models directory, when inferable | Installed models를 resolve할 때 사용합니다. |
-| `ip_whitelist` | Optional | Comma-separated rules | `localhost` | `localhost`, exact IPs, CIDR, `*`, `192.168.*` 같은 IPv4 wildcard를 지원합니다. |
-| `max_streaming` | Optional | Non-negative integer | `2` | 최대 concurrent streaming WebSocket connections입니다. |
-| `max_concurrent` | Optional | Non-negative integer | `2` | 최대 concurrent batch jobs입니다. |
-| `max_queue_size` | Optional | Non-negative integer | `100` | `0`이면 queue가 사실상 unlimited입니다. |
-| `max_upload_size_mb` | Optional | Non-negative integer | `50` | `0`이면 upload size limit을 비활성화합니다. |
-| `job_ttl_minutes` | Optional | Non-negative integer | `60` | `0`이면 completed/failed job cleanup을 비활성화합니다. |
-| `gpu_acceleration` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Local batch와 streaming jobs의 server-level default입니다. Windows `auto`는 CUDA, available DirectML, CPU 순서로 사용합니다. |
-| `vad_model_id` | Optional | Preset model id | `silero-vad` | API server jobs의 default VAD companion model입니다. |
-| `punctuation_model_id` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API server jobs의 default punctuation companion입니다. |
-
-## Parameters
-
-### Global
-
-```text
-sona
-  -V, --version
-  -v, --verbose
-  -h, --help
-  help
-```
-
-Sona version을 출력하려면 `-V` 또는 `--version`을 사용합니다. 자세한 diagnostic logs를 켜려면 subcommand 앞에 `-v` 또는 `--verbose`를 둡니다. Command help를 보려면 `-h`, `--help`, `help`를 사용하세요.
-
-```bash
-sona --version
-sona -V
-sona -v models list
-sona --verbose transcribe ./sample.mp4 -c ./sona-cli.toml
-sona transcribe --help
-```
-
-Verbose diagnostics는 `stderr`로 출력됩니다. `models list`와 `--output` 없는 `transcribe`의 table 또는 JSON output 같은 command output은 계속 `stdout`에 남아 다른 도구로 pipe할 수 있습니다.
-
-Advanced wrapper와 tests는 recognized CLI subcommand 없이 executable이 시작되더라도 CLI mode를 강제하려면 `SONA_FORCE_CLI=1`을 설정할 수 있습니다.
-
-Shell completion script는 `sona completions <shell>`로 생성합니다. 지원 shell은 `bash`, `zsh`, `fish`, `powershell`, `elvish`이며 script는 `stdout`으로 출력됩니다.
-
-### `transcribe`
-
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `<input>...` | Required unless `--input-dir` is passed | Local audio/video file paths or glob patterns | None | Input 하나는 single-file mode입니다. Multiple inputs 또는 glob patterns는 batch mode를 쓰며 `--output-dir`가 필요합니다. |
-| `--input-dir <dir>` | Required for directory mode | Directory path | None | Directory 안의 supported media files를 전사합니다. |
-| `-c, --config <path>` | Optional | TOML file path | None | Config에서 defaults를 로드합니다. |
-| `--output <path>` | Optional | Filesystem path | `stdout` | Single-file mode 전용 output file path입니다. 파일이 이미 있으면 `--force` 없이는 error입니다. |
-| `--output-dir <dir>` | Required with `--input-dir`, multiple inputs, or glob patterns | Directory path | None | Input file마다 transcript 하나를 씁니다. Planned output이 이미 있으면 `--force` 없이는 error입니다. |
-| `--recursive` | Optional | Flag | Off | Subdirectories를 scan하고 relative output paths를 보존합니다. |
-| `--jobs <n>` | Optional | Integer greater than `0` | `jobs` config or `1` | Batch mode의 최대 concurrent file jobs입니다. |
-| `--format <format>` | Optional | `json`, `txt`, `srt`, `vtt`, `md` | `json` on stdout or in directory mode, otherwise inferred from `--output` | Config와 output extension inference를 override합니다. |
-| `--language <code>` | Optional | `auto` or a model language code | `auto` | Config를 override합니다. |
-| `--model-id <id>` | Required unless `model_id` is configured | Offline preset model id | None | Main transcription model입니다. |
-| `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Config를 override합니다. |
-| `--vad-model-id <id>` | Optional | Preset model id | `silero-vad` when required | Default VAD companion을 override합니다. |
-| `--punctuation-model-id <id>` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` when required | Default punctuation companion을 override합니다. |
-| `--threads <n>` | Optional | Integer greater than `0` | `4` | Config를 override합니다. |
-| `--enable-itn` | Optional | Flag | `false` | `--disable-itn`과 함께 쓸 수 없습니다. |
-| `--disable-itn` | Optional | Flag | `false` | `enable_itn = true`를 override하며 `--enable-itn`과 함께 쓸 수 없습니다. |
-| `--hotwords <words>` | Optional | Comma-separated words | None | `hotwords`를 override합니다. 현재 Transducer와 Qwen3 model에서 지원됩니다. |
-| `--gpu-acceleration <provider>` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Config를 override합니다. Windows에서 `auto`는 CUDA를 먼저 시도하고, bundled runtime이 DirectML을 지원하면 DirectML을 시도한 뒤 CPU로 fallback합니다. Explicit `directml`은 manual DirectML request로 유지됩니다. |
-| `<model_id>` | Required | Known preset model id | None | 삭제할 model입니다. |
-| `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Target models directory입니다. |
-| `--yes` | Optional | Flag | Off | Interactive confirmation prompt를 건너뜁니다. |
-| Missing install path | No | Known but not installed preset | Successful no-op | `stderr`에 notice를 출력하고 status 0으로 종료합니다. |
-| Companion deletion | No | Required VAD and punctuation presets | Not deleted | 더 이상 필요 없으면 companion model을 명시적으로 삭제하세요. |
 
 ### `init-config`
 
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `[PATH]` | Optional | TOML file path | Current directory의 `sona-cli.toml` | Target template path입니다. Parent directories는 필요하면 생성됩니다. |
-| `--force` | Optional | Flag | Off | Existing config file overwrite를 허용합니다. |
-| Output | Always | Status text | `stderr` | Generated TOML은 `stdout`이 아니라 target file에 쓰입니다. |
+독립 실행형 CLI 작업에 사용할 주석 포함 초기 설정 파일을 만듭니다.
+
+```bash
+sona-cli init-config
+sona-cli init-config ./sona-cli.toml --force
+```
+
+- 기본 출력 경로: `./sona-cli.toml`
+- `--force`를 지정하지 않으면 기존 파일을 덮어쓰지 않습니다
+- 상태 메시지는 `stderr`에 기록됩니다
+
+### `models list`
+
+프리셋 모델을 나열하고 모드, 유형, 언어 또는 설치 상태로 필터링합니다.
+
+```bash
+sona-cli models list
+sona-cli models list --mode offline --type whisper
+sona-cli models list --language zh --installed
+sona-cli models list --json
+```
+
+`--json`은 `install_path`를 포함한 전체 기계 판독형 구조를 출력합니다.
+
+### `models download`
+
+프리셋 모델 하나를 확인된 모델 디렉터리에 다운로드합니다.
+
+```bash
+sona-cli models download sherpa-onnx-whisper-turbo
+sona-cli models download silero-vad --models-dir ./models --yes
+```
+
+선택한 프리셋에 보조 리소스가 필요하면 `sona-cli`가 필요한 VAD 또는 구두점 모델도 함께 다운로드합니다.
+
+### `models delete`
+
+설치된 프리셋 모델 하나를 삭제합니다.
+
+```bash
+sona-cli models delete sherpa-onnx-whisper-turbo --yes
+sona-cli models delete silero-vad --models-dir ./models --yes
+```
+
+보조 모델은 자동으로 삭제되지 않습니다.
+
+### `history`
+
+공유 기록 서비스를 통해 기존 Sona 앱 데이터 디렉터리를 조회하거나 변경합니다.
+
+```bash
+sona-cli history list --app-data-dir ./sona-data --limit 50 --offset 0
+sona-cli history query --app-data-dir ./sona-data --input ./workspace-query.json --json
+sona-cli history transcript --app-data-dir ./sona-data --history-id <ID> --json
+sona-cli history snapshots --app-data-dir ./sona-data --history-id <ID>
+sona-cli history snapshot --app-data-dir ./sona-data --history-id <ID> --snapshot-id <ID> --json
+sona-cli history create-live-draft --app-data-dir ./sona-data --id <ID> --audio-extension wav --json
+sona-cli history complete-live-draft --app-data-dir ./sona-data --history-id <ID> --segments ./segments.json --duration 12.5 --json
+sona-cli history save-recording --app-data-dir ./sona-data --input ./recording.json --audio ./recording.wav --json
+sona-cli history import-file --app-data-dir ./sona-data --input ./history-import.json --json
+sona-cli history update-transcript --app-data-dir ./sona-data --history-id <ID> --segments ./segments.json --json
+sona-cli history create-snapshot --app-data-dir ./sona-data --history-id <ID> --reason polish --segments ./segments.json --json
+sona-cli history update-meta --app-data-dir ./sona-data --history-id <ID> --updates ./history-meta.json
+sona-cli history assign-project --app-data-dir ./sona-data --history-id <ID> --project-id <PROJECT_ID>
+sona-cli history reassign-project --app-data-dir ./sona-data --current-project-id <PROJECT_ID>
+sona-cli history delete --app-data-dir ./sona-data --history-id <ID>
+```
+
+- `query`는 Tauri 및 UniFFI와 같은 camelCase `HistoryWorkspaceQueryRequest` JSON 계약을 받습니다.
+- `list`, `query`, `snapshots`는 기본적으로 표를 사용하며, `--json`은 완전한 기계 판독형 응답을 유지합니다.
+- `transcript`와 `snapshot`은 기본적으로 세그먼트 표를 표시합니다.
+- `recording.json`에는 `segments`, `duration`, 선택적 `projectId`와 `audioExtension`이 들어갑니다. 오디오 바이트는 `--audio`에서만 읽습니다.
+- `history-import.json`은 camelCase `HistorySaveImportedFileRequest` 계약을 사용합니다. `--segments` 파일은 JSON 배열이고 `--updates`는 JSON 객체입니다.
+- `assign-project` 또는 `reassign-project`에서 대상 프로젝트 옵션을 생략하면 기록을 Inbox로 이동합니다.
+- 앱 데이터 디렉터리는 미리 존재해야 합니다. 잘못된 변경 입력은 지연 초기화되는 SQLite 어댑터가 데이터베이스를 열기 전에 거부됩니다.
+
+### `export transcript`
+
+기존 전사 세그먼트 JSON 배열을 공유 코어 내보내기 서비스로 내보냅니다.
+
+```bash
+sona-cli export transcript --input ./segments.json --output ./transcript.vtt
+sona-cli export transcript --input ./segments.json --output ./transcript.srt --mode bilingual
+sona-cli export transcript --input ./segments.json --output ./transcript.txt --format txt --json
+```
+
+- `--format`을 지정하지 않으면 출력 파일 확장자에서 형식을 추론합니다.
+- 지원 형식: `json`, `txt`, `srt`, `vtt`, `md`
+- 지원 모드: `original`(기본값), `translation`, `bilingual`
+- `--json`은 출력 경로와 기록된 바이트 수를 기계 판독형 JSON으로 출력합니다.
+
+### `backup`
+
+지원되는 앱 상태 범위 다섯 개를 모두 내보내고, 앱 데이터를 열지 않은 채 보관 파일을 검증하거나, 보관 파일에서 백업된 상태를 원자적으로 교체합니다.
+
+```bash
+sona-cli backup export --app-data-dir ./sona-data --output ./sona-backup.sona-backup --app-version 0.8.0
+sona-cli backup inspect --archive ./sona-backup.sona-backup
+sona-cli backup import --app-data-dir ./sona-data --archive ./sona-backup.sona-backup --default-rule-set-name "Default Rules" --confirm-replace
+```
+
+가져오기는 `config`, `workspace`, `history`, `automation`, `analytics` 범위를 원자적으로 교체합니다. `--confirm-replace`가 반드시 필요하며 대화형 프롬프트를 열지 않습니다. 작업 원장과 원본 오디오는 백업 보관 파일에 포함되지 않습니다.
 
 ### `serve`
 
-| Parameter / config key | Required | Range | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `-c, --config <path>` | Optional | TOML file path | None | Config에서 defaults를 로드합니다. |
-| `--host <ip>` | Optional | Bind address | `0.0.0.0` | Config를 override합니다. |
-| `--port <port>` | Optional | TCP port `0` to `65535` | `14200` | Config를 override합니다. |
-| `--api-key <key>` | Optional | String | Empty | Empty면 Bearer auth가 없습니다. |
-| `--models-dir <path>` | Optional | Filesystem path | Desktop app models directory, when inferable | Config를 override합니다. |
-| `--ip-whitelist <rules>` | Optional | Comma-separated rules | `localhost` | `localhost`, exact IPs, CIDR, `*`, `192.168.*` 같은 IPv4 wildcard를 지원합니다. |
-| `--max-streaming <n>` | Optional | Non-negative integer | `2` | 최대 concurrent streaming connections입니다. |
-| `--max-concurrent <n>` | Optional | Non-negative integer | `2` | 최대 concurrent batch jobs입니다. |
-| `--max-queue-size <n>` | Optional | Non-negative integer | `100` | `0`이면 queue가 사실상 unlimited입니다. |
-| `--max-upload-size-mb <n>` | Optional | Non-negative integer | `50` | `0`이면 upload size limit을 비활성화합니다. |
-| `--job-ttl-minutes <n>` | Optional | Non-negative integer | `60` | `0`이면 completed/failed job cleanup을 비활성화합니다. |
-| `--gpu-acceleration <provider>` | Optional | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Server-level default입니다. HTTP API request는 request별 GPU override를 받지 않습니다. Windows `auto`는 CUDA, available DirectML, CPU 순서로 사용합니다. |
-| `--vad-model-id <id>` | Optional | Preset model id | `silero-vad` | API server jobs의 default VAD companion입니다. |
-| `--punctuation-model-id <id>` | Optional | Preset model id | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API server jobs의 default punctuation companion입니다. |
+독립 실행형 CLI에서 공유 로컬 HTTP API 서버를 실행합니다.
 
-전체 clap-generated help text는 `sona <command> --help`로 확인하세요.
+```bash
+sona-cli serve
+sona-cli serve --config ./sona-cli.toml
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key local-secret
+```
+
+- Ctrl+C를 누를 때까지 실행됩니다
+- 데스크톱 앱과 같은 로컬 일괄 전사 API 서버 어댑터를 재사용합니다
+- `--config`는 `init-config`가 생성한 `[serve]` 섹션을 읽습니다
+- CLI에서 로컬 REST 전사를 사용할 수 있습니다. `serve`의 WebSocket 스트리밍 라우터와 온라인 ASR 연동에는 여전히 데스크톱 런타임이 필요합니다. 독립 실행형 로컬 스트리밍에는 `transcribe-live`를 사용하세요.
+
+### `transcribe`
+
+오프라인 ASR 어댑터를 사용해 로컬 오디오 또는 비디오 파일 하나를 전사합니다.
+
+```bash
+sona-cli transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
+sona-cli transcribe ./sample.wav --config ./sona-cli.toml --output ./out.srt
+sona-cli transcribe ./sample.wav --format txt --quiet
+```
+
+- `--output`을 생략하면 기본적으로 `stdout`에 출력합니다
+- 지원 내보내기 형식: `json`, `txt`, `srt`, `vtt`, `md`
+- `--config`는 `init-config`가 생성한 주석 포함 `sona-cli.toml` 템플릿을 읽습니다
+- `--force`를 지정하면 기존 출력 파일을 덮어쓸 수 있습니다
+
+### `transcribe-live`
+
+설치된 로컬 스트리밍 모델로 마이크 또는 stdin 원시 오디오를 실시간 전사합니다.
+
+```bash
+sona-cli transcribe-live --list-input-devices
+sona-cli transcribe-live \
+  --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17 \
+  --device "Studio Mic" \
+  --duration 60 \
+  --output ./live.srt
+ffmpeg -i sample.wav -f s16le -ac 1 -ar 16000 - | \
+  sona-cli transcribe-live \
+    --input stdin \
+    --model-id sherpa-onnx-streaming-paraformer-trilingual-zh-cantonese-en \
+    --output-format ndjson
+```
+
+- 이 명령은 로컬 오프라인 ASR만 지원합니다. 선택한 프리셋은 `streaming` 모드를 선언해야 하며 확인된 모델 디렉터리에 설치되어 있어야 합니다.
+- `--device`에 `--list-input-devices`가 반환한 정확한 이름을 지정하지 않으면 마이크 입력은 기본 CPAL 입력 장치를 사용합니다.
+- `--input stdin`은 헤더 없는 16 kHz, 모노, 부호 있는 16-bit little-endian PCM을 받습니다. 끝에 불완전한 샘플이 있으면 입력 오류가 됩니다.
+- TTY 텍스트 출력은 현재 전사를 제자리에서 새로 고칩니다. 리디렉션된 텍스트 출력은 flush 후 최종 스냅샷을 한 번만 기록합니다.
+- `--output-format ndjson`은 한 줄에 JSON 객체 하나를 출력하고 각 이벤트마다 flush합니다. 이벤트 유형은 `started`, `update`, `stopped`, 런타임 오류 전용 `error`이며 전사 필드는 camelCase를 사용합니다.
+- Ctrl+C, stdin EOF, `--duration`은 같은 정상 종료 절차를 수행합니다. 캡처 오디오를 비우고 ASR을 flush한 뒤 중지하며, 필요하면 최종 파일을 쓰고 `stopped`를 출력한 다음 종료 코드 0으로 끝납니다.
+- `--output`은 최종 스냅샷을 `json`, `txt`, `srt`, `vtt`, `md`로 기록합니다. `--format`이 없으면 확장자가 형식을 선택하며, 기존 파일을 교체하려면 `--force`가 필요합니다.
+- `--config`는 `sona-cli.toml`의 `[transcribe_live]`를 읽습니다. 명령줄 값이 이 섹션을 덮어쓰며, 이 섹션은 공유 최상위 ASR 기본값을 상속합니다. 최종 출력 경로, 내보내기 형식, 덮어쓰기 동작은 명령줄에서만 지정할 수 있습니다.
+- 검증 오류는 종료 코드 2, 모델 오류는 3, 입력 또는 장치 오류는 5를 사용합니다. 런타임 NDJSON 오류도 0이 아닌 코드로 종료하기 전에 `error` 이벤트로 출력됩니다.
+
+## 전역 플래그
+
+```text
+sona-cli
+  -V, --version
+  -h, --help
+```
+
+명령별 사용법은 `sona-cli <command> --help`에서 확인하세요.

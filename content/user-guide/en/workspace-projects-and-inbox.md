@@ -23,9 +23,10 @@ Use `Workspace` when you want to organize saved recordings and imports without l
 ## Open and organize saved items
 
 1. Click any saved item to open it in the built-in detail pane and continue editing without leaving `Workspace`.
-2. Use search, filters, sort, and `List View` / `Grid View` / `Table View` to narrow the current scope.
-3. Turn on selection mode if you want to move items between `Inbox` and projects, or delete several items at once.
-4. Use the project header buttons when you want to start `Live Record` or `Batch Import` while keeping the current project context.
+2. Right-click a project for `Open` or `Project Settings`, and right-click a saved item for `Open`, `Rename`, or `Delete`. The keyboard context-menu key or `Shift + F10` opens the same actions for the focused row.
+3. Use search, filters, sort, and `List View` / `Grid View` / `Table View` to narrow the current scope.
+4. Turn on selection mode if you want to move items between `Inbox` and projects, or delete several items at once.
+5. Use the project header buttons when you want to start `Live Record` or `Batch Import` while keeping the current project context.
 
 ## Adjust `Project Settings`
 

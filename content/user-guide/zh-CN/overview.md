@@ -12,7 +12,7 @@ Sona 是一款以隐私优先为目标的转录编辑器，适合希望默认在
 - 需要一份贴着转录存在的归纳，而不是改写正文： [AI 摘要](guide:ai-summary)
 - 主要想看悬浮字幕或在其他应用里直接听写文字： [实时字幕与语音输入法](guide:live-caption-and-voice-typing)
 - 主要想调 `热词`、`文本替换`、`说话人档案` 或 `Auto-Polish`： [词汇与高级设置](guide:vocabulary-and-advanced-settings)
-- 主要想从终端做离线批量转录： [CLI 指南](guide:cli-guide)
+- 主要想从终端进行本地文件/实时转录或自动化操作： [CLI 指南](guide:cli-guide)
 - 遇到具体阻塞： [常见问题与排障](guide:faq)
 
 ## 一句话看懂 Sona 的完整流程
@@ -36,7 +36,7 @@ Sona 是一款以隐私优先为目标的转录编辑器，适合希望默认在
 
 ## 其他你可能会用到的文档
 
-- 命令行批量转录： [CLI 指南](guide:cli-guide)
+- 独立 CLI 的转录、模型、历史、导出、备份与服务工作流： [CLI 指南](guide:cli-guide)
 - 本地 HTTP API 集成： [HTTP API 指南](guide:api-guide)
 - 源码构建与开发命令： [项目 README](readme)
 

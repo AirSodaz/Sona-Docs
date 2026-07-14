@@ -17,10 +17,11 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 1. Read through the segment list in the editor.
 2. Click a timestamp to seek playback to that moment.
 3. Double-click segment text, or use the edit action, to enter editing mode.
-4. Press `Enter` to save the current segment.
-5. Press `Shift + Enter` to split the current segment at the cursor.
-6. Use the merge action to combine a segment with the next one.
-7. Use the delete action to remove a segment after confirmation.
+4. Right-click a read-only segment for `Copy` and `Select All`. While editing, right-click for `Cut`, `Copy`, `Paste`, `Select All`, `Bold`, `Italic`, and `Underline`; the keyboard context-menu key or `Shift + F10` opens the same menu.
+5. Press `Enter` to save the current segment.
+6. Press `Shift + Enter` to split the current segment at the cursor.
+7. Use the merge action to combine a segment with the next one.
+8. Use the delete action to remove a segment after confirmation.
 
 ## Review speaker labels
 

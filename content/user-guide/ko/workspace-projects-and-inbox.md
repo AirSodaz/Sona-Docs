@@ -23,9 +23,10 @@
 ## 저장된 항목 열기와 정리
 
 1. 저장된 항목을 클릭하면 내장 detail pane에서 열리고 `Workspace`를 떠나지 않은 채 편집을 계속할 수 있습니다.
-2. 검색, 필터, 정렬, `List View` / `Grid View` / `Table View`로 현재 범위를 좁힙니다.
-3. 항목을 `Inbox`와 프로젝트 사이에서 이동하거나 여러 항목을 한 번에 삭제하려면 선택 모드를 켭니다.
-4. 현재 프로젝트 context를 유지한 채 `Live Record` 또는 `Batch Import`를 시작하려면 프로젝트 헤더 버튼을 사용합니다.
+2. 프로젝트를 마우스 오른쪽 버튼으로 클릭하면 `Open` 또는 `Project Settings`를, 저장된 항목을 클릭하면 `Open`, `Rename`, `Delete`를 사용할 수 있습니다. 해당 행에 포커스를 두고 키보드 컨텍스트 메뉴 키 또는 `Shift + F10`을 눌러도 같은 동작이 열립니다.
+3. 검색, 필터, 정렬, `List View` / `Grid View` / `Table View`로 현재 범위를 좁힙니다.
+4. 항목을 `Inbox`와 프로젝트 사이에서 이동하거나 여러 항목을 한 번에 삭제하려면 선택 모드를 켭니다.
+5. 현재 프로젝트 context를 유지한 채 `Live Record` 또는 `Batch Import`를 시작하려면 프로젝트 헤더 버튼을 사용합니다.
 
 ## `Project Settings` 조정
 

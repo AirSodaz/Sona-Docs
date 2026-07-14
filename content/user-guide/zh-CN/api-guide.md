@@ -15,13 +15,13 @@ API 服务可以通过两种方式启动。
 
 ### 命令行无头模式
 
-也可以通过命令行无头启动 Sona：
+也可以通过独立的 `sona-cli` 启动同一个 API server adapter：
 
 ```bash
-sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
 ```
 
-GPU 硬件加速通过 GUI 模型设置或 `sona serve --gpu-acceleration` 作为服务级默认值配置。Windows 上 `auto` 会先尝试 CUDA；当前打包运行时支持 DirectML 时再尝试 DirectML，最后回退 CPU。批量和流式 API 请求不支持按请求覆盖 GPU 配置。
+GPU 硬件加速通过 GUI 模型设置或 `sona-cli serve --gpu-acceleration` 作为服务级默认值配置。Windows 上 `auto` 会先尝试 CUDA；当前打包运行时支持 DirectML 时再尝试 DirectML，最后回退 CPU。批量和流式 API 请求不支持按请求覆盖 GPU 配置。
 
 完整 `serve` 参数表见 [CLI 指南](guide:cli-guide)。
 

@@ -12,7 +12,7 @@ Sona 是一款以隱私優先為目標的轉錄編輯器，適合希望預設在
 - 需要一份貼著轉錄存在的歸納，而不是改寫正文： [AI 摘要](guide:ai-summary)
 - 主要想看懸浮字幕或在其他應用程式裡直接聽寫文字： [即時字幕與語音輸入法](guide:live-caption-and-voice-typing)
 - 主要想調 `熱詞`、`文字替換`、`說話者檔案` 或 `Auto-Polish`： [詞彙與進階設定](guide:vocabulary-and-advanced-settings)
-- 主要想從終端機做離線批次轉錄： [CLI 指南](guide:cli-guide)
+- 主要想從終端機進行本機檔案/即時轉錄或自動化操作： [CLI 指南](guide:cli-guide)
 - 遇到具體阻塞： [常見問題與疑難排解](guide:faq)
 
 ## 一句話看懂 Sona 的完整流程
@@ -36,7 +36,7 @@ Sona 是一款以隱私優先為目標的轉錄編輯器，適合希望預設在
 
 ## 其他您可能會用到的文件
 
-- 命令列批次轉錄： [CLI 指南](guide:cli-guide)
+- 獨立 CLI 的轉錄、模型、歷史、匯出、備份與服務工作流程： [CLI 指南](guide:cli-guide)
 - 本機 HTTP API 整合： [HTTP API 指南](guide:api-guide)
 - 原始碼建構與開發命令： [專案 README](readme)
 

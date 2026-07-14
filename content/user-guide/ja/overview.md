@@ -14,7 +14,7 @@ Sona は、音声の文字起こしをできるだけ自分のマシン上で完
 - 本文を書き換えずに要約だけ作りたい: [AI Summary](guide:ai-summary)
 - フローティング字幕や他のアプリへの Voice Typing を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
 - Hotwords、Text Replacement、Speaker Profiles、Auto-Polish を調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
-- ターミナルからオフラインのバッチ文字起こしを実行したい: [CLI ガイド](guide:cli-guide)
+- ターミナルからローカルファイル/リアルタイム文字起こしや自動化を実行したい: [CLI ガイド](guide:cli-guide)
 - 問題の切り分けやよくある詰まりを確認したい: [FAQ とトラブルシューティング](guide:faq)
 
 ## Sona の基本ワークフロー
@@ -38,7 +38,7 @@ AI Summary、Live Caption、Voice Typing、Speaker Profiles、語彙調整は、
 
 ## 関連ドキュメント
 
-- コマンドラインからのバッチ文字起こし: [CLI ガイド](guide:cli-guide)
+- スタンドアロン CLI の文字起こし、モデル、履歴、書き出し、バックアップ、サーバーワークフロー: [CLI ガイド](guide:cli-guide)
 - ローカル HTTP API 連携: [HTTP API ガイド](guide:api-guide)
 - ソースからのビルドと開発コマンド: [プロジェクトの README](readme)
 

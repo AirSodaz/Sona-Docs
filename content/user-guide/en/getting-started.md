@@ -50,4 +50,4 @@ If Windows SmartScreen, macOS Gatekeeper, or Linux executable-permission prompts
 - You can change models later in `Settings > Model Settings`.
 - You can change the default microphone later in `Settings > Input Device`.
 - If model download stalls, check that your internet connection is available and the model host can be reached, then retry onboarding. If it still fails, use `Settings > Model Settings` to download or select models, then open `Settings > General > Diagnostics` for details.
-- If you want command-line batch transcription later, continue to the in-site [CLI Guide](guide:cli-guide).
+- If you later want standalone CLI file/live transcription, model management, history/export/backup automation, or the local API server, continue to the in-site [CLI Guide](guide:cli-guide).

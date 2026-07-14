@@ -1,243 +1,228 @@
-Sona は、デスクトップアプリの実行ファイルを通じて、オフライン文字起こし用の CLI コマンドを提供しています。パッケージ版インストーラーでインストールした場合、`sona` がシェルの `PATH` に自動追加されないことがあるため、インストール済みアプリのバイナリを直接指定して CLI サブコマンドを実行してください。ソースからビルドする場合は、Cargo から同じコマンドを実行できます。
+`sona-cli` は Sona のスタンドアロン CLI です。デスクトップ版 Tauri アプリには CLI サブコマンドが組み込まれなくなったため、パッケージ版でコマンドライン操作を行う場合は `sona-cli` を起動してください。
 
-CLI の範囲は意図的に絞られています。現在含まれるのは、単一ファイルとディレクトリのオフライン文字起こし、プリセットモデルの一覧表示 / ダウンロード / 削除、ヘッドレス HTTP API サーバー起動です。Live Record、LLM Polish、Translate は CLI には含まれません。
+現在のスタンドアロン CLI には、次のコマンドが含まれます。
+
+- `path-status`
+- `init-config`
+- `models list`
+- `models download`
+- `models delete`
+- `history list|query|transcript|snapshots|snapshot|<mutation>`
+- `export transcript`
+- `backup export|inspect|import`
+- `serve`
+- `transcribe`
+- `transcribe-live`
+
+ヘッドレス HTTP API サーバーは共通の `sona-api-server` アダプターを使用しており、デスクトップアプリまたは `sona-cli serve` から起動できます。
 
 ## 実行方法
 
-- Windows: インストールディレクトリから `Sona.exe transcribe ...` を実行します。
-- macOS: `/Applications/Sona.app/Contents/MacOS/Sona transcribe ...` を実行します。
-- Linux パッケージ: インストール先の `Sona` バイナリに CLI サブコマンドを付けて実行します。
-- AppImage: マウントした AppImage の実行ファイルを指定し、CLI サブコマンドを付けて実行します。
-- ソースからビルド: `cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 -c ./sona-cli.toml` を実行します。
+- パッケージ版：同じプラットフォーム向けインストーラー出力に同梱されている `sona-cli` バイナリを使用
+- ソース版：`cargo run -p sona-cli -- <command> ...`
 
-## 主なコマンド
-
-### ファイルを文字起こしする
+例：
 
 ```bash
-sona transcribe ./sample.mp4 \
-  -c ./sona-cli.toml \
-  --output ./sample.srt
+cargo run -p sona-cli -- path-status .
+cargo run -p sona-cli -- init-config
+cargo run -p sona-cli -- models list --json
+cargo run -p sona-cli -- history list --app-data-dir ./sona-data --json
+cargo run -p sona-cli -- export transcript --input ./segments.json --output ./transcript.vtt
+cargo run -p sona-cli -- serve --host 127.0.0.1 --port 14200
+cargo run -p sona-cli -- transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
+cargo run -p sona-cli -- transcribe-live --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17
 ```
 
-`--output` を指定しない場合、文字起こし結果は JSON として標準出力（`stdout`）に出力されます。`--output` を指定した場合、`--format` を明示しない限り、出力形式はファイル拡張子から自動判定されます。既存の出力ファイルは既定で保護されます。上書きする場合だけ `--force` を指定してください。
+## コマンド
 
-### ディレクトリを文字起こしする
+### `path-status`
+
+共通のランタイム状態コントラクトでファイルシステム上のパスを解決し、JSON を `stdout` に出力します。
 
 ```bash
-sona transcribe \
-  --input-dir ./media \
-  --output-dir ./transcripts \
-  --format srt \
-  --recursive \
-  --jobs 1 \
-  -c ./sona-cli.toml
+sona-cli path-status ./models
 ```
 
-ディレクトリモードでは、対応している各メディアファイルごとに `--output-dir` へ文字起こしファイルを書き出します。既定では直下のファイルだけを走査します。`--recursive` を追加するとサブディレクトリも対象になり、相対パスを保ったまま出力されます。文字起こし本文はファイルへ書き出され、`stdout` には JSON の成功 / 失敗サマリーが出力されます。
+出力例：
 
-複数の入力ファイルや glob パターンも指定できます。これらはディレクトリモードと同じバッチ出力計画を使うため、`--output-dir` が必要です。
-
-```bash
-sona transcribe ./media/*.wav ./media/interview.mp4 --output-dir ./transcripts --format srt
+```json
+{
+  "kind": "directory",
+  "path": "C:/work/models",
+  "error": null
+}
 ```
-
-### モデルを一覧表示、ダウンロード、削除する
-
-```bash
-sona models list --mode offline --type whisper
-sona models list --language zh --installed
-sona models list --json
-sona models download sherpa-onnx-whisper-turbo
-sona models delete sherpa-onnx-whisper-turbo
-```
-
-`models list` は既定で読みやすい表形式で出力します。`install_path` を含む完全な機械可読形式が必要なスクリプトでは `--json` を使ってください。
-`models download` を実行すると、選択したプリセットで必要な場合に、`silero-vad` や既定の句読点モデルなどの関連モデルも自動でダウンロードされます。
-`models delete` は指定したモデルだけを削除します。関連モデルは自動削除されません。
-
-### API サーバーを起動する
-
-```bash
-sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
-```
-
-HTTP API のエンドポイントやリクエスト例は、[HTTP API ガイド](guide:api-guide)を参照してください。
-
-### 設定テンプレートを作成する
-
-```bash
-sona init-config
-sona init-config ./sona-cli.toml --force
-```
-
-`init-config` は、英語コメント付きの TOML 初期テンプレートを既定で `sona-cli.toml` に書き込みます。別の場所に書きたい場合はパスを渡します。既存ファイルは既定で保護され、上書きするには `--force` を必要とします。
-
-## 設定ファイル
-
-`-c` または `--config` オプションで TOML ファイルを渡します。コマンドライン引数で指定した値は、設定ファイルの値を上書きします。コメント付きの初期テンプレートを作成するには `sona init-config` を使用し、使用する前に必要なキーのコメントアウトを解除してください。
-
-生成されるテンプレートの最小抜粋:
-
-```toml
-# Top-level keys are shared defaults for both commands.
-# Uncomment the same key inside [transcribe] or [serve] to override it per command.
-
-# models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
-# gpu_acceleration = "auto"
-# vad_model_id = "silero-vad"
-# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-
-[transcribe]
-# models_dir = "..."
-# gpu_acceleration = "auto"
-# vad_model_id = "silero-vad"
-# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-# model_id = "sherpa-onnx-whisper-turbo"
-# language = "auto"
-# threads = 4
-# enable_itn = false
-# vad_buffer_size = 5.0
-# hotwords = "Sona,offline ASR"
-# format = "srt"
-# quiet = false
-# jobs = 1
-
-[serve]
-# models_dir = "..."
-# gpu_acceleration = "auto"
-# vad_model_id = "silero-vad"
-# punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-# host = "127.0.0.1"
-# port = 14200
-# api_key = ""
-# ip_whitelist = "localhost"
-# max_streaming = 2
-# max_concurrent = 2
-# max_queue_size = 100
-# max_upload_size_mb = 50
-# job_ttl_minutes = 60
-```
-
-### `transcribe` の設定キー
-
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `models_dir` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | CLI がデスクトップアプリのモデルを検出できない場合に、明示的にパスを指定します。 |
-| `model_id` | 引数 `--model-id` を指定しない限り必須 | オフラインのプリセットモデル ID | なし | `sona models list --mode offline` で ID を確認してください。 |
-| `vad_model_id` | 任意 | プリセットモデル ID | 必要な場合は `silero-vad` | 選択したモデルが VAD を必要とする場合に使います。既定の関連モデルを上書きできます。 |
-| `punctuation_model_id` | 任意 | プリセットモデル ID | 必要な場合は `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 選択したモデルが句読点モデルを必要とする場合に使います。既定の関連モデルを上書きできます。 |
-| `language` | 任意 | `auto` または `zh`、`en`、`ja` などのモデル言語コード | `auto` | 自動言語検出を上書きします。 |
-| `threads` | 任意 | `0` より大きい整数 | `4` | 認識処理のスレッド数。 |
-| `enable_itn` | 任意 | `true` または `false` | `false` | 逆テキスト正規化（ITN）を有効にします。 |
-| `hotwords` | 任意 | カンマ区切りの単語 | なし | カスタム ASR ホットワード。現在、Transducer および Qwen3 モデルでサポートされています。 |
-| `quiet` | 任意 | `true` または `false` | `false` | `true` の場合、文字起こしの進捗表示を隠します。CLI の `--quiet` でも有効になります。 |
-| `jobs` | 任意 | `0` より大きい整数 | `1` | ディレクトリ、複数入力、glob モードでの最大同時ファイルジョブ数。CLI の `--jobs` が上書きします。 |
-| `vad_buffer_size` | 任意 | `0` より大きい数値 | `5.0` | VAD のバッファサイズ（秒単位）。 |
-| `gpu_acceleration` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | Windows では、`auto` は最初に CUDA を試し、同梱ランタイムが DirectML をサポートしている場合は次に DirectML、最後に CPU へフォールバックします。GPU アクセラレーションを無効にする場合は `cpu` を指定します。 |
-| `format` | 任意 | `json`, `txt`, `srt`, `vtt`, `md` | 標準出力またはディレクトリモードでは `json`、それ以外は `--output` から自動判定 | 出力ファイル拡張子からの自動判定を上書きします。 |
-
-### `serve` の設定キー
-
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `host` | 任意 | バインド アドレス | `127.0.0.1` | ネットワークに公開する場合は `0.0.0.0` を使用します。 |
-| `port` | 任意 | TCP ポート `0`〜`65535` | `14200` | API サーバーの TCP ポート番号。 |
-| `api_key` | 任意 | 文字列 | 空文字 | 空の場合、リクエストは Bearer 認証で保護されません。 |
-| `models_dir` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | インストール済みモデルの解決に使います。 |
-| `ip_whitelist` | 任意 | カンマ区切りのルール | `localhost` | `localhost`、特定の IP、CIDR、`*`、`192.168.*` などの IPv4 ワイルドカードをサポートします。 |
-| `max_streaming` | 任意 | 非負整数 | `2` | WebSocket の最大同時ストリーミング接続数。 |
-| `max_concurrent` | 任意 | 非負整数 | `2` | 最大同時バッチジョブ処理数。 |
-| `max_queue_size` | 任意 | 非負整数 | `100` | `0` はキューを無制限にすることを意味します。 |
-| `max_upload_size_mb` | 任意 | 非負整数 | `50` | `0` はアップロードファイル制限を無効にします。 |
-| `job_ttl_minutes` | 任意 | 非負整数 | `60` | `0` は完了または失敗したジョブ履歴のクリーンアップを無効にします。 |
-| `gpu_acceleration` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | ローカルのバッチジョブとストリーミングジョブに使う、サーバーレベルの既定値です。Windows の `auto` は CUDA、利用可能な場合は DirectML、CPU の順に使います。 |
-| `vad_model_id` | 任意 | プリセットモデル ID | `silero-vad` | API サーバージョブで使う既定の VAD 関連モデル。 |
-| `punctuation_model_id` | 任意 | プリセットモデル ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API サーバージョブで使う既定の句読点関連モデル。 |
-
-## パラメータ
-
-### グローバル
-
-```text
-sona
-  -V, --version
-  -v, --verbose
-  -h, --help
-  help
-```
-
-Sona のバージョンを表示するには `-V` または `--version` を使います。詳しい診断ログを出すには、サブコマンドの前に `-v` または `--verbose` を追加します。コマンドのヘルプは、`-h`、`--help`、または `help` サブコマンドで表示できます。
-
-```bash
-sona --version
-sona -V
-sona -v models list
-sona --verbose transcribe ./sample.mp4 -c ./sona-cli.toml
-sona transcribe --help
-```
-
-詳細な診断情報は標準エラー出力（`stderr`）に出力されます。`models list` の表または JSON 出力や、`--output` を付けない `transcribe` の JSON 出力など、コマンド本体の結果は標準出力（`stdout`）に出るため、他のツールへパイプできます。
-
-高度なラッパーやテストでは、`SONA_FORCE_CLI=1` を設定すると、認識済みの CLI サブコマンドなしで実行ファイルが起動された場合でも CLI モードを強制できます。
-
-`shell` 補完スクリプトは `sona completions <shell>` で生成できます。対応シェルは `bash`、`zsh`、`fish`、`powershell`、`elvish` で、スクリプトは `stdout` に出力されます。
-
-### `transcribe`
-
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `<input>...` | `--input-dir` を指定しない限り必須 | ローカルの音声 / 動画ファイルパス、または glob パターン | なし | 1 つの入力は単一ファイルモードです。複数入力や glob パターンはバッチモードになり、`--output-dir` が必要です。 |
-| `--input-dir <dir>` | ディレクトリモードでは必須 | ディレクトリパス | なし | ディレクトリ内の対応メディアファイルを文字起こしします。 |
-| `-c, --config <path>` | 任意 | TOML ファイルパス | なし | 設定ファイルから既定値を読み込みます。 |
-| `--output <path>` | 任意 | ファイルシステムパス | `stdout` | 単一ファイルモード専用の出力ファイルパス。既存ファイルがある場合は、`--force` を指定しない限りエラーになります。 |
-| `--output-dir <dir>` | `--input-dir`、複数入力、または glob と併用する場合は必須 | ディレクトリパス | なし | 入力ファイルごとに文字起こしファイルを書き出します。計画された出力が既にある場合は、`--force` を指定しない限りエラーになります。 |
-| `--recursive` | 任意 | フラグ | オフ | サブディレクトリを走査し、相対出力パスを保ちます。 |
-| `--jobs <n>` | 任意 | `0` より大きい整数 | `jobs` 設定または `1` | バッチモードの最大同時ファイルジョブ数。CLI の `--jobs` が上書きします。 |
-| `--format <format>` | 任意 | `json`, `txt`, `srt`, `vtt`, `md` | 標準出力またはディレクトリモードでは `json`、それ以外は `--output` から自動判定 | 設定ファイルと出力ファイル拡張子による自動判定を上書きします。 |
-| `--language <code>` | 任意 | `auto` またはモデル言語コード | `auto` | 設定ファイルの指定を上書きします。 |
-| `--model-id <id>` | 設定ファイルで `model_id` が設定されていない限り必須 | オフラインのプリセットモデル ID | なし | メインの音声認識モデル。 |
-| `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | 設定ファイルの指定を上書きします。 |
-| `--vad-model-id <id>` | 任意 | プリセットモデル ID | 必要な場合は `silero-vad` | 既定の VAD 関連モデルを上書きします。 |
-| `--punctuation-model-id <id>` | 任意 | プリセットモデル ID | 必要な場合は `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 既定の句読点関連モデルを上書きします。 |
-| `--threads <n>` | 任意 | `0` より大きい整数 | `4` | 設定ファイルの指定を上書きします。 |
-| `--enable-itn` | 任意 | フラグ | `false` | `--disable-itn` と同時には使えません。 |
-| `--disable-itn` | 任意 | フラグ | `false` | `enable_itn = true` を上書きします。`--enable-itn` と同時には使えません。 |
-| `--hotwords <words>` | 任意 | カンマ区切りの単語 | なし | `hotwords` を上書きします。現在、Transducer および Qwen3 モデルでサポートされています。 |
-| `--gpu-acceleration <provider>` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | 設定ファイルの指定を上書きします。Windows では、`auto` は最初に CUDA を試し、同梱ランタイムが DirectML をサポートしている場合は次に DirectML、最後に CPU へフォールバックします。明示的な `directml` は手動 DirectML 指定として扱われます。 |
-| `<model_id>` | 必須 | 既知のプリセットモデル ID | なし | 削除するモデル。 |
-| `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | 対象モデルディレクトリ。 |
-| `--yes` | 任意 | フラグ | オフ | 対話確認を省略します。 |
-| インストール先がない場合 | いいえ | 既知だが未インストールのプリセット | 成功 no-op | `stderr` に通知して終了コード 0 で終了します。 |
-| 関連モデルの削除 | いいえ | 必須の VAD と句読点プリセット | 削除しない | 不要な関連モデルは明示的に削除してください。 |
 
 ### `init-config`
 
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `[PATH]` | 任意 | TOML ファイルパス | 現在のディレクトリの `sona-cli.toml` | テンプレートの出力先。必要に応じて親ディレクトリも作成されます。 |
-| `--force` | 任意 | フラグ | オフ | 既存の設定ファイルを上書きできます。 |
-| 出力 | 常に | ステータステキスト | `stderr` | 生成された TOML は `stdout` ではなく、指定したファイルに書き込まれます。 |
+スタンドアロン CLI のワークフローで使用する、コメント付きの初期設定ファイルを作成します。
+
+```bash
+sona-cli init-config
+sona-cli init-config ./sona-cli.toml --force
+```
+
+- 既定の出力先：`./sona-cli.toml`
+- `--force` を指定しない限り、既存ファイルは上書きされません
+- 状態メッセージは `stderr` に出力されます
+
+### `models list`
+
+プリセットモデルを一覧表示し、モード、種類、言語、インストール状態で絞り込みます。
+
+```bash
+sona-cli models list
+sona-cli models list --mode offline --type whisper
+sona-cli models list --language zh --installed
+sona-cli models list --json
+```
+
+`--json` を指定すると、`install_path` を含む完全な機械可読形式で出力します。
+
+### `models download`
+
+プリセットモデルを、解決されたモデルディレクトリへダウンロードします。
+
+```bash
+sona-cli models download sherpa-onnx-whisper-turbo
+sona-cli models download silero-vad --models-dir ./models --yes
+```
+
+選択したプリセットが付随リソースを必要とする場合は、必要な VAD または句読点モデルも `sona-cli` がダウンロードします。
+
+### `models delete`
+
+インストール済みのプリセットモデルを 1 つ削除します。
+
+```bash
+sona-cli models delete sherpa-onnx-whisper-turbo --yes
+sona-cli models delete silero-vad --models-dir ./models --yes
+```
+
+付随モデルは自動では削除されません。
+
+### `history`
+
+共通の履歴サービスを通じて、既存の Sona アプリデータディレクトリを照会または変更します。
+
+```bash
+sona-cli history list --app-data-dir ./sona-data --limit 50 --offset 0
+sona-cli history query --app-data-dir ./sona-data --input ./workspace-query.json --json
+sona-cli history transcript --app-data-dir ./sona-data --history-id <ID> --json
+sona-cli history snapshots --app-data-dir ./sona-data --history-id <ID>
+sona-cli history snapshot --app-data-dir ./sona-data --history-id <ID> --snapshot-id <ID> --json
+sona-cli history create-live-draft --app-data-dir ./sona-data --id <ID> --audio-extension wav --json
+sona-cli history complete-live-draft --app-data-dir ./sona-data --history-id <ID> --segments ./segments.json --duration 12.5 --json
+sona-cli history save-recording --app-data-dir ./sona-data --input ./recording.json --audio ./recording.wav --json
+sona-cli history import-file --app-data-dir ./sona-data --input ./history-import.json --json
+sona-cli history update-transcript --app-data-dir ./sona-data --history-id <ID> --segments ./segments.json --json
+sona-cli history create-snapshot --app-data-dir ./sona-data --history-id <ID> --reason polish --segments ./segments.json --json
+sona-cli history update-meta --app-data-dir ./sona-data --history-id <ID> --updates ./history-meta.json
+sona-cli history assign-project --app-data-dir ./sona-data --history-id <ID> --project-id <PROJECT_ID>
+sona-cli history reassign-project --app-data-dir ./sona-data --current-project-id <PROJECT_ID>
+sona-cli history delete --app-data-dir ./sona-data --history-id <ID>
+```
+
+- `query` は Tauri および UniFFI と同じ camelCase の `HistoryWorkspaceQueryRequest` JSON コントラクトを受け取ります。
+- `list`、`query`、`snapshots` は既定で表形式を使用し、`--json` では完全な機械可読レスポンスを保持します。
+- `transcript` と `snapshot` は既定でセグメント表を表示します。
+- `recording.json` には `segments`、`duration`、任意の `projectId` と `audioExtension` を含めます。音声バイトは `--audio` からのみ読み込みます。
+- `history-import.json` は camelCase の `HistorySaveImportedFileRequest` コントラクトを使用します。`--segments` ファイルは JSON 配列、`--updates` は JSON オブジェクトです。
+- `assign-project` または `reassign-project` で移動先プロジェクトを省略すると、記録は Inbox に戻ります。
+- アプリデータディレクトリは事前に存在している必要があります。不正な変更入力は、遅延初期化される SQLite アダプターがデータベースを開く前に拒否されます。
+
+### `export transcript`
+
+既存の文字起こしセグメント JSON 配列を、共通のコア書き出しサービスでエクスポートします。
+
+```bash
+sona-cli export transcript --input ./segments.json --output ./transcript.vtt
+sona-cli export transcript --input ./segments.json --output ./transcript.srt --mode bilingual
+sona-cli export transcript --input ./segments.json --output ./transcript.txt --format txt --json
+```
+
+- `--format` を省略すると、出力ファイルの拡張子から形式を判定します。
+- 対応形式：`json`、`txt`、`srt`、`vtt`、`md`
+- 対応モード：`original`（既定）、`translation`、`bilingual`
+- `--json` は出力先と書き込んだバイト数を機械可読 JSON で表示します。
+
+### `backup`
+
+5 つのアプリ状態スコープをすべて書き出す、アプリデータを開かずにアーカイブを検証する、またはアーカイブからバックアップ対象状態をアトミックに置換します。
+
+```bash
+sona-cli backup export --app-data-dir ./sona-data --output ./sona-backup.sona-backup --app-version 0.8.0
+sona-cli backup inspect --archive ./sona-backup.sona-backup
+sona-cli backup import --app-data-dir ./sona-data --archive ./sona-backup.sona-backup --default-rule-set-name "Default Rules" --confirm-replace
+```
+
+インポートは `config`、`workspace`、`history`、`automation`、`analytics` の各スコープをアトミックに置換します。`--confirm-replace` が必須で、対話式プロンプトは表示しません。タスク台帳と元の音声はバックアップアーカイブに含まれません。
 
 ### `serve`
 
-| パラメータ / 設定キー | 必須かどうか | 指定可能な値の範囲 | デフォルト値 | 備考 |
-| --- | --- | --- | --- | --- |
-| `-c, --config <path>` | 任意 | TOML ファイルパス | なし | 設定ファイルから既定値を読み込みます。 |
-| `--host <ip>` | 任意 | バインド IP アドレス | `0.0.0.0` | 設定ファイルの指定を上書きします。 |
-| `--port <port>` | 任意 | TCP ポート `0`〜`65535` | `14200` | 設定ファイルの指定を上書きします。 |
-| `--api-key <key>` | 任意 | 文字列 | 空文字 | 設定ファイルの指定を上書きします。 |
-| `--models-dir <path>` | 任意 | ファイルシステムパス | 推測可能な場合はデスクトップアプリのモデルディレクトリ | 設定ファイルの指定を上書きします。 |
-| `--ip-whitelist <rules>` | 任意 | カンマ区切りのルール | `localhost` | `localhost`、特定の IP、CIDR、`*`、`192.168.*` などの IPv4 ワイルドカードをサポートします。 |
-| `--max-streaming <n>` | 任意 | 非負整数 | `2` | 設定ファイルの指定を上書きします。 |
-| `--max-concurrent <n>` | 任意 | 非負整数 | `2` | 設定ファイルの指定を上書きします。 |
-| `--max-queue-size <n>` | 任意 | 非負整数 | `100` | 設定ファイルの指定を上書きします。 |
-| `--max-upload-size-mb <n>` | 任意 | 非負整数 | `50` | 設定ファイルの指定を上書きします。 |
-| `--job-ttl-minutes <n>` | 任意 | 非負整数 | `60` | 設定ファイルの指定を上書きします。 |
-| `--gpu-acceleration <provider>` | 任意 | `auto`, `cpu`, `cuda`, `coreml`, `directml` | `auto` | サーバーレベルの既定値です。HTTP API リクエストでは、リクエスト単位の GPU 上書きは受け付けません。Windows の `auto` は CUDA、利用可能な場合は DirectML、CPU の順に使います。 |
-| `--vad-model-id <id>` | 任意 | プリセットモデル ID | `silero-vad` | 設定ファイルの指定を上書きします。 |
-| `--punctuation-model-id <id>` | 任意 | プリセットモデル ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 設定ファイルの指定を上書きします。 |
+スタンドアロン CLI から共通のローカル HTTP API サーバーを実行します。
 
-Clap が自動生成する詳細なヘルプを見るには、`sona <command> --help` を実行してください。
+```bash
+sona-cli serve
+sona-cli serve --config ./sona-cli.toml
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key local-secret
+```
 
-デスクトップアプリの通常のワークフローを使いたい場合は、[はじめに](guide:getting-started) または [Batch Import](guide:batch-import) に戻ってください。
+- Ctrl+C を押すまで実行を続けます
+- デスクトップアプリと同じローカル一括文字起こし API サーバーアダプターを再利用します
+- `--config` は `init-config` が生成する `[serve]` セクションを読み込みます
+- CLI ではローカル REST 文字起こしを利用できます。`serve` の WebSocket ストリーミングルーターとオンライン ASR 連携には引き続きデスクトップランタイムが必要です。スタンドアロンのローカルストリーミングには `transcribe-live` を使用してください。
+
+### `transcribe`
+
+オフライン ASR アダプターを使用して、ローカルの音声または動画ファイルを 1 つ文字起こしします。
+
+```bash
+sona-cli transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
+sona-cli transcribe ./sample.wav --config ./sona-cli.toml --output ./out.srt
+sona-cli transcribe ./sample.wav --format txt --quiet
+```
+
+- `--output` を省略すると `stdout` に出力します
+- 対応する書き出し形式：`json`、`txt`、`srt`、`vtt`、`md`
+- `--config` は `init-config` が生成するコメント付き `sona-cli.toml` テンプレートを読み込みます
+- `--force` を指定すると既存の出力ファイルを上書きできます
+
+### `transcribe-live`
+
+インストール済みのローカルストリーミングモデルを使い、マイクまたは stdin の生音声をリアルタイムで文字起こしします。
+
+```bash
+sona-cli transcribe-live --list-input-devices
+sona-cli transcribe-live \
+  --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17 \
+  --device "Studio Mic" \
+  --duration 60 \
+  --output ./live.srt
+ffmpeg -i sample.wav -f s16le -ac 1 -ar 16000 - | \
+  sona-cli transcribe-live \
+    --input stdin \
+    --model-id sherpa-onnx-streaming-paraformer-trilingual-zh-cantonese-en \
+    --output-format ndjson
+```
+
+- このコマンドはローカルのオフライン ASR のみ対応します。選択するプリセットは `streaming` モードを宣言し、解決されたモデルディレクトリにインストール済みである必要があります。
+- マイク入力では、`--device` に `--list-input-devices` が返す完全な名前を指定しない限り、CPAL の既定入力デバイスを使用します。
+- `--input stdin` は、ヘッダーなしの 16 kHz、モノラル、符号付き 16-bit little-endian PCM を受け取ります。末尾に不完全なサンプルがあると入力エラーになります。
+- TTY のテキスト出力は現在の文字起こしを同じ位置で更新します。リダイレクトされたテキスト出力は flush 後に最終スナップショットを 1 回だけ書き込みます。
+- `--output-format ndjson` は 1 行に 1 個の JSON オブジェクトを出力し、イベントごとに flush します。イベント種別は `started`、`update`、`stopped`、実行時エラー専用の `error` で、文字起こしフィールドは camelCase です。
+- Ctrl+C、stdin EOF、`--duration` は同じ正常終了処理を行います。取得済み音声を処理し、ASR を flush して停止し、必要なら最終ファイルを書き込み、`stopped` を出力して終了コード 0 で終了します。
+- `--output` は最終スナップショットを `json`、`txt`、`srt`、`vtt`、`md` で保存します。`--format` がなければ拡張子で形式を選び、既存ファイルの置換には `--force` が必要です。
+- `--config` は `sona-cli.toml` の `[transcribe_live]` を読み込みます。コマンドライン値がこのセクションを上書きし、このセクションは共通のトップレベル ASR 既定値を継承します。最終出力先、書き出し形式、上書き動作はコマンドラインでのみ指定できます。
+- 検証エラーは終了コード 2、モデルエラーは 3、入力またはデバイスエラーは 5 です。実行時の NDJSON エラーも、非ゼロで終了する前に `error` イベントとして出力されます。
+
+## グローバルフラグ
+
+```text
+sona-cli
+  -V, --version
+  -h, --help
+```
+
+コマンドごとの使い方は `sona-cli <command> --help` で確認できます。

@@ -1,257 +1,228 @@
-`sona` 透過桌面主程式提供離線轉錄指令。安裝包不會把 `sona` 寫入 shell `PATH`，因此需要直接執行已安裝的應用二進位檔案並附帶 CLI 子指令。從原始碼建構時，也可以用 Cargo 執行同一組命令。
+`sona-cli` 是 Sona 的獨立命令列介面。桌面版 Tauri 應用程式已不再內嵌 CLI 子指令，因此打包後的桌面版本應使用 `sona-cli` 執行命令列工作流程。
 
-CLI 範圍刻意保持精簡：單檔和目錄離線轉錄、預設模型清單/下載/刪除、無外介面 (headless) HTTP API 服務啟動。它不包含即時錄音、LLM 潤色或 LLM 翻譯。
+目前獨立 CLI 提供以下指令：
+
+- `path-status`
+- `init-config`
+- `models list`
+- `models download`
+- `models delete`
+- `history list|query|transcript|snapshots|snapshot|<mutation>`
+- `export transcript`
+- `backup export|inspect|import`
+- `serve`
+- `transcribe`
+- `transcribe-live`
+
+無介面的 HTTP API 服務由共用的 `sona-api-server` 轉接器提供，可從桌面應用程式或 `sona-cli serve` 啟動。
 
 ## 執行方式
 
-- Windows：在安裝目錄執行 `Sona.exe transcribe ...`
-- macOS：執行 `/Applications/Sona.app/Contents/MacOS/Sona transcribe ...`
-- Linux 安裝包：從安裝位置執行 `Sona` 主程式並附帶 CLI 子指令
-- AppImage：執行掛載後的 AppImage 可執行檔並附帶 CLI 子指令
-- 原始碼：`cargo run --manifest-path src-tauri/Cargo.toml -- transcribe ./sample.mp4 -c ./sona-cli.toml`
+- 安裝套件：使用同平台安裝輸出中隨附的 `sona-cli` 執行檔
+- 原始碼建構：`cargo run -p sona-cli -- <command> ...`
 
-## 常用指令
-
-### 轉錄檔案
+範例：
 
 ```bash
-sona transcribe ./sample.mp4 \
-  -c ./sona-cli.toml \
-  --output ./sample.srt
+cargo run -p sona-cli -- path-status .
+cargo run -p sona-cli -- init-config
+cargo run -p sona-cli -- models list --json
+cargo run -p sona-cli -- history list --app-data-dir ./sona-data --json
+cargo run -p sona-cli -- export transcript --input ./segments.json --output ./transcript.vtt
+cargo run -p sona-cli -- serve --host 127.0.0.1 --port 14200
+cargo run -p sona-cli -- transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
+cargo run -p sona-cli -- transcribe-live --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17
 ```
 
-不指定 `--output` 時，轉錄結果會以 JSON 寫入 `stdout`。指定 `--output` 時，格式會從副檔名推斷，除非同時傳入 `--format`。已有輸出檔案預設受保護；只有明確傳入 `--force` 時才會覆寫。
+## 指令
 
-### 轉錄目錄
+### `path-status`
+
+透過共用的執行階段狀態契約解析一個檔案系統路徑，並將 JSON 輸出至 `stdout`。
 
 ```bash
-sona transcribe \
-  --input-dir ./media \
-  --output-dir ./transcripts \
-  --format srt \
-  --recursive \
-  --jobs 1 \
-  -c ./sona-cli.toml
+sona-cli path-status ./models
 ```
 
-目錄模式會為每個受支援媒體檔案在 `--output-dir` 中寫出一個轉錄檔案。預設只掃描目錄直屬檔案；加入 `--recursive` 後會包含子目錄，並保留相對輸出路徑。轉錄正文寫入檔案，`stdout` 會輸出 JSON 成功/失敗彙總。
+輸出範例：
 
-也可以傳入多個輸入檔案或 glob 萬用模式。它們會使用與目錄模式相同的批次輸出規劃，並要求傳入 `--output-dir`：
-
-```bash
-sona transcribe ./media/*.wav ./media/interview.mp4 --output-dir ./transcripts --format srt
+```json
+{
+  "kind": "directory",
+  "path": "C:/work/models",
+  "error": null
+}
 ```
-
-### 列出、下載或刪除模型
-
-```bash
-sona models list --mode offline --type whisper
-sona models list --language zh --installed
-sona models list --json
-sona models download sherpa-onnx-whisper-turbo
-sona models delete sherpa-onnx-whisper-turbo
-```
-
-`models list` 預設輸出便於閱讀的表格。腳本需要完整機器可讀結構時使用 `--json`，其中仍包含 `install_path`。
-當所選預設模型需要伴生模型時，`models download` 會自動下載所需模型，例如 `silero-vad` 或預設標點模型。
-`models delete` 只會刪除指定模型，不會自動刪除伴生模型。
-
-### 啟動 API 服務
-
-```bash
-sona serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
-```
-
-HTTP API 端點和請求範例請參閱 [HTTP API 指南](guide:api-guide)。
-
-### 建立設定範本
-
-```bash
-sona init-config
-sona init-config ./sona-cli.toml --force
-```
-
-`init-config` 預設會把帶英文註解的 TOML 範本寫入 `sona-cli.toml`。也可以傳入路徑寫到其他位置。已有檔案預設受保護；只有傳入 `--force` 才會覆寫。範本是平鋪 TOML，可同時給 `transcribe` 和 `serve` 使用；每個指令只讀取自己支援的鍵，並忽略無關鍵。
-
-## 設定檔
-
-透過 `-c` 或 `--config` 傳入 TOML 檔案。命令列參數會覆寫設定檔中的值。使用 `sona init-config` 可建立帶註解的起始範本。
-
-產生範本的最小摘錄：
-
-```toml
-models_dir = "C:/Users/you/AppData/Local/com.asoda.sona/models"
-model_id = "sherpa-onnx-whisper-turbo"
-vad_model_id = "silero-vad"
-punctuation_model_id = "sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8"
-language = "auto"
-threads = 4
-enable_itn = false
-vad_buffer_size = 5.0
-gpu_acceleration = "auto"
-hotwords = "Sona,offline ASR"
-format = "srt"
-quiet = false
-jobs = 1
-
-host = "127.0.0.1"
-port = 14200
-api_key = ""
-ip_whitelist = "localhost"
-max_streaming = 2
-max_concurrent = 2
-max_queue_size = 100
-max_upload_size_mb = 50
-job_ttl_minutes = 60
-```
-
-### `transcribe` 設定鍵
-
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `models_dir` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | CLI 找不到桌面模型目錄時請明確傳入。 |
-| `model_id` | 必選，除非傳入 `--model-id` | 離線預設模型 ID | 無 | 用 `sona models list --mode offline` 檢視可用 ID。 |
-| `vad_model_id` | 可選 | 預設模型 ID | 需要時為 `silero-vad` | 所選模型需要 VAD 時使用；可覆寫預設伴生模型。 |
-| `punctuation_model_id` | 可選 | 預設模型 ID | 需要時為 `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 所選模型需要標點時使用；可覆寫預設伴生模型。 |
-| `language` | 可選 | `auto` 或模型語言代碼，如 `zh`、`en`、`ja` | `auto` | 覆寫自動語言偵測。 |
-| `threads` | 可選 | 大於 `0` 的整數 | `4` | 辨識執行緒數。 |
-| `enable_itn` | 可選 | `true` 或 `false` | `false` | 啟用逆文字歸一化。 |
-| `hotwords` | 可選 | 逗號分隔片語 | 無 | 自訂 ASR 熱詞；目前支援 Transducer 和 Qwen3 模型。 |
-| `quiet` | 可選 | `true` 或 `false` | `false` | 設為 true 時隱藏轉錄進度；CLI `--quiet` 也會啟用。 |
-| `jobs` | 可選 | 大於 `0` 的整數 | `1` | 目錄、多輸入或 glob 模式下最大併發檔案任務數；CLI `--jobs` 會覆寫。 |
-| `vad_buffer_size` | 可選 | 大於 `0` 的數字 | `5.0` | VAD 緩衝秒數。 |
-| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | Windows 上 `auto` 會先嘗試 CUDA；目前打包執行期支援 DirectML 時再嘗試 DirectML，最後回退 CPU。使用 `cpu` 可明確關閉 GPU 加速。 |
-| `format` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 或目錄模式時為 `json`，否則從 `--output` 推斷 | 覆寫輸出副檔名推斷。 |
-
-### `serve` 設定鍵
-
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `host` | 可選 | 監聽位址 | `127.0.0.1` | 如需開啟網路存取，可使用 `0.0.0.0`。 |
-| `port` | 可選 | TCP 連接埠 `0` 到 `65535` | `14200` | API 服務連接埠。 |
-| `api_key` | 可選 | 字串 | 空 | 為空時請求不需要 Bearer 認證。 |
-| `models_dir` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 用於解析已安裝模型。 |
-| `ip_whitelist` | 可選 | 逗號分隔規則 | `localhost` | 支援 `localhost`、精確 IP、CIDR、`*`，以及 `192.168.*` 這類 IPv4 萬用字元。 |
-| `max_streaming` | 可選 | 非負整數 | `2` | 最大併發流式 WebSocket 連線數。 |
-| `max_concurrent` | 可選 | 非負整數 | `2` | 最大併發批次任務數。 |
-| `max_queue_size` | 可選 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
-| `max_upload_size_mb` | 可選 | 非負整數 | `50` | `0` 表示關閉上傳大小限制。 |
-| `job_ttl_minutes` | 可選 | 非負整數 | `60` | `0` 表示關閉完成/失敗任務清理。 |
-| `gpu_acceleration` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 本機批次和流式任務的服務級預設值；Windows `auto` 會依序使用 CUDA、可用時 DirectML、CPU。 |
-| `vad_model_id` | 可選 | 預設模型 ID | `silero-vad` | API 服務任務的預設 VAD 伴生模型。 |
-| `punctuation_model_id` | 可選 | 預設模型 ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API 服務任務的預設標點伴生模型。 |
-
-## 參數
-
-### 全域
-
-```text
-sona
-  -V, --version
-  -v, --verbose
-  -h, --help
-  help
-```
-
-使用 `-V` 或 `--version` 列印 Sona 版本號。使用 `-v` 或 `--verbose` 放在子指令前啟用詳細診斷日誌。使用 `-h`、`--help` 或 `help` 列印指令說明：
-
-```bash
-sona --version
-sona -V
-sona -v models list
-sona --verbose transcribe ./sample.mp4 -c ./sona-cli.toml
-sona transcribe --help
-```
-
-詳細診斷日誌會寫入 `stderr`。指令結果仍寫入 `stdout`，包括 `models list` 的表格或 JSON 輸出，以及 `transcribe` 未指定 `--output` 時的輸出，因此仍可安全透過管線傳給其他工具。
-
-進階包裝腳本和測試可以設定 `SONA_FORCE_CLI=1`，即使可執行檔啟動時沒有識別到 CLI 子指令，也強制進入 CLI 模式。
-
-使用 `sona completions <shell>` 產生 shell 補全腳本。支援 `bash`、`zsh`、`fish`、`powershell` 和 `elvish`；腳本會寫入 `stdout`。
-
-### `transcribe`
-
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `<input>...` | 必選，除非傳入 `--input-dir` | 本機音訊/影片檔案路徑或 glob 萬用模式 | 無 | 單一輸入保持單檔模式；多個輸入或 glob 模式會進入批次模式並要求 `--output-dir`。 |
-| `--input-dir <dir>` | 目錄模式必選 | 目錄路徑 | 無 | 轉錄目錄中的受支援媒體檔案。 |
-| `-c, --config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
-| `--output <path>` | 可選 | 檔案系統路徑 | `stdout` | 僅用於單檔模式。檔案已存在時會報錯，除非傳入 `--force`。 |
-| `--output-dir <dir>` | 與 `--input-dir`、多個輸入或 glob 同用時必選 | 目錄路徑 | 無 | 為每個輸入檔案寫出一個轉錄檔案。計劃輸出已存在時會報錯，除非傳入 `--force`。 |
-| `--recursive` | 可選 | 旗標 | 關閉 | 掃描子目錄並保留相對輸出路徑。 |
-| `--jobs <n>` | 可選 | 大於 `0` 的整數 | `jobs` 設定或 `1` | 批次模式下最大併發檔案任務數。 |
-| `--format <format>` | 可選 | `json`、`txt`、`srt`、`vtt`、`md` | 寫入 stdout 或目錄模式時為 `json`，否則從 `--output` 推斷 | 覆寫設定和輸出副檔名推斷。 |
-| `--language <code>` | 可選 | `auto` 或模型語言代碼 | `auto` | 覆寫設定。 |
-| `--model-id <id>` | 必選，除非設定了 `model_id` | 離線預設模型 ID | 無 | 主轉錄模型。 |
-| `--models-dir <path>` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 覆寫設定。 |
-| `--vad-model-id <id>` | 可選 | 預設模型 ID | 需要時為 `silero-vad` | 覆寫預設 VAD 伴生模型。 |
-| `--punctuation-model-id <id>` | 可選 | 預設模型 ID | 需要時為 `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | 覆寫預設標點伴生模型。 |
-| `--threads <n>` | 可選 | 大於 `0` 的整數 | `4` | 覆寫設定。 |
-| `--enable-itn` | 可選 | 旗標 | `false` | 與 `--disable-itn` 互斥。 |
-| `--disable-itn` | 可選 | 旗標 | `false` | 覆寫 `enable_itn = true`；與 `--enable-itn` 互斥。 |
-| `--hotwords <words>` | 可選 | 逗號分隔片語 | 無 | 覆寫 `hotwords`；目前支援 Transducer 和 Qwen3 模型。 |
-| `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 覆寫設定。Windows 上 `auto` 會先嘗試 CUDA；目前打包執行期支援 DirectML 時再嘗試 DirectML，最後回退 CPU。明確指定 `directml` 會保留為手動 DirectML 請求。 |
-| `--vad-buffer <seconds>` | 可選 | 大於 `0` 的數字 | `5.0` | `vad_buffer_size` 的 CLI 參數名。 |
-| `--save-wav <path>` | 可選 | 檔案系統路徑 | 無 | 僅 CLI 參數；儲存中間重取樣 WAV。與 `--input-dir` 不相容。 |
-| `--quiet` | 可選 | 旗標 | 關閉 | 隱藏轉錄進度，並覆寫 `quiet = false`。 |
-| `--force` | 可選 | 旗標 | 關閉 | 允許覆寫已有輸出檔案。批次模式中規劃出的重複輸出仍會失敗。 |
-
-### `models list`
-
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `--models-dir <path>` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 用於偵測已安裝預設模型。 |
-| `--mode <mode>` | 可選 | `streaming`、`offline` | 所有模式 | 按支援模式過濾。 |
-| `--type <type>` | 可選 | 預設模型類型，如 `whisper`、`vad`、`punctuation` | 所有類型 | 按模型類型過濾。 |
-| `--language <code>` | 可選 | 語言代碼，如 `zh`、`en`、`ja`、`yue` | 所有語言 | 依支援的語言代碼過濾。 |
-| `--installed` | 可選 | 旗標 | 關閉 | 只顯示 `models_dir` 中已存在的模型。 |
-| `--json` | 可選 | 旗標 | 關閉 | 輸出機器可讀 JSON，而不是預設表格。 |
-| 輸出 | 總是 | 表格或 JSON | 表格 | 寫入 `stdout`。 |
-
-### `models download`
-
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `<model_id>` | 必選 | 已知預設模型 ID | 無 | 要下載的主模型。 |
-| `--models-dir <path>` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 目標模型目錄。 |
-| `--quiet` | 可選 | 旗標 | 關閉 | 隱藏單個下載進度。 |
-| 伴生模型下載 | 自動 | 所需 VAD 和標點預設模型 | 自動 | 下載主模型時會同時下載必需伴生模型。 |
-
-### `models delete`
-
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `<model_id>` | 必選 | 已知預設模型 ID | 無 | 要刪除的模型。 |
-| `--models-dir <path>` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 目標模型目錄。 |
-| `--yes` | 可選 | 旗標 | 關閉 | 跳過互動確認提示。 |
-| 安裝路徑缺失 | 否 | 已知但未安裝的預設模型 | 成功 no-op | 向 `stderr` 輸出提示並以狀態碼 0 退出。 |
-| 伴生模型刪除 | 否 | 所需 VAD 和標點預設模型 | 不刪除 | 如果不再需要伴生模型，請明確刪除對應模型。 |
 
 ### `init-config`
 
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `[PATH]` | 可選 | TOML 檔案路徑 | 目前目錄下的 `sona-cli.toml` | 目標範本路徑。需要時會建立父目錄。 |
-| `--force` | 可選 | 旗標 | 關閉 | 允許覆寫已有設定檔。 |
-| 輸出 | 總是 | 狀態文字 | `stderr` | 產生的 TOML 會寫入目標檔案，而不是 `stdout`。 |
+建立帶有註解的起始設定檔，供後續獨立 CLI 工作流程使用。
+
+```bash
+sona-cli init-config
+sona-cli init-config ./sona-cli.toml --force
+```
+
+- 預設輸出路徑：`./sona-cli.toml`
+- 除非傳入 `--force`，否則不會覆寫既有檔案
+- 狀態文字會寫入 `stderr`
+
+### `models list`
+
+列出預設模型，並可依模式、類型、語言或安裝狀態篩選。
+
+```bash
+sona-cli models list
+sona-cli models list --mode offline --type whisper
+sona-cli models list --language zh --installed
+sona-cli models list --json
+```
+
+`--json` 會輸出完整的機器可讀格式，其中包含 `install_path`。
+
+### `models download`
+
+將一個預設模型下載至解析後的模型目錄。
+
+```bash
+sona-cli models download sherpa-onnx-whisper-turbo
+sona-cli models download silero-vad --models-dir ./models --yes
+```
+
+如果選定的預設模型需要配套資源，`sona-cli` 也會下載必要的 VAD 或標點模型。
+
+### `models delete`
+
+刪除一個已安裝的預設模型。
+
+```bash
+sona-cli models delete sherpa-onnx-whisper-turbo --yes
+sona-cli models delete silero-vad --models-dir ./models --yes
+```
+
+配套模型不會自動刪除。
+
+### `history`
+
+透過共用的歷史記錄服務，查詢或修改既有的 Sona 應用程式資料目錄。
+
+```bash
+sona-cli history list --app-data-dir ./sona-data --limit 50 --offset 0
+sona-cli history query --app-data-dir ./sona-data --input ./workspace-query.json --json
+sona-cli history transcript --app-data-dir ./sona-data --history-id <ID> --json
+sona-cli history snapshots --app-data-dir ./sona-data --history-id <ID>
+sona-cli history snapshot --app-data-dir ./sona-data --history-id <ID> --snapshot-id <ID> --json
+sona-cli history create-live-draft --app-data-dir ./sona-data --id <ID> --audio-extension wav --json
+sona-cli history complete-live-draft --app-data-dir ./sona-data --history-id <ID> --segments ./segments.json --duration 12.5 --json
+sona-cli history save-recording --app-data-dir ./sona-data --input ./recording.json --audio ./recording.wav --json
+sona-cli history import-file --app-data-dir ./sona-data --input ./history-import.json --json
+sona-cli history update-transcript --app-data-dir ./sona-data --history-id <ID> --segments ./segments.json --json
+sona-cli history create-snapshot --app-data-dir ./sona-data --history-id <ID> --reason polish --segments ./segments.json --json
+sona-cli history update-meta --app-data-dir ./sona-data --history-id <ID> --updates ./history-meta.json
+sona-cli history assign-project --app-data-dir ./sona-data --history-id <ID> --project-id <PROJECT_ID>
+sona-cli history reassign-project --app-data-dir ./sona-data --current-project-id <PROJECT_ID>
+sona-cli history delete --app-data-dir ./sona-data --history-id <ID>
+```
+
+- `query` 接受與 Tauri、UniFFI 相同的 camelCase `HistoryWorkspaceQueryRequest` JSON 契約。
+- `list`、`query` 和 `snapshots` 預設使用表格；`--json` 會保留完整的機器可讀回應。
+- `transcript` 和 `snapshot` 預設顯示分段表格。
+- `recording.json` 包含 `segments`、`duration`，以及可選的 `projectId`、`audioExtension`；音訊位元組只會從 `--audio` 讀取。
+- `history-import.json` 使用 camelCase `HistorySaveImportedFileRequest` 契約。`--segments` 檔案是 JSON 陣列，`--updates` 則是 JSON 物件。
+- 在 `assign-project` 或 `reassign-project` 省略目標專案選項，會將記錄移回 Inbox。
+- 應用程式資料目錄必須已存在。無效的修改輸入會在延遲載入的 SQLite 轉接器開啟資料庫之前被拒絕。
+
+### `export transcript`
+
+透過共用的核心匯出服務，匯出既有的轉錄分段 JSON 陣列。
+
+```bash
+sona-cli export transcript --input ./segments.json --output ./transcript.vtt
+sona-cli export transcript --input ./segments.json --output ./transcript.srt --mode bilingual
+sona-cli export transcript --input ./segments.json --output ./transcript.txt --format txt --json
+```
+
+- 未提供 `--format` 時，會從輸出副檔名推斷格式。
+- 支援格式：`json`、`txt`、`srt`、`vtt`、`md`。
+- 支援模式：`original`（預設）、`translation`、`bilingual`。
+- `--json` 會以機器可讀 JSON 輸出路徑和寫入的位元組數。
+
+### `backup`
+
+匯出全部五個應用程式狀態範圍、在不開啟應用程式資料的情況下驗證封存，或從封存原子取代已備份的狀態。
+
+```bash
+sona-cli backup export --app-data-dir ./sona-data --output ./sona-backup.sona-backup --app-version 0.8.0
+sona-cli backup inspect --archive ./sona-backup.sona-backup
+sona-cli backup import --app-data-dir ./sona-data --archive ./sona-backup.sona-backup --default-rule-set-name "Default Rules" --confirm-replace
+```
+
+匯入會以原子方式取代 `config`、`workspace`、`history`、`automation` 和 `analytics` 範圍。必須提供 `--confirm-replace`，而且不會開啟互動式提示。備份封存不包含任務帳本與原始音訊。
 
 ### `serve`
 
-| 參數 / 設定鍵 | 必要性 | 取值範圍 | 預設值 | 說明 |
-| --- | --- | --- | --- | --- |
-| `-c, --config <path>` | 可選 | TOML 檔案路徑 | 無 | 從設定檔載入預設值。 |
-| `--host <ip>` | 可選 | 監聽地址 | `0.0.0.0` | 覆寫設定。 |
-| `--port <port>` | 可選 | TCP 連接埠 `0` 到 `65535` | `14200` | 覆寫設定。 |
-| `--api-key <key>` | 可選 | 字串 | 空 | 為空時不啟用 Bearer 認證。 |
-| `--models-dir <path>` | 可選 | 檔案系統路徑 | 可推斷時使用桌面應用模型目錄 | 覆寫設定。 |
-| `--ip-whitelist <rules>` | 可選 | 逗號分隔規則 | `localhost` | 支援 `localhost`、精確 IP、CIDR、`*`，以及 `192.168.*` 這類 IPv4 萬用字元。 |
-| `--max-streaming <n>` | 可選 | 非負整數 | `2` | 最大併發流式連線數。 |
-| `--max-concurrent <n>` | 可選 | 非負整數 | `2` | 最大併發批次任務數。 |
-| `--max-queue-size <n>` | 可選 | 非負整數 | `100` | `0` 表示佇列基本不限。 |
-| `--max-upload-size-mb <n>` | 可選 | 非負整數 | `50` | `0` 表示關閉上傳大小限制。 |
-| `--job-ttl-minutes <n>` | 可選 | 非負整數 | `60` | `0` 表示關閉完成/失敗任務清理。 |
-| `--gpu-acceleration <provider>` | 可選 | `auto`、`cpu`、`cuda`、`coreml`、`directml` | `auto` | 服務級預設值；HTTP API 請求不支援依個別請求覆寫 GPU 設定。Windows `auto` 會依序使用 CUDA、可用時 DirectML、CPU。 |
-| `--vad-model-id <id>` | 可選 | 預設模型 ID | `silero-vad` | API 服務任務的預設 VAD 伴生模型。 |
-| `--punctuation-model-id <id>` | 可選 | 預設模型 ID | `sherpa-onnx-punct-ct-transformer-zh-en-vocab272727-2024-04-12-int8` | API 服務任務的預設標點伴生模型。 |
+從獨立 CLI 執行共用的本機 HTTP API 服務。
 
-執行 `sona <command> --help` 可檢視 clap 產生的完整幫助文字。
+```bash
+sona-cli serve
+sona-cli serve --config ./sona-cli.toml
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key local-secret
+```
+
+- 持續執行直到按下 Ctrl+C
+- 重用與桌面應用程式相同的本機批次轉錄 API server 轉接器
+- `--config` 讀取 `init-config` 產生的 `[serve]` 區段
+- CLI 支援本機 REST 轉錄。`serve` 的 WebSocket 串流路由與線上 ASR 整合仍需要桌面執行階段；獨立本機串流請使用 `transcribe-live`。
+
+### `transcribe`
+
+使用離線 ASR 轉接器轉錄一個本機音訊或視訊檔案。
+
+```bash
+sona-cli transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
+sona-cli transcribe ./sample.wav --config ./sona-cli.toml --output ./out.srt
+sona-cli transcribe ./sample.wav --format txt --quiet
+```
+
+- 省略 `--output` 時，預設輸出至 `stdout`
+- 支援匯出格式：`json`、`txt`、`srt`、`vtt`、`md`
+- `--config` 讀取 `init-config` 產生且帶有註解的 `sona-cli.toml` 範本
+- `--force` 允許覆寫既有輸出檔案
+
+### `transcribe-live`
+
+使用已安裝的本機串流模型，即時轉錄麥克風或 stdin 原始音訊。
+
+```bash
+sona-cli transcribe-live --list-input-devices
+sona-cli transcribe-live \
+  --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17 \
+  --device "Studio Mic" \
+  --duration 60 \
+  --output ./live.srt
+ffmpeg -i sample.wav -f s16le -ac 1 -ar 16000 - | \
+  sona-cli transcribe-live \
+    --input stdin \
+    --model-id sherpa-onnx-streaming-paraformer-trilingual-zh-cantonese-en \
+    --output-format ndjson
+```
+
+- 此指令只支援本機離線 ASR。選定的預設模型必須宣告 `streaming` 模式，並安裝於解析後的模型目錄。
+- 麥克風輸入預設使用 CPAL 的預設輸入裝置；`--device` 必須提供 `--list-input-devices` 回傳的完整名稱。
+- `--input stdin` 接受無標頭的 16 kHz、單聲道、signed 16-bit little-endian PCM。最後一個不完整的 sample 會視為輸入錯誤。
+- TTY 文字輸出會原地更新目前的轉錄；重新導向的文字輸出會在 flush 後只寫入一次最終快照。
+- `--output-format ndjson` 每行輸出一個 JSON 物件，並在每個事件後 flush。事件類型為 `started`、`update`、`stopped`，以及只在執行階段錯誤時使用的 `error`；轉錄欄位使用 camelCase。
+- Ctrl+C、stdin EOF 和 `--duration` 使用相同的正常結束流程：排空擷取音訊、flush 並停止 ASR、視需要寫入最終檔案、輸出 `stopped`，然後以 0 結束。
+- `--output` 可將最終快照寫成 `json`、`txt`、`srt`、`vtt` 或 `md`。除非提供 `--format`，否則由副檔名選擇格式；覆寫既有檔案需要 `--force`。
+- `--config` 讀取 `sona-cli.toml` 的 `[transcribe_live]`。命令列值會覆寫該區段，而該區段會繼承共用的頂層 ASR 預設值。最終輸出路徑、匯出格式與覆寫行為仍只能透過命令列設定。
+- 驗證錯誤以狀態碼 2 結束，模型錯誤為 3，輸入/裝置錯誤為 5。執行階段 NDJSON 錯誤也會先寫入一個 `error` 事件，再以非零狀態碼結束。
+
+## 全域旗標
+
+```text
+sona-cli
+  -V, --version
+  -h, --help
+```
+
+執行 `sona-cli <command> --help` 查看各指令的用法。
