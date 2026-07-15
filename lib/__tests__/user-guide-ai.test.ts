@@ -40,6 +40,7 @@ describe('user guide AI locale instructions', () => {
     expect(context).toContain('Current page - Sona User Guide');
     expect(context).toContain('Page ID: overview');
     expect(context).toContain('Relevant reference snippets');
+    expect(context).toContain('Page ID: api-guide');
     const pageIdMatches = context.match(/^Page ID:/gm) ?? [];
 
     expect(pageIdMatches.length).toBeGreaterThan(1);

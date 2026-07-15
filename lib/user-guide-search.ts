@@ -8,6 +8,7 @@ import {
   type UserGuidePageId,
 } from '@/lib/user-guide-content';
 import {
+  normalizeGuideSearchText,
   searchUserGuideEntries,
   type UserGuideSearchEntry,
 } from '@/lib/user-guide-search-core';
@@ -67,6 +68,39 @@ export interface UserGuideSearchSnippet {
 }
 
 const REFERENCE_SNIPPET_RADIUS = 700;
+const ENGLISH_REFERENCE_QUERY_STOP_WORDS = new Set([
+  'and',
+  'are',
+  'can',
+  'does',
+  'for',
+  'how',
+  'the',
+  'use',
+  'what',
+  'when',
+  'where',
+  'which',
+  'who',
+  'why',
+  'with',
+  'you',
+  'your',
+]);
+
+function getReferenceSearchQuery(query: string) {
+  const normalizedQuery = normalizeGuideSearchText(query);
+  const meaningfulTokens = normalizedQuery
+    .split(' ')
+    .filter(
+      (token) =>
+        token.length > 2 && !ENGLISH_REFERENCE_QUERY_STOP_WORDS.has(token),
+    );
+
+  return meaningfulTokens.length > 0
+    ? meaningfulTokens.join(' ')
+    : normalizedQuery;
+}
 
 function createReferenceSnippet(content: string, excerpt: string) {
   const excerptToken = excerpt.replace(/^\.\.\./, '').replace(/\.\.\.$/, '').trim();
@@ -101,7 +135,7 @@ export async function getUserGuideReferenceSnippets({
   query: string;
 }): Promise<UserGuideSearchSnippet[]> {
   const entries = await getUserGuideSearchEntries(locale);
-  const results = searchUserGuideEntries(entries, query, {
+  const results = searchUserGuideEntries(entries, getReferenceSearchQuery(query), {
     currentPageId,
     limit: limit + 1,
   }).filter((result) => result.id !== currentPageId);

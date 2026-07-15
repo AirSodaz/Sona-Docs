@@ -11,11 +11,15 @@ describe('sitemap', () => {
 
     expect(nightlyEntries).toHaveLength(supportedLocales.length);
     for (const locale of supportedLocales) {
-      expect(nightlyEntries).toContainEqual(
+      const nightlyEntry = nightlyEntries.find(
+        (entry) =>
+          new URL(entry.url).pathname === `/${locale}/downloads/nightly`,
+      );
+
+      expect(nightlyEntry).toEqual(
         expect.objectContaining({
           changeFrequency: 'daily',
           priority: 0.84,
-          url: `http://localhost:3000/${locale}/downloads/nightly`,
         }),
       );
     }
