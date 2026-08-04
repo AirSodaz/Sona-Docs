@@ -18,10 +18,10 @@ Navigate to `Settings > API Server` and configure:
 You can also launch the same server adapter from the standalone `sona-cli`:
 
 ```bash
-sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
 ```
 
-GPU acceleration is configured as a server-level default through GUI model settings or `sona-cli serve --gpu-acceleration`. On Windows, `auto` tries CUDA first, then DirectML when the bundled runtime supports it, then CPU. Batch and streaming API requests do not accept a per-request GPU override.
+The CLI server supports local REST transcription with installed offline models. The `serve` routes do not expose Online ASR or WebSocket streaming; use `sona-cli transcribe` or `sona-cli transcribe-live` for direct online transcription.
 
 For the full `serve` option table, see [CLI Guide](guide:cli-guide).
 

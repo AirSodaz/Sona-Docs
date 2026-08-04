@@ -12,7 +12,7 @@ Sona는 음성-텍스트 작업을 기본적으로 내 컴퓨터 안에 두고 �
 - 원문 전사는 그대로 두고 옆에 요약이 필요한 경우: [AI Summary](guide:ai-summary)
 - 주로 플로팅 자막이나 다른 앱 받아쓰기가 필요한 경우: [Live Caption과 Voice Typing](guide:live-caption-and-voice-typing)
 - 주로 hotwords, text replacement, speaker profiles, `Auto-Polish` 조정이 필요한 경우: [용어와 고급 설정](guide:vocabulary-and-advanced-settings)
-- 터미널에서 로컬 파일/실시간 전사 또는 자동화를 실행하려는 경우: [CLI 가이드](guide:cli-guide)
+- 터미널에서 stateless 로컬/온라인 파일 또는 실시간 전사를 실행하려는 경우: [CLI 가이드](guide:cli-guide)
 - 막힌 부분을 해결하려는 경우: [FAQ와 문제 해결](guide:faq)
 
 ## Sona 워크플로 한 줄 요약
@@ -36,7 +36,7 @@ Sona는 음성-텍스트 작업을 기본적으로 내 컴퓨터 안에 두고 �
 
 ## 함께 볼 수 있는 다른 문서
 
-- 독립 실행형 CLI의 전사, 모델, 기록, 내보내기, 백업, 서버 워크플로: [CLI 가이드](guide:cli-guide)
+- Stateless CLI의 전사, model 관리, 진단, transcript 내보내기, 로컬 API server: [CLI 가이드](guide:cli-guide)
 - 로컬 HTTP API 연동: [HTTP API 가이드](guide:api-guide)
 - 소스 빌드와 개발 명령: [프로젝트 README](readme)
 

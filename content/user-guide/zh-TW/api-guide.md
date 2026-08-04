@@ -18,10 +18,10 @@ API 服務可以透過兩種方式啟動。
 也可以透過獨立的 `sona-cli` 啟動相同的 API server 轉接器：
 
 ```bash
-sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
 ```
 
-GPU 硬體加速透過 GUI 模型設定或 `sona-cli serve --gpu-acceleration` 作為服務級預設值設定。Windows 上 `auto` 會先嘗試 CUDA；目前打包執行期支援 DirectML 時再嘗試 DirectML，最後回退 CPU。批次和串流 API 請求不支援依個別請求覆寫 GPU 設定。
+CLI server 使用已安裝的離線模型提供本機 REST 轉寫。`serve` 路由不公開 Online ASR 或 WebSocket 串流轉寫；直接線上轉寫請使用 `sona-cli transcribe` 或 `sona-cli transcribe-live`。
 
 完整 `serve` 參數表請參閱 [CLI 指南](guide:cli-guide)。
 

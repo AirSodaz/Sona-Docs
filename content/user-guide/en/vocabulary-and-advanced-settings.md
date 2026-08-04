@@ -17,7 +17,7 @@ This page keeps a few tuning-oriented capabilities in one place: `Hotwords`, `Te
 
 - Add repeated terms to `Hotwords` when recognition keeps drifting on the same names or phrases.
 - `Hotwords` are entered one per line, and weighted entries such as `Term :2.0` are supported.
-- Right now this capability is especially relevant for Transducer and Qwen3 ASR models.
+- Hotwords currently apply to compatible sherpa-onnx Transducer models. The llama.cpp Qwen3-ASR presets do not use hotwords.
 
 ## What `Text Replacement` is good for
 

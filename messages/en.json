@@ -224,7 +224,7 @@
       "desc": "Install the latest release, then record or import audio, review timestamps, polish, translate, and export without breaking the thread.",
       "primaryLabel": "Download Latest Release",
       "secondaryLabel": "Read User Guide",
-      "note": "Stable and Nightly desktop builds are available for Windows, macOS, and Linux. Android is coming soon."
+      "note": "Stable and Nightly desktop builds are available for Windows, macOS, and Linux. Android debug previews are available on Nightly."
     },
     "footer": {
       "license": "Open sourced under MIT License.",
@@ -237,14 +237,16 @@
   "DownloadsPage": {
     "metadata": {
       "title": "Sona | Downloads",
-      "description": "Download stable and Nightly Sona desktop builds for Windows, macOS, and Linux. The Android client is coming soon.",
+      "description": "Download stable and Nightly Sona desktop builds for Windows, macOS, and Linux. Android debug previews are available on Nightly.",
       "nightlyTitle": "Sona | Nightly Downloads",
-      "nightlyDescription": "Download the latest Sona Nightly desktop builds for Windows, macOS, and Linux."
+      "nightlyDescription": "Download the latest Sona Nightly desktop builds and Android debug preview APKs."
     },
     "android": {
       "title": "Android",
-      "statusLabel": "Coming soon",
-      "description": "The Android client is in development. Public downloads will appear here when it is ready."
+      "stableStatusLabel": "Coming soon",
+      "stableDescription": "The Android client is not available on the stable channel yet. Debug preview builds are available on Nightly.",
+      "nightlyStatusLabel": "Debug preview",
+      "nightlyDescription": "Debug-signed Android APKs are available for testing. Choose the build that matches your device processor."
     },
     "button": {
       "allBuildsLabel": "All builds",
@@ -264,15 +266,15 @@
       "alternateLanguageLabel": "简体中文",
       "decisionDescription": "Start with your operating system and processor, then choose the installer format that fits how you manage apps.",
       "decisionTitle": "Choose platform and format",
-      "description": "Choose a stable or Nightly desktop build that matches your system, architecture, and preferred installer format.",
-      "desktopOnlyNote": "Desktop builds are available for Windows, macOS, and Linux. The Android client is not publicly available yet.",
-      "emptyBuildsDescription": "The release loaded, but it does not include Windows, macOS, or Linux desktop assets that this page can recognize. GitHub Releases may still list manual artifacts.",
-      "emptyBuildsTitle": "No desktop builds found",
+      "description": "Choose a stable or Nightly desktop build for your system. Android debug preview APKs are available on Nightly.",
+      "desktopOnlyNote": "Desktop builds are available for Windows, macOS, and Linux. Debug-signed Android preview APKs are available only on Nightly.",
+      "emptyBuildsDescription": "The release loaded, but it does not include desktop or Android debug assets that this page can recognize. GitHub Releases may still list manual artifacts.",
+      "emptyBuildsTitle": "No recognized builds found",
       "firstRunLabel": "Continue with Getting Started",
       "formatChoiceLabel": "Format",
       "githubLabel": "View on GitHub Releases",
       "homeLabel": "Back to home",
-      "installSafetyNote": "If Windows SmartScreen, macOS Gatekeeper, or Linux executable-permission prompts appear, first confirm the file came from Sona Downloads or GitHub Releases, then follow the operating-system prompt. Do not turn off system protection globally.",
+      "installSafetyNote": "If Windows SmartScreen, macOS Gatekeeper, Linux executable-permission, or Android unknown-app prompts appear, first confirm the file came from Sona Downloads or GitHub Releases, then follow the operating-system prompt. Do not turn off system protection globally.",
       "loadingLabel": "Checking the selected release...",
       "platformChoiceLabel": "Platform",
       "recommendedLabel": "Recommended",
@@ -294,6 +296,7 @@
       "dmg": "Disk image (.dmg)",
       "app-tar-gz": "App bundle (.app.tar.gz)",
       "appimage": "AppImage",
+      "apk": "Debug APK (.apk)",
       "deb": "Deb package (.deb)",
       "rpm": "RPM package (.rpm)"
     },
@@ -303,10 +306,13 @@
       "dmg": "Standard macOS disk image for drag-to-install setup.",
       "app-tar-gz": "Raw macOS app bundle for manual or automated installs.",
       "appimage": "Portable Linux build that runs outside a package manager.",
+      "apk": "Debug-signed Android preview for direct installation and testing.",
       "deb": "Debian and Ubuntu package for system installation.",
       "rpm": "Fedora, RHEL, and openSUSE package for system installation."
     },
     "platforms": {
+      "android-arm64": "Android ARM64",
+      "android-x64": "Android x86_64",
       "windows-x64": "Windows x64",
       "windows-arm64": "Windows ARM64",
       "macos-arm64": "macOS Apple Silicon",
@@ -315,6 +321,8 @@
       "linux-x64": "Linux x64"
     },
     "platformDescriptions": {
+      "android-arm64": "Most modern Android phones and tablets.",
+      "android-x64": "x86_64 Android emulators and compatible devices.",
       "windows-x64": "Most Windows PCs with Intel or AMD processors.",
       "windows-arm64": "Windows on ARM devices.",
       "macos-arm64": "Apple Silicon Macs.",

@@ -17,7 +17,7 @@
 
 - 같은 이름이나 구문에서 인식이 계속 흔들릴 때 `Hotwords`에 반복 용어를 추가합니다.
 - `Hotwords`는 한 줄에 하나씩 입력하며, `Term :2.0` 같은 weighted entries도 지원합니다.
-- 현재 이 기능은 특히 Transducer와 Qwen3 ASR 모델에서 관련성이 큽니다.
+- 이 기능은 호환되는 sherpa-onnx Transducer model에 적용됩니다. llama.cpp Qwen3-ASR preset은 hotword를 사용하지 않습니다.
 
 ## `Text Replacement`가 유용한 경우
 

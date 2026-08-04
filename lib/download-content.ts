@@ -24,9 +24,11 @@ interface DownloadChannelCopy {
 }
 
 interface AndroidDownloadCopy {
-  description: string;
+  nightlyDescription: string;
+  nightlyStatusLabel: string;
+  stableDescription: string;
+  stableStatusLabel: string;
   href: string;
-  statusLabel: string;
   title: string;
 }
 
@@ -102,7 +104,7 @@ export function buildDownloadContentFromMessages(
     },
     android: {
       ...(t.raw('android') as Omit<AndroidDownloadCopy, 'href'>),
-      href: '/downloads#android',
+      href: '/downloads/nightly#android',
     },
     button: {
       ...(t.raw('button') as Omit<DownloadButtonCopy, 'allBuildsHref'>),

@@ -1,16 +1,19 @@
-export type DownloadOs = 'windows' | 'macos' | 'linux';
-export type ClientPlatformOs = DownloadOs | 'android' | 'ios' | 'unknown';
+export type DownloadOs = 'android' | 'windows' | 'macos' | 'linux';
+export type ClientPlatformOs = DownloadOs | 'ios' | 'unknown';
 export type DownloadArch = 'arm64' | 'universal' | 'x64';
 export type ReleaseChannel = 'nightly' | 'stable';
 export type DownloadFormat =
   | 'app-tar-gz'
   | 'appimage'
+  | 'apk'
   | 'deb'
   | 'dmg'
   | 'exe'
   | 'msi'
   | 'rpm';
 export type DownloadPlatformKey =
+  | 'android-arm64'
+  | 'android-x64'
   | 'windows-x64'
   | 'windows-arm64'
   | 'macos-arm64'
@@ -31,6 +34,10 @@ export interface StructuredDownload extends PublicAsset {
 }
 
 export interface StructuredDownloads {
+  android: {
+    arm64?: StructuredDownload[];
+    x64?: StructuredDownload[];
+  };
   linux: {
     x64?: StructuredDownload[];
   };
@@ -46,6 +53,10 @@ export interface StructuredDownloads {
 }
 
 export interface RecommendedDownloads {
+  android: {
+    arm64?: StructuredDownload;
+    x64?: StructuredDownload;
+  };
   linux: {
     x64?: StructuredDownload;
   };
@@ -177,6 +188,10 @@ export function getDownloadsForKey(
   key: DownloadPlatformKey,
 ): StructuredDownload[] {
   switch (key) {
+    case 'android-arm64':
+      return release.downloads.android.arm64 ?? [];
+    case 'android-x64':
+      return release.downloads.android.x64 ?? [];
     case 'windows-x64':
       return release.downloads.windows.x64 ?? [];
     case 'windows-arm64':
@@ -197,6 +212,10 @@ export function getRecommendedForKey(
   key: DownloadPlatformKey,
 ): StructuredDownload | undefined {
   switch (key) {
+    case 'android-arm64':
+      return release.recommended.android.arm64;
+    case 'android-x64':
+      return release.recommended.android.x64;
     case 'windows-x64':
       return release.recommended.windows.x64;
     case 'windows-arm64':

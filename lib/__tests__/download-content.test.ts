@@ -56,7 +56,11 @@ describe('download content', () => {
       expect(content.channels.nightlyLabel).toBeTruthy();
       expect(content.channels.nightlyWarningDescription).toBeTruthy();
       expect(content.android.title).toBe('Android');
-      expect(content.android.statusLabel).toBeTruthy();
+      expect(content.android.href).toBe('/downloads/nightly#android');
+      expect(content.android.nightlyStatusLabel).toBeTruthy();
+      expect(content.android.stableStatusLabel).toBeTruthy();
+      expect(content.formats.apk).toBeTruthy();
+      expect(content.platforms['android-arm64']).toBeTruthy();
       expect(content.page.nightlyReleaseLabel).toBeTruthy();
     }
   });

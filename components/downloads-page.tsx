@@ -149,6 +149,17 @@ export function DownloadsPage({
       })).filter((section) => section.items.length > 0)
     : [];
   const hasDesktopBuilds = downloadSections.length > 0;
+  const androidDownloadGroups =
+    readyRelease && channel === 'nightly'
+      ? (['android-arm64', 'android-x64'] as const)
+          .map((key) => ({
+            downloads: getDownloadsForKey(readyRelease, key),
+            key,
+          }))
+          .filter((item) => item.downloads.length > 0)
+      : [];
+  const hasRecognizedBuilds =
+    hasDesktopBuilds || androidDownloadGroups.length > 0;
 
   return (
     <main className="relative min-h-[100svh] bg-[#F7F5F2] text-[#2D2D2D] transition-colors duration-300 dark:bg-[#121212] dark:text-[#E0E0E0]">
@@ -340,7 +351,7 @@ export function DownloadsPage({
             </motion.div>
           ) : null}
 
-          {readyRelease && !hasDesktopBuilds ? (
+          {readyRelease && !hasRecognizedBuilds ? (
             <motion.div
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -432,14 +443,50 @@ export function DownloadsPage({
                     {content.android.title}
                   </h2>
                   <p className="mt-1 max-w-2xl text-sm font-light leading-7 text-stone-500 dark:text-stone-400">
-                    {content.android.description}
+                    {channel === 'nightly'
+                      ? content.android.nightlyDescription
+                      : content.android.stableDescription}
                   </p>
                 </div>
               </div>
               <span className="inline-flex w-fit shrink-0 items-center rounded-full bg-stone-200 px-3 py-1.5 text-xs font-medium text-stone-600 dark:bg-stone-800 dark:text-stone-300">
-                {content.android.statusLabel}
+                {channel === 'nightly'
+                  ? content.android.nightlyStatusLabel
+                  : content.android.stableStatusLabel}
               </span>
             </div>
+
+            {androidDownloadGroups.length > 0 ? (
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                {androidDownloadGroups.map((item) => (
+                  <div
+                    key={item.key}
+                    className="flex flex-col gap-4 rounded-2xl bg-white/40 p-6 ring-1 ring-stone-200/50 transition-colors dark:bg-stone-900/30 dark:ring-stone-800/50"
+                  >
+                    <div>
+                      <h3 className="text-sm font-medium text-[#2D2D2D] dark:text-[#E0E0E0]">
+                        {content.platforms[item.key]}
+                      </h3>
+                      <p className="mt-2 text-sm font-light leading-[1.7] text-stone-500 dark:text-stone-400">
+                        {content.platformDescriptions[item.key]}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      {item.downloads.map((download) => (
+                        <DownloadRow
+                          key={download.url}
+                          download={download}
+                          guidance={content.formatDescriptions.apk}
+                          label={content.formats.apk}
+                          recommended={false}
+                          recommendedLabel={content.page.recommendedLabel}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </motion.section>
 
           <motion.div

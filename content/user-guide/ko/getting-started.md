@@ -50,4 +50,4 @@ Windows SmartScreen, macOS Gatekeeper, Linux 실행 권한 안내가 표시되�
 - 모델은 나중에 `Settings > Model Settings`에서 바꿀 수 있습니다.
 - 기본 마이크는 나중에 `Settings > Input Device`에서 바꿀 수 있습니다.
 - 모델 다운로드가 멈춘다면 인터넷 연결과 모델 호스트 접근 가능 여부를 확인한 뒤 온보딩을 다시 시도하세요. 그래도 실패하면 `Settings > Model Settings`에서 모델을 다운로드하거나 선택하고, `Settings > General > Diagnostics`에서 세부 정보를 확인하세요.
-- 나중에 독립 실행형 CLI의 파일/실시간 전사, 모델 관리, 기록/내보내기/백업 자동화 또는 로컬 API 서버가 필요하면 사이트 안의 [CLI 가이드](guide:cli-guide)로 이어가세요.
+- 나중에 stateless CLI의 로컬/온라인 파일 또는 실시간 전사, model 관리, 진단, transcript 내보내기, 로컬 API server가 필요하면 사이트 안의 [CLI 가이드](guide:cli-guide)로 이어가세요.

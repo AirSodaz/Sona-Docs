@@ -224,7 +224,7 @@
       "desc": "安裝後就能開始即時錄音或批次匯入，繼續整理時間戳記、潤飾、翻譯，並視需要匯出。",
       "primaryLabel": "下載最新版本",
       "secondaryLabel": "閱讀使用者指南",
-      "note": "Windows、macOS 和 Linux 提供穩定版與 Nightly 桌面建構；Android 客戶端即將推出。"
+      "note": "Windows、macOS 和 Linux 提供穩定版與 Nightly 桌面建構；Android debug 預覽版已在 Nightly 提供。"
     },
     "footer": {
       "license": "基於 MIT 協定開源。",
@@ -237,14 +237,16 @@
   "DownloadsPage": {
     "metadata": {
       "title": "Sona | 下載",
-      "description": "下載 Sona 的穩定版或 Nightly Windows、macOS 與 Linux 桌面建構；Android 客戶端即將推出。",
+      "description": "下載 Sona 的穩定版或 Nightly Windows、macOS 與 Linux 桌面建構；Android debug 預覽版已在 Nightly 提供。",
       "nightlyTitle": "Sona | Nightly 下載",
-      "nightlyDescription": "下載最新的 Sona Nightly Windows、macOS 與 Linux 桌面建構。"
+      "nightlyDescription": "下載最新的 Sona Nightly 桌面建構與 Android debug 預覽 APK。"
     },
     "android": {
       "title": "Android",
-      "statusLabel": "即將推出",
-      "description": "Android 客戶端正在開發中，公開下載準備就緒後會顯示在這裡。"
+      "stableStatusLabel": "即將推出",
+      "stableDescription": "Android 客戶端尚未進入穩定通道；可先前往 Nightly 下載 debug 預覽版。",
+      "nightlyStatusLabel": "Debug 預覽",
+      "nightlyDescription": "這裡提供用於測試的 debug 簽名 Android APK，請按裝置處理器架構選擇對應建構。"
     },
     "button": {
       "allBuildsLabel": "全部建構",
@@ -264,15 +266,15 @@
       "alternateLanguageLabel": "English",
       "decisionDescription": "先按作業系統和處理器選擇平台，再按您管理應用程式的方式選擇安裝格式。",
       "decisionTitle": "選擇平台與格式",
-      "description": "按系統、架構和安裝格式選擇穩定版或 Nightly 桌面建構，不必在 Releases 列表裡自己翻找。",
-      "desktopOnlyNote": "桌面建構適用於 Windows、macOS 和 Linux；Android 客戶端目前尚未開放公開下載。",
-      "emptyBuildsDescription": "release 已成功載入，但其中沒有本頁可辨識的 Windows、macOS 或 Linux 桌面端資源。GitHub Releases 中可能仍有可手動查看的建構。",
-      "emptyBuildsTitle": "沒有找到桌面端建構",
+      "description": "按系統、架構和安裝格式選擇穩定版或 Nightly 桌面建構；Android debug 預覽 APK 已在 Nightly 提供。",
+      "desktopOnlyNote": "桌面建構適用於 Windows、macOS 和 Linux；debug 簽名的 Android 預覽 APK 僅在 Nightly 提供。",
+      "emptyBuildsDescription": "release 已成功載入，但其中沒有本頁可辨識的桌面端或 Android debug 資源。GitHub Releases 中可能仍有可手動查看的建構。",
+      "emptyBuildsTitle": "沒有找到可辨識的建構",
       "firstRunLabel": "繼續查看快速入門",
       "formatChoiceLabel": "格式",
       "githubLabel": "前往 GitHub Releases",
       "homeLabel": "返回首頁",
-      "installSafetyNote": "如果遇到 Windows SmartScreen、macOS Gatekeeper 或 Linux 可執行權限提示，請先確認檔案來自 Sona 下載頁或 GitHub Releases，再按系統提示處理；不要全域關閉系統安全防護。",
+      "installSafetyNote": "如果遇到 Windows SmartScreen、macOS Gatekeeper、Linux 可執行權限或 Android 未知應用程式安裝提示，請先確認檔案來自 Sona 下載頁或 GitHub Releases，再按系統提示處理；不要全域關閉系統安全防護。",
       "loadingLabel": "正在檢查所選 release...",
       "platformChoiceLabel": "平台",
       "recommendedLabel": "推薦",
@@ -294,6 +296,7 @@
       "dmg": "磁碟映像 (.dmg)",
       "app-tar-gz": "應用程式包 (.app.tar.gz)",
       "appimage": "AppImage",
+      "apk": "Debug APK (.apk)",
       "deb": "Deb 安裝包 (.deb)",
       "rpm": "RPM 安裝包 (.rpm)"
     },
@@ -303,10 +306,13 @@
       "dmg": "macOS 常用磁碟映像，適合拖曳安裝。",
       "app-tar-gz": "macOS 原始應用程式包，適合手動安裝或自動化處理。",
       "appimage": "Linux 可攜式建構，不依賴系統包管理員。",
+      "apk": "用於直接安裝和測試的 debug 簽名 Android 預覽版。",
       "deb": "適用於 Debian 與 Ubuntu 的系統安裝包。",
       "rpm": "適用於 Fedora、RHEL 與 openSUSE 的系統安裝包。"
     },
     "platforms": {
+      "android-arm64": "Android ARM64",
+      "android-x64": "Android x86_64",
       "windows-x64": "Windows x64",
       "windows-arm64": "Windows ARM64",
       "macos-arm64": "macOS Apple 晶片",
@@ -315,6 +321,8 @@
       "linux-x64": "Linux x64"
     },
     "platformDescriptions": {
+      "android-arm64": "大多數現代 Android 手機和平板裝置。",
+      "android-x64": "x86_64 Android 模擬器及相容裝置。",
       "windows-x64": "大多數 Intel 或 AMD 處理器的 Windows 電腦。",
       "windows-arm64": "Windows on ARM 裝置。",
       "macos-arm64": "Apple 晶片 Mac。",

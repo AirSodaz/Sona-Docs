@@ -18,10 +18,10 @@ API 서버는 두 가지 방식으로 시작할 수 있습니다.
 독립 실행형 `sona-cli`에서 같은 API 서버 어댑터를 시작할 수도 있습니다.
 
 ```bash
-sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key --ip-whitelist localhost --max-streaming 2 --gpu-acceleration auto
+sona-cli serve --host 127.0.0.1 --port 14200 --api-key your_secure_key
 ```
 
-GPU acceleration은 GUI model settings 또는 `sona-cli serve --gpu-acceleration`을 통해 server-level default로 설정합니다. Windows에서 `auto`는 CUDA를 먼저 시도하고, bundled runtime이 DirectML을 지원하면 DirectML을 시도한 뒤 CPU로 fallback합니다. Batch와 streaming API request는 request별 GPU override를 받지 않습니다.
+CLI server는 설치된 offline model을 사용한 local REST 전사를 제공합니다. `serve` route는 Online ASR 또는 WebSocket streaming을 노출하지 않습니다. 직접 온라인 전사를 하려면 `sona-cli transcribe` 또는 `sona-cli transcribe-live`를 사용하세요.
 
 전체 `serve` option table은 [CLI 가이드](guide:cli-guide)를 참고하세요.
 

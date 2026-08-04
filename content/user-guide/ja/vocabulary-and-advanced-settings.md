@@ -19,7 +19,7 @@
 
 - 特定の名前やフレーズの認識が何度もぶれる場合、その用語を `Hotwords` に追加します。
 - `Hotwords` は 1 行に 1 項目ずつ入力します。`用語 :2.0` のような重み付けにも対応しています。
-- 現在、この機能は特に Transducer および Qwen3 ASR モデルで効果を発揮します。
+- この機能は互換性のある sherpa-onnx Transducer モデルに適用されます。llama.cpp Qwen3-ASR プリセットはホットワードを使用しません。
 
 ## Text Replacement が役立つ場面
 

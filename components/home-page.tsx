@@ -269,7 +269,7 @@ export function HomePage({
                   <Smartphone aria-hidden="true" size={14} />
                   <span>{downloads.android.title}</span>
                   <span aria-hidden="true">/</span>
-                  <span>{downloads.android.statusLabel}</span>
+                  <span>{downloads.android.nightlyStatusLabel}</span>
                 </Link>
               </motion.div>
 

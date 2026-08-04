@@ -28,6 +28,16 @@ const stablePayload = {
       browser_download_url: 'https://downloads.example.com/sona-debug.apk',
     },
     {
+      name: 'app-x86_64-debug.apk',
+      size: 9216,
+      browser_download_url: 'https://downloads.example.com/sona-x86-debug.apk',
+    },
+    {
+      name: 'app-arm64-v8a-release-unsigned.apk',
+      size: 10_240,
+      browser_download_url: 'https://downloads.example.com/sona-unsigned.apk',
+    },
+    {
       name: 'Sona_0.9.0_x64-setup.exe.sig',
       size: 128,
       browser_download_url: 'https://downloads.example.com/sona-x64.exe.sig',
@@ -97,6 +107,21 @@ describe('GitHub release route', () => {
     expect(payload.version).toBe('nightly');
     expect(payload.releaseName).toBe(
       'Nightly 2026-07-14 (0.9.0-nightly.20260714)',
+    );
+    expect(payload.downloads.android.arm64).toEqual([
+      expect.objectContaining({
+        format: 'apk',
+        name: 'app-arm64-v8a-debug.apk',
+      }),
+    ]);
+    expect(payload.downloads.android.x64).toEqual([
+      expect.objectContaining({
+        format: 'apk',
+        name: 'app-x86_64-debug.apk',
+      }),
+    ]);
+    expect(JSON.stringify(payload.downloads)).not.toContain(
+      'release-unsigned.apk',
     );
   });
 

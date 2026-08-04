@@ -752,21 +752,21 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'CLI Guide',
         navLabel: 'CLI Guide',
         description:
-          "Use the standalone Sona CLI for local file or live transcription, model management, history, export, backup, and headless server workflows.",
+          'Use the stateless Sona CLI for local or online file/live transcription, model management, diagnostics, transcript export, and a local-ASR REST server.',
         contentFile: 'en/cli-guide.md',
       },
       'zh-CN': {
         title: 'CLI 指南',
         navLabel: 'CLI 指南',
         description:
-          '使用独立 Sona CLI 完成本地文件或实时转录、模型管理、历史、导出、备份与无界面服务端工作流。',
+          '使用无状态 Sona CLI 完成本地或在线文件/实时转录、模型管理、诊断、转录导出，以及仅限本地 ASR 的 REST 服务。',
         contentFile: 'zh-CN/cli-guide.md',
       },
       ja: {
         title: 'CLI ガイド',
         navLabel: 'CLI ガイド',
         description:
-          'スタンドアロン Sona CLI で、ローカルファイル/リアルタイム文字起こし、モデル管理、履歴、書き出し、バックアップ、ヘッドレスサーバーを扱います。',
+          'ステートレスな Sona CLI で、ローカル/オンラインのファイル・リアルタイム文字起こし、モデル管理、診断、書き出し、ローカル ASR REST サーバーを扱います。',
         contentFile: 'ja/cli-guide.md',
       },
     
@@ -774,14 +774,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'CLI 가이드',
         navLabel: 'CLI 가이드',
         description:
-          '독립 실행형 Sona CLI에서 로컬 파일/실시간 전사, 모델 관리, 기록, 내보내기, 백업, 헤드리스 서버 워크플로를 사용합니다.',
+          'Stateless Sona CLI에서 로컬/온라인 파일 및 실시간 전사, 모델 관리, 진단, transcript 내보내기, 로컬 ASR REST server를 사용합니다.',
         contentFile: 'ko/cli-guide.md',
       },
       'zh-TW': {
         title: 'CLI 指南',
         navLabel: 'CLI 參考',
         description:
-          '使用獨立 Sona CLI 完成本機檔案或即時轉錄、模型管理、歷史、匯出、備份與無外介面服務端工作流程。',
+          '使用無狀態 Sona CLI 完成本機或線上檔案/即時轉寫、模型管理、診斷、轉寫匯出，以及僅限本機 ASR 的 REST 服務。',
         contentFile: 'zh-TW/cli-guide.md',
       },
     },

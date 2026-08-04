@@ -224,7 +224,7 @@
       "desc": "最新版をインストールすれば、録音またはインポート、タイムスタンプ確認、整文、翻訳、エクスポートまで続けて進められます。",
       "primaryLabel": "最新版をダウンロード",
       "secondaryLabel": "ユーザーガイドを読む",
-      "note": "Windows、macOS、Linux では安定版と Nightly を利用できます。Android は近日公開予定です。"
+      "note": "Windows、macOS、Linux では安定版と Nightly を利用できます。Android の debug プレビュー版は Nightly で提供しています。"
     },
     "footer": {
       "license": "MIT ライセンスで公開されています。",
@@ -237,14 +237,16 @@
   "DownloadsPage": {
     "metadata": {
       "title": "Sona | ダウンロード",
-      "description": "Windows、macOS、Linux 向けの Sona 安定版または Nightly をダウンロードできます。Android クライアントは近日公開予定です。",
+      "description": "Windows、macOS、Linux 向けの Sona 安定版または Nightly をダウンロードできます。Android の debug プレビュー版は Nightly で提供しています。",
       "nightlyTitle": "Sona | Nightly ダウンロード",
-      "nightlyDescription": "Windows、macOS、Linux 向けの最新 Sona Nightly デスクトップ版をダウンロードできます。"
+      "nightlyDescription": "最新の Sona Nightly デスクトップ版と Android debug プレビュー APK をダウンロードできます。"
     },
     "android": {
       "title": "Android",
-      "statusLabel": "近日公開",
-      "description": "Android クライアントは開発中です。公開準備が整い次第、ここにダウンロードを追加します。"
+      "stableStatusLabel": "近日公開",
+      "stableDescription": "Android クライアントはまだ安定版チャンネルでは提供していません。Nightly で debug プレビュー版を利用できます。",
+      "nightlyStatusLabel": "Debug プレビュー",
+      "nightlyDescription": "テスト用の debug 署名済み Android APK です。端末のプロセッサに合うビルドを選択してください。"
     },
     "button": {
       "allBuildsLabel": "すべてのビルド",
@@ -264,15 +266,15 @@
       "alternateLanguageLabel": "English",
       "decisionDescription": "まず OS とプロセッサを選び、次にアプリの管理方法に合うインストーラー形式を選んでください。",
       "decisionTitle": "プラットフォームと形式の選択",
-      "description": "お使いのシステム、アーキテクチャ、インストール方法に合う安定版または Nightly デスクトップ版を選択できます。",
-      "desktopOnlyNote": "デスクトップ版は Windows、macOS、Linux で利用できます。Android クライアントはまだ一般公開されていません。",
-      "emptyBuildsDescription": "リリース情報は取得できましたが、このページで認識できる Windows、macOS、Linux 向けのデスクトップアセットが見つかりませんでした。GitHub Releases には手動で確認できるファイルがある場合があります。",
-      "emptyBuildsTitle": "デスクトップ版のビルドが見つかりません",
+      "description": "システムに合う安定版または Nightly デスクトップ版を選択できます。Android debug プレビュー APK は Nightly で提供しています。",
+      "desktopOnlyNote": "デスクトップ版は Windows、macOS、Linux で利用できます。debug 署名済み Android プレビュー APK は Nightly のみで提供しています。",
+      "emptyBuildsDescription": "リリース情報は取得できましたが、このページで認識できるデスクトップ版または Android debug アセットが見つかりませんでした。GitHub Releases には手動で確認できるファイルがある場合があります。",
+      "emptyBuildsTitle": "認識できるビルドが見つかりません",
       "firstRunLabel": "はじめに進む",
       "formatChoiceLabel": "形式",
       "githubLabel": "GitHub Releases で見る",
       "homeLabel": "ホームへ戻る",
-      "installSafetyNote": "Windows SmartScreen、macOS Gatekeeper、Linux の実行権限に関する確認が表示された場合は、ファイルの入手元が Sona Downloads または GitHub Releases であることを確認してから、OS の案内に従ってください。システム保護を全体で無効にする必要はありません。",
+      "installSafetyNote": "Windows SmartScreen、macOS Gatekeeper、Linux の実行権限、Android の提供元不明アプリに関する確認が表示された場合は、ファイルの入手元が Sona Downloads または GitHub Releases であることを確認してから、OS の案内に従ってください。システム保護を全体で無効にする必要はありません。",
       "loadingLabel": "選択したリリースを確認しています...",
       "platformChoiceLabel": "プラットフォーム",
       "recommendedLabel": "推奨",
@@ -294,6 +296,7 @@
       "dmg": "ディスクイメージ (.dmg)",
       "app-tar-gz": "アプリバンドル (.app.tar.gz)",
       "appimage": "AppImage",
+      "apk": "Debug APK (.apk)",
       "deb": "Deb パッケージ (.deb)",
       "rpm": "RPM パッケージ (.rpm)"
     },
@@ -303,10 +306,13 @@
       "dmg": "ドラッグ＆ドロップでインストールできる標準的な macOS 形式です。",
       "app-tar-gz": "手動導入や自動化に使いやすい macOS アプリバンドルです。",
       "appimage": "パッケージマネージャーを使わずに実行できる Linux 向けポータブルビルドです。",
+      "apk": "直接インストールしてテストするための debug 署名済み Android プレビュー版です。",
       "deb": "Debian や Ubuntu 系向けのシステムインストールパッケージです。",
       "rpm": "Fedora、RHEL、openSUSE 系向けのシステムインストールパッケージです。"
     },
     "platforms": {
+      "android-arm64": "Android ARM64",
+      "android-x64": "Android x86_64",
       "windows-x64": "Windows x64",
       "windows-arm64": "Windows ARM64",
       "macos-arm64": "macOS Apple Silicon",
@@ -315,6 +321,8 @@
       "linux-x64": "Linux x64"
     },
     "platformDescriptions": {
+      "android-arm64": "一般的な最新の Android スマートフォンとタブレット向けです。",
+      "android-x64": "x86_64 Android エミュレーターおよび対応端末向けです。",
       "windows-x64": "Intel または AMD プロセッサを搭載した多くの Windows PC 向けです。",
       "windows-arm64": "ARM 版 Windows デバイス向けです。",
       "macos-arm64": "Apple Silicon 搭載 Mac 向けです。",

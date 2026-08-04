@@ -4,7 +4,7 @@ A lightweight landing page for **Sona**, the offline transcript editor built wit
 
 ## Overview
 
-Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact bilingual landing page, a stable release-aware download button, a Stable/Nightly downloads view, an Android coming-soon placeholder, a branded global 404 page, and metadata tuned for production deployment.
+Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact multilingual landing page, a stable release-aware download button, a Stable/Nightly downloads view with Android debug previews on Nightly, a branded global 404 page, and metadata tuned for production deployment.
 
 ### Highlighted Product Capabilities
 - **Local processing:** Speech recognition runs on-device with Sherpa-onnx.

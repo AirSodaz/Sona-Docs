@@ -39,6 +39,7 @@ interface GitHubRelease {
 const WINDOWS_FORMAT_PRIORITY: DownloadFormat[] = ['exe', 'msi'];
 const MACOS_FORMAT_PRIORITY: DownloadFormat[] = ['dmg', 'app-tar-gz'];
 const LINUX_FORMAT_PRIORITY: DownloadFormat[] = ['appimage', 'deb', 'rpm'];
+const ANDROID_FORMAT_PRIORITY: DownloadFormat[] = ['apk'];
 
 function buildCacheControl(maxAge: number) {
   return `public, max-age=0, s-maxage=${maxAge}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_SECONDS}`;
@@ -149,6 +150,10 @@ function detectFormat(name: string): DownloadFormat | null {
     return 'appimage';
   }
 
+  if (lowerName.endsWith('.apk')) {
+    return 'apk';
+  }
+
   if (lowerName.endsWith('.deb')) {
     return 'deb';
   }
@@ -208,7 +213,22 @@ function detectLinuxArch(name: string): DownloadArch | null {
   return null;
 }
 
-function parseStructuredDownload(asset: PublicAsset): StructuredDownload | null {
+function detectAndroidArch(name: string): DownloadArch | null {
+  if (name.includes('arm64-v8a')) {
+    return 'arm64';
+  }
+
+  if (name.includes('x86_64')) {
+    return 'x64';
+  }
+
+  return null;
+}
+
+function parseStructuredDownload(
+  asset: PublicAsset,
+  channel: ReleaseChannel,
+): StructuredDownload | null {
   const lowerName = asset.name.toLowerCase();
 
   if (lowerName.endsWith('.sig') || lowerName === 'updater.json') {
@@ -218,6 +238,24 @@ function parseStructuredDownload(asset: PublicAsset): StructuredDownload | null 
   const format = detectFormat(lowerName);
   if (!format) {
     return null;
+  }
+
+  if (format === 'apk') {
+    if (channel !== 'nightly' || !lowerName.endsWith('-debug.apk')) {
+      return null;
+    }
+
+    const arch = detectAndroidArch(lowerName);
+    if (!arch || arch === 'universal') {
+      return null;
+    }
+
+    return {
+      ...asset,
+      arch,
+      format,
+      os: 'android',
+    };
   }
 
   if (format === 'exe' || format === 'msi') {
@@ -263,7 +301,9 @@ function parseStructuredDownload(asset: PublicAsset): StructuredDownload | null 
 
 function getFormatPriority(os: DownloadOs, format: DownloadFormat) {
   const order =
-    os === 'windows'
+    os === 'android'
+      ? ANDROID_FORMAT_PRIORITY
+      : os === 'windows'
       ? WINDOWS_FORMAT_PRIORITY
       : os === 'macos'
         ? MACOS_FORMAT_PRIORITY
@@ -289,12 +329,23 @@ function sortDownloads(downloads: StructuredDownload[]) {
 
 function buildStructuredDownloads(downloads: StructuredDownload[]) {
   const grouped: StructuredDownloads = {
+    android: {},
     linux: {},
     macos: {},
     windows: {},
   };
 
   for (const download of downloads) {
+    if (download.os === 'android') {
+      if (download.arch === 'arm64' || download.arch === 'x64') {
+        const bucket = grouped.android[download.arch];
+        grouped.android[download.arch] = bucket
+          ? [...bucket, download]
+          : [download];
+      }
+      continue;
+    }
+
     if (download.os === 'windows') {
       if (download.arch === 'arm64' || download.arch === 'x64') {
         const bucket = grouped.windows[download.arch];
@@ -327,6 +378,14 @@ function buildStructuredDownloads(downloads: StructuredDownload[]) {
     grouped.windows.arm64 = sortDownloads(grouped.windows.arm64);
   }
 
+  if (grouped.android.arm64) {
+    grouped.android.arm64 = sortDownloads(grouped.android.arm64);
+  }
+
+  if (grouped.android.x64) {
+    grouped.android.x64 = sortDownloads(grouped.android.x64);
+  }
+
   if (grouped.macos.arm64) {
     grouped.macos.arm64 = sortDownloads(grouped.macos.arm64);
   }
@@ -344,11 +403,14 @@ function buildStructuredDownloads(downloads: StructuredDownload[]) {
   }
 
   const recommended: RecommendedDownloads = {
+    android: {},
     linux: {},
     macos: {},
     windows: {},
   };
 
+  recommended.android.arm64 = grouped.android.arm64?.[0];
+  recommended.android.x64 = grouped.android.x64?.[0];
   recommended.windows.x64 = grouped.windows.x64?.[0];
   recommended.windows.arm64 = grouped.windows.arm64?.[0];
   recommended.macos.arm64 = grouped.macos.arm64?.[0];
@@ -411,7 +473,7 @@ export async function GET(request: Request) {
 
     const assets = normalizeAssets(data.assets ?? []);
     const structuredDownloads = assets
-      .map((asset) => parseStructuredDownload(asset))
+      .map((asset) => parseStructuredDownload(asset, channel))
       .filter((asset): asset is StructuredDownload => asset !== null);
     const { downloads, recommended } = buildStructuredDownloads(
       structuredDownloads,
