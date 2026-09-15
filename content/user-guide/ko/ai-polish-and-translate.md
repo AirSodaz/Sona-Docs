@@ -8,7 +8,7 @@ Sona의 정리와 번역 기능은 선택 기능입니다. 로컬 전사는 이 
 
 ## 시작하기 전에
 
-- [Live Record](guide:live-record), [Batch Import](guide:batch-import), [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)에서 만든 전사 세그먼트가 이미 있어야 합니다.
+- [Live Record](guide:live-record), [Batch Import](guide:batch-import), [프로젝트와 Inbox](guide:workspace-projects-and-inbox)에서 만든 전사 세그먼트가 이미 있어야 합니다.
 - 필요한 기능을 `Settings > LLM Service`에서 설정할 준비가 되어 있어야 합니다.
 
 ## Provider 먼저 연결
@@ -45,7 +45,7 @@ Sona의 정리와 번역 기능은 선택 기능입니다. 로컬 전사는 이 
 - `Polish Model`과 `Translation Model`은 따로 설정됩니다. 하나의 provider가 둘 다 처리할 수도 있고, 기능별로 나눌 수도 있습니다.
 - 번역은 `Google Translate (Free)` 또는 `Google Translate (API)` 같은 전용 번역 provider를 사용할 수 있지만, polish에는 LLM을 사용할 수 있는 provider와 모델이 필요합니다.
 - 번역 대상 언어에는 현재 `Chinese (Simplified)`, `English`, `Japanese`, `Korean`, `French`, `German`, `Spanish`가 포함됩니다.
-- `Re-transcribe`는 현재 전사가 저장된 workspace 항목에서 온 경우에만 사용할 수 있습니다.
+- `Re-transcribe`는 현재 전사가 저장된 프로젝트 항목에서 온 경우에만 사용할 수 있습니다.
 - 필요한 것이 전사 텍스트 rewrite가 아니라 전사 옆 요약이라면 [AI Summary](guide:ai-summary)로 이어가세요.
 - 실제로 필요한 것이 `Auto-Polish`, keywords, custom context라면 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)으로 이어가세요.
 - 텍스트가 괜찮아지면 [내보내기와 설정](guide:export-and-settings)으로 이동하세요.

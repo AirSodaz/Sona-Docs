@@ -23,14 +23,16 @@
 
 1. 点击 `参数设置`，按需调整 `字幕模式` 或 `语言`。
 2. 关注队列状态： `待处理`、`处理中`、`完成`、`失败`。
+3. **任务中心与实时取消**：顶部栏的 `任务中心` 会集中显示批处理队列和转录进度，并支持随时对正在进行的批处理任务执行实时取消。
 
 ## 文件完成后会发生什么
 
 - 已完成的文件会载入主编辑器。
-- 接下来可以继续进入 [编辑与播放](guide:edit-and-playback)、[AI 润色与翻译](guide:ai-polish-and-translate)、[工作区、项目与 Inbox](guide:workspace-projects-and-inbox) 或 [导出与设置](guide:export-and-settings)。
+- 接下来可以继续进入 [编辑与播放](guide:edit-and-playback)、[AI 润色与翻译](guide:ai-polish-and-translate)、[项目中心与收件箱](guide:workspace-projects-and-inbox) 或 [导出与设置](guide:export-and-settings)。
 
 ## 补充说明
 
-- 如果没有配置离线批量模型，Sona 会重新打开引导，而不是直接开始转录。
-- `设置 > 模型设置` 中的 `批量 VAD 分割`、`VAD Buffer Size` 与 `Max Concurrent Transcriptions` 会影响批处理体验。关闭批量 VAD 后，本地批量转录会整段识别文件。
+- 如果没有配置离线批量模型，Sona 会重新打开引导，而不是直接开始转录。支持使用 llama.cpp 引擎的 Qwen3-ASR 模型或 Whisper 系列高效完成批量任务。
+- `设置 > 模型设置` 中的 `批量 VAD 分割`（基于升级的 Silero VAD v5）、`VAD Buffer Size` 与 `Max Concurrent Transcriptions` 会影响批处理体验。关闭批量 VAD 后，本地批量转录会整段识别文件。
+- 如遇非常规音视频格式或系统未找到解码器，可在 `设置 > 存储管理` 中指定自定义 FFmpeg 路径。
 - 如果目标是从现成媒体文件导出字幕，`批量转录` 加导出就是最直接的路径。

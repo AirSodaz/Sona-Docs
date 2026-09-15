@@ -1,5 +1,3 @@
-# AI Summary
-
 `AI Summary` は、すでに文字起こしテキストがある状態で、その横に要約を残したいときに使います。文字起こし本文を書き換える機能ではなく、エクスポート時に自動で出力ファイルへ含まれるものでもありません。
 
 ## 推奨対象
@@ -10,7 +8,7 @@
 
 ## 開始する前に
 
-- [Live Record](guide:live-record)、[Batch Import](guide:batch-import)、または[ワークスペース、プロジェクト、Inbox](guide:workspace-projects-and-inbox)から作成した文字起こしセグメントが必要です。
+- [Live Record](guide:live-record)、[Batch Import](guide:batch-import)、または[プロジェクトと Inbox](guide:workspace-projects-and-inbox)から作成した文字起こしセグメントが必要です。
 - `Settings > LLM Service` で `Summary Model` を設定できる状態にしておいてください。
 
 ## 先に Summary Model を割り当てる
@@ -20,7 +18,7 @@
 3. `Provider Credentials` で使うプロバイダーを開き、必要な接続情報を入力します。
 4. 選択したモデルが推論モードに対応している場合は、`Reasoning Mode` を有効にし、`Reasoning Level` を選択します。
 5. `Test Connection` をクリックします。
-6. `Summary Model` が利用できるようになったら、メインワークスペースに戻ります。
+6. `Summary Model` が利用できるようになったら、メインエディタに戻ります。
 
 ## 要約を生成または更新する
 

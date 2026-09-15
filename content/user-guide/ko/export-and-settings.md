@@ -20,10 +20,10 @@
 - `Copy to Clipboard`는 선택한 내보내기 모드의 최종 세그먼트 텍스트를 plain text로 복사합니다.
 - `Translation`과 `Bilingual`은 하나 이상의 세그먼트에 번역 텍스트가 있을 때만 나타납니다.
 
-## 언제 `Workspace`로 돌아가나요
+## 언제 `Projects`로 돌아가나요
 
-- 저장된 녹음과 가져온 파일을 다시 열거나, 이름을 바꾸거나, 이동하거나, 정렬하려면 [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)로 돌아가세요.
-- 프로젝트 context와 `Inbox` 정리도 지금은 `Workspace` 안에 있습니다.
+- 저장된 녹음과 가져온 파일을 다시 열거나, 이름을 바꾸거나, 이동하거나, 정렬하려면 [프로젝트와 Inbox](guide:workspace-projects-and-inbox)로 돌아가세요.
+- 프로젝트 context와 `Inbox` 정리도 지금은 `Projects`(프로젝트 센터) 안에 있습니다.
 
 ## 먼저 익혀 두면 좋은 설정 영역
 
@@ -35,18 +35,21 @@
 - `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, 다운로드 가능한 recognition, punctuation, speaker, VAD models
 - `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, `Speaker Profiles`. 실제 조정 사례는 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)에 있습니다.
 - `Settings > Automation`: Sona가 실행 중일 때 새 미디어를 전사, 정리, 번역, 내보내기할 수 있는 watched-folder rules
+- `Settings > Storage Management`: 데이터 및 모델 디렉터리 개요, 사용자 지정 FFmpeg 경로, 디스크 사용량 분석, 오디오 보관 정리 정책, WebView 캐시 삭제
+- `Settings > Cloud Sync`: 종단간 암호화(E2EE) 기기 간 동기화 볼트, 볼트 ID 및 페어링, 마스터 비밀번호 및 긴급 복구 키, 동기화 범위 사전 설정, 충돌 센터
 - `Settings > API Server`: 로컬 HTTP API host, port, 선택형 API key, IP allowlist, server limits, server-level transcription defaults
 - `Settings > LLM Service`: feature model bindings, reasoning options, provider credentials. 정리/번역은 [AI Polish와 번역](guide:ai-polish-and-translate), 요약은 [AI Summary](guide:ai-summary)을 보세요.
-- `Settings > Shortcuts`: live recording, playback, search, workspace navigation, editor shortcuts
+- `Settings > Shortcuts`: live recording, playback, search, project navigation, editor shortcuts (취소선 `Ctrl + Shift + S` 지원)
 - `Settings > About`: source code, logs, update 관련 동작
 
-## Diagnostics, backup, notifications
+## Diagnostics, backup, cloud sync, task center
 
 - `Settings > General`에서 `Diagnostics`를 사용해 로컬 전사 체인, runtime readiness, packaging environment를 확인합니다.
-- 같은 페이지의 `Backup & Restore`로 config, workspace, light history transcripts and summaries, automation state, dashboard LLM usage를 담은 가벼운 archive를 내보내거나 가져옵니다.
+- 같은 페이지의 `Backup & Restore`로 config, project data, light history transcripts and summaries, automation state, dashboard LLM usage를 담은 가벼운 archive를 내보내거나 가져옵니다.
 - 가벼운 백업 archive는 텍스트 history와 summaries를 복원하지만 원본 오디오 파일은 복원하지 않습니다. 복원된 항목은 playback 없이 읽기와 편집용으로 열릴 수 있습니다.
-- `WebDAV Cloud Sync`는 `Backup & Restore` 안에 있습니다. 자격 증명은 이 기기에 로컬 저장되며 backup archive를 수동으로 업로드하거나 복원하는 데 도움을 줍니다.
-- Sona가 update actions, `Recovery Center`, automation results를 표시할 때는 헤더 알림 센터를 사용하세요.
+- `Settings > Cloud Sync`는 독립적인 종단간 암호화(E2EE) 증분 동기화 시스템입니다. 전사 및 설정은 기기를 떠나기 전에 마스터 비밀번호로 암호화되며, 긴급 복구 키를 통한 접근 복구와 기기간 동시 수정을 중재하는 충돌 센터를 지원합니다. 녹음 오디오는 로컬 컴퓨터에만 유지되며 클라우드로 업로드되지 않습니다.
+- 페이지 하단에서 기존 WebDAV 백업 아카이브의 1회성 마이그레이션 가져오기를 제공합니다(Sona는 더 이상 새로운 원격 전체 백업을 생성하지 않습니다).
+- 헤더의 작업 센터(Task Center)에서 일괄 전사, 자동화, LLM 작업을 중앙 관리하며, 실시간 진행률 및 일괄 전사 시 실시간 취소를 지원합니다. 중단된 작업은 복구 센터에서 재개하거나 폐기할 수 있습니다.
 
 ## 확장 기능 때문에 온 경우
 

@@ -23,14 +23,16 @@
 
 1. 點擊 `參數設定`，視需要調整 `字幕模式` 或 `語言`。
 2. 關注佇列狀態： `待處理`、`處理中`、`完成`、`失敗`。
+3. **任務中心與即時取消**：頂部欄的 `任務中心` 會集中顯示批次佇列和轉錄進度，並支援隨時對正在進行的批次任務執行即時取消。
 
 ## 檔案完成後會發生什麼
 
 - 已完成的檔案會載入主編輯器。
-- 接下來可以繼續進入 [編輯與播放](guide:edit-and-playback)、[AI 潤飾與翻譯](guide:ai-polish-and-translate)、[工作區、專案與 Inbox](guide:workspace-projects-and-inbox) 或 [匯出與設定](guide:export-and-settings)。
+- 接下來可以繼續進入 [編輯與播放](guide:edit-and-playback)、[AI 潤飾與翻譯](guide:ai-polish-and-translate)、[專案中心與收件匣](guide:workspace-projects-and-inbox) 或 [匯出與設定](guide:export-and-settings)。
 
 ## 補充說明
 
-- 如果沒有設定離線批次模型，Sona 會重新打開引導，而不是直接開始轉錄。
-- `設定 > 模型設定` 中的 `批次 VAD 分割`、`VAD Buffer Size` 與 `Max Concurrent Transcriptions` 會影響批次處理體驗。關閉批次 VAD 後，本機批次轉錄會整段辨識檔案。
+- 如果沒有設定離線批次模型，Sona 會重新打開引導，而不是直接開始轉錄。支援使用 llama.cpp 引擎的 Qwen3-ASR 模型或 Whisper 系列高效完成批次任務。
+- `設定 > 模型設定` 中的 `批次 VAD 分割`（基於升級的 Silero VAD v5）、`VAD Buffer Size` 與 `Max Concurrent Transcriptions` 會影響批次處理體驗。關閉批次 VAD 後，本機批次轉錄會整段辨識檔案。
+- 如遇非常規影音格式或系統未找到解碼器，可在 `設定 > 儲存管理` 中指定自訂 FFmpeg 路徑。
 - 如果目標是從現成媒體檔案匯出字幕，`批次轉錄` 加匯出就是最直接的路徑。

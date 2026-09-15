@@ -143,7 +143,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: 'Everything Inside',
       browseTitle: 'The full docs set, organized by the actual Sona workflow.',
       browseDescription:
-        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, workspace organization, export, extended capabilities, CLI reference, and troubleshooting.',
+        'Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, project organization, export, extended capabilities, CLI reference, and troubleshooting.',
     },
     codeBlock: {
       copyLabel: 'Copy code',
@@ -172,7 +172,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: '完整内容',
       browseTitle: '整套指南按照 Sona 的真实使用流程组织。',
       browseDescription:
-        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 工作区整理 -> 导出 -> 扩展能力 -> CLI 参考 -> 排障”的顺序继续。',
+        '建议先看总览，再按“首次设置 -> 创建转录 -> 编辑整理 -> 可选 AI 处理 -> 项目与收件箱整理 -> 导出 -> 扩展能力 -> CLI 参考 -> 排障”的顺序继续。',
     },
     codeBlock: {
       copyLabel: '复制代码',
@@ -201,7 +201,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: 'すべての内容',
       browseTitle: 'Sona の実際のワークフローに沿って整理したガイドです。',
       browseDescription:
-        '初めて使う場合は概要から始め、その後はセットアップ、文字起こし作成、編集、任意の AI 機能、ワークスペース整理、エクスポート、拡張機能、CLI リファレンス、トラブルシューティングへ進んでください。',
+        '初めて使う場合は概要から始め、その後はセットアップ、文字起こし作成、編集、任意の AI 機能、プロジェクト整理、エクスポート、拡張機能、CLI リファレンス、トラブルシューティングへ進んでください。',
     },
     codeBlock: {
       copyLabel: 'コピー',
@@ -259,7 +259,7 @@ const userGuideUiContent: Record<HomeLocale, UserGuideUiCopy> = {
       browseEyebrow: '完整內容',
       browseTitle: '整套指南按照 Sona 的真實使用流程組織。',
       browseDescription:
-        '建議先看總覽，再按「首次設定 -> 建立轉錄 -> 編輯整理 -> 可選 AI 處理 -> 工作區整理 -> 匯出 -> 擴充能力 -> CLI 參考 -> 疑難排解」的順序繼續。',
+        '建議先看總覽，再按「首次設定 -> 建立轉錄 -> 編輯整理 -> 可選 AI 處理 -> 專案與收件匣整理 -> 匯出 -> 擴充能力 -> CLI 參考 -> 疑難排解」的順序繼續。',
     },
     codeBlock: {
       copyLabel: '複製程式碼',
@@ -278,14 +278,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Sona User Guide',
         navLabel: 'Overview',
         description:
-          'A product-shaped entry point to the Sona docs, with the shortest paths for setup, live capture, file import, editing, optional AI steps, workspace organization, export, extended capabilities, and help.',
+          'A product-shaped entry point to the Sona docs, with the shortest paths for setup, live capture, file import, editing, optional AI steps, project organization, export, extended capabilities, and help.',
         contentFile: 'en/overview.md',
       },
       'zh-CN': {
         title: 'Sona 用户指南',
         navLabel: '总览',
         description:
-          '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、工作区整理、导出、扩展能力与排障。',
+          '站内文档入口页，先帮你找到最短上手路径，再进入首次设置、录音转录、文件导入、编辑整理、AI 处理、项目整理、导出、扩展能力与排障。',
         contentFile: 'zh-CN/overview.md',
       },
       ja: {
@@ -300,14 +300,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Sona 사용자 가이드',
         navLabel: '개요',
         description:
-          'Sona 문서의 입구입니다. 설정, Live Record, Batch Import, 편집, 선택형 AI 단계, Workspace 정리, 내보내기, 확장 기능, 도움말로 바로 이어집니다.',
+          'Sona 문서의 입구입니다. 설정, Live Record, Batch Import, 편집, 선택형 AI 단계, 프로젝트 정리, 내보내기, 확장 기능, 도움말로 바로 이어집니다.',
         contentFile: 'ko/overview.md',
       },
       'zh-TW': {
         title: 'Sona 使用者指南',
         navLabel: '總覽',
         description:
-          '站內文件進入點，先幫您找到最短上手路徑，再進入首次設定、錄音轉錄、檔案匯入、編輯整理、AI 處理、工作區整理、匯出、擴充能力與疑難排解。',
+          '站內文件進入點，先幫您找到最短上手路徑，再進入首次設定、錄音轉錄、檔案匯入、編輯整理、AI 處理、專案整理、匯出、擴充能力與疑難排解。',
         contentFile: 'zh-TW/overview.md',
       },
     },
@@ -371,7 +371,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '实时录音',
         navLabel: '实时录音',
         description:
-          '了解实时录音的适用场景、输入源、字幕设置、快捷键，以及录音草稿在工作区中如何一路延续到录音完成。',
+          '了解实时录音的适用场景、输入源、字幕设置、快捷键，以及录音草稿在项目中心中如何一路延续到录音完成。',
         contentFile: 'zh-CN/live-record.md',
       },
       ja: {
@@ -393,7 +393,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '即時錄音',
         navLabel: '即時錄音',
         description:
-          '了解即時錄音的適用場景、輸入來源、字幕設定、快速鍵，以及錄音草稿在工作區中如何一路延續到錄音完成。',
+          '了解即時錄音的適用場景、輸入來源、字幕設定、快速鍵，以及錄音草稿在專案中心中如何一路延續到錄音完成。',
         contentFile: 'zh-TW/live-record.md',
       },
     },
@@ -450,7 +450,7 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Edit and Playback',
         navLabel: 'Edit & Playback',
         description:
-          'Review transcript segments, keep timestamps aligned to playback, search the transcript, and use the editor tools without leaving the main workspace.',
+          'Review transcript segments, keep timestamps aligned to playback, search the transcript, and use the editor tools without leaving the main editor.',
         contentFile: 'en/edit-and-playback.md',
       },
       'zh-CN': {
@@ -533,39 +533,39 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
     group: 'workflow',
     localizations: {
       en: {
-        title: 'Workspace, Projects, and Inbox',
-        navLabel: 'Workspace / Projects / Inbox',
+        title: 'Projects and Inbox',
+        navLabel: 'Projects / Inbox',
         description:
-          'Organize saved recordings and imports, switch between All Items, Inbox, and projects, and understand how project defaults shape new work.',
+          'Organize saved recordings and imports, switch between All Items, Inbox, and projects, and configure project pipelines and defaults.',
         contentFile: 'en/workspace-projects-and-inbox.md',
       },
       'zh-CN': {
-        title: '工作区、项目与 Inbox',
-        navLabel: '工作区 / 项目 / Inbox',
+        title: '项目中心与收件箱',
+        navLabel: '项目中心 / 收件箱',
         description:
-          '了解如何在全部内容、Inbox 与项目之间整理已保存内容，以及项目默认值会如何影响后续工作。',
+          '了解如何在全部内容、收件箱与项目之间整理已保存内容，以及项目专属流水线与默认值设置。',
         contentFile: 'zh-CN/workspace-projects-and-inbox.md',
       },
       ja: {
-        title: 'ワークスペース、プロジェクト、Inbox',
-        navLabel: 'ワークスペース / プロジェクト / Inbox',
+        title: 'プロジェクトと Inbox',
+        navLabel: 'プロジェクト / Inbox',
         description:
-          '保存済みの録音やインポートを整理し、All Items、Inbox、プロジェクトを切り替え、プロジェクト既定値の影響を確認します。',
+          '保存済みの録音やインポートを整理し、All Items、Inbox、プロジェクトを切り替え、プロジェクト専用パイプラインと既定値を設定します。',
         contentFile: 'ja/workspace-projects-and-inbox.md',
       },
     
       ko: {
-        title: 'Workspace, 프로젝트, Inbox',
-        navLabel: 'Workspace / 프로젝트 / Inbox',
+        title: '프로젝트와 Inbox',
+        navLabel: '프로젝트 / Inbox',
         description:
-          '저장된 녹음과 가져온 파일을 정리하고, All Items, Inbox, 프로젝트를 전환하며 프로젝트 기본값의 영향을 확인합니다.',
+          '저장된 녹음과 가져온 파일을 정리하고, All Items, Inbox, 프로젝트를 전환하며 프로젝트 전용 파이프라인과 기본값을 설정합니다.',
         contentFile: 'ko/workspace-projects-and-inbox.md',
       },
       'zh-TW': {
-        title: '工作區、專案與 Inbox',
-        navLabel: '工作區與專案',
+        title: '專案中心與收件匣',
+        navLabel: '專案中心 / 收件匣',
         description:
-          '使用工作區跨專案瀏覽或在專案間移動內容，修改專案圖示，並為每個獨立主題設定不同的預設摘要範本、翻譯語言和文字替換規則。',
+          '了解如何在全部內容、收件匣與專案之間整理已儲存內容，以及專案專屬流水線與預設值設定。',
         contentFile: 'zh-TW/workspace-projects-and-inbox.md',
       },
     },
@@ -579,21 +579,21 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: 'Export and Settings',
         navLabel: 'Export / Settings',
         description:
-          'Export finished work as subtitles, JSON, plain text, or Markdown, copy text to the clipboard, and quickly find Dashboard, Diagnostics, Backup & Restore, Automation, API Server, LLM Service, Shortcuts, Voice Typing, and notification entry points.',
+          'Export finished work as subtitles, JSON, plain text, or Markdown, copy text to the clipboard, and quickly find Dashboard, Diagnostics, Backup & Restore, Storage Management, Cloud Sync, Automation, API Server, LLM Service, Shortcuts, Voice Typing, and Task Center entry points.',
         contentFile: 'en/export-and-settings.md',
       },
       'zh-CN': {
         title: '导出与设置',
         navLabel: '导出 / 设置',
         description:
-          '将成稿导出为字幕、JSON、纯文本或 Markdown，按需复制到剪贴板，并快速理解仪表盘、诊断、备份与恢复、自动化、本地 API、LLM 服务、快捷键、语音输入法和通知入口分别在哪里。',
+          '将成稿导出为字幕、JSON、纯文本或 Markdown，按需复制到剪贴板，并快速理解仪表盘、诊断、备份与恢复、存储管理、云同步、自动化、本地 API、LLM 服务、快捷键、语音输入法与任务中心入口分别在哪里。',
         contentFile: 'zh-CN/export-and-settings.md',
       },
       ja: {
         title: 'エクスポートと設定',
         navLabel: 'エクスポート / 設定',
         description:
-          '完成した文字起こしを字幕、JSON、プレーンテキスト、Markdown として書き出し、クリップボードへコピーし、Dashboard、Diagnostics、Backup & Restore、Automation、API Server、LLM Service などの入口を確認します。',
+          '完成した文字起こしを字幕、JSON、プレーンテキスト、Markdown として書き出し、クリップボードへコピーし、Dashboard、Diagnostics、Backup & Restore、Storage Management、Cloud Sync、Automation、API Server、LLM Service、タスクセンターなどの入口を確認します。',
         contentFile: 'ja/export-and-settings.md',
       },
     
@@ -601,14 +601,14 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
         title: '내보내기와 설정',
         navLabel: '내보내기 / 설정',
         description:
-          '완성된 작업을 자막, JSON, 일반 텍스트, Markdown으로 내보내고, Dashboard, Diagnostics, Backup & Restore, Automation, API Server, LLM Service, Shortcuts, Voice Typing, 알림 진입점을 빠르게 찾습니다.',
+          '완성된 작업을 자막, JSON, 일반 텍스트, Markdown으로 내보내고, Dashboard, Diagnostics, Backup & Restore, Storage Management, Cloud Sync, Automation, API Server, LLM Service, Shortcuts, Voice Typing, Task Center 진입점을 빠르게 찾습니다.',
         contentFile: 'ko/export-and-settings.md',
       },
       'zh-TW': {
         title: '匯出與設定',
         navLabel: '匯出與設定',
         description:
-          '匯出字幕、JSON、純文字或 Markdown，按需複製到剪貼簿，並快速了解儀表板、輸入裝置、自動化監控資料夾、本機 API、診斷與備份的正確入口。',
+          '匯出字幕、JSON、純文字或 Markdown，按需複製到剪貼簿，並快速了解儀表板、儲存管理、雲端同步、自動化監控資料夾、本機 API、診斷、備份與任務中心的正確入口。',
         contentFile: 'zh-TW/export-and-settings.md',
       },
     },

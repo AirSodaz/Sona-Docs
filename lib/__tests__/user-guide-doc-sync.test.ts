@@ -84,4 +84,34 @@ describe('synced Sona command and context-menu guides', () => {
       'Shift + F10',
     );
   });
+
+  it.each(locales)('documents standalone Cloud Sync and not legacy embedded backup in %s', (locale) => {
+    const exportSettings = readGuide(locale, 'export-and-settings');
+    expect(exportSettings).not.toContain('lives inside Backup & Restore');
+    expect(exportSettings).not.toContain('位于 备份与恢复 内部');
+    expect(exportSettings).not.toContain('位於 備份與復原 內部');
+    expect(exportSettings).not.toContain('Backup & Restore の中にあります');
+    expect(exportSettings).not.toContain('Backup & Restore 안에 있습니다');
+  });
+
+  it.each(locales)('uses Inbox instead of obsolete Untagged in %s', (locale) => {
+    const workspace = readGuide(locale, 'workspace-projects-and-inbox');
+    const overview = readGuide(locale, 'overview');
+
+    expect(workspace).not.toContain('Untagged');
+    expect(workspace).not.toContain('未分类');
+    expect(workspace).not.toContain('未分類');
+    expect(overview).not.toContain('Untagged');
+    expect(overview).not.toContain('未分类');
+    expect(overview).not.toContain('未分類');
+  });
+
+  it.each(locales)('uses Projects instead of obsolete Workspace in %s', (locale) => {
+    const guide = readGuide(locale, 'workspace-projects-and-inbox');
+    expect(guide).not.toContain('`Workspace` tab');
+    expect(guide).not.toContain('`工作区` 页签');
+    expect(guide).not.toContain('`工作區` 標籤頁');
+    expect(guide).not.toContain('`Workspace` タブ');
+    expect(guide).not.toContain('`Workspace` 탭');
+  });
 });

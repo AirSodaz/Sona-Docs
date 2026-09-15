@@ -10,14 +10,14 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 
 ## Before you edit
 
-- Load transcript content from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- Load transcript content from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Projects and Inbox](guide:workspace-projects-and-inbox).
 
 ## Review and change transcript segments
 
 1. Read through the segment list in the editor.
 2. Click a timestamp to seek playback to that moment.
 3. Double-click segment text, or use the edit action, to enter editing mode.
-4. Right-click a read-only segment for `Copy` and `Select All`. While editing, right-click for `Cut`, `Copy`, `Paste`, `Select All`, `Bold`, `Italic`, and `Underline`; the keyboard context-menu key or `Shift + F10` opens the same menu.
+4. Right-click a read-only segment for `Copy` and `Select All`. While editing, right-click for `Cut`, `Copy`, `Paste`, `Select All`, `Bold`, `Italic`, `Underline`, `Strikethrough`, and `Inline Code`; the keyboard context-menu key or `Shift + F10` opens the same menu.
 5. Press `Enter` to save the current segment.
 6. Press `Shift + Enter` to split the current segment at the cursor.
 7. Use the merge action to combine a segment with the next one.
@@ -33,7 +33,7 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 
 ## Use version snapshots
 
-1. Open `Version Snapshots` from the transcript header when the transcript is a saved non-draft workspace item.
+1. Open `Version Snapshots` from the transcript header when the transcript is a saved non-draft project item.
 2. Choose a snapshot saved before a bulk rewrite such as `LLM Polish`, `Translate`, or `Re-transcribe`.
 3. Compare the snapshot with the current transcript.
 4. Restore selected changed rows when only part of the rewrite needs to be rolled back.
@@ -55,9 +55,9 @@ After Sona creates transcript segments, the editor becomes the main place to rev
 
 ## Useful tips
 
-- The toolbar supports `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, and segment splitting.
+- The toolbar and keyboard shortcuts support `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, `Strikethrough` (`Ctrl + Shift + S`), `Inline Code`, and segment splitting.
 - `Speaker Profiles` are created in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings). Profiles help with suggestions and automatic matching, but manual confirmation is still available.
-- `Version Snapshots` only appears for saved workspace items that are not drafts or the temporary `current` transcript.
+- `Version Snapshots` only appears for saved project items that are not drafts or the temporary `current` transcript.
 - If you want to add optional LLM cleanup or translation after editing, continue to [AI Polish and Translate](guide:ai-polish-and-translate).
-- If you want to reopen or reorganize saved items around the editor, continue to [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- If you want to reopen or reorganize saved items around the editor, continue to [Projects and Inbox](guide:workspace-projects-and-inbox).
 - If you are done and mainly need files out of Sona, skip ahead to [Export and Settings](guide:export-and-settings).

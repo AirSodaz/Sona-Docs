@@ -8,7 +8,7 @@ Sona 的潤飾與翻譯是可選能力。離線轉錄本身不依賴它們，但
 
 ## 開始前
 
-- 您已經有來自 [即時錄音](guide:live-record)、[批次轉錄](guide:batch-import) 或 [工作區、專案與 Inbox](guide:workspace-projects-and-inbox) 的轉錄分段。
+- 您已經有來自 [即時錄音](guide:live-record)、[批次轉錄](guide:batch-import) 或 [專案中心與收件匣](guide:workspace-projects-and-inbox) 的轉錄分段。
 - 您準備先在 `設定 > LLM 服務` 中設定需要的功能。
 
 ## 先完成 provider 設定
@@ -45,7 +45,7 @@ Sona 的潤飾與翻譯是可選能力。離線轉錄本身不依賴它們，但
 - `潤飾模型` 與 `翻譯模型` 是分開設定的。可以共用同一個 provider，也可以拆開。
 - 翻譯可以使用 `Google Translate (Free)`、`Google Translate (API)` 這類專用翻譯 provider；潤飾則需要真正的 LLM provider 與模型。
 - 目前支援的翻譯目標語言包括 `繁體中文`、`简体中文`、`English`、`Japanese`、`Korean`、`French`、`German`、`Spanish`。
-- 只有當目前轉錄來自已儲存的工作區條目時，選單裡才會出現 `重新轉錄`。
+- 只有當目前轉錄來自已儲存的專案條目時，選單裡才會出現 `重新轉錄`。
 - 如果您下一步要做的是貼著轉錄存在的摘要，而不是改寫轉錄正文，請繼續看 [AI 摘要](guide:ai-summary)。
 - 如果您現在關心的是 `Auto-Polish`、關鍵詞或自訂上下文，請繼續看 [詞彙與進階設定](guide:vocabulary-and-advanced-settings)。
 - 當文字已經整理完成，下一步通常就是 [匯出與設定](guide:export-and-settings)。

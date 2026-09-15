@@ -39,8 +39,8 @@
 
 - 오른쪽 편집기에 전사 세그먼트가 나타납니다.
 - 캡처가 실행 중일 때 활성 세그먼트가 live recording 상태를 따라갑니다.
-- 캡처가 아직 진행 중이어도 Sona는 세션을 [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)의 `Draft` 항목으로 표시할 수 있습니다.
-- 녹음이 끝나면 전사는 편집, 정리, 번역, 내보내기, 이후 [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)에서 다시 열기에 사용할 수 있으며, Sona는 두 번째 저장 사본을 만들지 않고 같은 draft 항목을 완료합니다.
+- 캡처가 아직 진행 중이어도 Sona는 세션을 [프로젝트와 Inbox](guide:workspace-projects-and-inbox)의 `Draft` 항목으로 표시할 수 있습니다.
+- 녹음이 끝나면 전사는 편집, 정리, 번역, 내보내기, 이후 [프로젝트와 Inbox](guide:workspace-projects-and-inbox)에서 다시 열기에 사용할 수 있으며, Sona는 두 번째 저장 사본을 만들지 않고 같은 draft 항목을 완료합니다.
 - 이미 프로젝트 안에 있지 않았다면 저장된 항목은 보통 `Inbox`에 들어갑니다.
 
 ## 팁

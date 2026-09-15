@@ -23,14 +23,16 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 
 1. Click `Parameter Settings` if you want to change `Subtitle Mode` or `Language` for new work.
 2. Keep an eye on the queue states: `Pending`, `Processing`, `Complete`, or `Failed`.
+3. **Task Center & Cancellation**: The header `Task Center` displays batch queue and transcription progress in real time, supporting instant cancellation of active batch imports.
 
 ## What happens after a file finishes
 
 - Completed items load into the main transcript editor.
-- From there, you can continue with [Edit and Playback](guide:edit-and-playback), [AI Polish and Translate](guide:ai-polish-and-translate), [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox), or [Export and Settings](guide:export-and-settings).
+- From there, you can continue with [Edit and Playback](guide:edit-and-playback), [AI Polish and Translate](guide:ai-polish-and-translate), [Projects and Inbox](guide:workspace-projects-and-inbox), or [Export and Settings](guide:export-and-settings).
 
 ## Useful tips
 
-- If no offline batch model is configured, Sona reopens onboarding instead of starting import.
-- `Settings > Model Settings` includes `Batch VAD Segmentation`, `VAD Buffer Size`, and `Max Concurrent Transcriptions`, which affect batch behavior. Turning off batch VAD makes local batch transcription recognize the whole file at once.
+- If no offline batch model is configured, Sona reopens onboarding instead of starting import. Models like Qwen3-ASR (via llama.cpp) or Whisper presets provide high-performance offline batch transcription.
+- `Settings > Model Settings` includes `Batch VAD Segmentation` (powered by Silero VAD v5), `VAD Buffer Size`, and `Max Concurrent Transcriptions`, which affect batch behavior. Turning off batch VAD makes local batch transcription recognize the whole file at once.
+- If you encounter unusual audio formats or missing decoders, specify a custom FFmpeg path in `Settings > Storage Management`.
 - `Batch Import` plus export is the main path when you want subtitle files from existing media.

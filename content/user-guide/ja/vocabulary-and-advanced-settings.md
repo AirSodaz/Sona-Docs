@@ -1,5 +1,3 @@
-# 語彙と詳細設定
-
 このページでは、文字起こしの精度や仕上がりを調整するための `Hotwords`、`Text Replacement`、`Speaker Profiles`、そして `LLM Polish` の `Advanced Settings` をまとめています。初回起動時に必須の設定ではありませんが、専門用語、話者、整文の挙動を細かく調整したいときに役立ちます。
 
 ## 推奨対象

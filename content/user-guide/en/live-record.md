@@ -4,7 +4,7 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 
 - Meetings, interviews, lectures, or voice notes
 - Workflows where timestamps need to stay attached during capture
-- Users who want to keep everything in the main Sona workspace, including visible live drafts, after recording stops
+- Users who want to keep everything in Sona projects, including visible live drafts, after recording stops
 
 ## Before you start
 
@@ -39,8 +39,8 @@ Use `Live Record` when you want transcript segments to appear while you are stil
 
 - Transcript segments appear in the editor on the right.
 - The active segment follows the live recording state while capture is running.
-- While capture is still running, Sona can already surface the session as a `Draft` item in [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
-- Once recording stops, the transcript remains available for editing, polishing, translation, export, and later reopening from [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox), and Sona completes that same draft item instead of creating a second saved copy.
+- While capture is still running, Sona can already surface the session as a `Draft` item in [Projects and Inbox](guide:workspace-projects-and-inbox).
+- Once recording stops, the transcript remains available for editing, polishing, translation, export, and later reopening from [Projects and Inbox](guide:workspace-projects-and-inbox), and Sona completes that same draft item instead of creating a second saved copy.
 - If you were not already inside a project, the saved item usually lands in `Inbox`.
 
 ## Useful tips

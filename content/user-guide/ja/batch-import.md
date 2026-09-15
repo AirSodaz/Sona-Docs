@@ -1,34 +1,38 @@
-# Batch Import
-
-すでに音声または動画ファイルがあり、Sona にバックグラウンドで処理させたい場合は、`Batch Import` を使います。複数のファイルをキューに追加し、完了した文字起こしを同じエディタで確認できます。
+既に音声や動画ファイルがあり、Sona にバックグラウンドで処理させたい場合は `Batch Import` を使用します。
 
 ## 推奨対象
 
 - 録音済みの会議、講義、ポッドキャスト、インタビュー
-- ローカルのメディアファイルから字幕を作りたい場合
-- 複数ファイルを順番に処理し、完了後にまとめて確認したい場合
+- ローカルメディアファイルからの字幕作成
+- 複数のファイルをキューに追加し、順次バックグラウンド処理したいワークフロー
 
 ## キューに追加する前に
 
-- `Settings > Model Settings` で `Batch Import Model` を設定してください。
-- ファイル形式が Sona の対応する音声または動画形式であることを確認してください。
+- `Settings > Model Settings` で `Batch Import Model` が設定されていることを確認してください。
+- ファイルが対応する音声または動画形式であることを確認してください。
 
 ## ファイルをキューに追加する
 
 1. `Batch Import` タブを開きます。
-2. 音声または動画ファイルをインポート領域にドラッグするか、ファイル選択から追加します。
-3. Sona がファイルをキューに追加し、順番に処理します。
-4. 進捗、完了、失敗の状態をキュー上で確認します。
-5. 完了したアイテムを開き、メインの文字起こしエディタで確認します。
+2. ファイルをインポート領域にドラッグ＆ドロップするか、`Select File` をクリックします。
+3. 1 つまたは複数のファイルをキューに追加します。
+4. サイドバーのキュー一覧とアクティブな項目のステータス表示を確認します。
+5. キューをさらに追加したい場合は `Add More Files` を使用します。
+
+## インポート動作を調整する
+
+1. 新しいタスクの `Subtitle Mode` や `Language` を変更したい場合は `Parameter Settings` をクリックします。
+2. キューの各ステータスを確認します: `Pending`（待機中）、`Processing`（処理中）、`Complete`（完了）、`Failed`（失敗）。
+3. **タスクセンターとキャンセル**: ヘッダーの `タスクセンター`（Task Center）では、キューと文字起こしの進捗をリアルタイムに表示し、実行中の一括インポートタスクの即時キャンセルに対応しています。
 
 ## 完了後にできること
 
-- 完了したアイテムは、メインの文字起こしエディタで開けます。
-- そこから [編集と再生](guide:edit-and-playback)、[AI Polish と翻訳](guide:ai-polish-and-translate)、[ワークスペース、プロジェクト、Inbox](guide:workspace-projects-and-inbox)、[エクスポートと設定](guide:export-and-settings) へ進めます。
-- プロジェクトを開いた状態で Batch Import を開始すると、新しいアイテムをそのプロジェクトの流れに乗せやすくなります。
+- 完了したアイテムはメインの文字起こしエディタに読み込まれます。
+- そこから [編集と再生](guide:edit-and-playback)、[AI Polish と翻訳](guide:ai-polish-and-translate)、[プロジェクトと Inbox](guide:workspace-projects-and-inbox)、または [エクスポートと設定](guide:export-and-settings) に進むことができます。
 
 ## お役立ちメモ
 
-- `Settings > Model Settings` には、Batch Import の挙動に関わる `Batch VAD Segmentation`、`VAD Buffer Size`、`Max Concurrent Transcriptions` などの設定があります。Batch VAD をオフにすると、ローカルのバッチ文字起こしはファイル全体を一度に認識します。
-- 途中で失敗したファイルは、ファイル形式、モデル設定、ディスク容量を確認してから再試行してください。
-- 中断されたバッチ処理を復元できる場合、Sona はヘッダーの通知センターから `Recovery Center` へ案内します。
+- オフラインの一括モデルが未設定の場合、Sona はインポートを開始する代わりに初回セットアップを再表示します。Qwen3-ASR（llama.cpp 経由）や Whisper プリセットなどのモデルにより、高精度かつ高速なオフライン一括文字起こしが可能です。
+- `Settings > Model Settings` には、一括処理の動作に影響する `Batch VAD Segmentation`（Silero VAD v5 対応）、`VAD Buffer Size`、`Max Concurrent Transcriptions` が含まれています。Batch VAD をオフにすると、ローカルの一括文字起こしはファイル全体を一度に認識します。
+- 特殊な音声形式やデコーダー不足のエラーが発生した場合は、`Settings > Storage Management` でカスタム FFmpeg パスを指定してください。
+- 既存のメディアから字幕ファイルを作成したい場合、`Batch Import` とエクスポートの組み合わせが主なワークフローとなります。

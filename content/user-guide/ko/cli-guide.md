@@ -1,4 +1,4 @@
-`sona-cli`는 Sona의 stateless 명령줄 전사 Host입니다. Sona의 SQLite 애플리케이션 데이터베이스, History/Tag workspace, 동기화 상태 또는 Online LLM 작업을 열거나 관리하지 않습니다. 전사 결과는 `stdout` 또는 명시적으로 지정한 출력 파일에 기록됩니다.
+`sona-cli`는 Sona의 stateless 명령줄 전사 Host입니다. Sona의 SQLite 애플리케이션 데이터베이스, 프로젝트 데이터베이스 및 히스토리 저장소, 동기화 상태 또는 Online LLM 작업을 열거나 관리하지 않습니다. 전사 결과는 `stdout` 또는 명시적으로 지정한 출력 파일에 기록됩니다.
 
 독립 실행형 CLI에는 다음 명령이 포함됩니다.
 

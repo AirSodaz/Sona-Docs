@@ -73,20 +73,20 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 ## I cannot find `Version Snapshots`
 
-- `Version Snapshots` only appears for saved workspace items that already contain transcript segments.
+- `Version Snapshots` only appears for saved project items that already contain transcript segments.
 - It is hidden for the temporary `current` transcript and for live recording drafts that are still in progress.
 - Snapshots are created before bulk rewrite operations such as `LLM Polish`, `Translate`, `Re-transcribe`, and before restoring from another snapshot.
 
 ## A restored backup opens text but no audio playback
 
-- Backup archives are intentionally lightweight. They include config, workspace data, light history transcripts and summaries, automation state, and dashboard LLM usage.
+- Backup archives are intentionally lightweight. They include config, project data, light history transcripts and summaries, automation state, and dashboard LLM usage.
 - Original audio files are not included, so restored entries may reopen for reading and editing but lack playback until the source audio is available through another path.
 
 ## Why do new items appear in `Inbox` first
 
 - `Inbox` is the default holding area for recordings and imports that are not assigned to a project yet.
 - Open a specific project before starting `Live Record` or `Batch Import` if you want new items to stay in that project automatically.
-- You can also move saved items later from `Inbox` into a project from [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- You can also move saved items later from `Inbox` into a project from [Projects and Inbox](guide:workspace-projects-and-inbox).
 
 ## What happens when I delete a project
 
@@ -95,7 +95,7 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 ## Why do I see a `Draft` item while I am still recording
 
-- During an active live recording, Sona can create a visible `Draft` item so the session already has a saved place in `Workspace`.
+- During an active live recording, Sona can create a visible `Draft` item so the session already has a saved place in `Projects`.
 - When you stop recording, Sona completes that same item instead of creating a second saved copy.
 - Treat the draft as the live session while capture is still running; the finished transcript stays on the same entry.
 
@@ -122,6 +122,34 @@ Use this page when the main workflow is clear but one part is still blocking you
 ## Playback controls are missing
 
 - The audio player only appears when the current transcript has an audio source available, such as a saved recording or processed file.
+
+## What if I forget my Master Password for Cloud Sync (WebDAV E2EE)?
+
+- If you saved the `Emergency Recovery Key` generated during vault setup, you can use it to reset access.
+- If both the Master Password and Emergency Recovery Key are lost, no one (including developers) can decrypt or recover the encrypted data on the sync server due to zero-knowledge end-to-end encryption. However, transcripts and audio already stored locally on your device remain unaffected and fully accessible.
+
+## Does Cloud Sync upload my audio recordings to the cloud?
+
+- No. Cloud Sync only synchronizes transcript segments, summaries, project metadata, and preferences. All original audio recording files remain stored locally on your machine and are never uploaded to WebDAV.
+
+## Why does Cloud Sync show a conflict?
+
+- When multiple devices edit the same transcript offline or make concurrent edits within sync intervals, Sona detects the discrepancy and flags it in `Settings > Cloud Sync > Conflict Center`.
+- In Conflict Center, you can review diffs side by side and manually choose between keeping the local version, remote version, or merging them.
+
+## How do I recover an accidentally deleted transcript?
+
+- Deleted transcripts are not wiped from disk immediately; they move to `Trash` in the `Projects` rail.
+- Switch to the `Trash` scope, select the item, and click `Restore` to return it to its original project or Inbox.
+- Data is only permanently removed from disk when you click `Empty Trash` or select permanent deletion.
+
+## Can I cancel an in-progress batch transcription job?
+
+- Yes. Click the `Task Center` icon in the header to view active batch transcription queues, where you can cancel active tasks in real time.
+
+## What if media import fails or reports a missing decoder?
+
+- Sona uses built-in media decoding by default. If you encounter non-standard audio/video containers or missing decoders, go to `Settings > Storage Management` and specify your installed FFmpeg executable in `Custom FFmpeg Path`.
 
 ## I want to build or develop Sona
 

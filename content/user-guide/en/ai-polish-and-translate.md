@@ -8,7 +8,7 @@ Sona's polish and translation features are optional. Local transcription works w
 
 ## Before you start
 
-- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Projects and Inbox](guide:workspace-projects-and-inbox).
 - You are ready to configure the feature you need in `Settings > LLM Service`.
 
 ## Connect the provider first
@@ -18,7 +18,7 @@ Sona's polish and translation features are optional. Local transcription works w
 3. In `Provider Credentials`, open the provider you want to use and fill in the required connection details such as `Base URL`, `API Key`, `Endpoint`, `Deployment Name`, or provider-specific fields.
 4. If the selected model supports it, enable `Reasoning Mode` and choose a `Reasoning Level`.
 5. Click `Test Connection`.
-6. Return to the main workspace after the required feature model is assigned.
+6. Return to the main editor after the required feature model is assigned.
 
 ## Run polish when you want a cleaner draft
 
@@ -45,7 +45,7 @@ Sona's polish and translation features are optional. Local transcription works w
 - `Polish Model` and `Translation Model` are configured separately. One provider can serve both, or you can split them.
 - Translation can use dedicated translation providers such as `Google Translate (Free)` or `Google Translate (API)`, but polish needs an LLM-capable provider and model.
 - Translation target languages currently include `Chinese (Simplified)`, `English`, `Japanese`, `Korean`, `French`, `German`, and `Spanish`.
-- `Re-transcribe` is only available when the current transcript came from a saved workspace item.
+- `Re-transcribe` is only available when the current transcript came from a saved project item.
 - If what you need next is a transcript-side recap instead of rewritten transcript text, continue to [AI Summary](guide:ai-summary).
 - If you are really here for `Auto-Polish`, keywords, or custom context, continue to [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
 - Once the text looks right, move to [Export and Settings](guide:export-and-settings).

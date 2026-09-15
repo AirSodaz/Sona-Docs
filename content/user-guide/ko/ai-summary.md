@@ -8,7 +8,7 @@
 
 ## 시작하기 전에
 
-- [Live Record](guide:live-record), [Batch Import](guide:batch-import), [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)에서 만든 전사 세그먼트가 이미 있어야 합니다.
+- [Live Record](guide:live-record), [Batch Import](guide:batch-import), [프로젝트와 Inbox](guide:workspace-projects-and-inbox)에서 만든 전사 세그먼트가 이미 있어야 합니다.
 - `Settings > LLM Service`에서 `Summary Model`을 설정할 준비가 되어 있어야 합니다.
 
 ## 먼저 summary model 지정

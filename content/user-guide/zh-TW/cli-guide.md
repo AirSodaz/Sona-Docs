@@ -1,4 +1,4 @@
-`sona-cli` 是 Sona 的無狀態命令列轉寫 Host。它不會開啟或管理 Sona 的 SQLite 應用程式資料庫、History/Tag 工作區、同步狀態或 Online LLM 工作。轉寫結果只會寫入 `stdout`，或寫入命令明確指定的輸出檔案。
+`sona-cli` 是 Sona 的無狀態命令列轉寫 Host。它不會開啟或管理 Sona 的 SQLite 應用程式資料庫、專案資料庫、歷史儲存、同步狀態或 Online LLM 工作。轉寫結果只會寫入 `stdout`，或寫入命令明確指定的輸出檔案。
 
 目前獨立 CLI 提供以下命令：
 

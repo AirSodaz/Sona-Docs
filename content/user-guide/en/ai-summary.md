@@ -8,7 +8,7 @@
 
 ## Before you start
 
-- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Workspace, Projects, and Inbox](guide:workspace-projects-and-inbox).
+- You already have transcript segments from [Live Record](guide:live-record), [Batch Import](guide:batch-import), or [Projects and Inbox](guide:workspace-projects-and-inbox).
 - You are ready to configure `Summary Model` in `Settings > LLM Service`.
 
 ## Assign the summary model first
@@ -18,7 +18,7 @@
 3. In `Provider Credentials`, open the provider you want to use and fill in the required connection details.
 4. If the selected model supports it, enable `Reasoning Mode` and choose a `Reasoning Level`.
 5. Click `Test Connection`.
-6. Return to the main workspace after `Summary Model` is available.
+6. Return to the main editor after `Summary Model` is available.
 
 ## Generate or update the current summary
 

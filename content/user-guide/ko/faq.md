@@ -73,20 +73,20 @@
 
 ## `Version Snapshots`를 찾을 수 없습니다
 
-- `Version Snapshots`는 이미 전사 세그먼트가 있는 저장된 workspace 항목에서만 나타납니다.
+- `Version Snapshots`는 이미 전사 세그먼트가 있는 저장된 프로젝트 항목에서만 나타납니다.
 - 임시 `current` 전사와 아직 진행 중인 live recording draft에서는 숨겨집니다.
 - Snapshots는 `LLM Polish`, `Translate`, `Re-transcribe` 같은 bulk rewrite 전과 다른 snapshot에서 복원하기 전에 만들어집니다.
 
 ## 복원한 backup은 텍스트는 열리지만 오디오 재생이 없습니다
 
-- Backup archives는 의도적으로 가볍습니다. config, workspace data, light history transcripts and summaries, automation state, dashboard LLM usage를 포함합니다.
+- Backup archives는 의도적으로 가볍습니다. config, project data, light history transcripts and summaries, automation state, dashboard LLM usage를 포함합니다.
 - 원본 오디오 파일은 포함되지 않으므로 복원된 항목은 읽기와 편집용으로 다시 열릴 수 있지만, 원본 오디오가 다른 경로로 제공되기 전에는 playback이 없을 수 있습니다.
 
 ## 새 항목이 왜 먼저 `Inbox`에 나타나나요?
 
 - `Inbox`는 아직 프로젝트에 배정되지 않은 녹음과 가져오기의 기본 보관 위치입니다.
 - 새 항목이 자동으로 해당 프로젝트에 남길 원한다면 `Live Record` 또는 `Batch Import`를 시작하기 전에 특정 프로젝트를 여세요.
-- 나중에 [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)에서 저장된 항목을 `Inbox`에서 프로젝트로 이동할 수도 있습니다.
+- 나중에 [프로젝트와 Inbox](guide:workspace-projects-and-inbox)에서 저장된 항목을 `Inbox`에서 프로젝트로 이동할 수도 있습니다.
 
 ## 프로젝트를 삭제하면 어떻게 되나요?
 
@@ -95,7 +95,7 @@
 
 ## 녹음 중인데 `Draft` 항목이 보이는 이유는?
 
-- 활성 live recording 중 Sona는 세션이 이미 `Workspace` 안에 저장된 위치를 갖도록 보이는 `Draft` 항목을 만들 수 있습니다.
+- 활성 live recording 중 Sona는 세션이 이미 `Projects` 안에 저장된 위치를 갖도록 보이는 `Draft` 항목을 만들 수 있습니다.
 - 녹음을 멈추면 두 번째 저장 사본을 만들지 않고 같은 항목을 완료합니다.
 - 캡처가 실행 중인 동안에는 이 draft를 live session으로 다루면 됩니다. 완성된 전사는 같은 항목에 남습니다.
 
@@ -122,6 +122,34 @@
 ## 재생 controls가 없습니다
 
 - 오디오 플레이어는 현재 전사에 저장된 녹음이나 처리된 파일 같은 오디오 source가 있을 때만 나타납니다.
+
+## 클라우드 동기화(WebDAV E2EE) 마스터 비밀번호를 잊어버렸을 때는 어떻게 하나요?
+
+- 볼트 설정 시 저장한 `긴급 복구 키(Emergency Recovery Key)`가 있으면 접근을 재설정할 수 있습니다.
+- 마스터 비밀번호와 긴급 복구 키를 모두 분실한 경우, 영지식 종단간 암호화(E2EE)가 적용되어 개발자를 포함한 누구도 동기화 서버의 암호화된 데이터를 복구할 수 없습니다. 단, 현재 기기에 이미 로컬 저장된 전사와 오디오는 온전히 유지됩니다.
+
+## 클라우드 동기화가 내 녹음 오디오를 클라우드에 업로드하나요?
+
+- 아니요. 클라우드 동기화는 전사 세그먼트, 요약, 프로젝트 메타데이터, 설정만 동기화합니다. 모든 원본 녹음 오디오 파일은 로컬 컴퓨터에만 남으며 WebDAV로 업로드되지 않습니다.
+
+## 클라우드 동기화에서 충돌이 감지되는 이유는 무엇인가요?
+
+- 여러 기기에서 동일한 전사를 오프라인 편집했거나 동기화 간격 내에 동시에 수정한 경우, Sona는 차이를 감지하여 `Settings > Cloud Sync > 충돌 센터`에 표시합니다.
+- 충돌 센터에서 양쪽 차이점을 나란히 검토하고 로컬 버전 유지, 원격 버전 유지, 또는 병합을 수동으로 선택할 수 있습니다.
+
+## 실수로 삭제한 전사는 어떻게 복구하나요?
+
+- 삭제된 전사는 디스크에서 즉시 지워지지 않고 `Projects` 왼쪽의 `Trash`(휴지통)로 이동합니다.
+- `Trash` 범위로 전환하여 해당 항목을 선택하고 `Restore`를 클릭하면 원래 프로젝트나 Inbox로 복구됩니다.
+- 휴지통에서 `Empty Trash`를 누르거나 영구 삭제를 선택했을 때만 로컬 디스크에서 완전히 지워집니다.
+
+## 진행 중인 일괄 전사 작업을 중간에 취소할 수 있나요?
+
+- 네. 상단 헤더의 `Task Center`(작업 센터) 아이콘을 클릭하면 활성 일괄 전사 대기열을 확인하고 진행 중인 작업을 실시간으로 취소할 수 있습니다.
+
+## 미디어 가져오기에 실패하거나 디코더 누락 오류가 발생하면 어떻게 하나요?
+
+- Sona는 기본적으로 내장 미디어 디코딩을 사용합니다. 비표준 오디오/비디오 형식이거나 디코더가 누락된 경우 `Settings > Storage Management`로 이동하여 `사용자 지정 FFmpeg 경로`에 시스템에 설치된 FFmpeg 실행 파일 경로를 지정하세요.
 
 ## Sona를 빌드하거나 개발하고 싶습니다
 

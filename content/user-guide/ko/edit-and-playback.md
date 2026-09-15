@@ -10,14 +10,14 @@ Sona가 전사 세그먼트를 만든 뒤에는 편집기가 검토, 수정, 이
 
 ## 편집 전에
 
-- [Live Record](guide:live-record), [Batch Import](guide:batch-import), [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)에서 전사 내용을 불러옵니다.
+- [Live Record](guide:live-record), [Batch Import](guide:batch-import), [프로젝트와 Inbox](guide:workspace-projects-and-inbox)에서 전사 내용을 불러옵니다.
 
 ## 전사 세그먼트 검토와 수정
 
 1. 편집기에서 세그먼트 목록을 읽습니다.
 2. 타임스탬프를 클릭해 재생 위치를 해당 순간으로 이동합니다.
 3. 세그먼트 텍스트를 두 번 클릭하거나 편집 동작을 사용해 편집 모드로 들어갑니다.
-4. 읽기 전용 세그먼트를 마우스 오른쪽 버튼으로 클릭하면 `Copy`와 `Select All`을, 편집 중에 클릭하면 `Cut`, `Copy`, `Paste`, `Select All`, `Bold`, `Italic`, `Underline`을 사용할 수 있습니다. 키보드 컨텍스트 메뉴 키 또는 `Shift + F10`도 같은 메뉴를 엽니다.
+4. 읽기 전용 세그먼트를 마우스 오른쪽 버튼으로 클릭하면 `Copy`와 `Select All`을, 편집 중에 클릭하면 `Cut`, `Copy`, `Paste`, `Select All`, `Bold`, `Italic`, `Underline`, `Strikethrough`, `Inline Code`를 사용할 수 있습니다. 키보드 컨텍스트 메뉴 키 또는 `Shift + F10`도 같은 메뉴를 엽니다.
 5. `Enter`를 눌러 현재 세그먼트를 저장합니다.
 6. `Shift + Enter`를 눌러 커서 위치에서 현재 세그먼트를 나눕니다.
 7. 병합 동작으로 세그먼트를 다음 세그먼트와 합칩니다.
@@ -33,7 +33,7 @@ Sona가 전사 세그먼트를 만든 뒤에는 편집기가 검토, 수정, 이
 
 ## Version Snapshots 사용
 
-1. 전사가 저장된 non-draft workspace 항목이면 전사 헤더에서 `Version Snapshots`를 엽니다.
+1. 전사가 저장된 non-draft 프로젝트 항목이면 전사 헤더에서 `Version Snapshots`를 엽니다.
 2. `LLM Polish`, `Translate`, `Re-transcribe` 같은 대량 rewrite 이전에 저장된 snapshot을 고릅니다.
 3. snapshot과 현재 전사를 비교합니다.
 4. 일부 rewrite만 되돌려야 하면 변경된 행을 선택해 복원합니다.
@@ -55,9 +55,9 @@ Sona가 전사 세그먼트를 만든 뒤에는 편집기가 검토, 수정, 이
 
 ## 팁
 
-- 툴바는 `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, 세그먼트 나누기를 지원합니다.
+- 툴바는 `Undo`, `Redo`, `Bold`, `Italic`, `Underline`, `Strikethrough`(`Ctrl + Shift + S`), `Inline Code`, 세그먼트 나누기를 지원합니다.
 - `Speaker Profiles`는 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)에서 만듭니다. Profiles는 추천과 자동 매칭에 도움을 주지만 수동 확인도 계속 가능합니다.
-- `Version Snapshots`는 draft나 임시 `current` 전사가 아니라 저장된 workspace 항목에서만 나타납니다.
+- `Version Snapshots`는 draft나 임시 `current` 전사가 아니라 저장된 프로젝트 항목에서만 나타납니다.
 - 편집 뒤 선택형 LLM 정리나 번역을 추가하려면 [AI Polish와 번역](guide:ai-polish-and-translate)으로 이어가세요.
-- 저장된 항목을 편집기 주변에서 다시 열거나 정리하려면 [Workspace, 프로젝트, Inbox](guide:workspace-projects-and-inbox)로 이어가세요.
+- 저장된 항목을 편집기 주변에서 다시 열거나 정리하려면 [프로젝트와 Inbox](guide:workspace-projects-and-inbox)로 이어가세요.
 - 작업이 끝났고 주로 파일을 꺼내야 한다면 [내보내기와 설정](guide:export-and-settings)으로 바로 이동하세요.

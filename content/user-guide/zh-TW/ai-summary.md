@@ -8,7 +8,7 @@
 
 ## 開始前
 
-- 您已經有來自 [即時錄音](guide:live-record)、[批次轉錄](guide:batch-import) 或 [工作區、專案與 Inbox](guide:workspace-projects-and-inbox) 的轉錄分段。
+- 您已經有來自 [即時錄音](guide:live-record)、[批次轉錄](guide:batch-import) 或 [專案中心與收件匣](guide:workspace-projects-and-inbox) 的轉錄分段。
 - 您準備先在 `設定 > LLM 服務` 中設定 `摘要模型`。
 
 ## 先完成摘要模型設定

@@ -7,10 +7,11 @@ A lightweight landing page for **Sona**, the offline transcript editor built wit
 Sona is designed for people who want privacy, speed, and local-first transcription. This site reflects that with a compact multilingual landing page, a stable release-aware download button, a Stable/Nightly downloads view with Android debug previews on Nightly, a branded global 404 page, and metadata tuned for production deployment.
 
 ### Highlighted Product Capabilities
-- **Local processing:** Speech recognition runs on-device with Sherpa-onnx.
+- **Local processing:** Speech recognition runs on-device with Sherpa-onnx and llama.cpp (Qwen3-ASR).
 - **LLM assistant:** Local models can help polish, summarize, and translate transcripts.
-- **High accuracy:** Tuned for long-form audio and readable punctuation recovery.
-- **Transcript editor:** A focused editor for proofreading, timestamps, and cleanup.
+- **End-to-End Encrypted Cloud Sync:** Cross-device sync (desktop and Android client) with zero-knowledge encryption.
+- **High accuracy:** Tuned for long-form audio, Silero VAD v5, and readable punctuation recovery.
+- **Transcript editor:** A focused editor for proofreading, timestamps, text styling, and cleanup.
 
 ## Tech Stack
 
