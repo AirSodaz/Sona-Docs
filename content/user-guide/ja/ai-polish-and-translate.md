@@ -25,7 +25,7 @@ Sona の AI Polish と Translate は任意機能です。使わなくてもロ�
 1. `Settings > LLM Service` で `Polish Model` が割り当てられていることを確認します。
 2. アプリ内で `LLM Polish` アクションを開きます。
 3. 必要に応じて `LLM Polish`、`Re-transcribe`、`Undo`、`Redo`、`Advanced Settings` を選択します。
-4. `Auto-Polish`、`Auto-Polish Frequency`、`Keywords`、`Scenario Presets`、`Custom Context` を調整したい場合は、`Advanced Settings` を開きます。細かな調整は[語彙と詳細設定](guide:vocabulary-and-advanced-settings)にまとめています。
+4. `Auto-Polish`、`Auto-Polish Frequency`、`Keywords`、`Polish Modes`（`Clean & Readable`, `Verbatim Strict`, `Formal Written`）、`Custom Context` を調整したい場合は、`Advanced Settings` を開きます。細かな調整は[語彙と詳細設定](guide:vocabulary-and-advanced-settings)にまとめています。
 
 ## 二言語表示が必要な場合は Translate を実行する
 

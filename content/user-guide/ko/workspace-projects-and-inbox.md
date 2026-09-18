@@ -35,7 +35,7 @@
 1. 프로젝트를 열고 `Project Settings`를 클릭합니다.
 2. 프로젝트 이름과 설명을 업데이트합니다.
 3. 필요하면 프로젝트 아이콘을 고릅니다. 프로젝트 아이콘은 `New Project` modal이 아니라 여기에서 편집합니다.
-4. 프로젝트 안에서 작업할 때 적용할 기본값을 고릅니다: `Default Summary Template`, `Default Translation Language`, `Default Polish Scenario`, 선택형 `Default Polish Context`, `Export Filename Prefix`.
+4. 프로젝트 안에서 작업할 때 적용할 기본값을 고릅니다: `Default Summary Template`, `Default Translation Language`, `Default Polish Mode`, 선택형 `Default Polish Context`, `Export Filename Prefix`.
 5. **프로젝트 파이프라인**: 프로젝트별 인식 또는 정리 동작이 필요하면 `Text Replacement`와 `Hotword` set를 켜거나 끕니다. 해당 프로젝트에서 작업할 때 이 규칙들이 자동으로 적용됩니다.
 6. 변경을 유지하려면 `Save`를 클릭하고, 프로젝트를 제거하고 항목을 `Inbox`로 돌리고 싶으면 `Delete Project`를 사용합니다.
 

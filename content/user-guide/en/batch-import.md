@@ -23,7 +23,7 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 
 1. Click `Parameter Settings` if you want to change `Subtitle Mode` or `Language` for new work.
 2. Keep an eye on the queue states: `Pending`, `Processing`, `Complete`, or `Failed`.
-3. **Task Center & Cancellation**: The header `Task Center` displays batch queue and transcription progress in real time, supporting instant cancellation of active batch imports.
+3. **Message Center & Cancellation**: The header `Message Center` displays batch queue and transcription progress in real time, supporting instant cancellation of active batch imports.
 
 ## What happens after a file finishes
 

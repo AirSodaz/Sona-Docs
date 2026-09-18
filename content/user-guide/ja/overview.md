@@ -8,7 +8,7 @@ Sona は、音声の文字起こしをできるだけ自分のマシン上で完
 - 文字起こし、タイムスタンプ、話者ラベル、再生、バージョン履歴を確認したい: [編集と再生](guide:edit-and-playback)
 - LLM を使って文章を整えたり、翻訳を追加したりしたい: [AI Polish と翻訳](guide:ai-polish-and-translate)
 - 保存済みの録音、プロジェクトのパイプライン、Inbox、ゴミ箱を整理したい: [プロジェクトと Inbox](guide:workspace-projects-and-inbox)
-- 完成した内容を書き出す、または Storage Management、Cloud Sync (E2EE)、タスクセンターなどの設定画面を確認したい: [エクスポートと設定](guide:export-and-settings)
+- 完成した内容を書き出す、または Storage Management、Cloud Sync (E2EE)、メッセージセンターなどの設定画面を確認したい: [エクスポートと設定](guide:export-and-settings)
 - 本文を書き換えずに要約だけ作りたい: [AI Summary](guide:ai-summary)
 - フローティング字幕や他のアプリへの Voice Typing を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
 - Hotwords、Text Replacement、Speaker Profiles、Auto-Polish を調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
@@ -22,7 +22,7 @@ Sona は、音声の文字起こしをできるだけ自分のマシン上で完
 3. 必要に応じて話者やバージョン履歴も確認しながら、[編集と再生](guide:edit-and-playback)でテキストを整えます。
 4. LLM による整文や翻訳が必要な場合だけ、[AI Polish と翻訳](guide:ai-polish-and-translate)を使います。
 5. 保存済みの作業を開き直したり、プロジェクトを切り替えたり、パイプラインを設定したり、ゴミ箱を確認したりする場合は、[プロジェクトと Inbox](guide:workspace-projects-and-inbox)を使います。
-6. 仕上げとして[エクスポートと設定](guide:export-and-settings)を確認します。ヘッダーのタスクセンターで進捗確認やキャンセルを行えるほか、復元、更新、自動化などの通知も確認してください。
+6. 仕上げとして[エクスポートと設定](guide:export-and-settings)を確認します。ヘッダーのメッセージセンターで進捗確認やキャンセルを行えるほか、復元、更新、自動化などの通知も確認してください。
 
 AI Summary、Live Caption、Voice Typing、エンドツーエンド暗号化（E2EE）クラウド同期（Android 連携対応）、Speaker Profiles、語彙調整は、基本ワークフローを補う機能です。まずは文字起こしの流れを一度通し、そのあと必要に応じて個別のページを開くのが一番わかりやすい進め方です。
 
@@ -32,7 +32,7 @@ AI Summary、Live Caption、Voice Typing、エンドツーエンド暗号化（E
 - Live Record と、キューに追加して処理する Batch Import の違い
 - エディタ、プロジェクト整理、翻訳、エクスポートのつながり
 - 編集や引き継ぎで役立つ Speaker Review、Speaker Profiles、Version Snapshots の使い方
-- Dashboard、Diagnostics、Storage Management、Cloud Sync（E2EE）、Automation、タスクセンターなど、日常的に参照する設定画面の役割
+- Dashboard、Diagnostics、Storage Management、Cloud Sync（E2EE）、Automation、メッセージセンターなど、日常的に参照する設定画面の役割
 
 ## 関連ドキュメント
 

@@ -58,7 +58,7 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 ## I cannot find `Auto-Polish`
 
-- Open `LLM Polish > Advanced Settings` for `Auto-Polish`, frequency, keywords, scenario presets, and custom context.
+- Open `LLM Polish > Advanced Settings` for `Auto-Polish`, frequency, keywords, directive polish modes (`Clean`, `Verbatim`, `Formal`), and custom context.
 - If you want the map of where those controls fit, continue to [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
 
 ## Export only shows `Original`
@@ -123,14 +123,14 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 - The audio player only appears when the current transcript has an audio source available, such as a saved recording or processed file.
 
-## What if I forget my Master Password for Cloud Sync (WebDAV E2EE)?
+## What if I forget my Master Password for Cloud Sync (E2EE)?
 
 - If you saved the `Emergency Recovery Key` generated during vault setup, you can use it to reset access.
 - If both the Master Password and Emergency Recovery Key are lost, no one (including developers) can decrypt or recover the encrypted data on the sync server due to zero-knowledge end-to-end encryption. However, transcripts and audio already stored locally on your device remain unaffected and fully accessible.
 
 ## Does Cloud Sync upload my audio recordings to the cloud?
 
-- No. Cloud Sync only synchronizes transcript segments, summaries, project metadata, and preferences. All original audio recording files remain stored locally on your machine and are never uploaded to WebDAV.
+- No. Cloud Sync only synchronizes transcript segments, summaries, project metadata, and preferences. All original audio recording files remain stored locally on your machine and are never uploaded to WebDAV or S3-compatible cloud storage.
 
 ## Why does Cloud Sync show a conflict?
 
@@ -145,7 +145,7 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 ## Can I cancel an in-progress batch transcription job?
 
-- Yes. Click the `Task Center` icon in the header to view active batch transcription queues, where you can cancel active tasks in real time.
+- Yes. Click the `Message Center` icon in the header to view active batch transcription queues, where you can cancel active tasks in real time.
 
 ## What if media import fails or reports a missing decoder?
 

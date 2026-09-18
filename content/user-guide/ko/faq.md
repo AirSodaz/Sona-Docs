@@ -58,7 +58,7 @@
 
 ## `Auto-Polish`를 찾을 수 없습니다
 
-- `Auto-Polish`, frequency, keywords, scenario presets, custom context는 `LLM Polish > Advanced Settings`에서 엽니다.
+- `Auto-Polish`, frequency, keywords, directive polish modes, custom context는 `LLM Polish > Advanced Settings`에서 엽니다.
 - 이 controls가 어디에 들어가는지 지도가 필요하면 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)으로 이어가세요.
 
 ## 내보내기에 `Original`만 보입니다
@@ -123,7 +123,7 @@
 
 - 오디오 플레이어는 현재 전사에 저장된 녹음이나 처리된 파일 같은 오디오 source가 있을 때만 나타납니다.
 
-## 클라우드 동기화(WebDAV E2EE) 마스터 비밀번호를 잊어버렸을 때는 어떻게 하나요?
+## 클라우드 동기화(E2EE) 마스터 비밀번호를 잊어버렸을 때는 어떻게 하나요?
 
 - 볼트 설정 시 저장한 `긴급 복구 키(Emergency Recovery Key)`가 있으면 접근을 재설정할 수 있습니다.
 - 마스터 비밀번호와 긴급 복구 키를 모두 분실한 경우, 영지식 종단간 암호화(E2EE)가 적용되어 개발자를 포함한 누구도 동기화 서버의 암호화된 데이터를 복구할 수 없습니다. 단, 현재 기기에 이미 로컬 저장된 전사와 오디오는 온전히 유지됩니다.
@@ -145,7 +145,7 @@
 
 ## 진행 중인 일괄 전사 작업을 중간에 취소할 수 있나요?
 
-- 네. 상단 헤더의 `Task Center`(작업 센터) 아이콘을 클릭하면 활성 일괄 전사 대기열을 확인하고 진행 중인 작업을 실시간으로 취소할 수 있습니다.
+- 네. 상단 헤더의 `Message Center`(메시지 센터) 아이콘을 클릭하면 활성 일괄 전사 대기열을 확인하고 진행 중인 작업을 실시간으로 취소할 수 있습니다.
 
 ## 미디어 가져오기에 실패하거나 디코더 누락 오류가 발생하면 어떻게 하나요?
 

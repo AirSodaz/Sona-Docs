@@ -10,7 +10,7 @@
 ## 먼저 알맞은 설정 영역 열기
 
 - `Settings > Vocabulary`: `Hotwords`, `Text Replacement`, `Speaker Profiles` 관리
-- `LLM Polish > Advanced Settings`: `Auto-Polish`, frequency, keywords, scenario presets, custom context 관리
+- `LLM Polish > Advanced Settings`: `Auto-Polish`, frequency, keywords, directive polish modes, custom context 관리
 - 기본 polish와 translation 흐름이 아직 필요하다면 [AI Polish와 번역](guide:ai-polish-and-translate)으로 돌아가세요.
 
 ## `Hotwords`가 유용한 경우
@@ -36,7 +36,7 @@
 ## 언제 `Advanced Settings`를 열까요
 
 - 일회성 `LLM Polish`보다 더 많은 제어가 필요하고 `Auto-Polish`를 관리하고 싶을 때
-- `Auto-Polish Frequency`, keywords, scenario presets, custom context를 조정하고 싶을 때
+- `Auto-Polish Frequency`, keywords, directive polish modes, custom context를 조정하고 싶을 때
 - Provider와 model setup은 끝났지만 polish 동작을 더 구체적인 use case에 맞추고 싶을 때
 
 ## 참고

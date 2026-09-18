@@ -379,7 +379,7 @@
           "items": [
             "Local transcription does not require a Sona-hosted speech service.",
             "Model downloads and app updates may contact external release or model hosts when you ask for them.",
-            "Backups, restores, and WebDAV sync are controlled from the app and should be treated as user-selected data movement."
+            "Backups, restores, and WebDAV and S3 sync are controlled from the app and should be treated as user-selected data movement."
           ]
         },
         {
@@ -430,7 +430,7 @@
         {
           "label": "Optional",
           "title": "Network features are action-based",
-          "description": "AI provider calls, model downloads, updates, backups, and WebDAV sync are tied to features you configure or trigger."
+          "description": "AI provider calls, model downloads, updates, backups, and WebDAV and S3 sync are tied to features you configure or trigger."
         },
         {
           "label": "Website",
@@ -514,10 +514,10 @@
             "control": "You choose when to export, where to save, and whether to import an archive later."
           },
           {
-            "feature": "WebDAV Cloud Sync",
+            "feature": "WebDAV & S3 Cloud Sync",
             "trigger": "Configure sync and run backup, restore, or sync actions.",
             "data": "Backup archives and sync metadata.",
-            "destination": "Your configured WebDAV server.",
+            "destination": "Your configured WebDAV server or S3-compatible object storage bucket.",
             "control": "Optional; controlled by your server URL, credentials, and sync actions."
           },
           {
@@ -581,7 +581,7 @@
           "body": "This is a practical product explanation, not a lawyer-reviewed privacy policy or compliance statement. It reflects the current repository shape and should be updated when product behavior changes.",
           "items": [
             "It does not claim that every third-party provider follows the same privacy practices.",
-            "It does not replace reading the policies of GitHub, Gemini, Cloudflare, your LLM provider, or your WebDAV host.",
+            "It does not replace reading the policies of GitHub, Gemini, Cloudflare, your LLM provider, or your WebDAV/S3 storage host.",
             "It does not add client analytics, persistent user tracking, or a new user-data collection flow."
           ]
         }

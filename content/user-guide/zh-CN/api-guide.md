@@ -39,7 +39,7 @@ Authorization: Bearer your_secure_key
 
 获取服务器平台信息、硬件状态、已安装模型以及可用的在线 ASR provider。
 
-- URL：`/v1/info`
+- URL：`/info`
 - Method：`GET`
 
 ### 响应 (`200 OK`)

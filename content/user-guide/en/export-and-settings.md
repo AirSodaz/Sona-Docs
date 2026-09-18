@@ -32,24 +32,24 @@ Before exporting, open `Speaker Review` from the transcript header if speaker la
 - `Settings > Input Device`: microphone selection, system audio selection, microphone boost, `Keep Microphone Active`, mute during recording
 - `Settings > Subtitle Settings`: floating caption behavior; if you mainly came for `Live Caption` or `Voice Typing`, continue to [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - `Settings > Voice Typing`: turn on `Voice Typing`, assign its global shortcut, choose `Push to Talk (Hold)` or `Toggle (Press once)`, and check readiness
-- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, and downloadable recognition, punctuation, speaker, and VAD models
-- `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, and `Speaker Profiles`; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
+- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, CTC forced alignment, diarization sensitivity (Permissive/Balanced/Strict), `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, and downloadable recognition, punctuation, speaker, and VAD models
+- `Settings > Vocabulary`: organized into sub-tabs (`Recognition`, `Prompts`, `Speakers`) for text replacement, hotwords, polish context notes, summary templates, and speaker profiles; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 - `Settings > Automation`: watched-folder rules that can transcribe, polish, translate, and export new media while Sona is running
 - `Settings > Storage Management`: unified data and models directories overview, custom FFmpeg path, disk usage breakdown, audio retention cleanup policy, and WebView cache clearing
-- `Settings > Cloud Sync`: End-to-End Encrypted (E2EE) cross-device sync vault, Vault ID and pairing, Master Password and Emergency Recovery Key, sync scope presets, and Conflict Center
+- `Settings > Cloud Sync`: End-to-End Encrypted (E2EE) cross-device sync vault supporting WebDAV and S3-compatible object storage (AWS S3, Cloudflare R2, MinIO, etc.), Vault ID and pairing, Master Password and Emergency Recovery Key, sync scope presets, and Conflict Center
 - `Settings > API Server`: local HTTP API host, port, optional API key, IP allowlist, server limits, and server-level transcription defaults
 - `Settings > LLM Service`: feature model bindings, reasoning options, and provider credentials; use [AI Polish and Translate](guide:ai-polish-and-translate) for polish/translation and [AI Summary](guide:ai-summary) for summaries
 - `Settings > Shortcuts`: live recording, playback, search, project navigation, and editor shortcuts (supports strikethrough `Ctrl + Shift + S`)
 - `Settings > About`: source code, logs, and update-related actions
 
-## Diagnostics, backup, cloud sync, and task center
+## Diagnostics, backup, cloud sync, and message center
 
 - In `Settings > General`, use `Diagnostics` to inspect the local transcription chain, runtime readiness, and packaging environment.
 - In the same page, use `Backup & Restore` to export or import a light archive of config, project data, light history transcripts and summaries, automation state, and dashboard LLM usage.
 - Light backup archives restore text history and summaries, but not original audio files. Restored entries may reopen for reading and editing without playback.
 - `Settings > Cloud Sync` is a standalone End-to-End Encrypted (E2EE) incremental sync system. Transcripts and settings are encrypted with your Master Password before leaving your device, with an Emergency Recovery Key for access recovery, and a Conflict Center to arbitrate concurrent edits across devices. Audio recordings remain stored locally on your machine and are never uploaded to the cloud.
 - An entry at the bottom of the Cloud Sync page allows a one-time import of legacy WebDAV backup archives; Sona no longer creates new full remote backup bundles.
-- The Task Center in the header centrally manages batch transcription, automation, and LLM jobs with real-time progress and cancellation for batch imports; interrupted tasks can also be resumed or discarded in its Recovery Center.
+- The Message Center in the header centrally manages batch transcription, automation, and LLM jobs with real-time progress, cancellation, and clear options for completed tasks; interrupted tasks can also be resumed or discarded in its Recovery Center.
 
 ## If you mainly came for an extension capability
 

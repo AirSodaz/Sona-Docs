@@ -9,8 +9,8 @@ This page keeps a few tuning-oriented capabilities in one place: `Hotwords`, `Te
 
 ## Open the right settings area first
 
-- `Settings > Vocabulary`: manage `Hotwords`, `Text Replacement`, and `Speaker Profiles`
-- `LLM Polish > Advanced Settings`: manage `Auto-Polish`, frequency, keywords, scenario presets, and custom context
+- `Settings > Vocabulary`: organized into sub-tabs (`Recognition`, `Prompts`, `Speakers`) to manage `Hotwords`, `Text Replacement`, polish context notes, summary templates, and `Speaker Profiles`
+- `LLM Polish > Advanced Settings`: manage `Auto-Polish`, frequency, keywords, directive `Polish Modes` (`Clean & Readable`, `Verbatim Strict`, `Formal Written`), and custom context
 - If you still need the basic polish and translation flow first, return to [AI Polish and Translate](guide:ai-polish-and-translate)
 
 ## What `Hotwords` are good for
@@ -36,7 +36,7 @@ This page keeps a few tuning-oriented capabilities in one place: `Hotwords`, `Te
 ## When to open `Advanced Settings`
 
 - When you need more than a one-off `LLM Polish` action and want to manage `Auto-Polish`.
-- When you want to tune `Auto-Polish Frequency`, keywords, scenario presets, or custom context.
+- When you want to tune `Auto-Polish Frequency`, keywords, directive polish modes, or custom context.
 - When provider and model setup is already done, but you want polish behavior to match a more specific use case.
 
 ## Useful notes

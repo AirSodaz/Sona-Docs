@@ -514,10 +514,10 @@
             "control": "언제 내보낼지, 어디에 저장할지, 나중에 가져올지 사용자가 선택합니다."
           },
           {
-            "feature": "WebDAV Cloud Sync",
+            "feature": "WebDAV 및 S3 클라우드 동기화",
             "trigger": "동기화를 설정하고 백업, 복원, 동기화 동작을 실행합니다.",
             "data": "백업 아카이브와 동기화 메타데이터.",
-            "destination": "설정한 WebDAV 서버.",
+            "destination": "설정한 WebDAV 서버 또는 S3 호환 스토리지 버킷.",
             "control": "선택 기능입니다. 서버 URL, 인증 정보, 동기화 동작으로 제어됩니다."
           },
           {

@@ -4,7 +4,7 @@ Use `Project Center` (`Projects`) when you want to organize saved recordings and
 
 - Reopening saved items from one place instead of treating them as a separate saved-items view
 - Sorting work across `All Items`, `Inbox`, project scopes, and `Trash`
-- Configuring project-dedicated pipelines (hotwords, replacement rules, prompt presets, default translation and polish) before starting new recordings or imports
+- Configuring project-dedicated pipelines (hotwords, replacement rules, directive polish modes, default translation and polish) before starting new recordings or imports
 - Recovering accidentally deleted transcripts or purging the trash
 
 ## Understand the four scopes first
@@ -35,7 +35,7 @@ Use `Project Center` (`Projects`) when you want to organize saved recordings and
 1. Open a project, then click `Project Settings`.
 2. Update the project name and description.
 3. Choose a project icon if you want one. Project icons are edited here, not in the `New Project` modal.
-4. Pick the defaults that should apply whenever you work inside that project: `Default Summary Template`, `Default Translation Language`, `Default Polish Scenario`, optional `Default Polish Context`, and `Export Filename Prefix`.
+4. Pick the defaults that should apply whenever you work inside that project: `Default Summary Template`, `Default Translation Language`, `Default Polish Mode`, optional `Default Polish Context`, and `Export Filename Prefix`.
 5. **Project Pipelines**: Turn `Text Replacement` sets and `Hotword` sets on or off specifically for this project. When transcribing or post-processing within this project, these rules are applied automatically.
 6. Click `Save` to keep the changes, or `Delete Project` if you want to remove the project and move its items back to `Inbox`.
 

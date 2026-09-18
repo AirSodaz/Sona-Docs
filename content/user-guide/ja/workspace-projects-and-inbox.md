@@ -35,7 +35,7 @@
 1. プロジェクトを開き、`Project Settings` をクリックします。
 2. プロジェクト名と説明を更新します。
 3. 必要に応じてプロジェクトアイコンを選択します。アイコンは新規作成時ではなく、この設定画面で編集します。
-4. そのプロジェクトで使う既定値を選びます。`Default Summary Template`、`Default Translation Language`、`Default Polish Scenario`、任意の `Default Polish Context`、`Export Filename Prefix` などを設定できます。
+4. そのプロジェクトで使う既定値を選びます。`Default Summary Template`、`Default Translation Language`、`Default Polish Mode`、任意の `Default Polish Context`、`Export Filename Prefix` などを設定できます。
 5. **プロジェクトパイプライン**: プロジェクト固有の認識や整文を行いたい場合、そのプロジェクト専用の `Text Replacement` や `Hotword` セットの有効/無効を設定します。このプロジェクトで処理を行う際、これらのルールが自動的に適用されます。
 6. `Save` をクリックして変更を保存します。プロジェクトだけを削除し、含まれるアイテムを Inbox に戻したい場合は、`Delete Project` をクリックします。
 

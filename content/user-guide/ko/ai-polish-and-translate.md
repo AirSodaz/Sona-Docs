@@ -25,7 +25,7 @@ Sona의 정리와 번역 기능은 선택 기능입니다. 로컬 전사는 이 
 1. `Settings > LLM Service`에서 `Polish Model`이 지정되어 있는지 확인합니다.
 2. 앱에서 `LLM Polish` 동작을 엽니다.
 3. 필요한 동작을 고릅니다: `LLM Polish`, `Re-transcribe`, `Undo`, `Redo`, `Advanced Settings`.
-4. `Auto-Polish`, `Auto-Polish Frequency`, `Keywords`, `Scenario Presets`, `Custom Context`를 관리하려면 `Advanced Settings`를 엽니다. 더 자세한 조정 화면은 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)에 모아 두었습니다.
+4. `Auto-Polish`, `Auto-Polish Frequency`, `Keywords`, `Polish Modes`(`Clean & Readable`, `Verbatim Strict`, `Formal Written`), `Custom Context`를 관리하려면 `Advanced Settings`를 엽니다. 더 자세한 조정 화면은 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)에 모아 두었습니다.
 
 ## 이중 언어 출력이 필요할 때 번역 실행
 

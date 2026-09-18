@@ -39,7 +39,7 @@ API key가 없으면 서버는 unauthenticated request를 허용합니다.
 
 서버 platform 정보, hardware status, 설치된 model, 사용 가능한 online ASR provider를 가져옵니다.
 
-- URL: `/v1/info`
+- URL: `/info`
 - Method: `GET`
 
 ### Response (`200 OK`)

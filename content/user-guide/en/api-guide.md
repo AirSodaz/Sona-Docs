@@ -39,7 +39,7 @@ If no API key is set, the server permits unauthenticated requests.
 
 Retrieve server platform information, hardware status, installed models, and available online ASR providers.
 
-- URL: `/v1/info`
+- URL: `/info`
 - Method: `GET`
 
 ### Response (`200 OK`)

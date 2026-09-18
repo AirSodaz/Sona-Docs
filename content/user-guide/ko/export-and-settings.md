@@ -42,14 +42,14 @@
 - `Settings > Shortcuts`: live recording, playback, search, project navigation, editor shortcuts (취소선 `Ctrl + Shift + S` 지원)
 - `Settings > About`: source code, logs, update 관련 동작
 
-## Diagnostics, backup, cloud sync, task center
+## Diagnostics, backup, cloud sync, message center
 
 - `Settings > General`에서 `Diagnostics`를 사용해 로컬 전사 체인, runtime readiness, packaging environment를 확인합니다.
 - 같은 페이지의 `Backup & Restore`로 config, project data, light history transcripts and summaries, automation state, dashboard LLM usage를 담은 가벼운 archive를 내보내거나 가져옵니다.
 - 가벼운 백업 archive는 텍스트 history와 summaries를 복원하지만 원본 오디오 파일은 복원하지 않습니다. 복원된 항목은 playback 없이 읽기와 편집용으로 열릴 수 있습니다.
 - `Settings > Cloud Sync`는 독립적인 종단간 암호화(E2EE) 증분 동기화 시스템입니다. 전사 및 설정은 기기를 떠나기 전에 마스터 비밀번호로 암호화되며, 긴급 복구 키를 통한 접근 복구와 기기간 동시 수정을 중재하는 충돌 센터를 지원합니다. 녹음 오디오는 로컬 컴퓨터에만 유지되며 클라우드로 업로드되지 않습니다.
 - 페이지 하단에서 기존 WebDAV 백업 아카이브의 1회성 마이그레이션 가져오기를 제공합니다(Sona는 더 이상 새로운 원격 전체 백업을 생성하지 않습니다).
-- 헤더의 작업 센터(Task Center)에서 일괄 전사, 자동화, LLM 작업을 중앙 관리하며, 실시간 진행률 및 일괄 전사 시 실시간 취소를 지원합니다. 중단된 작업은 복구 센터에서 재개하거나 폐기할 수 있습니다.
+- 헤더의 메시지 센터(Message Center)에서 일괄 전사, 자동화, LLM 작업을 중앙 관리하며, 실시간 진행률, 일괄 전사 실시간 취소, 완료 작업 지우기 메뉴를 지원합니다. 중단된 작업은 복구 센터에서 재개하거나 폐기할 수 있습니다.
 
 ## 확장 기능 때문에 온 경우
 

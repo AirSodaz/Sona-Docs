@@ -25,7 +25,7 @@ Sona's polish and translation features are optional. Local transcription works w
 1. Make sure `Polish Model` is assigned in `Settings > LLM Service`.
 2. In the app, open the `LLM Polish` action.
 3. Choose what you need: `LLM Polish`, `Re-transcribe`, `Undo`, `Redo`, or `Advanced Settings`.
-4. Open `Advanced Settings` if you want to manage `Auto-Polish`, `Auto-Polish Frequency`, `Keywords`, `Scenario Presets`, or `Custom Context`. The fuller tuning view is collected in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
+4. Open `Advanced Settings` if you want to manage `Auto-Polish`, `Auto-Polish Frequency`, `Keywords`, directive `Polish Modes` (`Clean & Readable`, `Verbatim Strict`, `Formal Written`), and `Custom Context`. The fuller tuning view is collected in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings).
 
 ## Run translation when you need bilingual output
 
@@ -33,7 +33,7 @@ Sona's polish and translation features are optional. Local transcription works w
 2. Click the `Translate` button.
 3. Choose the target language.
 4. Click `Start Translation` or `Retranslate`.
-5. Use `Show Translations` or `Hide Translations` to control bilingual display in the editor.
+5. Bilingual translation display is enabled by default once translated. Use `Show Translations` or `Hide Translations` to toggle the view, and double-click any translated segment directly in the editor to make inline adjustments.
 
 ## What the AI steps change
 
