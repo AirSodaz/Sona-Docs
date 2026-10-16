@@ -1,30 +1,33 @@
+overrides:
+  vite: ^8.3.4
+  brace-expansion: '>=1.1.21'
+  js-yaml: '>=4.3.2'
+  postcss-selector-parser: ^7.1.6
+  protobufjs: '>=7.6.5'
+  baseline-browser-mapping: '>=2.11.0'
+
 allowBuilds:
   '@google/genai': true
   '@parcel/watcher': true
   '@swc/core': true
   protobufjs: true
-  sharp: true
   unrs-resolver: true
+
 minimumReleaseAgeExclude:
-  - postcss@8.5.10
-  - protobufjs@7.5.6
-  - '@protobufjs/utf8@1.1.1'
-  - ws@8.20.1
-  - protobufjs@7.5.8
-  - brace-expansion@5.0.6
-onlyBuiltDependencies:
-  - '@google/genai'
-  - '@tailwindcss/oxide'
-  - protobufjs
-  - re2
-  - sharp
-  - unrs-resolver
-overrides:
-  '@protobufjs/utf8@<=1.1.0': ^1.1.1
-  brace-expansion@>=5.0.0 <5.0.6: ^5.0.6
-  js-yaml@<4.1.2: ^4.1.2
-  postcss@<8.5.10: ^8.5.10
-  protobufjs@<=7.5.5: ^7.5.6
-  protobufjs@<=7.5.7: ^7.5.8
-  vite@<8.0.16: ^8.0.16
-  ws@>=8.0.0 <8.20.1: ^8.20.1
+  - '@next/env@16.4.2'
+  - '@next/eslint-plugin-next@16.4.2'
+  - '@next/swc-darwin-arm64@16.4.2'
+  - '@next/swc-darwin-x64@16.4.2'
+  - '@next/swc-linux-arm64-gnu@16.4.2'
+  - '@next/swc-linux-arm64-musl@16.4.2'
+  - '@next/swc-linux-x64-gnu@16.4.2'
+  - '@next/swc-linux-x64-musl@16.4.2'
+  - '@next/swc-win32-arm64-msvc@16.4.2'
+  - '@next/swc-win32-x64-msvc@16.4.2'
+  - eslint-config-next@16.4.2
+  - lucide-react@1.58.0
+  - next@16.4.2
+
+auditConfig:
+  ignoreGhsas:
+    - GHSA-vfj7-8cjw-p6xm

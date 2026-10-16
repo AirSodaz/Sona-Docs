@@ -9,10 +9,10 @@ import {
   ArrowRight,
   CheckCircle2,
   ExternalLink,
-  Github,
   Smartphone,
   TriangleAlert,
 } from 'lucide-react';
+import { GithubIcon } from '@/components/GithubIcon';
 import { motion } from 'motion/react';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -197,7 +197,7 @@ export function DownloadsPage({
             <LanguageSwitcher />
             <HeaderLink href={githubHref} external>
               <span className="inline-flex items-center gap-1.5">
-                <Github size={16} />
+                <GithubIcon size={16} />
                 <span className="hidden sm:inline">{content.page.githubLabel}</span>
               </span>
             </HeaderLink>
@@ -505,7 +505,7 @@ export function DownloadsPage({
             </Link>
             <HeaderLink href={githubHref} external>
               <span className="inline-flex items-center gap-2">
-                <Github size={16} />
+                <GithubIcon size={16} />
                 {content.page.githubLabel}
               </span>
             </HeaderLink>

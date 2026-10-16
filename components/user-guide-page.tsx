@@ -6,8 +6,8 @@ import {
   ArrowLeft,
   ArrowRight,
   ChevronRight,
-  Github,
 } from 'lucide-react';
+import { GithubIcon } from '@/components/GithubIcon';
 import ReactMarkdown, {
   defaultUrlTransform,
   type Components,
@@ -320,7 +320,7 @@ function HeaderActions({
       <LanguageSwitcher />
       <HeaderLink href={page.sourceHref} external>
         <span className="inline-flex items-center gap-1.5">
-          <Github size={16} />
+          <GithubIcon size={16} />
           <span className="hidden sm:inline">{page.sourceLabel}</span>
         </span>
       </HeaderLink>

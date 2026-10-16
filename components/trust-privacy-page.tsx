@@ -5,10 +5,10 @@ import type { ReactNode } from 'react';
 import {
   ArrowLeft,
   ExternalLink,
-  Github,
   LockKeyhole,
   ShieldCheck,
 } from 'lucide-react';
+import { GithubIcon } from '@/components/GithubIcon';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
@@ -73,7 +73,7 @@ export function TrustPrivacyPage({
             </HeaderLink>
             <LanguageSwitcher />
             <HeaderLink href="https://github.com/AirSodaz/sona" external>
-              <Github size={16} />
+              <GithubIcon size={16} />
               <span className="hidden sm:inline">{content.nav.githubLabel}</span>
             </HeaderLink>
           </div>

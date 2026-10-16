@@ -5,13 +5,13 @@ import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import {
   Bot,
-  Github,
   Mic,
   MoonStar,
   Scissors,
   Shield,
   Smartphone,
 } from 'lucide-react';
+import { GithubIcon } from '@/components/GithubIcon';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LanguageSwitcher } from '@/components/language-switcher';
@@ -162,7 +162,7 @@ export function HomePage({
               target="_blank"
               rel="noreferrer"
             >
-              <Github size={16} />
+              <GithubIcon size={16} />
               <span className="hidden sm:inline">{content.nav.github}</span>
             </Link>
           </div>
