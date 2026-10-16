@@ -149,8 +149,17 @@
 
 ## 影音匯入失敗或提示缺少解碼器怎麼辦？
 
-- Sona 預設使用內建媒體解碼鏈路。如果遇到非常規影音封裝或缺少解碼器，可以前往 `設定 > 儲存管理`，在 `自訂 FFmpeg 路徑` 中手動指定本機已安裝的 FFmpeg 執行檔路徑。
+- Sona 內建純 Rust 音訊解碼引擎，開箱即用支援 WAV、MP3、FLAC、OGG、AAC 與 M4A 常見格式，無需系統預裝 FFmpeg。
+- 如果遇到非常規專屬影音封裝或缺少解碼器，可以前往 `設定 > 儲存管理`，在 `自訂 FFmpeg 路徑` 中手動指定本機已安裝的 FFmpeg 執行檔路徑作為後備。
 
+## 可以在沒有雲端 API Key 的情況下使用 AI 潤飾與摘要嗎？
+
+- 可以。Sona 內建基於 llama.cpp 的本機離線 LLM 推理引擎。在 `設定 > LLM 服務` 中，可一鍵下載輕量 GGUF 預設模型（如 Qwen 1.7B）或匯入自訂 GGUF 模型，完全在本機硬體上執行潤飾、翻譯與摘要，無需連網或設定雲端金鑰。
+
+## 如何將外部 AI Agent（Claude Desktop、Cursor 等）連接到 Sona？
+
+- Sona 隨桌面端隨附了獨立的 `sona-mcp` 執行檔，完全符合 Model Context Protocol (MCP 2.0) 規範。
+- 只需在 Agent 的 MCP 設定檔中註冊 `sona-mcp`（如 Claude Desktop 的 `claude_desktop_config.json` 或 Cursor 的 `.cursor/mcp.json`）。Sona 開放了 40 個細粒度工具和 `sona://` 資源，允許 Agent 自動檢查、編輯、翻譯和控制錄音。詳細說明請參閱 [MCP 指南](guide:mcp-guide)。
 ## 我想從原始碼建構或參與開發
 
 - 請查看 [專案 README](readme) 中的原始碼建構與開發指令說明。

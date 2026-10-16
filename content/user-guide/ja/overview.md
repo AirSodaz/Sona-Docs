@@ -13,6 +13,7 @@ Sona は、音声の文字起こしをできるだけ自分のマシン上で完
 - フローティング字幕や他のアプリへの Voice Typing を使いたい: [Live Caption と Voice Typing](guide:live-caption-and-voice-typing)
 - Hotwords、Text Replacement、Speaker Profiles、Auto-Polish を調整したい: [語彙と詳細設定](guide:vocabulary-and-advanced-settings)
 - ターミナルからステートレスなローカル/オンラインのファイル・リアルタイム文字起こしを実行したい: [CLI ガイド](guide:cli-guide)
+- 外部 AI Agent（Claude Desktop、Cursor など）から Sona を自動操作したい: [MCP ガイド](guide:mcp-guide)
 - 問題の切り分けやよくある詰まりを確認したい: [FAQ とトラブルシューティング](guide:faq)
 
 ## Sona の基本ワークフロー
@@ -38,6 +39,7 @@ AI Summary、Live Caption、Voice Typing、エンドツーエンド暗号化（E
 
 - ステートレス CLI の文字起こし、モデル管理、診断、書き出し、ローカル API サーバー: [CLI ガイド](guide:cli-guide)
 - ローカル HTTP API 連携: [HTTP API ガイド](guide:api-guide)
+- 外部 AI Agent 向け Model Context Protocol (MCP) 連携: [MCP ガイド](guide:mcp-guide)
 - ソースからのビルドと開発コマンド: [プロジェクトの README](readme)
 
 > Sona の基本は、ローカル文字起こしを設定し、新しい音声または既存ファイルを開き、エディタで確認し、必要に応じてプロジェクト整理、AI Polish、翻訳、要約、エクスポートへ進むことです。

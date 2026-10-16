@@ -25,23 +25,34 @@
 - 저장된 녹음과 가져온 파일을 다시 열거나, 이름을 바꾸거나, 이동하거나, 정렬하려면 [프로젝트와 Inbox](guide:workspace-projects-and-inbox)로 돌아가세요.
 - 프로젝트 context와 `Inbox` 정리도 지금은 `Projects`(프로젝트 센터) 안에 있습니다.
 
-## 먼저 익혀 두면 좋은 설정 영역
+## 범주별로 정리된 설정 화면
 
+Sona 데스크톱의 설정 사이드바는 5개의 명명된 범주로 구분됩니다:
+
+### 1. 일반 (General)
+- `Settings > General`: 테마, 앱 언어, 글꼴, 부팅 시 자동 시작, 백그라운드 무음 실행(트레이 최소화 실행), 업데이트 확인, `Diagnostics`, `Backup & Restore`
 - `Settings > Dashboard`: 전체 콘텐츠 개요, 화자 coverage, LLM 사용 추세
-- `Settings > General`: 테마, 앱 언어, 글꼴, tray 동작, 업데이트 확인, `Diagnostics`, `Backup & Restore`
-- `Settings > Input Device`: 마이크 선택, 시스템 오디오 선택, microphone boost, `Keep Microphone Active`, 녹음 중 음소거
-- `Settings > Subtitle Settings`: 플로팅 자막 동작. `Live Caption` 또는 `Voice Typing`이 주목적이면 [Live Caption과 Voice Typing](guide:live-caption-and-voice-typing)으로 이어가세요.
-- `Settings > Voice Typing`: `Voice Typing` 켜기, global shortcut 지정, `Push to Talk (Hold)` 또는 `Toggle (Press once)` 선택, 준비 상태 확인
-- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, `Transcription Settings`, `ITN`, `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, `Restore Default Settings`, 다운로드 가능한 recognition, punctuation, speaker, VAD models
-- `Settings > Vocabulary`: `Text Replacement`, `Hotwords`, polish keyword sets, polish context presets, summary templates, `Speaker Profiles`. 실제 조정 사례는 [용어와 고급 설정](guide:vocabulary-and-advanced-settings)에 있습니다.
-- `Settings > Automation`: Sona가 실행 중일 때 새 미디어를 전사, 정리, 번역, 내보내기할 수 있는 watched-folder rules
-- `Settings > Storage Management`: 데이터 및 모델 디렉터리 개요, 사용자 지정 FFmpeg 경로, 디스크 사용량 분석, 오디오 보관 정리 정책, WebView 캐시 삭제
-- `Settings > Cloud Sync`: 종단간 암호화(E2EE) 기기 간 동기화 볼트, 볼트 ID 및 페어링, 마스터 비밀번호 및 긴급 복구 키, 동기화 범위 사전 설정, 충돌 센터
-- `Settings > API Server`: 로컬 HTTP API host, port, 선택형 API key, IP allowlist, server limits, server-level transcription defaults
-- `Settings > LLM Service`: feature model bindings, reasoning options, provider credentials. 정리/번역은 [AI Polish와 번역](guide:ai-polish-and-translate), 요약은 [AI Summary](guide:ai-summary)을 보세요.
-- `Settings > Shortcuts`: live recording, playback, search, project navigation, editor shortcuts (취소선 `Ctrl + Shift + S` 지원)
-- `Settings > About`: source code, logs, update 관련 동작
+- `Settings > About`: 버전 정보, 릴리스 노트, 라이선스, 업데이트 확인
 
+### 2. 인식 및 음성 (Recognition & Speech)
+- `Settings > Input Device`: 마이크 선택, 시스템 오디오 선택, microphone boost, `Keep Microphone Active`, 녹음 중 음소거
+- `Settings > Subtitle Settings`: 플로팅 자막 동작, 창 모양 스타일, 클릭 통과, 글꼴 크기
+- `Settings > Voice Typing`: `Voice Typing` 켜기, 전역 바로가기 키, `Push to Talk` / `Toggle`, 상황별 프리셋, 준비 상태 확인
+- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, CTC 강제 정렬, 화자 분리 민감도, `Batch VAD Segmentation`, `VAD Buffer Size`, 모델 관리
+- `Settings > Vocabulary`: `인식 및 교정`, `프롬프트 및 컨텍스트`, `화자 프로필`의 3개 하위 탭으로 구성되며 통합 사전(시각 모드 및 YAML 소스 듀얼 모드) 지원
+
+### 3. AI 및 자동화 (AI & Automation)
+- `Settings > LLM Service`: 기능 모델 바인딩(llama.cpp 기반 로컬 GGUF 모델 및 aimux 기반 클라우드 다중 제공자), 추론 과정과 본문 분리, 제공자 자격 증명 관리
+- `Settings > Automation`: Sona 실행 중 지정 폴더의 미디어를 자동으로 전사, 윤문, 번역하여 대상 프로젝트로 내보내는 자동화 규칙
+
+### 4. 통합 및 동기화 (Integration & Sync)
+- `Settings > Cloud Sync`: 종단간 암호화(E2EE) 기기 간 동기화 볼트, WebDAV 및 S3 호환 객체 스토리지(AWS S3, Cloudflare R2, MinIO 등) 지원, 마스터 비밀번호, 긴급 복구 키, 충돌 센터
+- `Settings > API Server`: 로컬 HTTP API 호스트, 포트, 선택형 API Key, IP 허용 목록, REST 전사 및 WebSocket 실시간 스트리밍
+- `Settings > MCP Server`: Model Context Protocol 서버 브리지 설정, 엔드포인트 모니터링, Agent 권한 스위치(텍스트 편집, 파괴적 작업, 모델 다운로드 등)
+
+### 5. 시스템 및 고급 (System & Advanced)
+- `Settings > Storage Management`: 데이터 및 모델 디렉터리 개요, 핫 리로드 스토리지 마이그레이션(앱 재시작 없이 진행 모달과 함께 디렉터리 이동), 순수 Rust 오디오 디코더 및 선택적 사용자 지정 FFmpeg 경로, 디스크 분석 및 정리 정책
+- `Settings > Shortcuts`: 실시간 녹음, 재생, 검색, 프로젝트 탐색, 편집기 바로가기 키(취소선 `Ctrl + Shift + S` 지원)
 ## Diagnostics, backup, cloud sync, message center
 
 - `Settings > General`에서 `Diagnostics`를 사용해 로컬 전사 체인, runtime readiness, packaging environment를 확인합니다.

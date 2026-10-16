@@ -13,6 +13,7 @@ Sona는 음성-텍스트 작업을 기본적으로 내 컴퓨터 안에 두고 �
 - 주로 플로팅 자막이나 다른 앱 받아쓰기가 필요한 경우: [Live Caption과 Voice Typing](guide:live-caption-and-voice-typing)
 - 주로 hotwords, text replacement, speaker profiles, `Auto-Polish` 조정이 필요한 경우: [용어와 고급 설정](guide:vocabulary-and-advanced-settings)
 - 터미널에서 stateless 로컬/온라인 파일 또는 실시간 전사를 실행하려는 경우: [CLI 가이드](guide:cli-guide)
+- 외부 AI Agent(Claude Desktop, Cursor 등)로 Sona를 자동 제어하려는 경우: [MCP 가이드](guide:mcp-guide)
 - 막힌 부분을 해결하려는 경우: [FAQ와 문제 해결](guide:faq)
 
 ## Sona 워크플로 한 줄 요약
@@ -38,6 +39,7 @@ Sona는 음성-텍스트 작업을 기본적으로 내 컴퓨터 안에 두고 �
 
 - Stateless CLI의 전사, model 관리, 진단, transcript 내보내기, 로컬 API server: [CLI 가이드](guide:cli-guide)
 - 로컬 HTTP API 연동: [HTTP API 가이드](guide:api-guide)
+- 외부 AI Agent 연동을 위한 Model Context Protocol (MCP): [MCP 가이드](guide:mcp-guide)
 - 소스 빌드와 개발 명령: [프로젝트 README](readme)
 
 > Sona의 기본 경로는 단순합니다. 로컬 전사를 설정하고, 전사를 만들거나 다시 열고, 편집기에서 검토한 뒤 필요에 따라 작업공간 정리, 정리, 번역, 요약, 내보내기를 사용합니다.

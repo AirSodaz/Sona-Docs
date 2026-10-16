@@ -25,23 +25,34 @@ Before exporting, open `Speaker Review` from the transcript header if speaker la
 - If you want to reopen, rename, move, or sort saved recordings and imports, go back to [Projects and Inbox](guide:workspace-projects-and-inbox).
 - `Project Center` is also where project context and `Inbox` organization live now.
 
-## Settings areas worth learning first
+## Settings areas organized by category
 
+The Sona desktop settings sidebar is grouped into 5 labeled categories:
+
+### 1. General
+- `Settings > General`: theme, app language, font, auto-start on boot, silent launch (start minimized to system tray), update checks, plus `Diagnostics` and `Backup & Restore`
 - `Settings > Dashboard`: global content overview, speaker coverage, and LLM usage trends
-- `Settings > General`: theme, app language, font, tray behavior, update checks, plus `Diagnostics` and `Backup & Restore`
-- `Settings > Input Device`: microphone selection, system audio selection, microphone boost, `Keep Microphone Active`, mute during recording
-- `Settings > Subtitle Settings`: floating caption behavior; if you mainly came for `Live Caption` or `Voice Typing`, continue to [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
-- `Settings > Voice Typing`: turn on `Voice Typing`, assign its global shortcut, choose `Push to Talk (Hold)` or `Toggle (Press once)`, and check readiness
-- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, CTC forced alignment, diarization sensitivity (Permissive/Balanced/Strict), `Batch VAD Segmentation`, `VAD Buffer Size`, `Max Concurrent Transcriptions`, and downloadable recognition, punctuation, speaker, and VAD models
-- `Settings > Vocabulary`: organized into sub-tabs (`Recognition`, `Prompts`, `Speakers`) for text replacement, hotwords, polish context notes, summary templates, and speaker profiles; the concrete tuning use cases live in [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
-- `Settings > Automation`: watched-folder rules that can transcribe, polish, translate, and export new media while Sona is running
-- `Settings > Storage Management`: unified data and models directories overview, custom FFmpeg path, disk usage breakdown, audio retention cleanup policy, and WebView cache clearing
-- `Settings > Cloud Sync`: End-to-End Encrypted (E2EE) cross-device sync vault supporting WebDAV and S3-compatible object storage (AWS S3, Cloudflare R2, MinIO, etc.), Vault ID and pairing, Master Password and Emergency Recovery Key, sync scope presets, and Conflict Center
-- `Settings > API Server`: local HTTP API host, port, optional API key, IP allowlist, server limits, and server-level transcription defaults
-- `Settings > LLM Service`: feature model bindings, reasoning options, and provider credentials; use [AI Polish and Translate](guide:ai-polish-and-translate) for polish/translation and [AI Summary](guide:ai-summary) for summaries
-- `Settings > Shortcuts`: live recording, playback, search, project navigation, and editor shortcuts (supports strikethrough `Ctrl + Shift + S`)
-- `Settings > About`: source code, logs, and update-related actions
+- `Settings > About`: version info, release notes, license, and update actions
 
+### 2. Recognition & Speech
+- `Settings > Input Device`: microphone selection, system audio selection, microphone boost, `Keep Microphone Active`, and mute during recording
+- `Settings > Subtitle Settings`: floating caption behavior, window styling, click-through, and font sizing
+- `Settings > Voice Typing`: turn on `Voice Typing`, assign its global shortcut, choose `Push to Talk (Hold)` or `Toggle (Press once)`, situational presets, and check readiness
+- `Settings > Model Settings`: `Live Record Model`, `Batch Import Model`, CTC forced alignment, diarization sensitivity (Permissive/Balanced/Strict), `Batch VAD Segmentation`, `VAD Buffer Size`, and model management
+- `Settings > Vocabulary`: organized into sub-tabs (`Recognition & Correction`, `Prompts & Context`, `Speaker Profiles`) and unified dictionary (Visual Mode & YAML source)
+
+### 3. AI & Automation
+- `Settings > LLM Service`: feature model bindings (local offline GGUF via llama.cpp or cloud LLMs via aimux), reasoning options with thinking separation, and provider credentials
+- `Settings > Automation`: watched-folder rules that automatically transcribe, polish, translate, and export incoming media into target projects
+
+### 4. Integration & Sync
+- `Settings > Cloud Sync`: End-to-End Encrypted (E2EE) cross-device sync vault supporting WebDAV and S3-compatible object storage (AWS S3, Cloudflare R2, MinIO, etc.), Master Password, Emergency Recovery Key, and Conflict Center
+- `Settings > API Server`: local HTTP API host, port, optional API key, IP allowlist, REST transcription, and WebSocket streaming
+- `Settings > MCP Server`: Model Context Protocol bridge configuration, endpoint monitoring, and agent permission toggles (transcript editing, destructive actions, model downloads)
+
+### 5. System & Advanced
+- `Settings > Storage Management`: data and models directory overview, hot-reload storage migration (live directory moving with progress modal), pure-Rust audio decoding with optional custom FFmpeg fallback path, disk usage breakdown, and cleanup policies
+- `Settings > Shortcuts`: live recording, playback, search, project navigation, and editor shortcuts (supports strikethrough `Ctrl + Shift + S`)
 ## Diagnostics, backup, cloud sync, and message center
 
 - In `Settings > General`, use `Diagnostics` to inspect the local transcription chain, runtime readiness, and packaging environment.

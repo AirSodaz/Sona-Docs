@@ -14,10 +14,10 @@ Sona's polish and translation features are optional. Local transcription works w
 ## Connect the provider first
 
 1. Open `Settings > LLM Service`.
-2. In `Feature Models`, choose the model for `Polish Model` and the model for `Translation Model`.
-3. In `Provider Credentials`, open the provider you want to use and fill in the required connection details such as `Base URL`, `API Key`, `Endpoint`, `Deployment Name`, or provider-specific fields.
-4. If the selected model supports it, enable `Reasoning Mode` and choose a `Reasoning Level`.
-5. Click `Test Connection`.
+2. Choose between **Local Offline LLM** (built-in llama.cpp engine with downloadable Qwen presets or custom GGUF imports for 100% offline polish and translation) or **Cloud Providers** (unified aimux multi-provider integration supporting OpenAI, Anthropic Claude, Google Gemini, Groq, Mistral, Ollama, DeepSeek, etc.).
+3. In `Feature Models`, assign the model for `Polish Model` and `Translation Model`.
+4. For reasoning models, Sona automatically parses and isolates thinking traces (`<think>` blocks), preventing internal chain-of-thought tokens from polluting the final transcript.
+5. If using a cloud provider, enter required credentials and click `Test Connection`.
 6. Return to the main editor after the required feature model is assigned.
 
 ## Run polish when you want a cleaner draft

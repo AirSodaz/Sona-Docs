@@ -14,10 +14,10 @@ Sona의 정리와 번역 기능은 선택 기능입니다. 로컬 전사는 이 
 ## Provider 먼저 연결
 
 1. `Settings > LLM Service`를 엽니다.
-2. `Feature Models`에서 `Polish Model`과 `Translation Model`에 사용할 모델을 선택합니다.
-3. `Provider Credentials`에서 사용할 provider를 열고 `Base URL`, `API Key`, `Endpoint`, `Deployment Name` 또는 provider별 필드를 입력합니다.
-4. 선택한 모델이 지원하면 `Reasoning Mode`를 켜고 `Reasoning Level`을 고릅니다.
-5. `Test Connection`을 클릭합니다.
+2. **로컬 오프라인 LLM**(내장 llama.cpp 엔진 기반 경량 Qwen 프리셋 다운로드 또는 사용자 지정 GGUF 가져오기를 통한 100% 오프라인 윤문 및 번역) 또는 **클라우드 제공자**(aimux 통합 레이어를 통한 OpenAI, Anthropic Claude, Google Gemini, Groq, Mistral, Ollama, DeepSeek 등) 중 선택합니다.
+3. `Feature Models`에서 `Polish Model`과 `Translation Model`에 사용할 모델을 선택합니다.
+4. 추론 사고 모델의 경우, Sona는 사고 과정(`<think>` 태그)을 자동으로 분리 및 격리하여 내부 사고 토큰이 전사 본문을 오염시키지 않도록 방지합니다.
+5. 클라우드 제공자를 사용하는 경우 연결 자격 증명을 입력하고 `Test Connection`을 클릭합니다.
 6. 필요한 feature model이 지정된 뒤 기본 작업공간으로 돌아갑니다.
 
 ## 더 깨끗한 초안이 필요할 때 polish 실행

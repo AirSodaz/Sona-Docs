@@ -149,8 +149,17 @@
 
 ## メディアのインポートに失敗するか、デコーダーが見つからない場合は？
 
-- Sona は標準で内蔵メディアデコード処理を使用します。特殊な音声・動画形式やデコーダー不足が発生した場合は、`Settings > Storage Management` を開き、`カスタム FFmpeg パス` にマシンにインストール済みの FFmpeg 実行ファイルパスを指定してください。
+- Sona は純 Rust 音声デコードエンジンを内蔵しており、WAV、MP3、FLAC、OGG、AAC、M4A などの標準フォーマットを外部 FFmpeg なしで直接処理できます。
+- 特殊なコンテナや旧式の独自コーデックを扱う場合は、`Settings > Storage Management` を開き、`カスタム FFmpeg パス` にマシンにインストール済みの FFmpeg 実行ファイルパスをフォールバックとして指定してください。
 
+## クラウド API Key なしで AI Polish や要約を利用できますか？
+
+- はい。Sona は llama.cpp ベースのローカルオフライン LLM 推論エンジンを内蔵しています。`Settings > LLM Service` で軽量な GGUF プリセット（Qwen 1.7B など）をダウンロードするか、カスタム GGUF モデルをインポートすることで、外部 API キーやネットワーク接続なしで完全にローカルハードウェア上で整文、翻訳、要約を実行できます。
+
+## 外部 AI Agent（Claude Desktop、Cursor 等）を Sona に接続するには？
+
+- Sona デスクトップには、Model Context Protocol (MCP 2.0) 仕様に準拠した独立した `sona-mcp` バイナリが同梱されています。
+- Agent の MCP 設定ファイル（Claude Desktop の `claude_desktop_config.json` または Cursor の `.cursor/mcp.json`）に `sona-mcp` を登録してください。40 個のツールと `sona://` リソースが公開され、Agent から録音の確認、編集、翻訳、制御が可能です。詳細は [MCP ガイド](guide:mcp-guide) を参照してください。
 ## Sona を自分でビルド・開発したいです
 
 - ソースからのビルド手順や開発者向けコマンドは、[プロジェクトの README](readme) を参照してください。

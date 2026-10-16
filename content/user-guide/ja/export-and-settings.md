@@ -25,23 +25,34 @@
 - 保存済みの録音やインポートを開き直す、名前を変更する、移動する、並べ替える場合は、[プロジェクトと Inbox](guide:workspace-projects-and-inbox) に戻ってください。
 - プロジェクトのコンテキスト設定や Inbox の整理も、現在はプロジェクトセンター（Projects）内で行います。
 
-## まず把握しておきたい設定画面
+## カテゴリ別に整理された設定項目
 
-- `Settings > Dashboard`: 全体のコンテンツ概要、話者カバー率、LLM の使用傾向を表示します。
-- `Settings > General`: テーマ、アプリの言語、フォント、システムトレイ、更新確認に加え、`Diagnostics` と `Backup & Restore` への入口があります。
-- `Settings > Input Device`: マイク、システム音声、マイクブースト、`Keep Microphone Active`、録音中のミュート設定を管理します。
-- `Settings > Subtitle Settings`: フローティング字幕の挙動を設定します。Live Caption や Voice Typing が目的の場合は、[Live Caption と Voice Typing](guide:live-caption-and-voice-typing) も参照してください。
-- `Settings > Voice Typing`: Voice Typing を有効にし、グローバルショートカット、Push to Talk / Toggle、準備状態を確認します。
-- `Settings > Model Settings`: `Live Record Model`、`Batch Import Model`、文字起こし設定、ITN、`Batch VAD Segmentation`、VAD バッファ、最大同時文字起こし数、既定値への復元、音声認識・句読点・話者・VAD などのダウンロード可能モデルを管理します。
-- `Settings > Vocabulary`: `Text Replacement`、`Hotwords`、整文用キーワードセット、整文コンテキストプリセット、要約テンプレート、`Speaker Profiles` を管理します。具体的な調整例は[語彙と詳細設定](guide:vocabulary-and-advanced-settings)を参照してください。
-- `Settings > Automation`: Sona の起動中に新しいメディアを監視し、文字起こし、AI Polish、翻訳、エクスポートを自動実行するフォルダールールを設定します。
-- `Settings > Storage Management`: データおよびモデル保存先ディレクトリの概要、カスタム FFmpeg パス、ディスク使用状況の内訳、音声保持クリーンアップポリシー、WebView キャッシュの消去を管理します。
-- `Settings > Cloud Sync`: エンドツーエンド暗号化（E2EE）クロスデバイス同期 Vault、Vault ID とペアリング、マスターパスワードと緊急リカバリーキー、同期スコーププリセット、競合センターを管理します。
-- `Settings > API Server`: ローカル HTTP API のホスト、ポート、任意の API Key、IP allowlist、サーバー制限、サーバーレベルの文字起こし既定値を設定します。
-- `Settings > LLM Service`: 機能モデルの割り当て、推論オプション、プロバイダー認証情報を設定します。整文と翻訳は[AI Polish と翻訳](guide:ai-polish-and-translate)、要約は[AI Summary](guide:ai-summary)を参照してください。
-- `Settings > Shortcuts`: Live Record、再生、検索、プロジェクトナビゲーション、エディタ操作のショートカット（取り消し線 `Ctrl + Shift + S` 対応）を設定します。
-- `Settings > About`: ソースコード、ログ、更新関連の操作を確認できます。
+Sona デスクトップの設定サイドバーは 5 つのカテゴリに分類されています：
 
+### 1. 全般 (General)
+- `Settings > General`: テーマ、アプリ言語、フォント、起動時自動起動、サイレント起動（トレイ最小化起動）、更新確認、`Diagnostics` および `Backup & Restore`
+- `Settings > Dashboard`: 全体コンテンツの概要、話者カバー率、LLM 使用傾向
+- `Settings > About`: バージョン情報、リリースノート、ライセンス、更新確認
+
+### 2. 認識と音声 (Recognition & Speech)
+- `Settings > Input Device`: マイク選択、システム音声選択、マイクブースト、`Keep Microphone Active`、録音中のミュート設定
+- `Settings > Subtitle Settings`: フローティング字幕の動作、ウィンドウ外観、マウスクリック透過、フォントサイズ
+- `Settings > Voice Typing`: `Voice Typing` 有効化、グローバルショートカット、`Push to Talk` / `Toggle`、シチュエーションプリセット、準備状態
+- `Settings > Model Settings`: `Live Record Model`、`Batch Import Model`、CTC 強制アライメント、話者分離感度、`Batch VAD Segmentation`、`VAD Buffer Size`、モデル管理
+- `Settings > Vocabulary`: `認識と補正`、`プロンプトとコンテキスト`、`話者プロファイル` の 3 つのサブタブに整理され、統合辞書（ビジュアルおよび YAML ソースのデュアルモード）に対応
+
+### 3. AI と自動化 (AI & Automation)
+- `Settings > LLM Service`: 機能モデル割り当て（llama.cpp によるローカル GGUF モデルおよび aimux 経由のマルチクラウドプロバイダー）、思考プロセスと本文の分離、プロバイダー認証情報
+- `Settings > Automation`: Sona 起動中に指定フォルダーの音声を自動文字起こし、整文、翻訳し、指定プロジェクトへ書き出す自動化ルール
+
+### 4. 連携と同期 (Integration & Sync)
+- `Settings > Cloud Sync`: エンドツーエンド暗号化（E2EE）クロスデバイス同期 Vault、WebDAV および S3 互換オブジェクトストレージ（AWS S3、Cloudflare R2、MinIO 等）対応、マスターパスワード、緊急リカバリーキー、競合センター
+- `Settings > API Server`: ローカル HTTP API ホスト、ポート、任意の API Key、IP 許可リスト、REST 文字起こし、WebSocket リアルタイムストリーミング
+- `Settings > MCP Server`: Model Context Protocol サーバーブリッジ設定、エンドポイント監視、Agent 権限設定（テキスト編集、破壊的操作、モデル管理等）
+
+### 5. システムと詳細 (System & Advanced)
+- `Settings > Storage Management`: データおよびモデルディレクトリ概要、ホットリロードストレージ移行（アプリ再起動不要の進捗モーダル付きディレクトリ移動）、純 Rust 音声デコーダーと任意のカスタム FFmpeg パス、ディスク分析とクリーンアップポリシー
+- `Settings > Shortcuts`: Live Record、再生、検索、プロジェクトナビゲーション、エディタ操作のショートカット（取り消し線 `Ctrl + Shift + S` 対応）
 ## 診断、バックアップ、クラウド同期、メッセージセンター
 
 - `Settings > General` の `Diagnostics` では、ローカル文字起こしの準備状態、ランタイム、パッケージング環境を確認できます。

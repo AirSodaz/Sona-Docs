@@ -30,8 +30,14 @@
 2. Turn on `Voice Typing`.
 3. Assign a global shortcut on that page.
 4. Choose either `Push to Talk (Hold)` or `Toggle (Press once)`.
-5. If it still is not ready, review the readiness and dependency status shown there.
+5. Configure situational presets, project vocabulary linking, and prolonged silence auto-commit under the secondary tabs.
+6. If it still is not ready, review the readiness and dependency status shown there.
 
+## Situational awareness and vocabulary linking
+
+- **Application Context Awareness**: Voice Typing can detect active application focus and apply tailored formatting presets (e.g. programming symbols for code editors, conversational punctuation for messengers).
+- **Project Scope & Hotwords Linking**: Terms and corrections defined in the Unified Dictionary (`Settings > Vocabulary`) can be targeted directly to Voice Typing or tied to active project contexts.
+- **VAD Auto-Commit**: Prolonged silence detected by Silero VAD automatically commits and types pending buffers without requiring manual shortcut triggers.
 ## `Push to Talk` versus `Toggle`
 
 - `Push to Talk (Hold)` works better for short bursts because capture only runs while you hold the shortcut.

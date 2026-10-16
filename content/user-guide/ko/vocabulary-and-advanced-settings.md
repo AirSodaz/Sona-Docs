@@ -9,9 +9,18 @@
 
 ## 먼저 알맞은 설정 영역 열기
 
-- `Settings > Vocabulary`: `Hotwords`, `Text Replacement`, `Speaker Profiles` 관리
-- `LLM Polish > Advanced Settings`: `Auto-Polish`, frequency, keywords, directive polish modes, custom context 관리
+- `Settings > Vocabulary`: `인식 및 교정`, `프롬프트 및 컨텍스트`, `화자 프로필`의 3개 하위 탭으로 구성되며 통합 사전, `Hotwords`, `Text Replacement`, 요약 템플릿, `Speaker Profiles`를 중앙 관리합니다.
+- `LLM Polish > Advanced Settings`: `Auto-Polish`, 빈도, 키워드, 지시적 윤문 모드(`Clean & Readable`, `Verbatim Strict`, `Formal Written`), 사용자 지정 컨텍스트를 관리합니다.
 - 기본 polish와 translation 흐름이 아직 필요하다면 [AI Polish와 번역](guide:ai-polish-and-translate)으로 돌아가세요.
+
+## 통합 사전 (시각 모드 및 YAML 소스 듀얼 모드)
+
+`Settings > Vocabulary > 인식 및 교정`에서는 전역 전문 용어, 텍스트 교정 규칙 및 프로젝트 전용 용어를 한곳에서 관리할 수 있는 통합 사전 편집기를 제공합니다:
+
+- **듀얼 모드 편집**: 코드 없는 `시각 모드`(폼 기반 목록 편집)와 가독성 높은 `YAML 소스 모드`(구조화된 텍스트 편집)를 자유롭게 전환할 수 있습니다.
+- **고유 용어 및 교정 규칙**: 고유 용어(`Sona` 등)나 교정 매핑(`오인식 단어 -> 올바른 표기` 또는 `=>`)을 직관적으로 등록할 수 있습니다.
+- **프로젝트 전용 스코프**: `projects:` 블록 아래에서 `(id:프로젝트ID)`를 사용하거나 프로젝트 자동 완성을 통해 특정 프로젝트 전사 시에만 적용되는 용어를 정의할 수 있습니다.
+- **서식 지정 및 진단**: `서식 지정` 버튼으로 들여쓰기와 화살표를 자동 정리하며, 진단 문제 목록을 클릭하여 구문 오류 줄로 즉시 이동할 수 있습니다.
 
 ## `Hotwords`가 유용한 경우
 
@@ -31,6 +40,7 @@
 - Sona는 가져온 sample을 앱이 관리하는 오디오로 정규화하고, speaker models가 설정되어 있을 때 candidate suggestions 또는 automatic matching에 profile을 사용합니다.
 - Profile은 usable sample count와 duration에 따라 automatic matching 준비 완료, suggestions 제한, 아직 준비되지 않음으로 표시될 수 있습니다.
 - 프로젝트는 어떤 speaker profiles를 활성화할지 선택할 수 있으므로, 클라이언트, 강의, 회의 시리즈마다 speaker set를 따로 둘 수 있습니다.
+- 클라우드 ASR 전사에 대해서도 로컬 화자 임베딩 벡터 매칭을 지원하여, 클라우드 인식 결과에 로컬 음성 프로필을 연결할 수 있습니다.
 - Speaker profiles는 완벽한 자동 화자 attribution을 보장하지 않습니다. [편집과 재생](guide:edit-and-playback)에서 suggestion을 확인하거나, 다른 profile을 지정하거나, 그룹을 anonymous로 reset할 수 있습니다.
 
 ## 언제 `Advanced Settings`를 열까요

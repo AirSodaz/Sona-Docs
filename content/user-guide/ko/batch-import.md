@@ -22,8 +22,9 @@
 ## 가져오기 동작 조정
 
 1. 새 작업의 `Subtitle Mode`나 `Language`를 바꾸고 싶으면 `Parameter Settings`를 클릭합니다.
-2. 대기열 상태를 확인하세요: `Pending`, `Processing`, `Complete`, `Failed`.
-3. **메시지 센터 및 실시간 취소**: 상단 헤더의 `Message Center`(메시지 센터)에서 대기열 및 전사 진행률을 실시간으로 확인하고, 실행 중인 일괄 가져오기 작업을 즉시 취소할 수 있습니다.
+2. **요약 대시보드**를 통해 대기열 전체 진행 상태(총 작업 수, 총 재생 시간, 처리 중, 완료, 실패)를 한눈에 파악하고 그룹화 목록으로 관리합니다.
+3. **비우기 메뉴**를 사용하여 완료된 항목, 실패한 항목 또는 전체 대기열을 정리할 수 있습니다.
+4. **실시간 취소**: 실행 중인 전사 작업은 대기열 또는 헤더의 `Message Center`에서 확인 대화상자와 함께 언제든지 실시간으로 취소할 수 있습니다.
 
 ## 파일 처리가 끝난 뒤
 
@@ -34,5 +35,5 @@
 
 - 오프라인 batch 모델이 설정되어 있지 않으면 Sona는 가져오기를 시작하는 대신 온보딩을 다시 엽니다. llama.cpp 기반의 Qwen3-ASR 모델이나 Whisper 프리셋을 통해 고성능 오프라인 일괄 전사를 지원합니다.
 - `Settings > Model Settings`의 `Batch VAD Segmentation`(Silero VAD v5 기반), `VAD Buffer Size`, `Max Concurrent Transcriptions`는 batch 동작에 영향을 줍니다. Batch VAD를 끄면 local batch transcription은 전체 파일을 한 번에 인식합니다.
-- 비표준 미디어 형식이거나 시스템에 디코더가 없는 경우 `Settings > Storage Management`에서 사용자 지정 FFmpeg 경로를 지정할 수 있습니다.
+- Sona에는 순수 Rust 오디오 디코딩 엔진이 내장되어 있어 시스템 FFmpeg 설치 없이도 WAV, MP3, FLAC, OGG, AAC, M4A 형식을 즉시 디코딩합니다. 레거시 특수 컨테이너나 독점 코덱을 처리해야 하는 경우에만 `Settings > Storage Management`에서 사용자 지정 FFmpeg 경로를 대체 경로로 지정하세요.
 - 기존 미디어에서 자막 파일을 만들 때 기본 경로는 `Batch Import`와 내보내기입니다.

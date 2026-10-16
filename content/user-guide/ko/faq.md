@@ -149,8 +149,17 @@
 
 ## 미디어 가져오기에 실패하거나 디코더 누락 오류가 발생하면 어떻게 하나요?
 
-- Sona는 기본적으로 내장 미디어 디코딩을 사용합니다. 비표준 오디오/비디오 형식이거나 디코더가 누락된 경우 `Settings > Storage Management`로 이동하여 `사용자 지정 FFmpeg 경로`에 시스템에 설치된 FFmpeg 실행 파일 경로를 지정하세요.
+- Sona에는 순수 Rust 오디오 디코딩 엔진이 내장되어 있어 시스템 FFmpeg 설치 없이도 WAV, MP3, FLAC, OGG, AAC, M4A 형식을 즉시 디코딩합니다.
+- 비표준 특수 컨테이너나 독점 코덱을 처리해야 하는 경우에만 `Settings > Storage Management`로 이동하여 `사용자 지정 FFmpeg 경로`에 시스템에 설치된 FFmpeg 실행 파일 경로를 대체 경로로 지정하세요.
 
+## 클라우드 API Key 없이도 AI 윤문 및 요약을 사용할 수 있나요?
+
+- 네. Sona는 llama.cpp 기반의 로컬 오프라인 LLM 추론 엔진을 내장하고 있습니다. `Settings > LLM Service`에서 경량 GGUF 프리셋 모델(Qwen 1.7B 등)을 다운로드하거나 사용자 지정 GGUF 모델을 가져와 외부 API 키나 인터넷 연결 없이 완전히 로컬 하드웨어에서 윤문, 번역, 요약을 실행할 수 있습니다.
+
+## 외부 AI Agent(Claude Desktop, Cursor 등)를 Sona에 어떻게 연결하나요?
+
+- Sona 데스크톱에는 Model Context Protocol (MCP 2.0) 사양을 준수하는 독립형 `sona-mcp` 바이너리가 포함되어 있습니다.
+- Agent의 MCP 설정 파일(Claude Desktop의 `claude_desktop_config.json` 또는 Cursor의 `.cursor/mcp.json`)에 `sona-mcp`를 등록하세요. 40개의 정밀 도구와 `sona://` 리소스가 제공되어 Agent가 녹음 검사, 편집, 번역 및 제어를 자동 수행할 수 있습니다. 자세한 내용은 [MCP 가이드](guide:mcp-guide)를 참조하세요.
 ## Sona를 빌드하거나 개발하고 싶습니다
 
 - Source builds와 development commands는 [프로젝트 README](readme)를 사용하세요.

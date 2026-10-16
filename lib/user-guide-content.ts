@@ -18,11 +18,12 @@ const USER_GUIDE_PAGE_ORDER = [
   'vocabulary-and-advanced-settings',
   'cli-guide',
   'api-guide',
+  'mcp-guide',
   'faq',
 ] as const;
 
 type UserGuideNavGroupId = 'start' | 'workflow' | 'extended' | 'reference';
-type UserGuideSourceDocId = 'user-guide' | 'cli' | 'api';
+type UserGuideSourceDocId = 'user-guide' | 'cli' | 'api' | 'mcp';
 
 export type UserGuidePageId = (typeof USER_GUIDE_PAGE_ORDER)[number];
 
@@ -831,6 +832,49 @@ const userGuidePageDefinitions: UserGuidePageDefinition[] = [
     },
   },
   {
+    id: 'mcp-guide',
+    slug: ['mcp'],
+    group: 'reference',
+    sourceDoc: 'mcp',
+    localizations: {
+      en: {
+        title: 'Model Context Protocol (MCP) Guide',
+        navLabel: 'MCP Server',
+        description:
+          'Connect external AI agents such as Claude Desktop or Cursor to Sona desktop via sona-mcp for automated transcription, editing, translation, and summaries.',
+        contentFile: 'en/mcp-guide.md',
+      },
+      'zh-CN': {
+        title: 'Model Context Protocol (MCP) 指南',
+        navLabel: 'MCP 服务',
+        description:
+          '通过 sona-mcp 将 Claude Desktop、Cursor 等外部 AI Agent 连接到 Sona 桌面端，实现自动转录、编辑、翻译与摘要。',
+        contentFile: 'zh-CN/mcp-guide.md',
+      },
+      ja: {
+        title: 'Model Context Protocol (MCP) ガイド',
+        navLabel: 'MCP サーバー',
+        description:
+          'sona-mcp を介して Claude Desktop や Cursor などの外部 AI Agent を Sona デスクトップに接続し、自動文字起こし、編集、翻訳、要約を実行します。',
+        contentFile: 'ja/mcp-guide.md',
+      },
+      ko: {
+        title: 'Model Context Protocol (MCP) 가이드',
+        navLabel: 'MCP 서버',
+        description:
+          'sona-mcp를 통해 Claude Desktop, Cursor 등 외부 AI Agent를 Sona 데스크톱에 연결하여 자동 전사, 편집, 번역 및 요약을 수행합니다.',
+        contentFile: 'ko/mcp-guide.md',
+      },
+      'zh-TW': {
+        title: 'Model Context Protocol (MCP) 指南',
+        navLabel: 'MCP 服務',
+        description:
+          '透過 sona-mcp 將 Claude Desktop、Cursor 等外部 AI Agent 連接到 Sona 桌面端，實現自動轉錄、編輯、翻譯與摘要。',
+        contentFile: 'zh-TW/mcp-guide.md',
+      },
+    },
+  },
+  {
     id: 'faq',
     slug: ['faq'],
     group: 'reference',
@@ -907,10 +951,8 @@ function getGuideSourceHref(locale: HomeLocale) {
     : `${GITHUB_BLOB_ROOT}/docs/user-guide.md`;
 }
 
-function getCliSourceHref(locale: HomeLocale) {
-  return sourceDocLocaleMap[locale] === 'zh-CN'
-    ? `${GITHUB_BLOB_ROOT}/docs/cli.zh-CN.md`
-    : `${GITHUB_BLOB_ROOT}/docs/cli.md`;
+function getCliSourceHref(_locale: HomeLocale) {
+  return `${GITHUB_BLOB_ROOT}/docs/cli.md`;
 }
 
 function getApiSourceHref(locale: HomeLocale) {
@@ -919,12 +961,18 @@ function getApiSourceHref(locale: HomeLocale) {
     : `${GITHUB_BLOB_ROOT}/docs/api.md`;
 }
 
+function getMcpSourceHref(_locale: HomeLocale) {
+  return `${GITHUB_BLOB_ROOT}/docs/mcp.md`;
+}
+
 function getSourceDocHref(sourceDocId: UserGuideSourceDocId, locale: HomeLocale) {
   switch (sourceDocId) {
     case 'api':
       return getApiSourceHref(locale);
     case 'cli':
       return getCliSourceHref(locale);
+    case 'mcp':
+      return getMcpSourceHref(locale);
     case 'user-guide':
       return getGuideSourceHref(locale);
   }

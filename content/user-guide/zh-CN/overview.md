@@ -13,6 +13,7 @@ Sona 是一款以隐私优先为目标的转录编辑器，适合希望默认在
 - 主要想看悬浮字幕或在其他应用里直接听写文字： [实时字幕与语音输入法](guide:live-caption-and-voice-typing)
 - 主要想调 `热词`、`文本替换`、`说话人档案` 或 `Auto-Polish`： [词汇与高级设置](guide:vocabulary-and-advanced-settings)
 - 主要想从终端进行无状态的本地/在线文件或实时转录： [CLI 指南](guide:cli-guide)
+- 连接外部 AI Agent（Claude Desktop、Cursor 等）自动化控制 Sona： [MCP 指南](guide:mcp-guide)
 - 遇到具体阻塞： [常见问题与排障](guide:faq)
 
 ## 一句话看懂 Sona 的完整流程
@@ -38,6 +39,7 @@ Sona 是一款以隐私优先为目标的转录编辑器，适合希望默认在
 
 - 无状态 CLI 的转录、模型管理、诊断、转录导出与本地 API 服务： [CLI 指南](guide:cli-guide)
 - 本地 HTTP API 集成： [HTTP API 指南](guide:api-guide)
+- 外部 AI Agent 的 Model Context Protocol (MCP) 集成： [MCP 指南](guide:mcp-guide)
 - 源码构建与开发命令： [项目 README](readme)
 
 > Sona 的正常路径其实很直接：先把本地转录配置好，再生成或重新打开转录、整理文本，然后按需使用项目整理、润色、翻译、摘要和导出。

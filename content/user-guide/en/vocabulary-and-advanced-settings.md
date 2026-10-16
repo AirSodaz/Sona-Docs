@@ -9,9 +9,18 @@ This page keeps a few tuning-oriented capabilities in one place: `Hotwords`, `Te
 
 ## Open the right settings area first
 
-- `Settings > Vocabulary`: organized into sub-tabs (`Recognition`, `Prompts`, `Speakers`) to manage `Hotwords`, `Text Replacement`, polish context notes, summary templates, and `Speaker Profiles`
+- `Settings > Vocabulary`: organized into sub-tabs (`Recognition & Correction`, `Prompts & Context`, `Speaker Profiles`) to manage the `Unified Dictionary`, `Hotwords`, `Text Replacement`, polish context notes, summary templates, and `Speaker Profiles`
 - `LLM Polish > Advanced Settings`: manage `Auto-Polish`, frequency, keywords, directive `Polish Modes` (`Clean & Readable`, `Verbatim Strict`, `Formal Written`), and custom context
 - If you still need the basic polish and translation flow first, return to [AI Polish and Translate](guide:ai-polish-and-translate)
+
+## Unified Dictionary (Visual Mode & YAML Source)
+
+The `Unified Dictionary` in `Settings > Vocabulary > Recognition & Correction` provides a centralized, human-readable editor combining global terms, text replacement rules, and project-scoped vocabulary:
+
+- **Dual-Mode Editing**: Switch seamlessly between `Visual Mode` (code-free list editing) and `YAML Source Mode` (structured YAML text).
+- **Global Terms & Replacements**: Enter terms (e.g. `Sona`) or correction mappings (`original -> replacement` or `=>`).
+- **Project-Scoped Vocabulary**: Scope terms to specific projects under the `projects:` YAML block using `(id:project_id)` or via project autocomplete, ensuring specialized terminology only applies to relevant transcripts.
+- **Formatting & Diagnostics**: Use `Format` to normalize indentations and arrows, and click diagnostic issue rows to jump directly to any syntax errors.
 
 ## What `Hotwords` are good for
 
@@ -31,6 +40,7 @@ This page keeps a few tuning-oriented capabilities in one place: `Hotwords`, `Te
 - Sona normalizes imported samples into app-managed audio and uses the profile for candidate suggestions or automatic matching when speaker models are configured.
 - A profile can show as ready for automatic matching, limited to suggestions, or not ready yet depending on usable sample count and duration.
 - Projects can choose which speaker profiles are active, so a client, course, or meeting series can keep its own speaker set.
+- Speaker profiles also support local speaker embedding matching for cloud ASR diarization, matching cloud speaker segments against your local voice profiles.
 - Speaker profiles are not a promise of perfect automatic attribution. You can still confirm suggestions, assign another profile, or reset a group to anonymous from [Edit and Playback](guide:edit-and-playback).
 
 ## When to open `Advanced Settings`

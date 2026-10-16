@@ -121,7 +121,7 @@
         "modes": {
           "live": "Live Record",
           "batch": "Batch Import",
-          "projects": "Workspace"
+          "projects": "Projects"
         },
         "headerActions": {
           "notifications": "Notifications",
@@ -461,7 +461,7 @@
             "feature": "Local editing/export",
             "trigger": "Edit a transcript or export SRT, VTT, TXT, or other files.",
             "data": "Transcript text, timestamps, and any summary or metadata included in the export.",
-            "destination": "The local workspace and the save location you select.",
+            "destination": "The local projects hub, inbox, and the save location you select.",
             "control": "You choose the export format, save location, and any later sharing."
           },
           {
@@ -503,13 +503,13 @@
             "feature": "Automation",
             "trigger": "Enable folder watches, presets, or automation runs.",
             "data": "Watched or imported files, transcript text, and workflow export outputs.",
-            "destination": "The local workspace plus any configured provider or export destination used by the workflow.",
+            "destination": "The local projects hub plus any configured provider or export destination used by the workflow.",
             "control": "Off unless configured; review preset actions and export mode before running."
           },
           {
             "feature": "Backup/restore archive",
             "trigger": "Export a backup archive or import one back into Sona.",
-            "data": "Config, workspace, light history transcripts, summaries, automation state, and dashboard LLM usage. Audio files, onboarding, current project, and recovery state are excluded.",
+            "data": "Config, projects, light history transcripts, summaries, automation state, and dashboard LLM usage. Audio files, onboarding, current project, and recovery state are excluded.",
             "destination": "The local archive path you choose.",
             "control": "You choose when to export, where to save, and whether to import an archive later."
           },
@@ -550,7 +550,7 @@
           "body": "Sona is intended for people who want transcript work to happen on their own machine by default. Recording, importing, local recognition, timestamp review, editing, and export are desktop workflows.",
           "items": [
             "Local transcription uses installed models and does not need a Sona cloud transcription account.",
-            "Workspace records, light history transcripts, summaries, settings, and backups are managed by the desktop app.",
+            "Project records, light history transcripts, summaries, settings, and backups are managed by the desktop app.",
             "Exported files go where you choose to save or share them."
           ]
         },
@@ -615,7 +615,7 @@
       "cardsDescription": "Most people only need one or two pages to get moving. Start with the path that matches what you are doing right now.",
       "browseEyebrow": "Everything Inside",
       "browseTitle": "The full docs set, organized by the actual Sona workflow.",
-      "browseDescription": "Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, workspace organization, export, extended capabilities, CLI reference, and troubleshooting."
+      "browseDescription": "Use the overview when you are new, then move into setup, transcript creation, editing, optional AI steps, project organization, export, extended capabilities, CLI reference, and troubleshooting."
     },
     "codeBlock": {
       "copyLabel": "Copy code",

@@ -13,6 +13,7 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 - Mainly want floating captions or dictation in another app: [Live Caption and Voice Typing](guide:live-caption-and-voice-typing)
 - Mainly want hotwords, text replacement, speaker profiles, or `Auto-Polish` tuning: [Vocabulary and Advanced Settings](guide:vocabulary-and-advanced-settings)
 - Mainly want stateless local/online file or live transcription from the terminal: [CLI Guide](guide:cli-guide)
+- Connecting external AI agents (Claude Desktop, Cursor) to inspect, edit, or automate Sona: [MCP Guide](guide:mcp-guide)
 - Solving a blocker: [FAQ and Troubleshooting](guide:faq)
 
 ## The Sona workflow in one line
@@ -38,6 +39,7 @@ Sona is a privacy-first transcript editor for people who want speech-to-text wor
 
 - Stateless standalone CLI transcription, model management, transcript export, diagnostics, and local API server workflows: [CLI Guide](guide:cli-guide)
 - Local HTTP API integration: [HTTP API Guide](guide:api-guide)
+- External AI agent integration via Model Context Protocol: [MCP Guide](guide:mcp-guide)
 - Source builds and development commands: [project README](readme)
 
 > The normal Sona path is simple: set up local transcription, create or reopen a transcript, review it in the editor, and then use project organization, polish, translation, summary, or export when needed.

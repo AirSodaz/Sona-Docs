@@ -14,10 +14,10 @@ Sona の AI Polish と Translate は任意機能です。使わなくてもロ�
 ## 先にプロバイダーを接続する
 
 1. `Settings > LLM Service` を開きます。
-2. `Feature Models` で、`Polish Model` と `Translation Model` に使うモデルを選択します。
-3. `Provider Credentials` で使うプロバイダーを開き、`Base URL`、`API Key`、`Endpoint`、`Deployment Name` など必要な接続情報を入力します。
-4. 選択したモデルが推論モードに対応している場合は、`Reasoning Mode` を有効にし、`Reasoning Level` を選択します。
-5. `Test Connection` をクリックします。
+2. **ローカルオフライン LLM**（組み込み llama.cpp 推論エンジンによる軽量 Qwen プリセットまたはカスタム GGUF、完全オフライン対応）または **クラウドプロバイダー**（aimux 統合レイヤー経由の OpenAI、Anthropic Claude、Google Gemini、Groq、Mistral、Ollama、DeepSeek 等）から選択します。
+3. `Feature Models` で、`Polish Model` と `Translation Model` に使うモデルを選択します。
+4. 推論思考モデルに対しては、Sona は思考プロセス（`<think>` タグ）を自動的に隔離・分離し、内部の思考トークンが文字起こし本文に混入するのを防ぎます。
+5. クラウドプロバイダーを使用する場合は接続情報を入力し、`Test Connection` をクリックします。
 6. 必要な機能モデルを割り当てたら、メインエディタへ戻ります。
 
 ## 文字を整えたい場合は LLM Polish を実行する

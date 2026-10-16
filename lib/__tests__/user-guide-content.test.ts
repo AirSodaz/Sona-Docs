@@ -41,6 +41,26 @@ describe('user guide content', () => {
       'https://github.com/AirSodaz/sona/blob/master/docs/api.md',
     );
   });
+  it('generates localized MCP guide pages with MCP source doc', () => {
+    expect(getAllUserGuidePaths()).toContain('/en/user-guide/mcp');
+    expect(getAllUserGuidePaths()).toContain('/zh-CN/user-guide/mcp');
+    expect(getAllUserGuidePaths()).toContain('/zh-TW/user-guide/mcp');
+    expect(getAllUserGuidePaths()).toContain('/ja/user-guide/mcp');
+    expect(getAllUserGuidePaths()).toContain('/ko/user-guide/mcp');
+
+    const englishPage = getUserGuidePageFromSlug('en', ['mcp']);
+    const chinesePage = getUserGuidePageFromSlug('zh-CN', ['mcp']);
+
+    expect(englishPage?.id).toBe('mcp-guide');
+    expect(englishPage?.sourceHref).toBe(
+      'https://github.com/AirSodaz/sona/blob/master/docs/mcp.md',
+    );
+    expect(chinesePage?.id).toBe('mcp-guide');
+    expect(chinesePage?.sourceHref).toBe(
+      'https://github.com/AirSodaz/sona/blob/master/docs/mcp.md',
+    );
+  });
+
 
   it('builds public guide paths with locale prefixes for SEO surfaces', () => {
     expect(buildLocalizedUserGuidePath('en', 'api-guide')).toBe(
@@ -106,6 +126,17 @@ describe('user guide content', () => {
       href: 'https://github.com/AirSodaz/sona/blob/master/README.md',
     });
   });
+  it('resolves legacy MCP doc links to the in-site MCP guide', () => {
+    expect(resolveUserGuideHref('en', 'mcp.md')).toEqual({
+      external: false,
+      href: '/user-guide/mcp',
+    });
+    expect(resolveUserGuideHref('zh-CN', 'mcp.md')).toEqual({
+      external: false,
+      href: '/user-guide/mcp',
+    });
+  });
+
 
   it('falls back removed Traditional Chinese, Japanese, and Korean source docs to English repo docs', () => {
     const taiwanOverview = getUserGuidePageFromSlug('zh-TW', []);

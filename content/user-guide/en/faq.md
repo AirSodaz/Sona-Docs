@@ -149,8 +149,17 @@ Use this page when the main workflow is clear but one part is still blocking you
 
 ## What if media import fails or reports a missing decoder?
 
-- Sona uses built-in media decoding by default. If you encounter non-standard audio/video containers or missing decoders, go to `Settings > Storage Management` and specify your installed FFmpeg executable in `Custom FFmpeg Path`.
+- Sona features a built-in pure-Rust audio decoding engine that handles standard audio formats (WAV, MP3, FLAC, OGG, AAC, M4A) out-of-the-box without requiring FFmpeg.
+- If you encounter non-standard or proprietary audio/video containers, go to `Settings > Storage Management` and specify your installed FFmpeg executable in `Custom FFmpeg Path` as an optional fallback.
 
+## Can I use AI Polish, Translation, and Summary without cloud API keys?
+
+- Yes. Sona includes a built-in llama.cpp local inference engine. You can download lightweight offline GGUF presets (such as Qwen 1.7B) or import custom GGUF models in `Settings > LLM Service` to run polish, translation, and summary completely offline on your own hardware without external API keys.
+
+## How do I connect external AI agents (Claude Desktop, Cursor) to Sona?
+
+- Sona bundles a standalone `sona-mcp` executable implementing the Model Context Protocol (MCP 2.0).
+- Register `sona-mcp` in your agent's MCP configuration (`claude_desktop_config.json` for Claude Desktop, or `.cursor/mcp.json` for Cursor). Sona exposes 40 granular tools and `sona://` resources for inspecting, editing, translating, and recording. See the full [MCP Guide](guide:mcp-guide).
 ## I want to build or develop Sona
 
 - Use the [project README](readme) for source builds and development commands.

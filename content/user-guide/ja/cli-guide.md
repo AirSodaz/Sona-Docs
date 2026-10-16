@@ -1,96 +1,107 @@
-`sona-cli` は、Sona のステートレスなコマンドライン文字起こし Host です。Sona の SQLite アプリケーションデータベース、プロジェクトデータベースや履歴ストレージ、同期状態、Online LLM タスクを開いたり管理したりしません。文字起こし結果は `stdout`、または明示的に指定した出力ファイルへ書き込まれます。
+`sona-cli` は、`sona-core` をベースにした Sona のスタンドアロン・ステートレスなコマンドライン音声認識ホストです。ローカルプリセット ASR モデルまたはクラウドプロバイダーを使って、音声ファイル、ディレクトリ、マイク入力、標準入力ストリームを文字起こしできます。Sona の SQLite アプリケーションデータベース、プロジェクトデータベース、履歴ストレージ、同期状態、Online LLM タスクを開いたり管理したりすることはありません。文字起こし結果は `stdout` または明示的に指定された出力ファイルに書き出されます。
 
-スタンドアロン CLI には次のコマンドがあります。
+スタンドアロン CLI は以下の主要コマンドを提供します：
 
-- `path-status`
-- `init-config`
-- `models list|download|delete`
-- `diagnostics`
-- `export transcript`
-- `serve`（ローカル ASR を使うローカル REST 文字起こし）
-- `transcribe`（ローカルまたはオンラインのバッチ ASR）
-- `transcribe-live`（ローカルまたはオンラインのストリーミング ASR）
+- `live`（互換エイリアス `transcribe-live`）：マイクまたは標準入力からのリアルタイムストリーミング音声認識
+- `transcribe`：ローカルまたはクラウドモデルによるファイル/ディレクトリの一括文字起こし
+- `models`：プリセット ASR モデルの一覧表示、ダウンロード、検証、検索、削除
+- `export`：文字起こしセグメント JSON を SRT、VTT、TXT、MD などに変換（互換エイリアス `export transcript` 対応）
+- `config`：TOML 設定ファイルの確認と管理（`init`、`check`、`show`、`get`、`set`、`unset`、`edit`、`path`）
+- `doctor`：ホスト環境診断、ハードウェアアクセラレーション（CUDA、Metal、AVX2、NEON）とパスの健全性確認
+- `devices`：利用可能なオーディオ入力/出力デバイスの一覧表示
+- `providers`：設定済みクラウド ASR プロバイダーとその機能状態の確認
+- `update`：Minisign 署名検証付きの安全な更新確認と適用
+- `completion`：シェル補完スクリプトの生成（bash、zsh、fish、powershell、elvish）
+- `serve`：ローカル REST API サーバーと WebSocket リアルタイムストリーミング（`/v1/streaming`）
+- `diagnostics`：ホスト診断スナップショット契約の構築
 
 ## 実行方法
 
-- パッケージ版: 同じプラットフォーム向けインストーラーに含まれる `sona-cli` バイナリを使います。
-- ソース版: `cargo run -p sona-cli -- <command> ...`
+- パッケージ版：インストーラーに同梱されている `sona-cli` バイナリを使用します。
+- ソースビルド版：`cargo run -p sona-cli -- <command> ...`
 
-例:
+例：
 
 ```bash
-cargo run -p sona-cli -- path-status ./models
-cargo run -p sona-cli -- init-config
-cargo run -p sona-cli -- models list --json
-cargo run -p sona-cli -- diagnostics
-cargo run -p sona-cli -- transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
-cargo run -p sona-cli -- transcribe ./sample.wav --online-provider groq-whisper
-cargo run -p sona-cli -- transcribe-live --online-provider volcengine-doubao
-cargo run -p sona-cli -- export transcript --input ./segments.json --output ./transcript.vtt
-cargo run -p sona-cli -- serve --host 127.0.0.1 --port 14200
+sona-cli doctor
+sona-cli config init
+sona-cli models list
+sona-cli models download whisper-turbo
+sona-cli transcribe ./sample.wav -m whisper-turbo
+sona-cli transcribe ./sample.wav --online-provider groq-whisper
+sona-cli live -m sensevoice
+sona-cli live --online-provider volcengine-doubao
+sona-cli export ./segments.json ./transcript.vtt
+sona-cli serve --host 127.0.0.1 --port 14200
 ```
 
 ## ステートレス境界
 
-CLI では SQLite、History、Tag、アプリケーションのバックアップ/復元、Sync、Online LLM を意図的に対象外としています。デスクトップアプリのデータディレクトリを作成、変更することはありません。`export transcript` と `stdout`/ファイル出力を使って、ほかのツールと組み合わせてください。
+CLI では SQLite、History、Tag、アプリケーションのバックアップ/復元、Sync、Online LLM を意図的に対象外としています。デスクトップアプリのデータディレクトリを作成したり暗黙に変更したりすることはありません。出力は `stdout` に出力されるか、明示的に指定されたファイルに保存されます。`export`（または `export transcript`）と `stdout`/ファイル出力を使って、他のツールと柔軟に組み合わせてください。
+
+## 設定の優先順位
+
+設定オプションは以下の優先順位（高から低）で解決されます：
+
+1. 明示的なコマンドライン引数：`-c / --config <PATH>`
+2. グローバル環境変数：`SONA_CONFIG`
+3. カレントディレクトリの設定ファイル：`./sona-cli.toml`
+4. ユーザー標準設定ファイル：`sona-cli.toml`（Linux：`~/.config/sona/sona-cli.toml`、macOS：`~/Library/Application Support/sona/sona-cli.toml`、Windows：`%APPDATA%\sona\sona-cli.toml` または `%USERPROFILE%\.config\sona\sona-cli.toml`）
+5. 組み込みデフォルト値：設定ファイルが見つからない場合は安全なデフォルト値で動作
 
 ## コマンド
 
-### `path-status`
+### `config`
 
-共有ランタイムステータス契約で 1 つのファイルシステムパスを解決し、JSON を `stdout` に出力します。
+Sona CLI 設定ファイルの確認と管理：
+
+- `sona-cli config init`：コメント付き TOML 設定テンプレートを生成（`-F/--force` で既存ファイルを上書き）
+- `sona-cli config check`：設定ファイルの構文とセクションを検証
+- `sona-cli config show`：マージされた有効な設定を表示
+- `sona-cli config get <KEY>`：特定の設定プロパティを取得
+- `sona-cli config set <KEY> <VALUE> [--global]`：プロパティ値をローカルまたはグローバルに保存
+- `sona-cli config unset <KEY> [--global]`：プロパティを設定から削除
+- `sona-cli config edit`：システムデフォルトのエディタで設定ファイルを開く
+- `sona-cli config path`：解決された設定ファイルの絶対パスを表示
 
 ```bash
-sona-cli path-status ./models
+sona-cli config init
+sona-cli config check
+sona-cli config set transcribe.model_id whisper-turbo
+sona-cli config get transcribe.model_id
 ```
-
-### `init-config`
-
-ローカル文字起こしとローカル API server 用の、コメント付き TOML 設定テンプレートを作成します。
-
-```bash
-sona-cli init-config
-sona-cli init-config ./sona-cli.toml --force
-```
-
-既存ファイルは `--force` を指定しない限り上書きされません。ステータスは `stderr` に出力されます。
 
 ### `models`
 
-ローカル ASR プリセットモデルを一覧表示、ダウンロード、削除します。選択したモデルディレクトリだけを操作し、SQLite アプリケーション状態は扱いません。
+選択されたモデルディレクトリ内のローカル ASR プリセットモデルを管理：
+
+- `sona-cli models list`：利用可能なプリセットモデルを一覧表示（`--mode live|batch`、`--installed`、`--json`）
+- `sona-cli models download <MODEL>`（エイリアス `install`）：モデルファイルをダウンロードしてハッシュを検証
+- `sona-cli models delete <MODEL>`（エイリアス `rm`）：ダウンロード済みモデルファイルを削除（`-F/--force` で確認をスキップ）
+- `sona-cli models info <MODEL>`（エイリアス `show`）：モデルの仕様と付随ファイルの詳細を確認
+- `sona-cli models search <QUERY>`：キーワードまたは言語でモデルを検索
+- `sona-cli models verify <MODEL>`：インストール済みモデルファイルの整合性とハッシュを検証
+- `sona-cli models path`：現在有効なモデルディレクトリの絶対パスを表示
 
 ```bash
-sona-cli models list --mode offline --type whisper
-sona-cli models list --language zh --installed --json
-sona-cli models download sherpa-onnx-whisper-turbo
-sona-cli models delete sherpa-onnx-whisper-turbo --yes
+sona-cli models list --mode batch
+sona-cli models search japanese
+sona-cli models download whisper-turbo
+sona-cli models verify whisper-turbo
+sona-cli models delete whisper-turbo --force
 ```
-
-### `diagnostics`
-
-Host が提供する情報から diagnostics スナップショットを作成します。アプリケーションデータベースは読み取りません。
-
-### `export transcript`
-
-文字起こしセグメントの JSON 配列を、共有 Core export service でエクスポートします。
-
-```bash
-sona-cli export transcript --input ./segments.json --output ./transcript.vtt
-sona-cli export transcript --input ./segments.json --output ./transcript.srt --mode bilingual
-```
-
-`--format` がなければ出力ファイルの拡張子から形式を判断します。対応形式は `json`、`txt`、`srt`、`vtt`、`md`、対応モードは `original`、`translation`、`bilingual` です。
 
 ### `transcribe`
 
-ローカル音声ファイルを 1 つ文字起こしします。ローカル ASR では動画ファイルも入力できます。`--online-provider` がなければ、インストール済みのローカル Sherpa プリセットを使います。
+ローカル ASR モデルまたはクラウドプロバイダーを使って音声・動画ファイルを文字起こしします。`--online-provider` を指定しない場合、ローカルの Sherpa プリセットを使用します：
 
 ```bash
+sona-cli transcribe ./sample.wav -m whisper-turbo
+sona-cli transcribe ./sample.wav -m whisper-turbo -o ./transcript.srt
 sona-cli transcribe ./sample.wav --model-id sherpa-onnx-whisper-turbo
-sona-cli transcribe ./sample.wav --config ./sona-cli.toml --output ./out.srt
 ```
 
-`--online-provider` を指定すると、ローカルファイルを選択した provider にアップロードし、結果を `stdout` または指定した出力ファイルへ書き込みます。
+`--online-provider` を指定すると、音声をクラウドプロバイダーにアップロードして結果を出力します：
 
 ```bash
 export GROQ_API_KEY="..."
@@ -100,50 +111,114 @@ export SONA_VOLCENGINE_ASR_API_KEY="..."
 sona-cli transcribe ./sample.wav --online-provider volcengine-doubao --output ./out.srt
 ```
 
-オンラインバッチは `volcengine-doubao`、`groq-whisper`、`mistral-voxtral` に対応しています。
+利用可能なバッチプロバイダーは `volcengine-doubao`、`groq-whisper`、`mistral-voxtral` です：
 
-| Provider | 既定の環境変数 |
+| プロバイダー | デフォルト環境変数 |
 | --- | --- |
 | `volcengine-doubao` | `SONA_VOLCENGINE_ASR_API_KEY` |
 | `groq-whisper` | `GROQ_API_KEY` |
 | `mistral-voxtral` | `MISTRAL_API_KEY` |
 
-別の環境変数を使うには `--api-key-env NAME` を指定します。`--online-config FILE` は endpoint/model など機密情報ではない上書きを含む JSON オブジェクトを受け付けますが、`apiKey` または `api_key` を含めることはできません。
+カスタム環境変数を指定するには `--api-key-env NAME` を使用します。`--online-config FILE` は非秘密設定の上書き用 JSON を受け取ります（`apiKey` や `api_key` を含めてはいけません）。
 
-オンライン provider を選んだ場合、`--model-id`、`--models-dir`、VAD/句読点オプション、スレッド数、GPU モード、`--save-wav` などローカル専用オプションは拒否されます。既存の出力ファイルを置き換えるには `--force` が必要です。
+オンラインプロバイダー選択時、ローカル専用フラグ（`--model-id`、`--models-dir`、VAD/句読点オプション、スレッド数、GPU モード、`--save-wav` など）は拒否されます。既存ファイルを上書きするには `--force` が必要です。
 
 ### `transcribe-live`
 
-マイク入力、または `stdin` からのヘッダーなし 16 kHz モノラル signed 16-bit little-endian PCM をリアルタイムで文字起こしします。
+`sona-cli live`（互換エイリアス `sona-cli transcribe-live`）は、マイク入力または標準入力（`--input stdin`）からリアルタイムのストリーミング音声認識を実行します。
 
 ```bash
-sona-cli transcribe-live --list-input-devices
-sona-cli transcribe-live \
-  --model-id sherpa-onnx-sense-voice-zh-en-ja-ko-yue-int8-2024-07-17 \
-  --device "Studio Mic" --duration 60 --output ./live.srt
+sona-cli live -m sensevoice
+sona-cli live --device "Studio Mic" --duration 60 --output ./live.srt
 
 ffmpeg -i sample.wav -f s16le -ac 1 -ar 16000 - | \
-  sona-cli transcribe-live --input stdin \
-    --model-id sherpa-onnx-streaming-paraformer-trilingual-zh-cantonese-en \
-    --output-format ndjson
+  sona-cli live --input stdin -m sensevoice --output-format ndjson
 ```
 
-オンラインストリーミングは現在 `volcengine-doubao` のみに対応しています。
+オンラインストリーミング認識は現在 `volcengine-doubao` に対応しています：
 
 ```bash
 export SONA_VOLCENGINE_ASR_API_KEY="..."
 ffmpeg -i sample.wav -f s16le -ac 1 -ar 16000 - | \
-  sona-cli transcribe-live --input stdin \
+  sona-cli live --input stdin \
     --online-provider volcengine-doubao --output-format ndjson
 ```
 
-マイク入力は既定の CPAL 入力デバイスを使います。`--device` を指定する場合は、`--list-input-devices` が返す正確な名前を使ってください。`--output-format` は `text` または `ndjson`、`--output` の最終スナップショットは `json`、`txt`、`srt`、`vtt`、`md` に対応します。`--format` には `--output` も必要です。Ctrl+C、`stdin` EOF、`--duration` は、セッションを flush/stop してから終了します。
+マイク入力は CPAL のデフォルト録音デバイスを使用します（`--device` でデバイス名を指定可能、`sona-cli devices` で一覧表示）。`--output-format` は `text` または `ndjson` を指定可能で、`--output` を指定すると終了時に `json`、`txt`、`srt`、`vtt`、`md` ファイルとして書き出されます。Ctrl+C、`stdin` EOF、`--duration` 到達時に安全にフラッシュして終了します。
 
-オンライン認証情報と機密情報ではない設定の規則は `transcribe` と同じです。オンラインストリーミングでローカルモデルまたはランタイムオプションを指定すると拒否されます。
+`transcribe` と同様の認証情報および設定規則が適用されます。
+
+### `export transcript`
+
+文字起こしセグメントを整形済み字幕やテキストファイルに変換して書き出します。推奨される直接引数構文は `sona-cli export <INPUT> [OUTPUT]` で、互換エイリアス `sona-cli export transcript` および `sona-cli convert` も完全にサポートされています：
+
+```bash
+sona-cli export ./segments.json ./transcript.vtt
+sona-cli export transcript --input ./segments.json --output ./transcript.vtt
+sona-cli export ./segments.json ./transcript.srt --mode bilingual
+```
+
+出力形式は拡張子から自動判別されるか、`--format <srt|vtt|txt|json|tsv|csv|md>` で指定します。モードは `original`、`translation`、`bilingual` をサポートしています。
+
+### `doctor`
+
+ローカル実行環境の自動ヘルスチェックを行い、ホストプラットフォーム、CPU アーキテクチャ、SIMD 拡張（AVX2、NEON）、GPU/CUDA アクセラレーション、オーディオデバイス、インストール済みモデルの整合性、書き込み権限を診断します：
+
+```bash
+sona-cli doctor
+sona-cli doctor --strict
+sona-cli doctor --json
+```
+
+### `devices`
+
+ホストシステムで検出されたオーディオ入力および出力デバイスを一覧表示します：
+
+```bash
+sona-cli devices
+sona-cli devices --json
+```
+
+### `providers`
+
+設定済みクラウド ASR プロバイダーとその接続・機能状態を確認します：
+
+```bash
+sona-cli providers
+sona-cli providers --json
+```
+
+### `update`
+
+Minisign 署名検証付きで、CLI およびデスクトップバイナリの更新を確認して安全にインストールします：
+
+```bash
+sona-cli update check
+sona-cli update apply
+```
+
+### `completion`
+
+各種シェル向けの自動補完スクリプトを生成します：
+
+```bash
+sona-cli completion bash > /etc/bash_completion.d/sona-cli
+sona-cli completion zsh > ~/.zfunc/_sona-cli
+sona-cli completion fish > ~/.config/fish/completions/sona-cli.fish
+sona-cli completion powershell | Out-File -Append -Encoding utf8 $PROFILE
+```
+
+### `diagnostics`
+
+サポートや問題報告のために、アプリケーションデータベースにアクセスしない構造化された診断スナップショット JSON を作成します：
+
+```bash
+sona-cli diagnostics
+```
 
 ### `serve`
 
-共有ローカル HTTP API server を起動します。CLI server はローカル ASR 専用であり、Online ASR や WebSocket ストリーミングを公開しません。Online ASR には `transcribe` または `transcribe-live` を直接使ってください。
+共有ローカル HTTP API サーバーを起動します。ローカル REST 文字起こしと WebSocket リアルタイムストリーミング（`/v1/streaming`）に対応しています：
 
 ```bash
 sona-cli serve
@@ -151,8 +226,14 @@ sona-cli serve --config ./sona-cli.toml
 sona-cli serve --host 127.0.0.1 --port 14200 --api-key local-secret
 ```
 
-## 出力とエラー
+REST および WebSocket エンドポイントの完全な仕様については、[HTTP API ガイド](guide:api-guide) を参照してください。
 
-`transcribe` は既定で JSON を `stdout` に書き込みます。`transcribe-live` はライブテキストまたは NDJSON イベントを出力し、任意で最終ファイルも書き込めます。検証エラーは終了コード 2、モデルエラーは 3、ネットワーク/provider エラーは 4、ファイルシステム/入力エラーは 5 です。
+## 終了コードとエラー
 
-コマンドごとの使い方は `sona-cli <command> --help` で確認できます。
+- `0`：成功
+- `1`：一般的なエラー（`doctor --strict` チェック不合格、シリアライズ失敗など）
+- `2`：検証または引数エラー（無効な引数、指定プロバイダー不在、ファイル非存在）
+- `3`：モデルエラー（プリセット不在、ダウンロードファイル破損、付随ファイル不足）
+- `4`：ネットワークまたはオンラインプロバイダーエラー（認証失敗、API タイムアウト）
+- `5`：ファイルシステムエラー（`--force` なしの既存ファイル上書き、書き込み失敗）
+- `130`：キャンセル（Ctrl+C シグナルによる中断）

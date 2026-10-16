@@ -13,6 +13,7 @@ Sona 是一款以隱私優先為目標的轉錄編輯器，適合希望預設在
 - 主要想看懸浮字幕或在其他應用程式裡直接聽寫文字： [即時字幕與語音輸入法](guide:live-caption-and-voice-typing)
 - 主要想調 `熱詞`、`文字替換`、`說話者檔案` 或 `Auto-Polish`： [詞彙與進階設定](guide:vocabulary-and-advanced-settings)
 - 主要想從終端機進行無狀態的本機/線上檔案或即時轉寫： [CLI 指南](guide:cli-guide)
+- 連接外部 AI Agent（Claude Desktop、Cursor 等）自動化控制 Sona： [MCP 指南](guide:mcp-guide)
 - 遇到具體阻塞： [常見問題與疑難排解](guide:faq)
 
 ## 一句話看懂 Sona 的完整流程
@@ -38,6 +39,7 @@ Sona 是一款以隱私優先為目標的轉錄編輯器，適合希望預設在
 
 - 無狀態 CLI 的轉寫、模型管理、診斷、轉寫匯出與本機 API 服務： [CLI 指南](guide:cli-guide)
 - 本機 HTTP API 整合： [HTTP API 指南](guide:api-guide)
+- 外部 AI Agent 的 Model Context Protocol (MCP) 整合： [MCP 指南](guide:mcp-guide)
 - 原始碼建構與開發命令： [專案 README](readme)
 
 > Sona 的正常路徑其實很直接：先把本機轉錄設定好，再生成或重新打開轉錄、整理文字，然後視需要使用專案整理、潤飾、翻譯、摘要和匯出。

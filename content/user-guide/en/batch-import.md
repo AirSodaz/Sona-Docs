@@ -22,8 +22,9 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 ## Adjust import behavior
 
 1. Click `Parameter Settings` if you want to change `Subtitle Mode` or `Language` for new work.
-2. Keep an eye on the queue states: `Pending`, `Processing`, `Complete`, or `Failed`.
-3. **Message Center & Cancellation**: The header `Message Center` displays batch queue and transcription progress in real time, supporting instant cancellation of active batch imports.
+2. Monitor batch progress through the **Summary Dashboard** (total tasks, total duration, processing, completed, and failed status) and grouped list views.
+3. Use the **Clear Menu** to clear completed, failed, or all items from the queue.
+4. **Real-time Cancellation**: In-flight transcription items can be cancelled in real time directly from the queue or the header `Message Center` with a safe confirmation dialog.
 
 ## What happens after a file finishes
 
@@ -34,5 +35,5 @@ Use `Batch Import` when you already have audio or video files and want Sona to p
 
 - If no offline batch model is configured, Sona reopens onboarding instead of starting import. Models like Qwen3-ASR (via llama.cpp) or Whisper presets provide high-performance offline batch transcription.
 - `Settings > Model Settings` includes `Batch VAD Segmentation` (powered by Silero VAD v5), `VAD Buffer Size`, and `Max Concurrent Transcriptions`, which affect batch behavior. Turning off batch VAD makes local batch transcription recognize the whole file at once.
-- If you encounter unusual audio formats or missing decoders, specify a custom FFmpeg path in `Settings > Storage Management`.
+- Sona features a built-in pure-Rust audio decoding engine that natively handles WAV, MP3, FLAC, OGG, AAC, and M4A without requiring system FFmpeg installations. If you encounter unusual legacy containers or proprietary codecs, specify a custom FFmpeg fallback path in `Settings > Storage Management`.
 - `Batch Import` plus export is the main path when you want subtitle files from existing media.

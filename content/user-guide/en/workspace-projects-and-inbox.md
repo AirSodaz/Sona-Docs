@@ -42,8 +42,9 @@ Use `Project Center` (`Projects`) when you want to organize saved recordings and
 ## Trash and recovery
 
 1. Deleted recordings or import entries are not permanently wiped from disk immediately; they move to `Trash`.
-2. Switch to the `Trash` scope to inspect deleted items, and click `Restore` to return an item to its original project or Inbox.
-3. Click `Empty Trash` to permanently purge deleted transcript data from disk.
+2. The move-to-trash confirmation dialog also provides a `Delete permanently` checkbox to bypass Trash and purge the item immediately when desired.
+3. Switch to the `Trash` scope to inspect deleted items, and click `Restore` to return an item to its original project or Inbox.
+4. Click `Empty Trash` to permanently purge deleted transcript data from disk.
 
 ## Useful notes
 
